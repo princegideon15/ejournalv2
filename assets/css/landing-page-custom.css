@@ -1,0 +1,175 @@
+
+body {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+pre {
+    display: block;
+    font-family:  Helvetica, Arial, sans-serif;
+    white-space: pre-wrap;
+    margin: 1em 0;
+    font-size:16px;
+} 
+
+.oi-spin {
+    -animation: spin .7s infinite linear;
+    -ms-animation: spin .7s infinite linear;
+    -webkit-animation: spinw .7s infinite linear;
+    -moz-animation: spinm .7s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spinw {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@-moz-keyframes spinm {
+    from { -moz-transform: rotate(0deg);}
+    to { -moz-transform: rotate(360deg);}
+}
+
+.right-inner-addon {
+    position: relative;
+}
+
+.right-inner-addon input {
+    padding-right: 30px;    
+}
+.right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+div.sticky{
+    position: sticky;
+    top: 6rem;
+}
+
+    /* feedback */
+.feedback-app {
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+.feedback-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.feedback-item {
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+.feedback-item .radio {
+    display: none;
+}
+.feedback-item .radio ~ span {
+    font-size: 3rem;
+    filter: grayscale(100);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.feedback-item .radio:checked ~ span {
+    filter: grayscale(0);
+    font-size: 4rem;
+}
+
+/* custom */
+.nav-title { 
+    letter-spacing: .1rem;
+    margin-bottom:-10px;
+    font-size:2.5rem;
+}
+
+.nav-subtitle {
+    font-size:.7rem;
+}
+
+.custom-border {
+    background: rgb(84,180,224);
+    background: linear-gradient(166deg, rgba(84,180,224,1) 0%, rgba(25,117,187,1) 100%);
+    border: 5px solid;
+    border-image: linear-gradient(45deg, rgba(42,119,153,1), rgba(0,79,143,1)) 1;
+    border-radius: 10px; /* Optional: adds rounded corners */
+}
+
+.footer-nrcp-brand {
+    background: rgb(84,180,224);
+    background: linear-gradient(166deg, rgba(84,180,224,1) 0%, rgba(25,117,187,1) 100%);
+    /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
+    /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serifS; */
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.badge-issn { 
+    background-color: #003a5d;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.custom-input-search {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border:2px solid #003a5d;
+    padding-left: 30px !important;
+}
+
+.custom-button-search {
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    background-color: #003a5d;
+    color: white;
+    width:15%;
+}
+
+.custom-button-search:hover{
+    background-color: #001d30;
+    color: white;
+}
+
+.aim-scope {
+    text-align: justify;
+}
+
+.nav-tabs .nav-link {
+    color: black;
+}
+
+.nav-tabs .nav-link {
+    background-color: #e2e2e2;
+}
+
+a {
+    text-decoration: none;
+}
+
+.main-link {
+    color: #006eb1 !important;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.nrcp-brand {
+    filter: invert(24%) sepia(13%) saturate(4998%) hue-rotate(200deg) brightness(100%) contrast(86%);
+    border-radius: 50%;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
