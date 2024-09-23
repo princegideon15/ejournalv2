@@ -41,11 +41,11 @@ gtag('config', 'G-VDLLX3HKBL');
                 <?php foreach($divisions as $row):?>
                 <div class="accordion-item border-0 mb-2">
                     <a href="javascript:void(0);" class="main-link text-decoration-underline" data-bs-toggle="collapse"
-                        data-bs-target="#collapse<?php echo $row->id;?>"><?php echo $row->title;?></a>
-                    <div id="collapse<?php echo $row->id;?>" class="accordion-collapse collapse"
+                        data-bs-target="#collapse<?=$row->id;?>"><?=$row->title;?></a>
+                    <div id="collapse<?=$row->id;?>" class="accordion-collapse collapse"
                         aria-labelledby="headingOne" data-bs-parent="#accordionDivisions">
                         <div class="accordion-body">
-                            <?php echo $row->content;?>
+                            <?=$row->content;?>
                         </div>
                     </div>
                 </div>
@@ -117,30 +117,30 @@ gtag('config', 'G-VDLLX3HKBL');
                     <?php $coa_arr = (explode(",& ", $row['coa']));?>
                     <div class="media mb-3 mt-3">
                         <!-- <img class="mr-2 img-thumbnail" height="20%" width="20%"
-										src="<?php echo base_url('assets/uploads/cover/' . $row['cover'] . ''); ?>"> -->
+										src="<?=base_url('assets/uploads/cover/' . $row['cover'] . '')?>"> -->
                         <div class="media-body">
                             <p class="mt-0">
                                 <a href="javascript:void(0);" class="text-dark h6"
-                                    onclick="top_article('<?php echo $row['id']; ?>','top','<?php echo $row['file']; ?>')"><?php echo $row['title']; ?></a>
+                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>')"><?=$row['title']?></a>
                                 <br />
 
 
                                 <?php $i = 0; foreach ($coa_arr as $c): ?>
                                 <a href="javascript:void(0);" class="main-link h6"
-                                    onclick="author_details('<?php echo $row['id_jor']; ?>','<?php echo $c; ?>')"><?php echo $c; ?></a>
-                                <?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'; ?>
-                                <?php $i++; ?>
+                                    onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a>
+                                <?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'?>
+                                <?php $i++?>
                                 <?php endforeach;?>
 
                             <div>
                                 <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Full Text Downloads"><i class="oi oi-data-transfer-download"></i>
-                                    <?php echo $row['count']; ?></span>
+                                    <?=$row['count']?></span>
                                 <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
-                                    title="Abstract Hits"><i class="oi oi-eye"></i> <?php echo $row['abs']; ?></span>
+                                    title="Abstract Hits"><i class="oi oi-eye"></i> <?=$row['abs']?></span>
                                 <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Cited"><i class="oi oi-document"></i>
-                                    <?php echo $row['citations']; ?></span>
+                                    <?=$row['citations']?></span>
 
                             </div>
 
@@ -150,7 +150,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     <?php endforeach;?>
 
 					<div class="d-flex align-items-center justify-content-end">
-                        <a href="<?php echo base_url('/client/ejournal/articles');?>" class="text-dark">View all articles</a><i class="oi oi-chevron-right text-dark ms-1"
+                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><i class="oi oi-chevron-right text-dark ms-1"
                             style="font-size: .9rem"></i>
                     </div>
                 </div>
@@ -198,16 +198,16 @@ gtag('config', 'G-VDLLX3HKBL');
 					<?php $coa_arr = (explode(",& ", $row['coa']));?>
 					<div class="media mb-3 mt-3">
 						<!-- <img class="mr-2 img-thumbnail" height="20%" width="20%"
-							src="<?php echo base_url('assets/uploads/cover/' . $row['cover'] . ''); ?>"> -->
+							src="<?=base_url('assets/uploads/cover/' . $row['cover'] . '')?>"> -->
 						<div class="media-body">
 							<p class="mt-0">
 								<a href="javascript:void(0);" class="text-dark h6 "
-									onclick="top_article('<?php echo $row['id']; ?>','top','<?php echo $row['file']; ?>')"><?php echo $row['title']; ?></a>
+									onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>')"><?=$row['title']?></a>
 								
 								<br />
 								<?php $i = 0; foreach ($coa_arr as $c): ?>
 									<a href="javascript:void(0);" class="main-link fs-6"
-									onclick="author_details('<?php echo $row['id_jor']; ?>','<?php echo $c; ?>')"><?php echo $c; ?></a> 
+									onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a> 
 									<?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'; ?>
 									<?php $i++; ?>
 								<?php endforeach;?>
@@ -218,14 +218,14 @@ gtag('config', 'G-VDLLX3HKBL');
 									<span class="badge bg-light text-dark" data-toggle="tooltip"
 										data-placement="top" title="Full Text Downloads"><span
 											class="oi oi-data-transfer-download"></span>
-										<?php echo $row['count']; ?></span>
+										<?=$row['count']?></span>
 									<span class="badge bg-light text-dark" data-toggle="tooltip"
 										data-placement="top" title="Abstract Hits"><span
-											class="oi oi-eye"></span> <?php echo $row['abs']; ?></span>
+											class="oi oi-eye"></span> <?=$row['abs']?></span>
 									<span class="badge bg-light text-dark" data-toggle="tooltip"
 										data-placement="top" title="Cited"><span
 											class="oi oi-document"></span>
-										<?php echo $row['citations']; ?></span>
+										<?=$row['citations']?></span>
 
 								</div>
 
@@ -235,7 +235,7 @@ gtag('config', 'G-VDLLX3HKBL');
 					<?php endforeach;}?>
 
                     <div class="d-flex align-items-center justify-content-end">
-                        <a href="<?php echo base_url('/client/ejournal/articles');?>" class="text-dark">View all articles</a><i class="oi oi-chevron-right text-dark ms-1"
+                        <a href="<?=base_url('/client/ejournal/articles');?>" class="text-dark">View all articles</a><i class="oi oi-chevron-right text-dark ms-1"
                             style="font-size: .9rem"></i>
                     </div>
 				</div>
@@ -675,7 +675,7 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
 function send_verification_code() {
     let clt_email = $("#clt_email").val();
     $("#send_verification_code").html("Please wait..");
-    var url = "<?php echo base_url('client/ejournal/send_verification_code');?>";
+    var url = "<?php base_url('client/ejournal/send_verification_code');?>";
     $.post(url, {
         clt_email: clt_email
     }, function(data, status) {

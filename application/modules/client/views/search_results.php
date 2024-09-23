@@ -11,7 +11,7 @@ $('.right-inner-addon').hide();
         <div class="col">
             <div class="btn-group" role="group" aria-label="Basic example">
 								<a type="button" class="btn btn-dark mr-1 text-white disabled">ARTICLES:</a>
-                <a href="<?php echo base_url('/client/ejournal/get_index');?>" type="button" class="btn btn-outline-primary mr-1">INDEX</a>
+                <a href="<?=base_url('/client/ejournal/get_index')?>" type="button" class="btn btn-outline-primary mr-1">INDEX</a>
                     <?php foreach (range('A', 'Z') as $char) {
                     echo '<a href="'.base_url('/client/ejournal/get_index/'.$char.'').'" type="button" class="btn btn-outline-primary mr-1">'. $char .'</a>';
                     }
@@ -19,49 +19,62 @@ $('.right-inner-addon').hide();
             </div>
         </div>
     </div> -->
-    
+    <!-- TODO: submit from form search and page (to fix no entered keyword) -->
     <div class="row pt-3">
         <div class="col col-3 p-3">
             <!-- <h6>Journal Collections</h6>
             <hr>
             <?php	$c = 0;foreach ($journals as $row): ?>
             <?php $c++;?>
-            <?php echo '<a href="'.base_url('/client/ejournal/get_issues/'.$row->jor_volume.'').'" class="text-muted fs-6 d-block">Volume ' . $row->jor_volume . ', ' . $row->jor_year . '</a>'; ?>
+            <?='<a href="'.base_url('/client/ejournal/get_issues/'.$row->jor_volume.'').'" class="text-muted fs-6 d-block">Volume ' . $row->jor_volume . ', ' . $row->jor_year . '</a>'; ?>
             <?php endforeach;?> -->
         </div>
         <div class="col col-7 p-3">
             <h3>Articles</h3>
             <div class="row">
                 <div class="col-6">
-                    <div class="input-group mb-2">
-                            <input type="text" class="form-control" placeholder="Search Articles" id="searchArticlesInput2" value="<?php echo str_replace('%C3%B1','ñ',(str_replace('%2C',',',str_replace('+',' ',$keyword))));?>" />
+                    <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Search Articles" id="searchArticlesInput2" value="<?=str_replace('%C3%B1','ñ',(str_replace('%2C',',',str_replace('+',' ',$keyword))));?>" autofocus />
                             <button class="btn btn-outline-secondary" type="button" id="searchArticlesBtn2">Search</button>
                     </div>
                 </div>  
             </div>
-            
+
             <?php $results = (array_key_exists('authors',$result)) ? array_merge($result['authors'],$result['coas']) : $result;?>
-            <?php if($keyword){?>
-            <div class="h3 text-dark mb-2">
-                <span class="main-link fw-bold"><?php echo count($results);?></span> 
-                result(s) for 
-                <span class="main-link">"<?php echo str_replace('%C3%B1','ñ',str_replace('+',' ',$keyword));?>"</span>
-                <!-- <span class="text-muted">for <?php echo ($filter == 1 ? 'Title' : (($filter == 2) ? 'Author' : 'Keywords')) ?></span> -->
+
+            <div class="row">
+                <div class="col col-6">
+                    <?php if($keyword){?>
+                        <div class="h3 text- ">
+                            <span class="main-link fw-bold"><?=$total_rows;?></span> 
+                            result(s) for 
+                            <span class="main-link">"<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$keyword));?>"</span>
+                            <!-- <span class="text-muted">for <?=($filter == 1 ? 'Title' : (($filter == 2) ? 'Author' : 'Keywords')) ?></span> -->
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="col col-6">
+                    <nav>
+                        <ul class="pagination justify-content-end">
+                            <?php echo $pagination; ?>
+                        </ul>
+                    </nav>
+                </div>
             </div>
-            <?php } ?>
             <?php if($this->session->flashdata('email_message')){
                     $msg = $this->session->flashdata('email_message');
                     $message = $msg['msg'];
                     $class = $msg['class'];
                     $icon = $msg['icon'];?>
-            <div class="alert <?php echo $class;?> alert-dismissible fade show" role="alert">
-                <strong><span class="oi <?php echo $icon;?>"></span> <?php echo $message;?></strong>
+            <div class="alert <?=$class;?> alert-dismissible fade show" role="alert">
+                <strong><span class="oi <?=$icon;?>"></span> <?=$message;?></strong>
                 <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <?php } $this->session->unset_userdata('email_message');?>
 
+               
             
                 <?php $results = $result;
                         $c = 1;
@@ -113,17 +126,17 @@ $('.right-inner-addon').hide();
                     ?>
 
 
-                <hr class="py-2">
+                <hr class="pb-2">
                 <div class="d-flex">
                     <div class="flex-shrink-0">
-                        <img class="me-3" src="<?php echo $cover;?>" height="200" width="150" alt="Loading image">
+                        <img class="me-3" src="<?=$cover;?>" height="200" width="150" alt="Loading image">
                     </div>
                     <div class="flex-grow-1 ms-2">
                         <p class="mt-0 text-dark mb-0"><?php ; echo $title;?></p>
                         <?php $i = 0; foreach($coa_arr as $cr):?>
                         <?php $cc = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$keyword))."\p{L}*/ui", "<b>$0</b>", $cr);?>
                         <a href="javascript:void(0);" class="main-link fs-6"
-                            onclick="author_details_search('<?php echo $jor_id;?>','<?php echo $cr;?>')"><?php echo $cc;?></a>
+                            onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>')"><?=$cc;?></a>
                             
                         <?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted ">|</span>'; ?>
                         <?php $i++; ?>
@@ -132,41 +145,41 @@ $('.right-inner-addon').hide();
                             <?php $this->Client_journal_model->click_keyword($keywords);?></div>
 
                         
-                        <div class="text-muted mt-1 small">Pages: <?php echo $pages; ?></div>
+                        <div class="text-muted mt-1 small">Pages: <?=$pages?></div>
                         
-                        <div class="text-muted mt-1 small"><?php echo $res->art_year; ?></div>
+                        <div class="text-muted mt-1 small"><?=$res->art_year?></div>
                         
-                        <div class="text-muted mt-1 small"><a class="text-muted" href="<?php echo  base_url('/client/ejournal/get_articles/'.$vol.'/'.$jor_id.'');?>">Volume <?php echo $res->jor_volume . ' ' . $issue; ?></a></div>
+                        <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/get_articles/'.$vol.'/'.$jor_id.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div>
                 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class='mb-2 mt-2'>
                                 <!-- <span class="badge bg-light text-dark" data-toggle="tooltip"
                                     data-placement="top" title="File Size">
-                                    <span class="oi oi-paperclip"></span> <?php echo $fsize;?></span> -->
+                                    <span class="oi oi-paperclip"></span> <?=$fsize?></span> -->
                                 <span class="badge bg-light text-dark" data-toggle="tooltip"
                                     data-placement="top" title="Full Text PDF Requests"><span
                                         class="oi oi-data-transfer-download"></span>
-                                    <?php echo $pdf;?></span>
+                                    <?=$pdf?></span>
                                 <span class="badge bg-light text-dark" data-toggle="tooltip"
                                     data-placement="top" title="Abstract Hits"><span
-                                        class="oi oi-eye"></span> <?php echo $abs;?></span>
+                                        class="oi oi-eye"></span> <?=$abs?></span>
                                 <span class="badge bg-light text-dark" data-toggle="tooltip"
                                     data-placement="top" title="Cited"><span class="oi oi-document"></span>
-                                    <?php echo $citations; ?></span>
+                                    <?=$citations?></span>
                             </div>
                             <div class="d-flex gap-2">
                                 <a data-bs-toggle="modal" data-bs-target="#client_modal"
                                     class="main-link" href="javascript:void(0);"
-                                    role="button" onclick="get_download_id(<?php echo $res->art_id;?>)">
+                                    role="button" onclick="get_download_id(<?=$res->art_id?>)">
                                     <span class="oi oi-file"></span> Download</a>
                                 <a class="main-link"
-                                    onclick="get_download_id(<?php echo $res->art_id;?>,'hits','<?php echo $file;?>')"
+                                    onclick="get_download_id(<?=$res->art_id?>,'hits','<?=$file?>')"
                                     href="javascript:void(0);" role="button">
                                     <span class="oi oi-eye"></span> Abstract</a>
                                 <a data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-link" href="javascript:void(0);"
                                     role="button"
-                                    onclick="get_citee_info('<?php echo addslashes($cite); ?>','<?php echo $res->art_id;?>')">
+                                    onclick="get_citee_info('<?=addslashes($cite)?>','<?=$res->art_id?>')">
                                     <span class='oi oi-document'></span> Cite</a>
                             </div>
                         </div>
@@ -369,7 +382,7 @@ $('.right-inner-addon').hide();
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <?php echo form_open('client/ejournal/download_pdf',array('id'=>'form-client'));?>
+                    <?=form_open('client/ejournal/download_pdf',array('id'=>'form-client'))?>
                     <div class="form-group">
                         <label class="font-weight-bold" for="clt_title">Title</label><span
                             class="text-danger font-weight-bold">*</span>

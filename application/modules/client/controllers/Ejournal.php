@@ -780,11 +780,57 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	// public function search($filter, $keyword) {
-	public function articles($keyword = null) {
+	public function articles($keyword = null, $page = 0) {
 
-		$clean_keyword = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$keyword)));
-		// $output = $this->Search_model->search_ejournal($filter, $clean_keyword);
-		$output = $this->Search_model->search_ejournal($clean_keyword);
+		// $page = !empty($keyword) ? $page : 1;
+		$this->load->library('pagination');
+		$perPage = 10;
+
+		if($keyword == null || $keyword == 'all'){
+			$config['base_url'] = base_url('client/ejournal/articles/');
+			$output = $this->Search_model->search_ejournal($keyword,$perPage, $page);
+			$totalRows = $this->Search_model->search_ejournal(null, $perPage , $page);
+		}else{
+			$config['base_url'] = base_url('client/ejournal/articles/' . $keyword . '/');
+			$clean_keyword = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$keyword)));
+			$output = $this->Search_model->search_ejournal($clean_keyword, $perPage, $page);
+			$totalRows = $this->Search_model->search_ejournal($clean_keyword, null , $page);
+		}
+
+
+		$config['total_rows'] = count($totalRows);
+		$config['per_page'] = $perPage;
+		$config['enable_query_strings'] = true;
+		$config['use_page_numbers'] = true;
+		$config['page_query_strings'] = true;
+		$config['page_query_segment'] = 'page';
+		$config['reuse_query_string'] = true;
+		// $config['full_tag_open'] = '<ul class="pagination">';
+		// $config['full_tag_close'] = '</ul>';
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
+		$config['first_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['first_tag_close'] = '</span></li>';
+		$config['prev_link'] = 'Previous';
+		$config['prev_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['prev_tag_close'] = '</span></li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['next_tag_close'] = '</span></li>';
+		$config['last_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['last_tag_close'] = '</span></li>';
+		$config['cur_tag_open'] = '<li class="page-item"><span class="page-link text-white main-bg-color">';
+		$config['cur_tag_close'] = '</span></li>';
+		$config['num_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['num_tag_close'] = '</span></li>';
+
+
+		$this->pagination->initialize($config);
+		$data['total_rows'] = count($totalRows);
+		$data['pagination'] = $this->pagination->create_links();
+
+
+
 
 		$data['result'] = $output;
 		$data['keyword'] = $keyword;

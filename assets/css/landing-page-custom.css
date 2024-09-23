@@ -164,6 +164,15 @@ a {
     color: #006eb1 !important;
 }
 
+.main-bg-color {
+    background-color: #006eb1;
+}
+
+.nav-pagination {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
 a:hover {
     text-decoration: underline;
 }

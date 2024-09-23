@@ -32,7 +32,7 @@ class Search_model extends CI_Model {
 
     /** this function search based on filter and keyword */
     // public function search_ejournal($filter, $keyword)
-    public function search_ejournal($keyword)
+    public function search_ejournal($keyword, $perPage, $page)
     {
 
         $searchFields = ['art_title', 'art_author', 'coa_name', 'art_keywords'];
@@ -43,10 +43,18 @@ class Search_model extends CI_Model {
             $this->db->from($this->articles.' a');
             $this->db->join($this->journals.' j','a.art_jor_id = j.jor_id');
             $this->db->join($this->coauthors.' c', 'a.art_id = c.coa_art_id', 'left');
-            $this->db->like($field, $keyword, 'both');
+
+            if($keyword || $keyword != 'all'){
+                $this->db->like($field, $keyword, 'both');
+            }
+
             $this->db->order_by('art_year', 'desc');
             $this->db->order_by('art_title', 'asc');
             $this->db->group_by('art_id');
+
+            if($page > 0){
+                $this->db->limit($perPage, $page * $perPage);
+            }
 
             $query = $this->db->get();
 
