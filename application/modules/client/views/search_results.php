@@ -22,6 +22,7 @@ $('.right-inner-addon').hide();
     <!-- TODO: submit from form search and page (to fix no entered keyword) -->
     <div class="row pt-3">
         <div class="col col-3 p-3">
+            <button class="btn btn-link main-link">View all articles</button>
             <!-- <h6>Journal Collections</h6>
             <hr>
             <?php	$c = 0;foreach ($journals as $row): ?>
@@ -33,10 +34,12 @@ $('.right-inner-addon').hide();
             <h3>Articles</h3>
             <div class="row">
                 <div class="col-6">
+                <?=form_open('client/ejournal/articles', ['method' => 'get'])?>
                     <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Search Articles" id="searchArticlesInput2" value="<?=str_replace('%C3%B1','ñ',(str_replace('%2C',',',str_replace('+',' ',$keyword))));?>" autofocus />
-                            <button class="btn btn-outline-secondary" type="button" id="searchArticlesBtn2">Search</button>
+                            <input type="text" class="form-control" placeholder="Search Articles" name="search" id="searchArticlesInput2" value="<?=str_replace('%C3%B1','ñ',(str_replace('%2C',',',str_replace('+',' ',$search))));?>" autofocus />
+                            <button class="btn btn-outline-secondary" type="submit" id="searchArticlesBtn2">Search</button>
                     </div>
+                    <?=form_close()?>
                 </div>  
             </div>
 
@@ -44,23 +47,24 @@ $('.right-inner-addon').hide();
 
             <div class="row">
                 <div class="col col-6">
-                    <?php if($keyword){?>
+                    <?php if($search){?>
                         <div class="h3 text- ">
                             <span class="main-link fw-bold"><?=$total_rows;?></span> 
                             result(s) for 
-                            <span class="main-link">"<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$keyword));?>"</span>
+                            <span class="main-link">"<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$search));?>"</span>
                             <!-- <span class="text-muted">for <?=($filter == 1 ? 'Title' : (($filter == 2) ? 'Author' : 'Keywords')) ?></span> -->
                         </div>
                     <?php } ?>
                 </div>
                 <div class="col col-6">
                     <nav>
-                        <ul class="pagination justify-content-end">
+                        <ul class="pagination my-custom-pagination justify-content-end">
                             <?php echo $pagination; ?>
                         </ul>
                     </nav>
                 </div>
             </div>
+
             <?php if($this->session->flashdata('email_message')){
                     $msg = $this->session->flashdata('email_message');
                     $message = $msg['msg'];
@@ -80,10 +84,10 @@ $('.right-inner-addon').hide();
                         $c = 1;
                         foreach($results as $res):
 
-                        $title = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$keyword))."\p{L}*/ui", "<b>$0</b>", $res->art_title);
-                        $author = preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$keyword))."\p{L}*/ui", "<b>$0</b>", $res->art_author);
-                        $affiliation = preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$keyword))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation);
-                        $keywords = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$keyword))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords);
+                        $title = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_title);
+                        $author = preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_author);
+                        $affiliation = preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation);
+                        $keywords = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords);
                         $file =  $res->art_abstract_file;
                         $get_cover = $this->Search_model->get_cover($res->art_jor_id);
                         $cover = ($get_cover > 0) ? base_url('assets/uploads/cover/'.$get_cover) : base_url('assets/images/unavailable.jpg');
@@ -134,7 +138,7 @@ $('.right-inner-addon').hide();
                     <div class="flex-grow-1 ms-2">
                         <p class="mt-0 text-dark mb-0"><?php ; echo $title;?></p>
                         <?php $i = 0; foreach($coa_arr as $cr):?>
-                        <?php $cc = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$keyword))."\p{L}*/ui", "<b>$0</b>", $cr);?>
+                        <?php $cc = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $cr);?>
                         <a href="javascript:void(0);" class="main-link fs-6"
                             onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>')"><?=$cc;?></a>
                             
@@ -186,19 +190,23 @@ $('.right-inner-addon').hide();
                     </div>
                 </div>
 
+                <?php endforeach; ?>
 
-                <?php endforeach;
-
-
-
-
-                    ?>
+                <div class="row mt-5">
+                    <div class="col">
+                        <nav>
+                            <ul class="pagination my-custom-pagination justify-content-end">
+                                <?php echo $pagination; ?>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
 
                 <?php if(count($results) == 0)
                     {
-                    echo ' <ul class="list-group "><li class="list-group-item list-group-item-secondary"><span class="oi oi-warning"></span> Sorry, no results found for <strong>'.str_replace('%C3%B1','ñ',str_replace('+',' ',$keyword)).'</strong>. Try entering fewer or broader query terms.</li></ul>';
+                    echo ' <ul class="list-group "><li class="list-group-item list-group-item-secondary"><span class="oi oi-warning"></span> Sorry, no results found for <strong>'.str_replace('%C3%B1','ñ',str_replace('+',' ',$search)).'</strong>. Try entering fewer or broader query terms.</li></ul>';
                     }
-                    ?>
+                ?>
             </ul>
         </div>
         <!-- <div class="col-4">
@@ -460,7 +468,7 @@ $('.right-inner-addon').hide();
                         data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger" id="btn_submit_client_info"
                         name="btn_submit_client_info"><span class="oi oi-check"></span> Submit</button>
-                    </form>
+                    <?=form_close()?>
                 </div>
             </div>
         </div>

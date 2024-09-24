@@ -780,21 +780,34 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	// public function search($filter, $keyword) {
-	public function articles($keyword = null, $page = 0) {
+	// public function articles($keyword = null, $page = 0) {
+	public function articles() {
 
-		// $page = !empty($keyword) ? $page : 1;
 		$this->load->library('pagination');
 		$perPage = 10;
+		$page = 0;
 
-		if($keyword == null || $keyword == 'all'){
-			$config['base_url'] = base_url('client/ejournal/articles/');
-			$output = $this->Search_model->search_ejournal($keyword,$perPage, $page);
-			$totalRows = $this->Search_model->search_ejournal(null, $perPage , $page);
+
+		if($this->input->get('per_page')){
+			$page =  $this->input->get('per_page');
+		}
+
+		$start_index = 0;
+
+		if($page != 0){
+			$start_index = $perPage * ($page - 1);
+		}
+
+		$config['base_url'] = base_url('client/ejournal/articles');
+
+		if($this->input->get('search') != null){
+			$search = $this->input->get('search');
+			$clean_search = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$search)));
+			$output = $this->Search_model->search_ejournal($perPage, $start_index, $clean_search);
+			$totalRows = $this->Search_model->search_ejournal(null, null, $clean_search);
 		}else{
-			$config['base_url'] = base_url('client/ejournal/articles/' . $keyword . '/');
-			$clean_keyword = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$keyword)));
-			$output = $this->Search_model->search_ejournal($clean_keyword, $perPage, $page);
-			$totalRows = $this->Search_model->search_ejournal($clean_keyword, null , $page);
+			$output = $this->Search_model->search_ejournal($perPage, $start_index, null);
+			$totalRows = $this->Search_model->search_ejournal(null, null, null);
 		}
 
 
@@ -802,7 +815,7 @@ class Ejournal extends EJ_Controller {
 		$config['per_page'] = $perPage;
 		$config['enable_query_strings'] = true;
 		$config['use_page_numbers'] = true;
-		$config['page_query_strings'] = true;
+		$config['page_query_string'] = true;
 		$config['page_query_segment'] = 'page';
 		$config['reuse_query_string'] = true;
 		// $config['full_tag_open'] = '<ul class="pagination">';
@@ -827,13 +840,14 @@ class Ejournal extends EJ_Controller {
 
 		$this->pagination->initialize($config);
 		$data['total_rows'] = count($totalRows);
+		$data['page'] = $page;
 		$data['pagination'] = $this->pagination->create_links();
 
 
 
 
 		$data['result'] = $output;
-		$data['keyword'] = $keyword;
+		$data['search'] = $search;
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();

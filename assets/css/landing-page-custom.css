@@ -168,10 +168,6 @@ a {
     background-color: #006eb1;
 }
 
-.nav-pagination {
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-}
 
 a:hover {
     text-decoration: underline;
@@ -181,4 +177,17 @@ a:hover {
     filter: invert(24%) sepia(13%) saturate(4998%) hue-rotate(200deg) brightness(100%) contrast(86%);
     border-radius: 50%;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.my-custom-pagination {
+    padding: 10px;
+}
+
+.my-custom-pagination .page-item a {
+    color: #333;
+}
+
+.my-custom-pagination .page-item.active a {
+    background-color: #006eb1;
+    color: #fff;
 }

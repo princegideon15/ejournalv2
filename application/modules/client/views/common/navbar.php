@@ -30,9 +30,9 @@
         <li class="nav-item">
           <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/guidelines');?>">Guidelines</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/articles');?>">Articles</a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a>
         </li>

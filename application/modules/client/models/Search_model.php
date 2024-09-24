@@ -32,11 +32,15 @@ class Search_model extends CI_Model {
 
     /** this function search based on filter and keyword */
     // public function search_ejournal($filter, $keyword)
-    public function search_ejournal($keyword, $perPage, $page)
+    public function search_ejournal($perPage, $start_index, $search = null)
     {
+        if($perPage != '' && $start_index != ''){
+            $this->db->limit($perPage, $start_index);
+        }else{
+            $this->db->limit($perPage);
+        }
 
         $searchFields = ['art_title', 'art_author', 'coa_name', 'art_keywords'];
-        $keyword = str_replace("%20", " ", $keyword);
 
         foreach ($searchFields as $field) {
             $this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn, c.*');
@@ -44,18 +48,16 @@ class Search_model extends CI_Model {
             $this->db->join($this->journals.' j','a.art_jor_id = j.jor_id');
             $this->db->join($this->coauthors.' c', 'a.art_id = c.coa_art_id', 'left');
 
-            if($keyword || $keyword != 'all'){
-                $this->db->like($field, $keyword, 'both');
+            if($search){
+                $search = str_replace("%20", " ", $search);
+                $this->db->like($field, $search, 'both');
             }
 
             $this->db->order_by('art_year', 'desc');
             $this->db->order_by('art_title', 'asc');
             $this->db->group_by('art_id');
 
-            if($page > 0){
-                $this->db->limit($perPage, $page * $perPage);
-            }
-
+    
             $query = $this->db->get();
 
             if ($query->num_rows() > 0) {
