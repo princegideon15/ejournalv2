@@ -2,7 +2,9 @@
 <div class="container-fluid" class="mt-3 p4">
 	<div class="row">
 		<!-- SIDE NAVIGATION -->
-		<div class="col col-3 p-3">
+        <div class="col col-3 p-3">
+            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
+		</div>
 			<!-- <div class="list-group sticky" id="list_group_menu">
 				<li class="list-group-item font-weight-bold bg-light"><span class="oi oi-book"></span> JOURNALS</li>
 				<?php if ($journals != null) {
@@ -11,7 +13,6 @@
 				<?php echo '<a href="'.base_url('/client/ejournal/get_issues/'.$row->jor_volume.'').'" class="list-group-item  list-group-item-action">Volume ' . $row->jor_volume . ', ' . $row->jor_year . '<span class="oi oi-chevron-right float-right mt-1" style="font-size:10px"></span></a>'; ?>
 				<?php endforeach;}?>
 			</div> -->
-		</div>
 		<div class="col col-7 p-3">
 			<div class="tab-content" id="nav-tabContent">
 

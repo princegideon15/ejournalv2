@@ -19,10 +19,9 @@ $('.right-inner-addon').hide();
             </div>
         </div>
     </div> -->
-    <!-- TODO: submit from form search and page (to fix no entered keyword) -->
     <div class="row pt-3">
         <div class="col col-3 p-3">
-            <button class="btn btn-link main-link">View all articles</button>
+            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
             <!-- <h6>Journal Collections</h6>
             <hr>
             <?php	$c = 0;foreach ($journals as $row): ?>
@@ -34,11 +33,11 @@ $('.right-inner-addon').hide();
             <h3>Articles</h3>
             <div class="row">
                 <div class="col-6">
-                <?=form_open('client/ejournal/articles', ['method' => 'get'])?>
-                    <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Search Articles" name="search" id="searchArticlesInput2" value="<?=str_replace('%C3%B1','ñ',(str_replace('%2C',',',str_replace('+',' ',$search))));?>" autofocus />
-                            <button class="btn btn-outline-secondary" type="submit" id="searchArticlesBtn2">Search</button>
-                    </div>
+                    <?=form_open('client/ejournal/articles', ['method' => 'get', 'id' => 'searchForm'])?>
+                        <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Search Articles" name="search" id="searchArticlesInput" value="<?=str_replace('%C3%B1','ñ',(str_replace('%2C',',',str_replace('+',' ',$search))));?>" autofocus />
+                                <button class="btn btn-outline-secondary" type="submit" id="searchArticlesBtn2">Search</button>
+                        </div>
                     <?=form_close()?>
                 </div>  
             </div>
@@ -368,7 +367,7 @@ $('.right-inner-addon').hide();
         <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
             <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
         </a>
-        <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
+        <p>This work is licensed under a <a class="text-dark" rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
             Attribution 4.0 International License</a>.
         </p>
     </div>

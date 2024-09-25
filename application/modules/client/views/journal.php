@@ -16,13 +16,15 @@ gtag('config', 'G-VDLLX3HKBL');
     <div class="row">
         <div class="col col-lg-5 p-3">
             <div class="d-flex flex-column mb-3 w-75">
-                <div class="input-group">
-                    <input type="text" class="form-control form-control-lg custom-input-search" id="searchArticlesInput"
-                        placeholder="Search articles">
-                    <button class="btn custom-button-search" type="button" id="searchArticlesBtn"><i
-                            class="oi oi-magnifying-glass"></i></button>
-                </div>
-                <p class="text-end fst-italic pr-3 me-3"><a class="main-link" href="">Advanced search</a></p>
+                <?=form_open('client/ejournal/articles', ['method' => 'get', 'id' => 'searchForm'])?>
+                    <div class="input-group">
+                            <input type="text" class="form-control form-control-lg custom-input-search" id="searchArticlesInput" name="search"
+                                placeholder="Search articles">
+                            <button class="btn custom-button-search" type="submit" id="searchArticlesBtn"><i
+                                    class="oi oi-magnifying-glass"></i></button>
+                    </div>
+                    <?=form_close()?>
+                <p class="text-end fst-italic pr-3 me-3"><a class="main-link" href="<?=base_url('/client/ejournal/articles')?>">Advanced search</a></p>
             </div>
 
             <h3>Aim and Scope</h3>

@@ -27,6 +27,7 @@ class Ejournal extends EJ_Controller {
 		$this->load->model('Library_model');
 		$this->load->model('Search_model');
 		$this->load->model('CSF_model');
+		$this->load->model('Admin/Journal_model');
 		$this->load->model('Admin/Email_model');
 		$this->load->library("My_phpmailer");
 		$objMail = $this->my_phpmailer->load();
@@ -856,7 +857,6 @@ class Ejournal extends EJ_Controller {
 		$data['country'] = $this->Library_model->get_library('tblcountries');
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/search_results";
-		// $data['main_content'] = "client/maintenance";
 		$this->_LoadPage('common/body', $data);
 
 		// if (strlen($clean_keyword) >= 3) {
@@ -904,6 +904,14 @@ class Ejournal extends EJ_Controller {
 		// 	}
 		// }
 
+	}
+
+	public function advanced(){
+		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['year'] = $this->Journal_model->get_unique_journal_year();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/advanced";
+		$this->_LoadPage('common/body', $data);
 	}
 
 	/**

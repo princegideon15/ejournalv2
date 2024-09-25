@@ -168,6 +168,16 @@ a {
     background-color: #006eb1;
 }
 
+.main-btn {
+    color: white;
+    background-color: #006eb1;
+}
+
+.main-btn:hover {
+    color: white;
+    background-color: #00588f;
+}
+
 
 a:hover {
     text-decoration: underline;

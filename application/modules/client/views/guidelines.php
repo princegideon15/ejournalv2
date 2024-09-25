@@ -2,7 +2,7 @@
 <div class="container-fluid">
     <div class="row pt-3">
         <div class="col col-3 p-3">
-            <button class="btn btn-link main-link">View all articles</button>
+            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
 		</div>
 		<div class="col col-7 p-3">
 					<div class="shadow p-5 mb-5 bg-white rounded">
@@ -14,7 +14,7 @@
 										<li>
 										<strong>ONLINE SUBMISSION</strong>
 										<ol type="a">
-											<li>Login to your SKMS account at <a href="https://skms.nrcp.dost.gov.ph">https://skms.nrcp.dost.gov.ph</a></li>
+											<li>Login to your SKMS account at <a class="main-link" href="https://skms.nrcp.dost.gov.ph">https://skms.nrcp.dost.gov.ph</a></li>
 											<li>Click Journal Publications</li>
 											<li>Click Upload manuscript</li>
 											<li>Provide/upload the necessary data/information</li>
@@ -149,7 +149,7 @@
 											The Acknowledgements shall be placed under a separate heading before the References.
 											</li>
 											<li>
-											For other details regarding manuscript submission, please email: <a href="mailto:ejournal@nrcp.dost.gov.ph">ejournal@nrcp.dost.gov.ph</a>
+											For other details regarding manuscript submission, please email: <a class="main-link" href="mailto:ejournal@nrcp.dost.gov.ph">ejournal@nrcp.dost.gov.ph</a>
 											</li>
 											<li>
 											To track the status of submissions, log in to SKMS Account.

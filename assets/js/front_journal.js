@@ -21,7 +21,6 @@ var fn_clt_email; //feedback client email
 $(document).ready(function()
 {
 
-
   // $('#mbsModal').modal('toggle');
   // $('#defaultCheck2').on('click', function(){
     
@@ -38,6 +37,12 @@ $(document).ready(function()
   // });
 
   $('body').tooltip({ selector: '[data-toggle=tooltip]' });
+
+  $('#searchForm').submit(function(e){
+      if ($("#searchArticlesInput").val() === "") {
+        e.preventDefault();
+      }
+  });
 
   $('input:radio[name="svc_fdbk_q_answer[1]"]').on('change',function(){
 
@@ -341,41 +346,41 @@ $('#citationModal .close').click(function(){
 
 
   // search ejournal and redirect to result page
-  $('#searchArticlesInput').keydown(function(e)
-  {
-    var keyword = $(this).val();
-    if(e.which == 13)
-    {
-      if(keyword != ''){
-        window.location.href = base_url + "client/ejournal/articles/"+ keyword.replace(/ /g, '+');
-      }
-    }
-  });
+  // $('#searchArticlesInput').keydown(function(e)
+  // {
+  //   var keyword = $(this).val();
+  //   if(e.which == 13)
+  //   {
+  //     if(keyword != ''){
+  //       window.location.href = base_url + "client/ejournal/articles/"+ keyword.replace(/ /g, '+');
+  //     }
+  //   }
+  // });
 
-  $('#searchArticlesBtn').click(function(e){
-    let keyword = $('#searchArticlesInput').val()
-    if(keyword != ''){;
-      window.location.href = base_url + "client/ejournal/articles/"+ keyword.replace(/ /g, '+');
-    }
-  });
+  // $('#searchArticlesBtn').click(function(e){
+  //   let keyword = $('#searchArticlesInput').val()
+  //   if(keyword != ''){;
+  //     window.location.href = base_url + "client/ejournal/articles/"+ keyword.replace(/ /g, '+');
+  //   }
+  // });
 
-  $('#searchArticlesBtn2').click(function(e){
-    let keyword = $('#searchArticlesInput2').val();
-    if(keyword != ''){
-      window.location.href = base_url + "client/ejournal/articles/"+ keyword.replace(/ /g, '+');
-    }
-  });
+  // $('#searchArticlesBtn2').click(function(e){
+  //   let keyword = $('#searchArticlesInput2').val();
+  //   if(keyword != ''){
+  //     window.location.href = base_url + "client/ejournal/articles/"+ keyword.replace(/ /g, '+');
+  //   }
+  // });
 
-  $('#searchArticlesInput2').keydown(function(e)
-  {
-    var keyword = $(this).val();
-    if(e.which == 13)
-    {
-      if(keyword != ''){
-        window.location.href = base_url + "client/ejournal/articles/"+ keyword.replace(/ /g, '+');
-      }
-    }
-  });
+  // $('#searchArticlesInput2').keydown(function(e)
+  // {
+  //   var keyword = $(this).val();
+  //   if(e.which == 13)
+  //   {
+  //     if(keyword != ''){
+  //       window.location.href = base_url + "client/ejournal/articles/"+ keyword.replace(/ /g, '+');
+  //     }
+  //   }
+  // });
 
 
 
