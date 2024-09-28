@@ -22,47 +22,47 @@ $('.right-inner-addon').hide();
     <div class="row pt-3">
         <div class="col col-3 p-3">
             <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
-            <!-- <h6>Journal Collections</h6>
-            <hr>
-            <?php	$c = 0;foreach ($journals as $row): ?>
-            <?php $c++;?>
-            <?='<a href="'.base_url('/client/ejournal/get_issues/'.$row->jor_volume.'').'" class="text-muted fs-6 d-block">Volume ' . $row->jor_volume . ', ' . $row->jor_year . '</a>'; ?>
-            <?php endforeach;?> -->
         </div>
         <div class="col col-7 p-3">
             <h3>Articles</h3>
             <div class="row">
-                <div class="col-6">
+                <div class="col col-8">
                     <?=form_open('client/ejournal/articles', ['method' => 'get', 'id' => 'searchForm'])?>
-                        <div class="input-group mb-3">
+                        <div class="input-group mb-4">
                                 <input type="text" class="form-control" placeholder="Search Articles" name="search" id="searchArticlesInput" value="<?=str_replace('%C3%B1','ñ',(str_replace('%2C',',',str_replace('+',' ',$search))));?>" autofocus />
                                 <button class="btn btn-outline-secondary" type="submit" id="searchArticlesBtn2">Search</button>
                         </div>
+                        
                     <?=form_close()?>
-                </div>  
+                </div>
+                <div class="col col-4 pt-2">
+                    <a href="<?=base_url('/client/ejournal/advanced')?>" class="main-link">Advanced search</a>
+                </div>
             </div>
 
             <?php $results = (array_key_exists('authors',$result)) ? array_merge($result['authors'],$result['coas']) : $result;?>
 
-            <div class="row">
-                <div class="col col-6">
-                    <?php if($search){?>
-                        <div class="h3 text- ">
-                            <span class="main-link fw-bold"><?=$total_rows;?></span> 
-                            result(s) for 
-                            <span class="main-link">"<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$search));?>"</span>
-                            <!-- <span class="text-muted">for <?=($filter == 1 ? 'Title' : (($filter == 2) ? 'Author' : 'Keywords')) ?></span> -->
-                        </div>
-                    <?php } ?>
+            <?php if(count($results) > 0){ ?>
+                <div class="row mb-0 pb-0">
+                    <div class="col col-6 d-flex align-items-end">
+                        <?php if($search){?>
+                            <div class="h6">
+                                <span class="main-link fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="main-link fw-bold"><?=$total_rows;?></span> result(s) of <span class="main-link fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$search));?>'</span>
+                            </div>
+                        <?php }else{ ?>
+                            <div class="h6">
+                                <span class="main-link fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="main-link fw-bold"><?=$total_rows;?></span> result(s)
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="col col-6">
+                            <ul class="pagination my-custom-pagination justify-content-end p-0 mb-2">
+                                <?php echo $pagination; ?>
+                            </ul>
+                    </div>
                 </div>
-                <div class="col col-6">
-                    <nav>
-                        <ul class="pagination my-custom-pagination justify-content-end">
-                            <?php echo $pagination; ?>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+                <hr class="mt-2 pb-2">
+            <?php } ?>
 
             <?php if($this->session->flashdata('email_message')){
                     $msg = $this->session->flashdata('email_message');
@@ -129,7 +129,7 @@ $('.right-inner-addon').hide();
                     ?>
 
 
-                <hr class="pb-2">
+                
                 <div class="d-flex">
                     <div class="flex-shrink-0">
                         <img class="me-3" src="<?=$cover;?>" height="200" width="150" alt="Loading image">
@@ -170,43 +170,56 @@ $('.right-inner-addon').hide();
                                     data-placement="top" title="Cited"><span class="oi oi-document"></span>
                                     <?=$citations?></span>
                             </div>
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-3">
                                 <a data-bs-toggle="modal" data-bs-target="#client_modal"
-                                    class="main-link" href="javascript:void(0);"
+                                    class="main-link text-decoration-underline" href="javascript:void(0);"
                                     role="button" onclick="get_download_id(<?=$res->art_id?>)">
                                     <span class="oi oi-file"></span> Download</a>
-                                <a class="main-link"
+                                <a class="main-link text-decoration-underline"
                                     onclick="get_download_id(<?=$res->art_id?>,'hits','<?=$file?>')"
                                     href="javascript:void(0);" role="button">
                                     <span class="oi oi-eye"></span> Abstract</a>
                                 <a data-bs-toggle="modal" data-bs-target="#citationModal"
-                                    class="main-link" href="javascript:void(0);"
+                                    class="main-link " href="javascript:void(0);"
                                     role="button"
                                     onclick="get_citee_info('<?=addslashes($cite)?>','<?=$res->art_id?>')">
-                                    <span class='oi oi-document'></span> Cite</a>
+                                    <span class='oi oi-document'></span> Cite this article</a>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <?php endforeach; ?>
-
-                <div class="row mt-5">
-                    <div class="col">
-                        <nav>
-                            <ul class="pagination my-custom-pagination justify-content-end">
-                                <?php echo $pagination; ?>
-                            </ul>
-                        </nav>
+                
+                <?php if(count($results) > 0){ ?>
+                    <hr class="pb-2">
+                    <div class="row">
+                        <div class="col col-6 d-flex align-items-start">
+                            <?php if($search){?>
+                                <div class="h6">
+                                    <span class="main-link fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="main-link fw-bold"><?=$total_rows;?></span> result(s) of <span class="main-link fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$search));?>'</span>
+                                </div>
+                            <?php }else{ ?>
+                                <div class="h6">
+                                    <span class="main-link fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="main-link fw-bold"><?=$total_rows;?></span> result(s)
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="col col-6">
+                                <ul class="pagination my-custom-pagination justify-content-end p-0 mb-2">
+                                    <?php echo $pagination; ?>
+                                </ul>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
 
-                <?php if(count($results) == 0)
-                    {
-                    echo ' <ul class="list-group "><li class="list-group-item list-group-item-secondary"><span class="oi oi-warning"></span> Sorry, no results found for <strong>'.str_replace('%C3%B1','ñ',str_replace('+',' ',$search)).'</strong>. Try entering fewer or broader query terms.</li></ul>';
-                    }
-                ?>
-            </ul>
+                <?php if(count($results) == 0){ ?>
+                    <div class="alert alert-secondary d-flex align-items-center" role="alert">
+                        <div>
+                        <span class="oi oi-warning"></span> Sorry, no results found for <strong>'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$search))?>'</strong>. Try entering fewer or broader query terms.
+                        </div>
+                    </div>
+                <?php } ?>
         </div>
         <!-- <div class="col-4">
             <div class="card">

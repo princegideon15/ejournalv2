@@ -71,6 +71,29 @@ $(document).ready(function()
   //   $('#' + activeTabSub + '').trigger('click');
   // }
 
+  $('#advanceSearch').on('input', function() {
+    const button = $('#advanceSearchBtn');
+    if ($(this).val().trim() !== '') {
+      button.removeClass('disabled');
+      button.prop('disabled', false);
+    } else {
+      button.addClass('disabled');
+      button.prop('disabled', true);
+    }
+  });
+
+  $('#advancedSearchForm select').change(function() {
+    const button = $('#advanceSearchBtn');
+    if ($('#advanceSearch').val().trim() !== '') {
+      button.removeClass('disabled');
+      button.prop('disabled', false);
+    } else {
+      button.addClass('disabled');
+      button.prop('disabled', true);
+    }
+  });
+
+
   // show home tab
   $('#nav_home').click(function()
   {
@@ -902,11 +925,12 @@ function get_coauthors(id)
  *
  * @return  {void}        
  */
-function top_article(id, flag, file)
+function top_article(id, flag, file, modalTitle)
 {
-  $('#top_modal').modal('toggle');
   $('#top_abstract_view').attr('src', base_url+('assets/uploads/abstract/'+file+'#toolbar=0&navpanes=0&scrollbar=0&menubar=0'));
   $('#top_download_pdf').attr('onClick', 'get_download_id('+id+')');
+  $('#top_modal .modal-title').text(modalTitle);
+  $('#top_modal').modal('toggle');
   
 }
 

@@ -780,10 +780,9 @@ class Ejournal extends EJ_Controller {
 	 * @param [string] $keyword		keyword
 	 * @return void
 	 */
-	// public function search($filter, $keyword) {
-	// public function articles($keyword = null, $page = 0) {
 	public function articles() {
 
+		//initialize pagination with page, start_index and per page
 		$this->load->library('pagination');
 		$perPage = 10;
 		$page = 0;
@@ -799,8 +798,7 @@ class Ejournal extends EJ_Controller {
 			$start_index = $perPage * ($page - 1);
 		}
 
-		$config['base_url'] = base_url('client/ejournal/articles');
-
+		//search query
 		if($this->input->get('search') != null){
 			$search = $this->input->get('search');
 			$clean_search = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$search)));
@@ -811,7 +809,8 @@ class Ejournal extends EJ_Controller {
 			$totalRows = $this->Search_model->search_ejournal(null, null, null);
 		}
 
-
+		//pagination config
+		$config['base_url'] = base_url('client/ejournal/articles');
 		$config['total_rows'] = count($totalRows);
 		$config['per_page'] = $perPage;
 		$config['enable_query_strings'] = true;
@@ -819,8 +818,6 @@ class Ejournal extends EJ_Controller {
 		$config['page_query_string'] = true;
 		$config['page_query_segment'] = 'page';
 		$config['reuse_query_string'] = true;
-		// $config['full_tag_open'] = '<ul class="pagination">';
-		// $config['full_tag_close'] = '</ul>';
 		$config['first_link'] = 'First';
 		$config['last_link'] = 'Last';
 		$config['first_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
@@ -839,14 +836,15 @@ class Ejournal extends EJ_Controller {
 		$config['num_tag_close'] = '</span></li>';
 
 
+		//pagination data to display
 		$this->pagination->initialize($config);
 		$data['total_rows'] = count($totalRows);
-		$data['page'] = $page;
 		$data['pagination'] = $this->pagination->create_links();
+		$data['page'] = ($page > 0) ? $page : 1;
+		$data['start_index'] = $start_index;
+		$data['per_page'] = $perPage;
 
-
-
-
+		//search result to display
 		$data['result'] = $output;
 		$data['search'] = $search;
 		$data['journals'] = $this->Client_journal_model->get_journals();
@@ -907,10 +905,106 @@ class Ejournal extends EJ_Controller {
 	}
 
 	public function advanced(){
+
+		if($this->input->get('search') != null){
+			//get search filter
+			switch($this->input->get('search_filter')){
+	
+				case 2: $where = ['art_title'];break;
+				case 3: $where = ['art_author', 'coa_name'];break;
+				case 4: $where = ['art_affiliation'];break;
+				case 5: $where = ['art_keywords'];break;
+				default: $where = ['art_title', 'art_author', 'coa_name', 'art_keywords', 'art_affiliation'];
+			}		
+
+			$searchFields = ['jor_volume', 'jor_issue', 'jor_year'];
+			$where2 = [];
+
+			foreach ($searchFields as $field) {
+				$value = $this->input->get($field);
+				if (!empty($value)) {
+					$where2[$field] = $value;
+				}
+			}
+
+			//initialize pagination with page, start_index and per page
+			$this->load->library('pagination');
+			$perPage = 10;
+			$page = 0;
+	
+	
+			if($this->input->get('per_page')){
+				$page =  $this->input->get('per_page');
+			}
+	
+			$start_index = 0;
+	
+			if($page != 0){
+				$start_index = $perPage * ($page - 1);
+			}
+	
+	
+			//advance search query
+			$search = $this->input->get('search');
+			$clean_search = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$search)));
+			$output = $this->Search_model->advance_search_ejournal($perPage, $start_index, $clean_search, $where, $where2);
+			$totalRows = $this->Search_model->advance_search_ejournal(null, null, $clean_search, $where, $where2);
+
+			//pagination config
+			$config['base_url'] = base_url('client/ejournal/articles');
+			$config['total_rows'] = count($totalRows);
+			$config['per_page'] = $perPage;
+			$config['enable_query_strings'] = true;
+			$config['use_page_numbers'] = true;
+			$config['page_query_string'] = true;
+			$config['page_query_segment'] = 'page';
+			$config['reuse_query_string'] = true;
+			$config['first_link'] = 'First';
+			$config['last_link'] = 'Last';
+			$config['first_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['first_tag_close'] = '</span></li>';
+			$config['prev_link'] = 'Previous';
+			$config['prev_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['prev_tag_close'] = '</span></li>';
+			$config['next_link'] = 'Next';
+			$config['next_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['next_tag_close'] = '</span></li>';
+			$config['last_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['last_tag_close'] = '</span></li>';
+			$config['cur_tag_open'] = '<li class="page-item"><span class="page-link text-white main-bg-color">';
+			$config['cur_tag_close'] = '</span></li>';
+			$config['num_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['num_tag_close'] = '</span></li>';
+	
+	
+			$this->pagination->initialize($config);
+	
+			//pagination data to display
+			$data['total_rows'] = count($totalRows);
+			$data['pagination'] = $this->pagination->create_links();
+			$data['page'] = ($page > 0) ? $page : 1;
+			$data['start_index'] = $start_index;
+			$data['per_page'] = $perPage;
+	
+			//output to display
+			$data['result'] = $output;
+			$data['search'] = $search;
+			$data['filter'] = $this->input->get('search_filter');
+			$data['volume'] = $this->input->get('jor_volume');
+			$data['issue'] = $this->input->get('jor_issue');
+			$data['year'] = $this->input->get('jor_year');
+
+		}
+
+
 		$data['journals'] = $this->Client_journal_model->get_journals();
-		$data['year'] = $this->Journal_model->get_unique_journal_year();
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['years'] = $this->Journal_model->get_unique_journal_year();
+		$data['country'] = $this->Library_model->get_library('tblcountries');
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/advanced";
+
 		$this->_LoadPage('common/body', $data);
 	}
 

@@ -24,7 +24,7 @@ gtag('config', 'G-VDLLX3HKBL');
                                     class="oi oi-magnifying-glass"></i></button>
                     </div>
                     <?=form_close()?>
-                <p class="text-end fst-italic pr-3 me-3"><a class="main-link" href="<?=base_url('/client/ejournal/articles')?>">Advanced search</a></p>
+                <p class="text-end fst-italic pr-3 me-3"><a class="main-link" href="<?=base_url('/client/ejournal/advanced')?>">Advanced search</a></p>
             </div>
 
             <h3>Aim and Scope</h3>
@@ -123,7 +123,7 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <p class="mt-0">
                                 <a href="javascript:void(0);" class="text-dark h6"
-                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>')"><?=$row['title']?></a>
+                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a>
                                 <br />
 
 
@@ -204,7 +204,7 @@ gtag('config', 'G-VDLLX3HKBL');
 						<div class="media-body">
 							<p class="mt-0">
 								<a href="javascript:void(0);" class="text-dark h6 "
-									onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>')"><?=$row['title']?></a>
+									onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Most Accessed')"><?=$row['title']?></a>
 								
 								<br />
 								<?php $i = 0; foreach ($coa_arr as $c): ?>
@@ -292,7 +292,7 @@ gtag('config', 'G-VDLLX3HKBL');
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Top Article</h5>
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
