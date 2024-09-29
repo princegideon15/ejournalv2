@@ -21,7 +21,7 @@ $('.right-inner-addon').hide();
     </div> -->
     <div class="row pt-3">
         <div class="col col-3 p-3">
-            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
+            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">Articles</a>
         </div>
         <div class="col col-7 p-3">
             <h3>Articles</h3>
@@ -140,7 +140,7 @@ $('.right-inner-addon').hide();
                         <div class="mt-2">
                             <?php $i = 0; foreach($coa_arr as $cr):?>
                             <?php $cc = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $cr) : $cr ;?>
-                            <a href="javascript:void(0);" class="text-muted fs-6"
+                            <a href="javascript:void(0);" class="text-muted"
                                 onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>','articles')"><?=$cc;?></a>
                                 
                             <?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted ">|</span>'; ?>
@@ -193,7 +193,7 @@ $('.right-inner-addon').hide();
                                     href="javascript:void(0);" role="button">
                                     <span class="oi oi-eye"></span> Abstract</a>
                                 <a data-bs-toggle="modal" data-bs-target="#citationModal"
-                                    class="main-link " href="javascript:void(0);"
+                                    class="main-link text-decoration-underline" href="javascript:void(0);"
                                     role="button"
                                     onclick="get_citee_info('<?=addslashes($cite)?>','<?=$res->art_id?>')">
                                     <span class='oi oi-document'></span> Cite this article</a>
@@ -397,8 +397,6 @@ $('.right-inner-addon').hide();
             Attribution 4.0 International License</a>.
         </p>
     </div>
-
-
 
     <!-- PDF MODAL -->
     <div class="modal fade" id="client_modal" role="dialog" aria-labelledby="client_modal" aria-hidden="true"

@@ -3,7 +3,7 @@
 <div class="container-fluid mt-3 p-4">
     <div class="row pt-3">
         <div class="col col-3 p-3">
-            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
+            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">Articles</a>
         </div>
         <div class="col col-7 p-3">
             <h3>Advanced search</h3>
@@ -226,7 +226,7 @@
                                     href="javascript:void(0);" role="button">
                                     <span class="oi oi-eye"></span> Abstract</a>
                                 <a data-bs-toggle="modal" data-bs-target="#citationModal"
-                                    class="main-link " href="javascript:void(0);"
+                                    class="main-link text-decoration-underline" href="javascript:void(0);"
                                     role="button"
                                     onclick="get_citee_info('<?=addslashes($cite)?>','<?=$res->art_id?>')">
                                     <span class='oi oi-document'></span> Cite this article</a>
