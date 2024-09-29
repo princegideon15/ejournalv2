@@ -395,13 +395,12 @@ class Client_journal_model extends CI_Model {
 		$this->db->select('a.*, j.jor_volume, j.jor_issue');
 		$this->db->from($this->articles.' a');
 		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
+		$this->db->where('jor_volume !=', 'Adv. Publication');
 		$this->db->order_by('a.date_created', 'desc');
 		$this->db->limit(5);
 
 		$query = $this->db->get();
 		return $query->result();
-
-		// echo $this->db->last_query();
 	}
 
 	/**
@@ -508,15 +507,18 @@ class Client_journal_model extends CI_Model {
 
 		return array('authors' => $result, 'coas' => $result2);
 	}
-	public function click_keyword($key) {
-		$string = explode(', ', $key);
-		foreach ($string as $i => $key) {
-			if ($key == strip_tags($key)) {
-				echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/search/3/' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
-			} else {
-				echo $key . '; ';
-			}
-		}
+
+	public function advancePublication() {
+
+		$this->db->select('a.*, j.jor_volume, j.jor_issue');
+		$this->db->from($this->articles.' a');
+		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
+		$this->db->where('jor_volume', 'Adv. Publication');
+		$this->db->order_by('a.date_created', 'desc');
+		$this->db->limit(5);
+
+		$query = $this->db->get();
+		return $query->result();
 	}
 
 	public function save_citation($post) {

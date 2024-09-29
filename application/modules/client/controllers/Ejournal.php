@@ -83,6 +83,7 @@ class Ejournal extends EJ_Controller {
 		$data['client_count'] = $this->Client_journal_model->all_client();
 		$data['hits_count'] = $this->Client_journal_model->all_hits();
 		$data['latest'] = $this->Client_journal_model->latest_journal();
+		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
 		$data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
@@ -850,7 +851,6 @@ class Ejournal extends EJ_Controller {
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
-		// $data['filter'] = $filter;
 
 		$data['country'] = $this->Library_model->get_library('tblcountries');
 		$data['main_title'] = "eJournal";

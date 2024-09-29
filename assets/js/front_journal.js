@@ -1018,7 +1018,7 @@ function author_details(id, name)
                       });
 
 
-                    $('#acoa_details_modal .modal-footer').html('<a href="' + base_url + "client/ejournal/articles/"+ name.replace(/ /g, '+') + '" type="button" class="btn btn-link text-primary font-weight-bold w-100">Show related articles</a>');
+                    $('#acoa_details_modal .modal-footer').html('<a href="' + base_url + "client/ejournal/articles?search="+ name.replace(/ /g, '+') + '" type="button" class="btn btn-link text-primary font-weight-bold w-100">Show related articles</a>');
                     // $('#acoa_details_modal p').html('<hr><p>Related Articles</p><ol class="pl-0 ml-3">'+list+'</ol');
                     }
         });
@@ -1032,7 +1032,7 @@ function author_details(id, name)
  *
  * @return  {void}        
  */
-function author_details_search(id, name)
+function author_details_search(id, name, url_segment)
 {
   $('#acoa_details_modal_search').modal('toggle');
   $('#acoa_details_modal_search .modal-title').text(name);
@@ -1093,8 +1093,14 @@ function author_details_search(id, name)
                       });
                     // }
 
+                    if(url_segment == 'advanced'){
+                      url_segment += '?search_filter=1&search=';
+                    }else{
+                      url_segment += '?search=';
+                    }
 
-                    $('#acoa_details_modal_search .modal-footer').html('<a href="' + base_url + "client/ejournal/articles/"+ name.replace(/ /g, '+') + '" type="button" class="btn btn-link text-primary font-weight-bold w-100">Show related articles</a>');
+
+                    $('#acoa_details_modal_search .modal-footer').html('<a href="' + base_url + "client/ejournal/" + url_segment + name.replace(/ /g, '+') + '" type="button" class="btn btn-link text-primary font-weight-bold w-100">Show related articles</a>');
                     // $('#acoa_details_modal p').html('<hr><p>Related Articles</p><ol class="pl-0 ml-3">'+list+'</ol');
                     }
         });

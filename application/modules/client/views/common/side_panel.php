@@ -13,8 +13,8 @@
                     <h6 class="card-title fw-bold mt-3 mb-0">Citation Impact <?php echo date('Y');?></h6>
                     <h6 class="card-title fw-bold mt-2 mb-0">Speed <?php echo date('Y');?></h6>
                     <h6 class="card-title fw-bold mt-2 mb-0">Usage <?php echo date('Y');?></h6>
-                    <div>Downloads: <?php echo $downloads;?></div>
-                    <div>Altmetric mentions: <?php echo $citations;?></div>
+                    <div>Downloads: <?=number_format($downloads, 0, '', ',')?></div>
+                    <div>Altmetric mentions: <?=number_format($citations, 0, '', ',')?></div>
 
                 </div>
             </div>

@@ -83,10 +83,10 @@ $('.right-inner-addon').hide();
                         $c = 1;
                         foreach($results as $res):
 
-                        $title = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_title);
-                        $author = preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_author);
-                        $affiliation = preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation);
-                        $keywords = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords);
+                        $title = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_title) : $res->art_title;
+                        $author = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_author) : $res->art_author;
+                        $affiliation = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation) : $res->art_affiliation;
+                        $keywords = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords) : $res->art_keywords;
                         $file =  $res->art_abstract_file;
                         $get_cover = $this->Search_model->get_cover($res->art_jor_id);
                         $cover = ($get_cover > 0) ? base_url('assets/uploads/cover/'.$get_cover) : base_url('assets/images/unavailable.jpg');
@@ -136,17 +136,30 @@ $('.right-inner-addon').hide();
                     </div>
                     <div class="flex-grow-1 ms-2">
                         <p class="mt-0 text-dark mb-0"><?php ; echo $title;?></p>
-                        <?php $i = 0; foreach($coa_arr as $cr):?>
-                        <?php $cc = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $cr);?>
-                        <a href="javascript:void(0);" class="main-link fs-6"
-                            onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>')"><?=$cc;?></a>
-                            
-                        <?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted ">|</span>'; ?>
-                        <?php $i++; ?>
-                        <?php endforeach;?>
-                        <div class="text-muted mt-3 small">Keywords:
-                            <?php $this->Client_journal_model->click_keyword($keywords);?></div>
 
+                        <div class="mt-2">
+                            <?php $i = 0; foreach($coa_arr as $cr):?>
+                            <?php $cc = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $cr) : $cr ;?>
+                            <a href="javascript:void(0);" class="text-muted fs-6"
+                                onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>','articles')"><?=$cc;?></a>
+                                
+                            <?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted ">|</span>'; ?>
+                            <?php $i++; ?>
+                            <?php endforeach;?>
+                        </div>
+                        
+                        <div class="text-muted mt-3 small">Keywords:
+                            <?php
+                            $string = explode(', ', $keywords);
+                            foreach ($string as $i => $key) {
+                                if ($key == strip_tags($key)) {
+                                    echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
+                                } else {
+                                    echo $key . '; ';
+                                }
+                            }
+                            ?>
+                        </div>
                         
                         <div class="text-muted mt-1 small">Pages: <?=$pages?></div>
                         
@@ -159,16 +172,16 @@ $('.right-inner-addon').hide();
                                 <!-- <span class="badge bg-light text-dark" data-toggle="tooltip"
                                     data-placement="top" title="File Size">
                                     <span class="oi oi-paperclip"></span> <?=$fsize?></span> -->
-                                <span class="badge bg-light text-dark" data-toggle="tooltip"
-                                    data-placement="top" title="Full Text PDF Requests"><span
-                                        class="oi oi-data-transfer-download"></span>
-                                    <?=$pdf?></span>
-                                <span class="badge bg-light text-dark" data-toggle="tooltip"
-                                    data-placement="top" title="Abstract Hits"><span
-                                        class="oi oi-eye"></span> <?=$abs?></span>
-                                <span class="badge bg-light text-dark" data-toggle="tooltip"
-                                    data-placement="top" title="Cited"><span class="oi oi-document"></span>
-                                    <?=$citations?></span>
+                               
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Full Text Downloads"><i class="oi oi-data-transfer-download"></i>
+                                    <?=number_format($pdf, 0, '', ',')?></span>
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Abstract Hits"><i class="oi oi-eye"></i>
+                                    <?=number_format($abs, 0, '', ',')?></span>
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Cited"><i class="oi oi-document"></i>
+                                    <?=number_format($citations, 0, '', ',')?></span>
                             </div>
                             <div class="d-flex gap-3">
                                 <a data-bs-toggle="modal" data-bs-target="#client_modal"
@@ -189,11 +202,11 @@ $('.right-inner-addon').hide();
                     </div>
                 </div>
 
+                <hr>
                 <?php endforeach; ?>
                 
                 <?php if(count($results) > 0){ ?>
-                    <hr class="pb-2">
-                    <div class="row">
+                    <div class="row mt-2">
                         <div class="col col-6 d-flex align-items-start">
                             <?php if($search){?>
                                 <div class="h6">

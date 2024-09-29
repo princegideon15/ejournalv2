@@ -17,14 +17,15 @@ gtag('config', 'G-VDLLX3HKBL');
         <div class="col col-lg-5 p-3">
             <div class="d-flex flex-column mb-3 w-75">
                 <?=form_open('client/ejournal/articles', ['method' => 'get', 'id' => 'searchForm'])?>
-                    <div class="input-group">
-                            <input type="text" class="form-control form-control-lg custom-input-search" id="searchArticlesInput" name="search"
-                                placeholder="Search articles">
-                            <button class="btn custom-button-search" type="submit" id="searchArticlesBtn"><i
-                                    class="oi oi-magnifying-glass"></i></button>
-                    </div>
-                    <?=form_close()?>
-                <p class="text-end fst-italic pr-3 me-3"><a class="main-link" href="<?=base_url('/client/ejournal/advanced')?>">Advanced search</a></p>
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-lg custom-input-search" id="searchArticlesInput"
+                        name="search" placeholder="Search articles">
+                    <button class="btn custom-button-search" type="submit" id="searchArticlesBtn"><i
+                            class="oi oi-magnifying-glass"></i></button>
+                </div>
+                <?=form_close()?>
+                <p class="text-end fst-italic pr-3 me-3"><a class="main-link"
+                        href="<?=base_url('/client/ejournal/advanced')?>">Advanced search</a></p>
             </div>
 
             <h3>Aim and Scope</h3>
@@ -44,8 +45,8 @@ gtag('config', 'G-VDLLX3HKBL');
                 <div class="accordion-item border-0 mb-2">
                     <a href="javascript:void(0);" class="main-link text-decoration-underline" data-bs-toggle="collapse"
                         data-bs-target="#collapse<?=$row->id;?>"><?=$row->title;?></a>
-                    <div id="collapse<?=$row->id;?>" class="accordion-collapse collapse"
-                        aria-labelledby="headingOne" data-bs-parent="#accordionDivisions">
+                    <div id="collapse<?=$row->id;?>" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionDivisions">
                         <div class="accordion-body">
                             <?=$row->content;?>
                         </div>
@@ -74,7 +75,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
-				<!-- Recent -->
+                <!-- Recent -->
                 <div class="tab-pane fade show active" id="recent-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                     tabindex="0">
 
@@ -121,20 +122,23 @@ gtag('config', 'G-VDLLX3HKBL');
                         <!-- <img class="mr-2 img-thumbnail" height="20%" width="20%"
 										src="<?=base_url('assets/uploads/cover/' . $row['cover'] . '')?>"> -->
                         <div class="media-body">
-                            <p class="mt-0">
-                                <a href="javascript:void(0);" class="text-dark h6"
-                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a>
-                                <br />
-
-
-                                <?php $i = 0; foreach ($coa_arr as $c): ?>
+                            <div class="mt-0">
                                 <a href="javascript:void(0);" class="main-link h6"
+                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a>
+                            </div>
+
+                            <div class="mt-2">
+                                <?php $i = 0; foreach ($coa_arr as $c): ?>
+                                <a href="javascript:void(0);" class="text-muted h6"
                                     onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a>
                                 <?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'?>
                                 <?php $i++?>
                                 <?php endforeach;?>
 
-                            <div>
+                            </div>
+
+
+                            <div class="mt-2">
                                 <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Full Text Downloads"><i class="oi oi-data-transfer-download"></i>
                                     <?=$row['count']?></span>
@@ -145,22 +149,21 @@ gtag('config', 'G-VDLLX3HKBL');
                                     <?=$row['citations']?></span>
 
                             </div>
-
-                            </p>
                         </div>
                     </div>
+                    <hr>
                     <?php endforeach;?>
 
-					<div class="d-flex align-items-center justify-content-end">
-                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><i class="oi oi-chevron-right text-dark ms-1"
-                            style="font-size: .9rem"></i>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><i
+                            class="oi oi-chevron-right text-dark ms-1" style="font-size: .9rem"></i>
                     </div>
                 </div>
-				<!-- Most Accessed -->
+                <!-- Most Accessed -->
                 <div class="tab-pane fade" id="most-access-tab-pane" role="tabpanel" aria-labelledby="most-access-tab"
                     tabindex="0">
-					<?php if ($client_count != '' && $hits_count != '') { ?>
-					<?php $c = 0;foreach ($popular as $row):
+                    <?php if ($client_count != '' && $hits_count != '') { ?>
+                    <?php $c = 0;foreach ($popular as $row):
 					$c++;
 					$pop[$c]['title'] = $row->art_title;
 					$pop[$c]['id'] = $row->art_id;
@@ -196,57 +199,137 @@ gtag('config', 'G-VDLLX3HKBL');
 
 				endforeach;?>
 
-					<?php $c = 1;foreach ($pop as $row): ?>
-					<?php $coa_arr = (explode(",& ", $row['coa']));?>
-					<div class="media mb-3 mt-3">
-						<!-- <img class="mr-2 img-thumbnail" height="20%" width="20%"
+                    <?php $c = 1;foreach ($pop as $row): ?>
+                    <?php $coa_arr = (explode(",& ", $row['coa']));?>
+                    <div class="media mb-3 mt-3">
+                        <!-- <img class="mr-2 img-thumbnail" height="20%" width="20%"
 							src="<?=base_url('assets/uploads/cover/' . $row['cover'] . '')?>"> -->
-						<div class="media-body">
-							<p class="mt-0">
-								<a href="javascript:void(0);" class="text-dark h6 "
-									onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Most Accessed')"><?=$row['title']?></a>
-								
-								<br />
-								<?php $i = 0; foreach ($coa_arr as $c): ?>
-									<a href="javascript:void(0);" class="main-link fs-6"
-									onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a> 
-									<?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'; ?>
-									<?php $i++; ?>
-								<?php endforeach;?>
-							
+                        <div class="media-body">
+                            <div class="mt-0">
+                                <a href="javascript:void(0);" class="main-link h6"
+                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Most Accessed')"><?=$row['title']?></a>
+                            </div>
 
-								<br />
-								<div>
-									<span class="badge bg-light text-dark" data-toggle="tooltip"
-										data-placement="top" title="Full Text Downloads"><span
-											class="oi oi-data-transfer-download"></span>
-										<?=$row['count']?></span>
-									<span class="badge bg-light text-dark" data-toggle="tooltip"
-										data-placement="top" title="Abstract Hits"><span
-											class="oi oi-eye"></span> <?=$row['abs']?></span>
-									<span class="badge bg-light text-dark" data-toggle="tooltip"
-										data-placement="top" title="Cited"><span
-											class="oi oi-document"></span>
-										<?=$row['citations']?></span>
 
-								</div>
+                            <div class="mt-2">
+                                <?php $i = 0; foreach ($coa_arr as $c): ?>
+                                <a href="javascript:void(0);" class="text-muted fs-6"
+                                    onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a>
+                                <?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'; ?>
+                                <?php $i++; ?>
+                                <?php endforeach;?>
+                            </div>
 
-							</p>
-						</div>
-					</div>
-					<?php endforeach;}?>
+                            <div class="mt-2">
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Full Text Downloads"><span class="oi oi-data-transfer-download"></span>
+                                    <?=$row['count']?></span>
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Abstract Hits"><span class="oi oi-eye"></span> <?=$row['abs']?></span>
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Cited"><span class="oi oi-document"></span>
+                                    <?=$row['citations']?></span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <?php endforeach;}?>
 
                     <div class="d-flex align-items-center justify-content-end">
-                        <a href="<?=base_url('/client/ejournal/articles');?>" class="text-dark">View all articles</a><i class="oi oi-chevron-right text-dark ms-1"
-                            style="font-size: .9rem"></i>
+                        <a href="<?=base_url('/client/ejournal/articles');?>" class="text-dark">View all articles</a><i
+                            class="oi oi-chevron-right text-dark ms-1" style="font-size: .9rem"></i>
                     </div>
-				</div>
+                </div>
                 <div class="tab-pane fade" id="advance-publication-tab-pane" role="tabpanel"
-                    aria-labelledby="advance-publication-tab" tabindex="0">...</div>
+                    aria-labelledby="advance-publication-tab" tabindex="0">
+
+
+                    <?php $c = 0;foreach ($adv_publication as $row):
+
+                    $c++;
+
+                    $lat[$c]['title'] = $row->art_title;
+                    $lat[$c]['id'] = $row->art_id;
+                    $lat[$c]['id_jor'] = $row->art_jor_id;
+                    $lat[$c]['file'] = $row->art_abstract_file;
+                    $lat[$c]['keyw'] = $row->art_keywords;
+                    $lat[$c]['coa'] = $this->Client_journal_model->get_author_coauthors($row->art_id);
+                    $issue = (
+                        ($row->jor_issue == 5) ? 'Special Issue No. 1' :
+                        (($row->jor_issue == 6) ? 'Special Issue No. 2' :
+                            (($row->jor_issue == 7) ? 'Special Issue No. 3' :
+                                (($row->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $row->jor_issue)))
+                    );
+                    $lat[$c]['cite'] =  $this->Client_journal_model->get_citation($row->art_id) . '('. $row->art_year .'). ' . ucfirst(strtolower($row->art_title)) . '. NRCP Research Journal, Volume ' . $row->jor_volume . ', ' . $issue . ', ' . $row->art_page;
+
+                    $server_dir = '/var/www/html/ejournal/assets/uploads/pdf/';
+                    $get_file = filesize($server_dir . $row->art_full_text_pdf);
+
+                    // $get_file = filesize($_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/'.$row->art_full_text_pdf);
+
+                    if ($get_file >= 1048576) {
+                        $lat[$c]['fsize'] = round($get_file / 1024 / 1024, 1) . ' MB';
+                    } elseif ($get_file >= 1024) {
+                        $lat[$c]['fsize'] = round($get_file / 1024, 1) . ' KB';
+                    } else {
+                        $lat[$c]['fsize'] = round($get_file, 1) . ' bytes';
+                    }
+
+                    $lat[$c]['citations'] = $this->Client_journal_model->count_citation($row->art_id);
+                    $lat[$c]['count'] = $this->Client_journal_model->count_pdf($row->art_id);
+                    $lat[$c]['abs'] = $this->Client_journal_model->count_abstract($row->art_id);
+                    $lat[$c]['cover'] = $this->Client_journal_model->get_cover($row->art_jor_id);
+
+                    endforeach;?>
+
+                    <?php $c = 1;foreach ($lat as $row): ?>
+                    <?php $coa_arr = (explode(",& ", $row['coa']));?>
+                    <div class="media mb-3 mt-3">
+                        <!-- <img class="mr-2 img-thumbnail" height="20%" width="20%"
+                        src="<?=base_url('assets/uploads/cover/' . $row['cover'] . '')?>"> -->
+                        <div class="media-body">
+                            <div class="mt-0">
+                                <a href="javascript:void(0);" class="main-link h6"
+                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a>
+                            </div>
+
+                            <div class="mt-2">
+                                <?php $i = 0; foreach ($coa_arr as $c): ?>
+                                <a href="javascript:void(0);" class="text-muted h6"
+                                    onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a>
+                                <?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'?>
+                                <?php $i++?>
+                                <?php endforeach;?>
+
+                            </div>
+
+                            <div class="mt-2">
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Full Text Downloads"><i class="oi oi-data-transfer-download"></i>
+                                    <?=number_format($row['count'], 0, '', ',')?></span>
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Abstract Hits"><i class="oi oi-eye"></i>
+                                    <?=number_format($row['abs'], 0, '', ',')?></span>
+                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                    title="Cited"><i class="oi oi-document"></i>
+                                    <?=number_format($row['citations'], 0, '', ',')?></span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <?php endforeach;?>
+
+                    <div class="d-flex align-items-center justify-content-end">
+                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><i
+                            class="oi oi-chevron-right text-dark ms-1" style="font-size: .9rem"></i>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col col-lg-2 p-3">
-			<?php $this->load->view('common/side_panel');?>
+            <?php $this->load->view('common/side_panel');?>
         </div>
     </div>
 </div>
