@@ -74,10 +74,7 @@ class Ejournal extends EJ_Controller {
 	public function index() {
 
 		$this->session->set_userdata('verification_code', $this->token());
-		$data['main_title'] = "eJournal";
 		$data['country'] = $this->Library_model->get_library('tblcountries');
-		$data['main_content'] = "client/journal";
-		//$data['main_content'] = "client/maintenance";
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();
 		$data['client_count'] = $this->Client_journal_model->all_client();
@@ -87,10 +84,21 @@ class Ejournal extends EJ_Controller {
 		$data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/journal";
 		$this->_LoadPage('common/body', $data);
 
 		// store visitor information
 		ip_info(); 
+	}
+
+	public function login(){
+		$data['country'] = $this->Library_model->get_library('tblcountries');
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/login";
+		$this->_LoadPage('common/body', $data);
 	}
 
 	/**

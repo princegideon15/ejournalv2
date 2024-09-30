@@ -37,7 +37,7 @@
           <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Login</a>
+          <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/login');?>" target="_blank">Login</a>
         </li>
       </ul>
        

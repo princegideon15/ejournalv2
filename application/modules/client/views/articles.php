@@ -7,7 +7,6 @@
             <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
             <hr>
             <h6 class="fw-bold text-decoration-underline fs-5 text-dark">Other Volumes</h6>
-            <hr>
             <ul class="list-unstyled">
                 <?php foreach($volumes as $key => $row):?>
                     <li><span class="fw-bold text-muted text-decoration-underlinex"><?=$key?></span>
