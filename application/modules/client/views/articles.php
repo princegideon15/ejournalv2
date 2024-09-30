@@ -4,10 +4,29 @@
         <!-- SIDE NAVIGATION -->
         
         <div class="col col-3 p-3">
-			<ul class="list-unstyled">
-				<li><a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">Articles</a></li>
-				<!-- <li><a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">Volumes</a></li> -->
-			</ul>
+            <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
+            <hr>
+            <h6 class="fw-bold text-decoration-underline fs-5 text-dark">Other Volumes</h6>
+            <hr>
+            <ul class="list-unstyled">
+                <?php foreach($volumes as $key => $row):?>
+                    <li><span class="fw-bold text-muted text-decoration-underlinex"><?=$key?></span>
+                    <ul class="list-unstyled mb-3">
+                        <?php foreach($row as $val):?>
+                            <?php   $issue = (
+                                        ($val[0] == 5) ? 'Special Issue No. 1' :
+                                        (($val[0] == 6) ? 'Special Issue No. 2' :
+                                            (($val[0] == 7) ? 'Special Issue No. 3' :
+                                                (($val[0] == 8) ? 'Special Issue No. 4' : 'Issue ' . $val[0])))
+                                    );
+                            ?>
+                        <li><a href="<?=base_url('/client/ejournal/get_articles/'.$key.'/'.$val[1])?>" class="main-link"><?=$issue?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                
+                    </li>
+                <?php endforeach; ?>
+            </ul>
             
             
         </div>
@@ -367,8 +386,9 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                 </div>
                 <div class="modal-body">
                 </div>
-                <div class="modal-footer">
-                </div>
+				<div class="modal-footer">
+					<a class="btn main-link font-weight-bold w-100 me-1 d-flex align-items-center justify-content-center">Show related articles<i class="oi oi-chevron-right ms-1" style="font-size: .7rem"></i></a>
+				</div>
             </div>
         </div>
     </div>

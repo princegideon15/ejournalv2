@@ -1018,7 +1018,8 @@ function author_details(id, name)
                       });
 
 
-                    $('#acoa_details_modal .modal-footer').html('<a href="' + base_url + "client/ejournal/articles?search="+ name.replace(/ /g, '+') + '" type="button" class="btn btn-link text-primary font-weight-bold w-100">Show related articles</a>');
+                    $('#acoa_details_modal .modal-footer .btn').attr('href', base_url + "client/ejournal/articles?search="+ name.replace(/ /g, '+'));
+                    // $('#acoa_details_modal .modal-footer .btn').html('<a href="' +  + '" type="button" class="btn main-link font-weight-bold w-100 me-1 d-flex align-items-center">Show related articles<i class="oi oi-chevron-right ms-1" style="font-size: .7rem"></i></a>');
                     // $('#acoa_details_modal p').html('<hr><p>Related Articles</p><ol class="pl-0 ml-3">'+list+'</ol');
                     }
         });
@@ -1100,7 +1101,8 @@ function author_details_search(id, name, url_segment)
                     }
 
 
-                    $('#acoa_details_modal_search .modal-footer').html('<a href="' + base_url + "client/ejournal/" + url_segment + name.replace(/ /g, '+') + '" type="button" class="btn btn-link text-primary font-weight-bold w-100">Show related articles</a>');
+                    $('#acoa_details_modal_search .modal-footer .btn').attr('href', base_url + "client/ejournal/" + url_segment + name.replace(/ /g, '+'));
+                    // $('#acoa_details_modal_search .modal-footer').html('<a href="' + base_url + "client/ejournal/" + url_segment + name.replace(/ /g, '+') + '" type="button" class="btn main-link fw-bold w-100 me-1">Show related articles<i class="oi oi-chevron-right text-dark ms-1" style="font-size: .9rem"></i></a>');
                     // $('#acoa_details_modal p').html('<hr><p>Related Articles</p><ol class="pl-0 ml-3">'+list+'</ol');
                     }
         });

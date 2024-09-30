@@ -522,6 +522,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
             <div class="modal-body">
             </div>
             <div class="modal-footer">
+                <a class="btn main-link font-weight-bold w-100 me-1 d-flex align-items-center justify-content-center">Show related articles<i class="oi oi-chevron-right ms-1" style="font-size: .7rem"></i></a>
             </div>
         </div>
     </div>

@@ -21,7 +21,7 @@ $('.right-inner-addon').hide();
     </div> -->
     <div class="row pt-3">
         <div class="col col-3 p-3">
-            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">Articles</a>
+            <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
         </div>
         <div class="col col-7 p-3">
             <h3>Articles</h3>
@@ -545,6 +545,7 @@ $('.right-inner-addon').hide();
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
+                    <a class="btn main-link font-weight-bold w-100 me-1 d-flex align-items-center justify-content-center">Show related articles<i class="oi oi-chevron-right ms-1" style="font-size: .7rem"></i></a>
                 </div>
             </div>
         </div>

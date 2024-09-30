@@ -144,6 +144,25 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	public function get_articles($vol,$id) {
+
+		//get volums for side menu
+		$volumes = [];
+		$issues = [];
+
+		$journals = $this->Client_journal_model->get_journals();
+
+		foreach($journals as $row){
+			$issues = $this->Client_journal_model->get_issues($row->jor_volume);
+			$jor_issues = [];
+			foreach ($issues as $issue) {
+				$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
+			}
+
+			$volumes[$row->jor_volume] = $jor_issues;
+		}
+
+
+		$data['volumes'] = $volumes;
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/articles";
 		//$data['main_content'] = "client/maintenance";
@@ -206,6 +225,36 @@ class Ejournal extends EJ_Controller {
 	public function get_journal($id) {
 		$output = $this->Client_journal_model->get_journal($id);
 		echo json_encode($output);
+	}
+
+	public function volumes(){
+		
+		$volumes = [];
+		$issues = [];
+
+		$journals = $this->Client_journal_model->get_journals();
+
+		foreach($journals as $row){
+			$issues = $this->Client_journal_model->get_issues($row->jor_volume);
+			$jor_issues = [];
+			foreach ($issues as $issue) {
+				$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
+			} 
+
+			$volumes[$row->jor_volume] = $jor_issues;
+		}
+
+		//data to display
+		$data['volumes'] = $volumes;
+		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+
+		$data['country'] = $this->Library_model->get_library('tblcountries');
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/volumes";
+		$this->_LoadPage('common/body', $data);
+
 	}
 
 	/**
