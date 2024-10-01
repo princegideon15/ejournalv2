@@ -33,6 +33,8 @@ class Ejournal extends EJ_Controller {
 		$objMail = $this->my_phpmailer->load();
 		$this->load->helper('visitors_helper');
 		$this->load->helper('string');
+        $this->load->helper('form');
+        $this->load->library('session'); 
 		$this->load->library('form_validation');
 		error_reporting(0);
 	}
@@ -91,6 +93,8 @@ class Ejournal extends EJ_Controller {
 		// store visitor information
 		ip_info(); 
 	}
+
+
 
 	public function login(){
 		$data['country'] = $this->Library_model->get_library('tblcountries');

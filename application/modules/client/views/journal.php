@@ -449,7 +449,7 @@ gtag('config', 'G-VDLLX3HKBL');
                             <!-- foreach of country -->
                             <?php foreach ($country as $c): ?>
                             <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
+                            echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                             <?php endforeach;?>
                             <!-- /.end of foreach-->
                         </select>
