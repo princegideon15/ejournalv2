@@ -12,6 +12,9 @@ gtag('config', 'G-VDLLX3HKBL');
 </script>
 
 <?php error_reporting(0);?>
+
+<?php $logged_in = $this->session->userdata('user_id'); ?>
+
 <div class="container-fluid mt-3 p-4">
     <div class="row">
         <div class="col col-lg-5 p-3">
@@ -348,8 +351,10 @@ gtag('config', 'G-VDLLX3HKBL');
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="download_pdf"><span
-                        class="oi oi-data-transfer-download"></span> Request Full Text PDF</button>
+                <button type="button" class="btn main-btn " id="download_pdf">Request Full Text PDF <span
+                class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></button>
+                <button type="button" class="btn main-btn " id="download_pdf"><span
+                        class="oi oi-locks"></span> Login to Get Access</button>
             </div>
         </div>
     </div>
@@ -383,8 +388,14 @@ gtag('config', 'G-VDLLX3HKBL');
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="top_download_pdf"><span
-                        class="oi oi-data-transfer-download"></span> Request Full Text PDF</button>
+
+                <?php if ($logged_in) {
+                    echo '<button type="button" class="btn main-btn" id="top_download_pdf">
+                    Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></button>';
+                } else {
+                    echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
+                    Login to Get Access <span class="oi oi-account-login ms-2"></span></a>';
+                }?>
             </div>
         </div>
     </div>

@@ -51,14 +51,13 @@ class Login extends EJ_Controller {
 			if ($validateUser) {
 
 				if (password_verify($password, $validateUser[0]->password)) {
-					//logged in
 					// // Set session variables
-					// $this->session->set_userdata('user_id', $validateUser['id']);
-					// $this->session->set_userdata('email', $validateUser['email']);
+					$this->session->set_userdata('user_id', $validateUser[0]->id);
+					$this->session->set_userdata('email',  $validateUser[0]->email);
 		
 					// Redirect to dashboard or other protected page
 					// redirect('dashboard');
-					// redirect('login');
+					redirect('/');
 				}else{
 					echo 'Invalid email or password.';exit;
 				}
@@ -69,5 +68,13 @@ class Login extends EJ_Controller {
 				// redirect('login');
 			}
 		}
+	}
+
+	public function logout(){
+        $this->session->unset_userdata('user_id');
+        $this->session->unset_userdata('email');
+        $this->session->sess_destroy();
+		redirect('client/ejournal/login');
+
 	}
 }

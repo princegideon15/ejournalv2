@@ -1,4 +1,6 @@
 
+<?php $logged_in = $this->session->userdata('user_id'); ?>
+
 <nav class="navbar navbar-expand-lg fixed-topx custom-border">
   <div class="container-fluid p-0">
     
@@ -36,9 +38,22 @@
         <li class="nav-item">
           <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/login');?>" target="_blank">Login</a>
-        </li>
+        <?php if($logged_in) {
+          echo '<li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    '.$this->session->userdata('email').'
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">My Profile</a></li>
+                    <li><a class="dropdown-item" href="'.base_url('/client/login/logout').'">Logout</a></li>
+                  </ul>
+                </li>';
+        }else{
+          echo '<li class="nav-item">
+                  <a class="nav-link text-dark" href="'.base_url('/client/ejournal/login').'" target="_blank">Login</a>
+                </li>';
+        } ?>
+        
       </ul>
        
       <span class="navbar-text">

@@ -1,5 +1,7 @@
 <?php error_reporting(0);?>
 
+<?php $logged_in = $this->session->userdata('user_id'); ?>
+
 <div class="container-fluid mt-3 p-4">
     <div class="row pt-3">
         <div class="col col-3 p-3">
@@ -199,7 +201,8 @@
                         
                         <div class="text-muted mt-1 small"><?=$res->art_year?></div>
                         
-                        <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/get_articles/'.$vol.'/'.$jor_id.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div>
+                        <!-- <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/get_articles/'.$vol.'/'.$jor_id.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div> -->
+                        <div class="text-muted mt-1 small">Volume <?=$res->jor_volume . ' ' . $issue?></div>
                 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class='mb-2 mt-2'>
@@ -216,21 +219,28 @@
                                     title="Cited"><i class="oi oi-document"></i>
                                     <?=number_format($citations, 0, '', ',')?></span>
                             </div>
-                            <div class="d-flex gap-3">
-                                <a data-bs-toggle="modal" data-bs-target="#client_modal"
-                                    class="main-link text-decoration-underline" href="javascript:void(0);"
-                                    role="button" onclick="get_download_id(<?=$res->art_id?>)">
-                                    <span class="oi oi-file"></span> Download</a>
-                                <a class="main-link text-decoration-underline"
-                                    onclick="get_download_id(<?=$res->art_id?>,'hits','<?=$file?>')"
+
+                            
+                            <?php if($logged_in){
+                               echo '<div class="d-flex gap-1">
+                                <a  data-bs-toggle="modal" data-bs-target="#client_modal"
+                                    class="main-btn btn btn-sm" href="javascript:void(0);"
+                                    role="button" onclick="get_download_id('.$res->art_id.')">
+                                    Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                                <a  class="main-btn btn btn-sm "
+                                    onclick="get_download_id(\''.$res->art_id.'\',\'hits\',\''.$file.'\')"
                                     href="javascript:void(0);" role="button">
-                                    <span class="oi oi-eye"></span> Abstract</a>
-                                <a data-bs-toggle="modal" data-bs-target="#citationModal"
-                                    class="main-link text-decoration-underline" href="javascript:void(0);"
+                                    Abstract <span class="oi oi-eye ms-1"></span></a>
+                                <a  data-bs-toggle="modal" data-bs-target="#citationModal"
+                                    class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"
-                                    onclick="get_citee_info('<?=addslashes($cite)?>','<?=$res->art_id?>')">
-                                    <span class='oi oi-document'></span> Cite this article</a>
-                            </div>
+                                    onclick="get_citee_info(\''.addslashes($cite).'\','.$res->art_id.')">
+                                    Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
+                                </div>';
+                            }else{
+                                echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
+                                Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a>';
+                            }?>
                         </div>
                     </div>
                 </div>
