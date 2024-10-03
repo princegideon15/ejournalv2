@@ -36,14 +36,24 @@ gtag('config', 'G-VDLLX3HKBL');
                     <!-- Login -->
                     <div class="tab-pane fade show active p-3" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                         tabindex="0">
+                        <?php if ($this->session->flashdata('error')) { ?>
+                            <div class="alert alert-danger d-flex align-items-center">
+                                <i class="oi oi-warning"></i><?php echo $this->session->flashdata('error'); ?>
+                            </div>
+                        <?php } ?>
+
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm'])?>
                             <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="name@example.com">
+                            <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['email']?></span>
+
                             </div>
                             <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                            <input type="password" class="form-control <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
+                            <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['password']?></span>
+
                             </div>
                             <button type="submit" class="btn main-btn w-50 mt-3">Login</button>
                         <?=form_close()?>

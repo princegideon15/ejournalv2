@@ -37,9 +37,20 @@ class Login extends EJ_Controller {
     public function authenticate(){
 
 		$this->form_validation->set_rules('email', 'Email', 'required|trim');
-		$this->form_validation->set_rules('password', 'Password', 'required|trim');
+		$this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]');
 
 		if($this->form_validation->run() == FALSE){
+			$errors = [];
+
+            if (form_error('email')) {
+                $errors['email'] = strip_tags(form_error('email'));
+            }
+            if (form_error('password')) {
+                $errors['password'] = strip_tags(form_error('password'));
+            }
+
+            // Set flashdata to pass validation errors and form data to the view
+            $this->session->set_flashdata('validation_errors', $errors);
 			redirect('client/ejournal/login');
 		}else{
 			
@@ -51,21 +62,16 @@ class Login extends EJ_Controller {
 			if ($validateUser) {
 
 				if (password_verify($password, $validateUser[0]->password)) {
-					// // Set session variables
 					$this->session->set_userdata('user_id', $validateUser[0]->id);
 					$this->session->set_userdata('email',  $validateUser[0]->email);
-		
-					// Redirect to dashboard or other protected page
-					// redirect('dashboard');
 					redirect('/');
 				}else{
-					echo 'Invalid email or password.';exit;
+					$this->session->set_flashdata('error', 'Invalid email or password.');
+					redirect('client/ejournal/login');
 				}
 			} else {
-				echo 'Invalid email or password.';exit;
-				// Redirect back to login form with error message
 				$this->session->set_flashdata('error', 'Invalid email or password.');
-				// redirect('login');
+				redirect('client/ejournal/login');
 			}
 		}
 	}
