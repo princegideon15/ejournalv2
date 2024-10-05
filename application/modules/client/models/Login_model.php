@@ -30,10 +30,6 @@ class Login_model extends CI_Model {
 	}
 
     public function validate_user($email){
-        // MD5 hash the entered password before checking with the database
-
-
-        // Query the database for a matching username and hashed password
         $this->db->select('*');
         $this->db->from($this->users);
         $this->db->where('email', $email);
@@ -47,5 +43,20 @@ class Login_model extends CI_Model {
             return false;
         }
     }
+    public function validate_otp($otp){
+        $this->db->select('*');
+        $this->db->from($this->users);
+        $this->db->where('otp', $otp);
+        $query = $this->db->get();
+        // If a matching user is found, return the user object
+        if ($query->num_rows() == 1) {
+            return $query->result();
+            // return $this->db->last_query();
+        } else {
+            // Return false if no user found
+            return false;
+        }
+    }
+
 
 }

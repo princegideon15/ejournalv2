@@ -25,6 +25,7 @@ class Login extends EJ_Controller {
 		parent::__construct();
 
 		$this->load->model('Login_model');
+		$this->load->model('Client_journal_model');
 		$this->load->library("My_phpmailer");
 		$objMail = $this->my_phpmailer->load();
 		$this->load->helper('string');
@@ -62,9 +63,11 @@ class Login extends EJ_Controller {
 			if ($validateUser) {
 
 				if (password_verify($password, $validateUser[0]->password)) {
-					$this->session->set_userdata('user_id', $validateUser[0]->id);
-					$this->session->set_userdata('email',  $validateUser[0]->email);
-					redirect('/');
+					// $this->session->set_userdata('user_id', $validateUser[0]->id);
+					// $this->session->set_userdata('email',  $validateUser[0]->email);
+
+					//send otp to email
+					$this->send_otp($email);
 				}else{
 					$this->session->set_flashdata('error', 'Invalid email or password.');
 					redirect('client/ejournal/login');
@@ -75,6 +78,123 @@ class Login extends EJ_Controller {
 			}
 		}
 	}
+
+
+	public function verify_otp(){
+		$this->form_validation->set_rules('otp', 'OTP', 'required|trim|min_length[6]');
+
+		if($this->form_validation->run() == FALSE){
+			$errors = [];
+
+            if (form_error('otp')) {
+                $errors['otp'] = strip_tags(form_error('otp'));
+            }
+
+            // Set flashdata to pass validation errors and form data to the view
+            $this->session->set_flashdata('validation_errors', $errors);
+			$data['main_title'] = "eJournal";
+			$data['main_content'] = "client/otp";
+			$this->_LoadPage('common/body', $data);
+		}else{
+			$otp = $this->input->post('otp');;
+		
+			// Check user credentials using your authentication logic
+			$verifyOTP = $this->Login_model->validate_otp($otp);
+			if ($verifyOTP) {
+				$this->session->set_userdata('user_id', $verifyOTP[0]->id);
+				$this->session->set_userdata('email',  $verifyOTP[0]->email);
+				redirect('client/ejournal/');
+			} else {
+				$this->session->set_flashdata('otp', '
+													<div class="alert alert-danger d-flex align-items-center">
+														<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
+													</div>');
+
+				$data['main_title'] = "eJournal";
+				$data['main_content'] = "client/otp";
+				$this->_LoadPage('common/body', $data);
+			}
+		}
+	}
+
+
+	public function send_otp($email) {
+		
+		$user = $this->Client_journal_model->get_user_info($email);
+		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
+		$otp = substr(number_format(time() * rand(),0,'',''),0,6);
+
+		$this->Client_journal_model->save_otp(['otp' => $otp],['email' => $email]);
+
+		// $link_to = base_url() . 'oprs/login/reviewer';
+		// $sender = 'eJournal';
+		// $sender_email = 'nrcp.ejournal@gmail.com';
+		// $password = 'fpzskheyxltsbvtg';
+		
+		// // setup email config	
+		// $mail = new PHPMailer;
+		// $mail->isSMTP();
+		// $mail->Host = "smtp.gmail.com";
+		// // Specify main and backup server
+		// $mail->SMTPAuth = true;
+		// $mail->Port = 465;
+		// // Enable SMTP authentication
+		// $mail->Username = $sender_email;
+		// // SMTP username
+		// $mail->Password = $password;
+		// // SMTP password
+		// $mail->SMTPSecure = 'ssl';
+		// // Enable encryption, 'ssl' also accepted
+		// $mail->From = $sender_email;
+		// $mail->FromName = $sender;
+	
+		// $mail->AddAddress($email);
+
+
+		// $date = date("F j, Y") . '<br/><br/>';
+
+		// $emailBody = 'Dear <strong>'.$name.'</strong>,
+		// <br><br>
+		// Please enter this code to verify your log in.
+		// <br><br>
+		// <strong style="font-size:20px">'.$otp.'</strong>
+		// <br><br>
+		// This code will only be valid for the next <strong>5 minutes</strong>.
+		// <br><br><br>
+		// Sincerely,
+		// <br><br>
+		// NRCP Research Journal
+		// <br><br><br>
+		// <em>THIS IS AN AUTOMATED MESSAGE PLEASE DO NOT REPLY</em>';
+		
+		// // send email
+		// $mail->Subject = 'Login Verification';
+		// $mail->Body = $emailBody;
+		// $mail->IsHTML(true);
+		// $mail->smtpConnect([
+		// 	'ssl' => [
+		// 		'verify_peer' => false,
+		// 		'verify_peer_name' => false,
+		// 		'allow_self_signed' => true,
+		// 	],
+		// ]);
+
+		// if (!$mail->Send()) {
+		// 	echo '</br></br>Message could not be sent.</br>';
+		// 	echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+		// 	exit;
+		// }
+
+		$this->session->set_flashdata('otp', '
+											<div class="alert alert-primary d-flex align-items-center">
+												<i class="oi oi-circle-check me-1"></i>Your code was sent to your email.
+											</div>');
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/otp";
+		$this->_LoadPage('common/body', $data);
+	}
+
+
 
 	public function logout(){
         $this->session->unset_userdata('user_id');

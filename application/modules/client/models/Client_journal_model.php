@@ -28,6 +28,8 @@ class Client_journal_model extends CI_Model {
 	private $editorials = 'tbleditorials';
 	private $citations = 'tblcitations';
 	private $divisions = 'tbldivisions';
+	private $profile = 'tbluser_profiles';
+	private $user = 'tblusers';
 
 	public function __construct() {
 		parent::__construct();
@@ -582,7 +584,6 @@ class Client_journal_model extends CI_Model {
 	}
 
 	public function get_client_info_citation($id){
-
 		$this->db->select('cite_name, cite_affiliation, cite_country, cite_email, art_title, cite_member, cite.date_created as cite_date, art_author');
 		$this->db->from($this->citations . ' cite');
 		$this->db->join($this->articles, 'art_id = cite_art_id');
@@ -590,6 +591,20 @@ class Client_journal_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function get_user_info($email){
+		$this->db->select('p.*');
+		$this->db->from($this->profile . ' p');
+		$this->db->join($this->user . ' u', 'p.user_id = u.id');
+		$this->db->where('u.email', $email);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function save_otp($post, $where){
+		$this->db->update($this->user, $post, $where);
+	}
+
 
 }
 

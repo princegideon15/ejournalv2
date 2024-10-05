@@ -244,6 +244,7 @@ gtag('config', 'G-VDLLX3HKBL');
                             class="oi oi-chevron-right text-dark ms-1" style="font-size: .9rem"></i>
                     </div>
                 </div>
+                <!-- Advance Publication -->
                 <div class="tab-pane fade" id="advance-publication-tab-pane" role="tabpanel"
                     aria-labelledby="advance-publication-tab" tabindex="0">
 
@@ -294,7 +295,7 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <a href="javascript:void(0);" class="main-link h6"
-                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a>
+                                    onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Advance Publication')"><?=$row['title']?></a>
                             </div>
 
                             <div class="mt-2">
@@ -387,11 +388,15 @@ gtag('config', 'G-VDLLX3HKBL');
                 <embed id="top_abstract_view" WMODE="transparent" width="100%" height="700px" type="application/pdf">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+
+
+                <!-- <button type="button" class="btn main-btn" onclick="download_full_paper('<?= $logged_in ?>')">
+                    Download Full Paper <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button> -->
 
                 <?php if ($logged_in) {
                     echo '<button type="button" class="btn main-btn" id="top_download_pdf">
-                    Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></button>';
+                    Download Full Paper <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></button>';
                 } else {
                     echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
                     Login to Get Access <span class="oi oi-account-login ms-2"></span></a>';
@@ -636,9 +641,6 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
             <div class="modal-header pb-0">
                 <p><span class="modal-title font-weight-bold h3">Your Feedback</span><br />
                 </p>
-                <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button> -->
             </div>
             <div class="modal-body p-4">
 
@@ -688,73 +690,6 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
 
                     <textarea class="form-control" name="fb_suggest_ux" id="fb_suggest_ux" rows="3"
                         placeholder="Optional" maxlength="300"></textarea>
-
-                    <!-- <div class="feedback text-center">
-                            <p class="font-weight-bold h4 text-center">User Interface</p>
-                            <div class="feedback-container ui-container">
-                                <div class="feedback-item">
-                                    <label for="ui-1" data-toggle="tooltip" data-placement="bottom" title="Sad">
-                                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-1" value="1">
-                                        <span>🙁</span>
-                                    </label>
-                                </div>
-
-                                <div class="feedback-item">
-                                    <label for="ui-2" data-toggle="tooltip" data-placement="bottom" title="Neutral">
-                                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-2" value="2">
-                                        <span>😶</span>
-                                    </label>
-                                </div>
-
-                                <div class="feedback-item">
-                                    <label for="ui-3" data-toggle="tooltip" data-placement="bottom" title="Happy">
-                                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-3" value="3">
-                                        <span>🙂</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="fb_suggest_ui"></label>
-                                <textarea class="form-control" name="fb_suggest_ui" id="fb_suggest_ui" rows="3"
-                                    placeholder="Type your suggestions here"></textarea>
-                            </div>
-
-                            <hr />
-
-                            <p class="font-weight-bold h4 text-center">User Experience</p>
-                            <div class="feedback-container ux-container">
-                                <div class="feedback-item">
-                                    <label for="ux-1" data-toggle="tooltip" data-placement="bottom" title="Sad">
-                                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-1" value="1">
-                                        <span>🙁</span>
-                                    </label>
-                                </div>
-
-                                <div class="feedback-item">
-                                    <label for="ux-2" data-toggle="tooltip" data-placement="bottom" title="Nuetral">
-                                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-2" value="2">
-                                        <span>😶</span>
-                                    </label>
-                                </div>
-
-                                <div class="feedback-item">
-                                    <label for="ux-3" data-toggle="tooltip" data-placement="bottom" title="Happy">
-                                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-3" value="3">
-                                        <span>🙂</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="fb_suggest_ux"></label>
-                                <textarea class="form-control" name="fb_suggest_ux" id="fb_suggest_ux" rows="3"
-                                    placeholder="Type your suggestions here"></textarea>
-                            </div>
-
-                            
-
-                        </div> -->
                     <div class="alert-prompt my-1" id="alert_prompt"></div>
                     <div class="form-group text-right mt-3 pb-0 mb-0">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>

@@ -36,26 +36,20 @@ gtag('config', 'G-VDLLX3HKBL');
                     <!-- Login -->
                     <div class="tab-pane fade show active p-3" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                         tabindex="0">
-                        <?php if ($this->session->flashdata('error')) { ?>
-                            <div class="alert alert-danger d-flex align-items-center">
-                                <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('error'); ?>
-                            </div>
+
+    
+                        <?php if ($this->session->flashdata('otp')) { ?>
+                            <?php echo $this->session->flashdata('otp'); ?>
                         <?php } ?>
 
-                        <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm'])?>
+                        <?= $otp ?>
+                        <?=form_open('client/login/verify_otp', ['method' => 'post', 'id' => 'verifyOTPForm'])?>
                             <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="name@example.com">
-                            <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['email']?></span>
-
+                                <label for="otp" class="form-label">Enter the One-Time-Password (OTP) below</label>
+                                <input type="otp" class="form-control w-50 <?php if($this->session->flashdata('validation_errors')['otp']){ echo 'is-invalid';} ?>" id="otp" name="otp" placeholder="6-digit Code">
+                                <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['otp']?></span>
                             </div>
-                            <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
-                            <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['password']?></span>
-
-                            </div>
-                            <button type="submit" class="btn main-btn w-50 mt-1">Login</button>
+                            <button type="submit" class="btn main-btn w-50 mt-1">Verify</button>
                         <?=form_close()?>
                     </div>
                     <!-- Create Account -->

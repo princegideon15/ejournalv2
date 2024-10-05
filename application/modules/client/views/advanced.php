@@ -172,17 +172,21 @@
                         <img class="me-3" src="<?=$cover;?>" height="200" width="150" alt="Loading image">
                     </div>
                     <div class="flex-grow-1 ms-2">
-                        <p class="mt-0 text-dark mb-0"><?php ; echo $title;?></p>
-                        <?php $i = 0; foreach($coa_arr as $cr):?>
-                        <?php $cc = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $cr) : $cr ;?>
-                        <a href="javascript:void(0);" class="main-link fs-6"
-                            onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>','advanced')"><?=$cc;?></a>
-                            
-                        <?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted ">|</span>'; ?>
-                        <?php $i++; ?>
-                        <?php endforeach;?>
-                        <div class="text-muted mt-3 small">Keywords:
+                        <a href="javascript:void(0)" class="mt-0 text-dark mb-0 main-link" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?php ; echo $title;?></a>
+                        
+                        <div class="mt-2">
+                            <?php $i = 0; foreach($coa_arr as $cr):?>
+                            <?php $cc = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $cr) : $cr ;?>
+                            <!-- <a href="javascript:void(0);" class="main-link fs-6"
+                                onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>','advanced')"><?=$cc;?></a> -->
+                            <a href="<?= base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ', '+', $cr) ?>" class="text-muted"><?=$cc;?></a>
+                                
+                            <?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted ">|</span>'; ?>
+                            <?php $i++; ?>
+                            <?php endforeach;?>
+                        </div>
 
+                        <div class="text-muted mt-3 small">Keywords:
                             <?php
                             $string = explode(', ', $keywords);
                             foreach ($string as $i => $key) {
@@ -220,17 +224,17 @@
                                     <?=number_format($citations, 0, '', ',')?></span>
                             </div>
 
-                            
+                            <!-- <a  class="main-btn btn btn-sm "
+                                    onclick="get_download_id(\''.$res->art_id.'\',\'hits\',\''.$file.'\')"
+                                    href="javascript:void(0);" role="button">
+                                    Abstract <span class="oi oi-eye ms-1"></span></a> -->
+
                             <?php if($logged_in){
                                echo '<div class="d-flex gap-1">
                                 <a  data-bs-toggle="modal" data-bs-target="#client_modal"
                                     class="main-btn btn btn-sm" href="javascript:void(0);"
                                     role="button" onclick="get_download_id('.$res->art_id.')">
                                     Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
-                                <a  class="main-btn btn btn-sm "
-                                    onclick="get_download_id(\''.$res->art_id.'\',\'hits\',\''.$file.'\')"
-                                    href="javascript:void(0);" role="button">
-                                    Abstract <span class="oi oi-eye ms-1"></span></a>
                                 <a  data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"

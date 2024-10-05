@@ -20,7 +20,6 @@ var fn_clt_email; //feedback client email
 
 $(document).ready(function()
 {
-
   // $('#mbsModal').modal('toggle');
   // $('#defaultCheck2').on('click', function(){
     
@@ -778,7 +777,7 @@ function viy(id)
  *
  * @return  {void}        
  */
-function get_download_id(id, flag=null, file=null)
+function get_download_id(id, flag=null, file=null, logged_in = null)
 {
   $('#clt_journal_downloaded_id').val(id);
 
@@ -1176,7 +1175,6 @@ function verify_feedback(fb_clt_id, source){
 }
 
 function copyCitationToClipboard(element){
-
   $(element).select();
 
   var $temp = $("<input>");
@@ -1186,4 +1184,15 @@ function copyCitationToClipboard(element){
   $temp.remove();
 }
 
+function download_full_paper(logged_in){
+  if(logged_in){
+
+  }else{
+    Swal.fire({
+      title: "The Internet?",
+      text: "That thing is still around?",
+      icon: "information"
+    });
+  }
+}
 
