@@ -43,13 +43,14 @@ gtag('config', 'G-VDLLX3HKBL');
                         <?php } ?>
 
                         <?= $otp ?>
-                        <?=form_open('client/login/verify_otp', ['method' => 'post', 'id' => 'verifyOTPForm'])?>
+                        <?=form_open('client/login/verify_otp/'.$this->session->userdata('otp_ref_code') ?? '', ['method' => 'post', 'id' => 'verifyOTPForm'])?>
                             <div class="mb-3">
                                 <label for="otp" class="form-label">Enter the One-Time-Password (OTP) below</label>
                                 <input type="otp" class="form-control w-50 <?php if($this->session->flashdata('validation_errors')['otp']){ echo 'is-invalid';} ?>" id="otp" name="otp" placeholder="6-digit Code">
                                 <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['otp']?></span>
+                                <input type="hidden" name="ref" value="<?= $this->session->userdata('otp_ref_code') ?? '' ?>">
                             </div>
-                            <button type="submit" class="btn main-btn w-50 mt-1">Verify</button>
+                            <button type="submit" class="btn main-btn w-50 mt-1 <?= $disabled ?>">Verify</button>
                         <?=form_close()?>
                     </div>
                     <!-- Create Account -->

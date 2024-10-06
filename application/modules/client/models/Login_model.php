@@ -23,6 +23,7 @@ class Login_model extends CI_Model {
 	private $clients = 'tblclients';
 	private $users = 'tblusers';
 	private $sex = 'tblsex';
+	private $attempts = 'tbllogin_attempts';
 
 	public function __construct() {
 		parent::__construct();
@@ -43,10 +44,11 @@ class Login_model extends CI_Model {
             return false;
         }
     }
-    public function validate_otp($otp){
+    public function validate_otp($otp, $ref){
         $this->db->select('*');
         $this->db->from($this->users);
         $this->db->where('otp', $otp);
+        $this->db->where('otp_ref_code', $ref);
         $query = $this->db->get();
         // If a matching user is found, return the user object
         if ($query->num_rows() == 1) {
@@ -58,5 +60,37 @@ class Login_model extends CI_Model {
         }
     }
 
+    public function validate_otp_ref($ref){
+        $this->db->select('*');
+        $this->db->from($this->users);
+        $this->db->where('otp_ref_code', $ref);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function delete_otp($id){
+		$this->db->update($this->users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['id' => $id]);
+    }
+
+	public function save_otp($data, $where){
+		$this->db->update($this->users, $data, $where);
+    }
+
+    public function store_login_attempts($data){
+		$this->db->insert($this->attempts, $data);
+    }
+
+    public function get_login_attempts($id){
+        $this->db->select('*');
+        $this->db->from($this->attempts);
+        $this->db->where('user_id', $id);
+        $this->db->order_by('attempt_time', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+    public function clear_login_attempts($id){
+        $this->db->delete($this->attempts, ['user_id' => $id]);
+    }
 
 }

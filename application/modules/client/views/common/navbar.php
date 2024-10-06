@@ -50,7 +50,7 @@
                 </li>';
         }else{
           echo '<li class="nav-item">
-                  <a class="nav-link text-dark" href="'.base_url('/client/ejournal/login').'" target="_blank">Login</a>
+                  <a class="nav-link text-dark" href="'.base_url('/client/ejournal/login').'">Login</a>
                 </li>';
         } ?>
         

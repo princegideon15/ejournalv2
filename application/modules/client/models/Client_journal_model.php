@@ -600,12 +600,6 @@ class Client_journal_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->result();
 	}
-
-	public function save_otp($post, $where){
-		$this->db->update($this->user, $post, $where);
-	}
-
-
 }
 
 ?>

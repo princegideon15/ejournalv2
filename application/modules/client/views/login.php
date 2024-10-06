@@ -44,16 +44,17 @@ gtag('config', 'G-VDLLX3HKBL');
 
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm'])?>
                             <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="name@example.com">
-                            <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['email']?></span>
-
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control w-50 <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="name@example.com">
+                                <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['email']?></span>
                             </div>
                             <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
-                            <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['password']?></span>
-
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control w-50 <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
+                                <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['password']?></span>
+                            </div>
+                            <div class="mb-3 d-flex justify-content-end">
+                                <a class="main-link" href="<?php echo base_url('/client/login/forgot_password');?>">Forgot Password?</a>
                             </div>
                             <button type="submit" class="btn main-btn w-50 mt-1">Login</button>
                         <?=form_close()?>
