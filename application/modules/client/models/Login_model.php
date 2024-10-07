@@ -80,10 +80,10 @@ class Login_model extends CI_Model {
 		$this->db->insert($this->attempts, $data);
     }
 
-    public function get_login_attempts($id){
+    public function get_login_attempts($email){
         $this->db->select('*');
         $this->db->from($this->attempts);
-        $this->db->where('user_id', $id);
+        $this->db->where('user_email', $email);
         $this->db->order_by('attempt_time', 'desc');
         $query = $this->db->get();
         return $query->result();

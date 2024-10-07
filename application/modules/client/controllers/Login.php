@@ -64,29 +64,31 @@ class Login extends EJ_Controller {
 			if ($validateUser) {
 
 				if (password_verify($password, $validateUser[0]->password)) {
-					$this->Login_model->clear_login_attempts($validateUser[0]->id);
+					$this->Login_model->clear_login_attempts($validateUser[0]->email);
 					//send otp to email
 					$this->send_otp($email);
 				}else{
 
 
-					$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->id));
+					$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->email));
 
-					if($count_attempt == 2){
+					if($count_attempt == 3){
 
-						$last_attempt_time = $this->Login_model->get_login_attempts($validateUser[0]->id);
+						$last_attempt_time = $this->Login_model->get_login_attempts($validateUser[0]->email);
 						$last_attempt_time = $last_attempt_time[0]->attempt_time;
 						$current_date = date('Y-m-d H:i:s');
 						$time_remaining = $this->compareDates($last_attempt_time, $current_date);
-						$time_remaining = 31;
+
+						$this->send_email_alert($email);
 						
 						if ($time_remaining  > 30) {
-							$this->Login_model->clear_login_attempts($validateUser[0]->id);
+							$this->Login_model->clear_login_attempts($validateUser[0]->email);
 							$this->session->set_flashdata('error', 'Invalid email or password.');
-							
+			
 							//store login attempt
 							$data = [
 								'user_id' => $validateUser[0]->id,
+								'user_email' => $validateUser[0]->email,
 								'attempt_time' => date('Y-m-d H:i:s')
 							];
 
@@ -97,22 +99,65 @@ class Login extends EJ_Controller {
 						}
 
 						redirect('client/ejournal/login');
+					}else{
+						//TODO:store in system logs
+						//store login attempt
+						$data = [
+							'user_id' => $validateUser[0]->id,
+							'user_email' => $validateUser[0]->email,
+							'attempt_time' => date('Y-m-d H:i:s')
+						];
+
+						$this->Login_model->store_login_attempts($data);  
 					}
 
-
-					//store login attempt
-					$data = [
-						'user_id' => $validateUser[0]->id,
-						'attempt_time' => date('Y-m-d H:i:s')
-					];
-
-					$this->Login_model->store_login_attempts($data);  
 					$this->session->set_flashdata('error', 'Invalid email or password.');
 					redirect('client/ejournal/login'); 
 				
 
 				}
 			} else {
+
+				$count_attempt = count($this->Login_model->get_login_attempts($email));
+
+				if($count_attempt == 3){
+
+					$last_attempt_time = $this->Login_model->get_login_attempts($email);
+					$last_attempt_time = $last_attempt_time[0]->attempt_time;
+					$current_date = date('Y-m-d H:i:s');
+					$time_remaining = $this->compareDates($last_attempt_time, $current_date);
+
+					$this->send_email_alert($email);
+					
+					if ($time_remaining  > 30) {
+						$this->Login_model->clear_login_attempts($email);
+						$this->session->set_flashdata('error', 'Invalid email or password.');
+						
+						//store login attempt
+						$data = [
+							'user_email' => $email,
+							'attempt_time' => date('Y-m-d H:i:s')
+						];
+
+						$this->Login_model->store_login_attempts($data); 
+					}
+					else{
+						$this->session->set_flashdata('error', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+					}
+
+					redirect('client/ejournal/login');
+				}else{
+					//TODO:store in system logs
+					//store login attempt
+					$data = [
+						'user_email' => $email,
+						'attempt_time' => date('Y-m-d H:i:s')
+					];
+
+					$this->Login_model->store_login_attempts($data); 
+				}
+
+			
 				$this->session->set_flashdata('error', 'Invalid email or password.');
 				redirect('client/ejournal/login');
 			}
@@ -206,6 +251,89 @@ class Login extends EJ_Controller {
 											</div>');
 		$this->session->set_userdata('otp_ref_code', $ref_code);
 		redirect($link);
+	}
+	
+	public function send_email_alert($email) {
+		
+		$user = $this->Client_journal_model->get_user_info($email);
+
+		if($user){
+			$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
+		}else{
+			$attempts = $this->Login_model->get_login_attempts($email);
+			$name = '(Unregistered/Invalid Account)';
+		}
+
+		$attempts = $this->Login_model->get_login_attempts($email);
+		$last_attempt_time = $attempts[0]->attempt_time;
+
+
+
+		$sender = 'eJournal';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+		
+		// setup email config	
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+	
+		// $mail->AddAddress('nrcp.ejournal@gmail.com');
+		$mail->AddAddress('gerard_balde@yahoo.com');
+
+
+		$date = date("F j, Y") . '<br/><br/>';
+
+		$emailBody = 'Dear Admin,
+		<br><br>
+		There have been multiple unsuccessful login attempts/
+		<br><br>
+		<strong>Details:</strong>
+		<br><br>
+		Name: <strong>'.$name.'</strong>
+		<br>
+		Email: <strong>'.$email.'</strong>
+		<br>
+		Attempts: <strong>3</strong>
+		<br>
+		Timestamp: <strong>'.$last_attempt_time.'</strong>
+		<br><br>
+		Please investigate this activity to ensure the security of your system.
+		<br><br>
+
+		Sincerely,
+		<br>
+		eJournal System';
+		
+		// send email
+		$mail->Subject = 'Login Attempt Alert';
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
 	}
 
 	

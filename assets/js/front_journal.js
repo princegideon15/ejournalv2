@@ -1196,3 +1196,10 @@ function download_full_paper(logged_in){
   }
 }
 
+function disableOnSubmit(element){
+  $(element).prop('disabled' ,true);
+  $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Logging In...'); // Submit the form using the native submit() method
+  $("#loginForm").submit();
+}
+
+
