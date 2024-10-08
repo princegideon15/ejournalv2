@@ -225,7 +225,7 @@ class Login extends EJ_Controller {
 		<br><br>
 		NRCP Research Journal
 		<br><br><br>
-		<em>THIS IS AN AUTOMATED MESSAGE PLEASE DO NOT REPLY</em>';
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
 		
 		// send email
 		// $mail->Subject = 'Login Verification';
@@ -246,8 +246,8 @@ class Login extends EJ_Controller {
 		// }
 
 		$this->session->set_flashdata('otp', '
-											<div class="alert alert-primary d-flex align-items-center">
-												<i class="oi oi-circle-check me-1"></i>Your code was sent to your email.
+											<div class="alert alert-primary d-flex align-items-center w-50">
+												<i class="oi oi-circle-check me-1"></i>We sent a 6 digit code to your email.
 											</div>');
 		$this->session->set_userdata('otp_ref_code', $ref_code);
 		redirect($link);
@@ -450,20 +450,100 @@ class Login extends EJ_Controller {
 		}else{
 			
 			$email = $this->input->post('email');
-			$password = $this->input->post('password');
 		
 			// Check user credentials using your authentication logic
 			$validateUser = $this->Login_model->validate_user($email);
 
 			if ($validateUser) {
-
 				//send email
+				$this->send_temp_password($validateUser[0]->email);
 			}else{
 				$this->session->set_flashdata('error', 'Email does not exist in our system.');
 				redirect('client/login/forgot_password');
 			}
 		}
 	}
+
+	public function send_temp_password($email) {
+		
+		$user = $this->Client_journal_model->get_user_info($email);
+		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
+		$temp_pass = random_string('alnum', 8);
+
+		$this->Login_model->update_password(
+			[
+				'password' => password_hash($temp_pass, PASSWORD_BCRYPT), 
+			],
+			['email' => $email]
+		);
+
+		// $link = base_url() . 'client/login/';
+		$sender = 'eJournal';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+		
+		// setup email config	
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+	
+		$mail->AddAddress($email);
+
+
+		$date = date("F j, Y") . '<br/><br/>';
+
+		$emailBody = 'Dear <strong>'.$name.'</strong>,
+		<br><br>
+		You have requested a new temporary password for your eJournal account.
+		<br><br>
+		Your new temporary password is: 
+		<br><br>
+		<strong style="font-size:20px">'.$temp_pass.'</strong>
+		<br><br>
+		Please log in to your account using this temporary password and change it to a more secure one as soon as possible.
+		<br><br>
+		If you did not request this password reset, please disregard this email.
+		<br><br>
+		Sincerely,
+		<br><br>
+		NRCP Research Journal
+		<br><br><br>
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		
+		// send email
+		$mail->Subject = 'Reset Password';
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+
+		// if (!$mail->Send()) {
+		// 	echo '</br></br>Message could not be sent.</br>';
+		// 	echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+		// 	exit;
+		// }
+
+		$this->session->set_flashdata('reset_password_success', 'Please check your email for your temporary password.');
+		redirect('client/login/forgot_password');
+	}
+	
 
 	public function logout(){
         $this->session->unset_userdata('user_id');

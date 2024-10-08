@@ -39,14 +39,25 @@ gtag('config', 'G-VDLLX3HKBL');
                             </div>
                         <?php } ?>
 
-                        <label for="email" class="form-label">Enter your email address and we will send you instructions on how to reset your password.</label>
-                        <?=form_open('client/login/reset_password', ['method' => 'post', 'id' => 'resetPasswordForm', 'class' => 'w-50'])?>
-                            <div class="mb-3">
-                                <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="name@example.com">
-                                <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['email']?></span>
+                        <?php if ($this->session->flashdata('reset_password_success')) { ?>
+                            <h1><i class="oi oi-circle-check me-1 text-success fs-3"></i>Success!</h1>
+                            <div class="alert alert- border" role="alert">
+                                <?php echo $this->session->flashdata('reset_password_success'); ?>
+                                <div><a class="btn main-btn mt-3" href="<?= base_url('client/ejournal/login') ?>">Continue to Login</a></div>
                             </div>
-                            <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this,'reset')">Submit </button>
-                        <?=form_close()?>
+                        <?php } else { ?>
+
+                           
+                            <label for="email" class="form-label">Enter your email address and we will send you instructions on how to reset your password.</label>
+                            <?=form_open('client/login/reset_password', ['method' => 'post', 'id' => 'resetPasswordForm', 'class' => 'w-50'])?>
+                                <div class="mb-3">
+                                    <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="name@example.com">
+                                    <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['email']?></span>
+                                </div>
+                                <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this,'reset')">Submit </button>
+                            <?=form_close()?>
+
+                        <?php } ?>
                     </div>
             </div>
         </div>

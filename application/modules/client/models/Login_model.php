@@ -93,4 +93,8 @@ class Login_model extends CI_Model {
         $this->db->delete($this->attempts, ['user_id' => $id]);
     }
 
+    public function update_password($data, $where){
+		$this->db->update($this->users, $data, $where);
+    }
+
 }

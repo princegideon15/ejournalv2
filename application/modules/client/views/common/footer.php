@@ -96,21 +96,21 @@
 						<a class="text-muted" href="https://scientificlibrary.nrcp.dost.gov.ph/" target="_blank">NRCP
 							Library Management System (LMS)</a>
 					</li>
-					<li class="mb-2">
+					<!-- <li class="mb-2">
 						<a class="text-muted" href="https://researchjournal.nrcp.dost.gov.ph/" target="_blank">NRCP
 							Research Journal (eJournal)</a>
-					</li>
+					</li> -->
 					<li class="mb-2">
 						<a class="text-muted" href="https://neep.nrcp.dost.gov.ph/" target="_blank">NRCP Expert
 							Engagement Program (NEEP)</a>
 					</li>
-					<li class="mb-2">
+					<!-- <li class="mb-2">
 						<a class="text-muted" href="https://oneexpert.gov.ph/" target="_blank">One Expert (1E)</a>
-					</li>
-					<li class="mb-2">
+					</li> -->
+					<!-- <li class="mb-2">
 						<a class="text-muted" href="https://recruitment.nrcp.dost.gov.ph/"
 							target="_blank">eRecruitment</a>
-					</li>
+					</li> -->
 					<li class="mb-2">
 						<a class="text-muted" href="https://skms.nrcp.dost.gov.ph/rdlip" target="_blank">Research
 							Dissemination in Local and International Platforms (RDLIP)
