@@ -433,6 +433,38 @@ class Login extends EJ_Controller {
 
 	}
 
+	public function reset_password(){
+
+		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|xss_clean');
+
+		if($this->form_validation->run() == FALSE){
+			$errors = [];
+
+            if (form_error('email')) {
+                $errors['email'] = strip_tags(form_error('email'));
+            }
+
+            // Set flashdata to pass validation errors and form data to the view
+            $this->session->set_flashdata('validation_errors', $errors);
+			redirect('client/login/forgot_password');
+		}else{
+			
+			$email = $this->input->post('email');
+			$password = $this->input->post('password');
+		
+			// Check user credentials using your authentication logic
+			$validateUser = $this->Login_model->validate_user($email);
+
+			if ($validateUser) {
+
+				//send email
+			}else{
+				$this->session->set_flashdata('error', 'Email does not exist in our system.');
+				redirect('client/login/forgot_password');
+			}
+		}
+	}
+
 	public function logout(){
         $this->session->unset_userdata('user_id');
         $this->session->unset_userdata('email');

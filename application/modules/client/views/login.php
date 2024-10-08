@@ -32,6 +32,7 @@ gtag('config', 'G-VDLLX3HKBL');
                         aria-controls="create-account-tab-pane" aria-selected="false">Create Account</button>
                 </li>
             </ul>
+
             <div class="tab-content" id="myTabContent">
                     <!-- Login -->
                     <div class="tab-pane fade show active p-3" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
@@ -56,7 +57,7 @@ gtag('config', 'G-VDLLX3HKBL');
                             <div class="mb-3 d-flex justify-content-end">
                                 <a class="main-link" href="<?php echo base_url('/client/login/forgot_password');?>">Forgot Password?</a>
                             </div>
-                            <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this)">Login </button>
+                            <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this, 'login')">Login </button>
                         <?=form_close()?>
                     </div>
                     <!-- Create Account -->
