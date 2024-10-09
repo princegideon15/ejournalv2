@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css"> -->
     <link rel="stylesheet" href="<?php echo base_url("assets/font/css/open-iconic-bootstrap.css");?>">
+    <link rel="stylesheet" href="<?php echo base_url("assets/admin/vendor/font-awesome/css/font-awesome.css");?>">
     <link rel="icon" href="<?php echo base_url("assets/images/ejicon-07.png");?>">
     <link href="<?php echo base_url("assets/css/animate.min.css");?>" rel="stylesheet"/>
     <link rel="stylesheet" href="<?php echo base_url("assets/css/jquery-editable-select.min.css");?>"> 

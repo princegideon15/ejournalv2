@@ -543,7 +543,6 @@ class Login extends EJ_Controller {
 		$this->session->set_flashdata('reset_password_success', 'Please check your email for your temporary password.');
 		redirect('client/login/forgot_password');
 	}
-	
 
 	public function logout(){
         $this->session->unset_userdata('user_id');

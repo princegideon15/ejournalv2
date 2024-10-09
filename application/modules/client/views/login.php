@@ -22,12 +22,12 @@ gtag('config', 'G-VDLLX3HKBL');
             
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="login-tab" data-bs-toggle="tab"
+                    <button class="nav-link <?=$this->session->flashdata('active_link1') ?? 'active'?>" id="login-tab" data-bs-toggle="tab"
                         data-bs-target="#login-tab-pane" type="button" role="tab" aria-controls="login-tab-pane"
                         aria-selected="true">Login</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="create-account-tab" data-bs-toggle="tab"
+                    <button class="nav-link <?=$this->session->flashdata('active_link2')?>" id="create-account-tab" data-bs-toggle="tab"
                         data-bs-target="#create-account-tab-pane" type="button" role="tab"
                         aria-controls="create-account-tab-pane" aria-selected="false">Create Account</button>
                 </li>
@@ -35,7 +35,7 @@ gtag('config', 'G-VDLLX3HKBL');
 
             <div class="tab-content" id="myTabContent">
                     <!-- Login -->
-                    <div class="tab-pane fade show active p-3" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+                    <div class="tab-pane fade p-3 <?=$this->session->flashdata('active_tab1') ?? 'show active'?>" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                         tabindex="0">
                         <?php if ($this->session->flashdata('error')) { ?>
                             <div class="alert alert-danger d-flex align-items-center">
@@ -61,88 +61,156 @@ gtag('config', 'G-VDLLX3HKBL');
                         <?=form_close()?>
                     </div>
                     <!-- Create Account -->
-                    <div class="tab-pane fade p-3" id="create-account-tab-pane" role="tabpanel" aria-labelledby="create-account-tab"
+                    <div class="tab-pane fade p-3 <?=$this->session->flashdata('active_tab2')?>" id="create-account-tab-pane" role="tabpanel" aria-labelledby="create-account-tab"
                         tabindex="0">
                         
-                        <?=form_open('client/ejournal/articles', ['method' => 'get', 'id' => 'signUpForm'])?>
+                        <?=form_open('client/ejournal/create_account', ['method' => 'post', 'id' => 'signUpForm'])?>
+                            <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
                             <div class="mb-3">
-                                <label class="form-label" for="clt_title">Title<span
-                                        class="text-danger fw-bold">*</span></label>
-                                <input type="text" class="form-control" id="clt_title" name="clt_title"
-                                    placeholder="Mr. / Ms. / Dr.">
+                                <label class="form-label" for="new_email"><span
+                                class="text-danger fw-bold">*</span>Email</label>
+                                <input type="email" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_email']){ echo 'is-invalid';} ?>" id="new_email" name="new_email"
+                                    placeholder="name@example.com">
+                                <span class="invalid-feedback"><?=$this->session->flashdata('signup_validation_errors')['new_email']?></span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="clt_name">Full name<span
-                                        class="text-danger fw-bold">*</span></label>
-                                <input type="text" class="form-control" id="clt_name" name="clt_name"
-                                    placeholder="Juan Dela Cruz">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label" for="title"><span
+                                        class="text-danger fw-bold">*</span>Title</label>
+                                        <select class="form-select" name="title" id="title">
+                                            <option selected disabled>Select Title</option>
+                                        </select>
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['title']?></span>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label" for="first_name"><span
+                                        class="text-danger fw-bold">*</span>First Name</label>
+                                        <input type="first_name" class="form-control" id="first_name" name="first_name">
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['first_name']?></span>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label" for="last_name"><span
+                                        class="text-danger fw-bold">*</span>Last Name</label>
+                                        <input type="last_name" class="form-control" id="last_name" name="last_name">
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['last_name']?></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="clt_age">Age<span
-                                    class="text-danger fw-bold">*</span>
-                                    <span class="main-link fs-6">(Must be 20 years old and above)</span></label>
-                                <input type="number" class="form-control" id="clt_age" name="clt_age" min="20" max="100">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label" for="middle_name">Middle Name</label>
+                                        <input type="middle_name" class="form-control" id="middle_name" name="middle_name">
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['middle_name']?></span>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label" for="extension_name"><span
+                                        class="text-danger fw-bold">*</span>Extension Name</label>
+                                        <input type="extension_name" class="form-control" id="extension_name" name="extension_name">
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['extension_name']?></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="clt_sex">Sex<span
+                                <label class="form-label" for="sex">Sex<span
                                         class="text-danger fw-bold">*</span></label>
-                                <select class="form-control" id="clt_sex" name="clt_sex">
-                                    <option value="">Select Sex</option>
+                                <select class="form-select" id="sex" name="sex">
+                                    <option selected disabled>Select Sex</option>
                                     <option value="1">Male</option>
                                     <option value="2">Female</option>
                                 </select>
+                                <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['sex']?></span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="clt_affiliation">Affiliation<span
+                                <label class="form-label" for="educational_attainment">educational_attainment Attainment<span
                                         class="text-danger fw-bold">*</span></label>
-                                <input type="text" class="form-control" id="clt_affiliation" name="clt_affiliation">
+                                <select class="form-select" id="educational_attainment" name="educational_attainment">
+                                <option selected disabled>Select Educational Attainment</option>
+                                <option value="1">Elementary</option>
+                                </select>
+                                <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['educational_attainment']?></span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="clt_country">Country<span
+                                <label class="form-label" for="affiliation">Affiliation<span
                                         class="text-danger fw-bold">*</span></label>
-                                <select class="form-control" id="clt_country" name="clt_country" placeholder="Select Country"
-                                    style="background-color: white">
-                                    <!-- foreach of country -->
+                                <input type="text" class="form-control" id="affiliation" name="affiliation">
+                                <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['affiliation']?></span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="country">Country<span
+                                        class="text-danger fw-bold">*</span></label>
+                                <select class="form-select" id="country" name="country">
+                                    <option disabled>Select Country</option>
                                     <?php foreach ($country as $c): ?>
                                     <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-                                    echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
+                                    echo '<option value=' . $c->country_id . ' '.$selected.'>' . $c->country_name . '</option>';?>
                                     <?php endforeach;?>
-                                    <!-- /.end of foreach-->
                                 </select>
                             </div>
-                            <!-- <div class="mb-3">
-                                <label class="form-label" for="clt_purpose">Purpose<span
-                                        class="text-danger fw-bold">*</span></label>
-                                <textarea class="form-control" id="clt_purpose" name="clt_purpose"></textarea>
-                            </div> -->
                             <div class="mb-3">
-                                <label class="form-label" for="clt_email">Email<span
-                                        class="text-danger fw-bold">*</span></label>
-                                <input type="email" class="form-control" id="clt_email" name="clt_email"
-                                    placeholder="Valid email is required">
-                                <div id="verification_code_div" class="mt-1">
-                                    <div class="btn btn-warning btn-block small fw-bold" id="send_verification_code"
-                                        onclick="send_verification_code()" style="font-size:0.9em; width:100%;"
-                                        title="Click this button to get the verification code emailed to you."><sup
-                                            class="text-danger fw-bold">*</sup>Click this button to get the
-                                        verification code emailed to you.</div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label" for="region">Region<span
+                                                class="text-danger fw-bold">*</span></label>
+                                        <select class="form-select" id="region" name="region">
+                                            <option selected disabled>Select Region</option>
+                                            <?php foreach ($country as $c): ?>
+                                            <?php echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
+                                            <?php endforeach;?>
+                                        </select>
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['region']?></span>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label" for="province">Province<span
+                                                class="text-danger fw-bold">*</span></label>
+                                        <select class="form-select" id="province" name="province">
+                                            <option selected disabled>Select Region</option>
+                                            <?php foreach ($country as $c): ?>
+                                            <?php echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
+                                            <?php endforeach;?>
+                                        </select>
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['province']?></span>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label" for="city">City<span
+                                                class="text-danger fw-bold">*</span></label>
+                                        <select class="form-select" id="city" name="city">
+                                            <option selected disabled>Select Region</option>
+                                            <?php foreach ($country as $c): ?>
+                                            <?php echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
+                                            <?php endforeach;?>
+                                        </select>
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['city']?></span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="clt_vcode">Verification Code<span
+                                <label class="form-label" for="contact">Contact No.<span
                                         class="text-danger fw-bold">*</span></label>
-                                <input type="text" class="form-control fw-bold text-center" id="clt_vcode"
-                                    name="clt_vcode" placeholder="Verification code is required">
+                                <input type="text" class="form-control" id="contact" name="contact"
+                                    placeholder="">
+                                    <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['contact']?></span>
                             </div>
-                            <div class="mb-3 text-left">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" value="1" name="clt_member"
-                                        id="clt_member">
-                                    <label class="custom-control-label" for="clt_member">Please check the box if you are an
-                                        <strong>NRCP member</strong>.</label>
+                            <div class="mb-4">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label" for="new_password">Password<span
+                                                class="text-danger fw-bold">*</span></label>
+                                        <input type="password" class="form-control" id="new_password" name="new_password"
+                                            placeholder="">
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['new_password']?></span>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label" for="confirm_password">Confirm Password<span
+                                                class="text-danger fw-bold">*</span></label>
+                                        <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                                            placeholder="">
+                                        <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['confirm_password']?></span>
+                                    </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-outline-secondary w-100">Create</button>
+                            <button type="submit" class="btn main-btn w-100">Create</button>
                         <?=form_close()?>
                     </div>
             </div>
