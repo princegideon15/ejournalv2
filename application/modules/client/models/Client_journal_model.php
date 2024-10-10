@@ -20,6 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Client_journal_model extends CI_Model {
 
+	//ejournal tables
 	private $journals = 'tbljournals';
 	private $articles = 'tblarticles';
 	private $coauthors = 'tblcoauthors';
@@ -30,6 +31,10 @@ class Client_journal_model extends CI_Model {
 	private $divisions = 'tbldivisions';
 	private $profile = 'tbluser_profiles';
 	private $user = 'tblusers';
+	private $educations = 'tbleducational_attainment';
+	
+	//oprs tables
+	private $titles = 'tbltitles';
 
 	public function __construct() {
 		parent::__construct();
@@ -597,6 +602,21 @@ class Client_journal_model extends CI_Model {
 		$this->db->from($this->profile . ' p');
 		$this->db->join($this->user . ' u', 'p.user_id = u.id');
 		$this->db->where('u.email', $email);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function getTitles(){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->titles);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function getEducations(){
+		$this->db->select('*');
+		$this->db->from($this->educations);
 		$query = $this->db->get();
 		return $query->result();
 	}

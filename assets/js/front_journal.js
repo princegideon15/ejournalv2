@@ -37,6 +37,41 @@ $(document).ready(function()
 
   $('body').tooltip({ selector: '[data-toggle=tooltip]' });
 
+  $('#signUpForm #country').on('change', function(){
+    if($(this).val() != 175){
+      $('#signUpForm #region').prop('disabled', true);
+      $('#signUpForm #province').prop('disabled', true);
+      $('#signUpForm #city').prop('disabled', true);
+    }else{
+      $('#signUpForm #region').prop('disabled', false);
+      $('#signUpForm #province').prop('disabled', false);
+      $('#signUpForm #city').prop('disabled', false);
+    }
+  });
+  
+  $('#signUpForm #new_password').on('keyup', function() {
+    var password = $(this).val();
+    var strength = getPasswordStrength(password);
+    var barColor, passwordStrength;
+    if (strength <= 25) {
+        barColor = 'red';
+        passwordStrength = 'Weak';
+    } else if (strength <= 50) {
+        barColor = 'orange';
+        passwordStrength = 'Good';
+    } else if (strength <= 75) {
+        barColor = 'yellow';
+        passwordStrength = 'Fair';
+    }else {
+      barColor = 'green';
+      passwordStrength = 'Excellent';
+    }
+    $('#password-strength').text(passwordStrength);
+    $('#password-strength-bar').css('width' , strength + '%');
+    $('#password-strength-bar').css('background-color', barColor);
+  });
+  
+
   $('#searchForm').submit(function(e){
       if ($("#searchArticlesInput").val() === "") {
         e.preventDefault();
@@ -1208,4 +1243,32 @@ function disableOnSubmit(element, action){
   }
 }
 
+function getPasswordStrength(password) {
+  // Implement your password strength logic here
+  // For example, you can check for length, uppercase, lowercase, numbers, and special characters
+  var strength = 0;
+  if (password.length >= 8) {
+      strength+=10;
+  }
+  if (password.length >= 12) {
+    strength+=15;
+  }
+  if (password.length >= 16) {
+    strength+=20;
+  }
+  if (/[A-Z]/.test(password)) {
+      strength+=15;
+  }
+  if (/[a-z]/.test(password)) {
+      strength+=10;
+  }
+  if (/[0-9]/.test(password)) {
+      strength+=15;
+  }
+  if   
+  (/[^A-Za-z0-9]/.test(password)) {
+      strength+=15;
+  }
+  return strength;   
 
+}

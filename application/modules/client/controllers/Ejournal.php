@@ -100,6 +100,8 @@ class Ejournal extends EJ_Controller {
 		$data['country'] = $this->Library_model->get_library('tblcountries');
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['titles'] = $this->Client_journal_model->getTitles();
+		$data['educations'] = $this->Client_journal_model->getEducations();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/login";
 		$this->_LoadPage('common/body', $data);
@@ -1428,27 +1430,47 @@ class Ejournal extends EJ_Controller {
 	public function create_account(){
 		
 		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email|xss_clean');
-		$this->form_validation->set_rules('title', 'Title', 'required|trim|int|xss_clean');
+		$this->form_validation->set_rules('title', 'Title', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('first_name', 'First Name', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('middle_name', 'Middle Name', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim|xss_clean');
-		$this->form_validation->set_rules('sex', 'Sex', 'required|trim|int|xss_clean');
+		$this->form_validation->set_rules('sex', 'Sex', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('educational_attainment', 'Password', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('region', 'Region', 'required|trim|int|xss_clean');
-		$this->form_validation->set_rules('province', 'Province', 'required|trim|int|xss_clean');
-		$this->form_validation->set_rules('city', 'City', 'required|trim|int|xss_clean');
+		if($this->input->post('country') == 175){
+			$this->form_validation->set_rules('region', 'Region', 'required|trim|xss_clean');
+			$this->form_validation->set_rules('province', 'Province', 'required|trim|xss_clean');
+			$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+		}
 		$this->form_validation->set_rules('contact', 'Contact', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]|xss_clean');
 
+		$validations = ['new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
+
 		if($this->form_validation->run() == FALSE){
 			$errors = [];
 
-            if (form_error('new_email')) {
-                $errors['new_email'] = strip_tags(form_error('new_email'));
-            }
+			foreach($validations as $value){
+				//store entered value to display on redirect
+				if($value == 'country'){
+					if($this->input->post($value)){
+						$this->session->set_flashdata($value, $this->input->post($value));
+					}else{
+						$this->session->set_flashdata($value, 175);
+					}
+				}else{
+					$this->session->set_flashdata($value, $this->input->post($value));
+				}
+
+				//store errors to display on redirect
+				if (form_error($value)) {
+					$errors[$value] = strip_tags(form_error($value));
+
+				}
+			}
+
             // Set flashdata to pass validation errors and form data to the view
             $this->session->set_flashdata('signup_validation_errors', $errors);
             $this->session->set_flashdata('active_link1', '');
