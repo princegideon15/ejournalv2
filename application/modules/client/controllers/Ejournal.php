@@ -35,6 +35,7 @@ class Ejournal extends EJ_Controller {
 		$this->load->helper('string');
         $this->load->helper('form');
         $this->load->library('session'); 
+		$this->load->helper('security');
 		$this->load->library('form_validation');
 		error_reporting(0);
 	}
@@ -76,7 +77,6 @@ class Ejournal extends EJ_Controller {
 	public function index() {
 
 		$this->session->set_userdata('verification_code', $this->token());
-		$data['country'] = $this->Library_model->get_library('tblcountries');
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();
 		$data['client_count'] = $this->Client_journal_model->all_client();
@@ -97,7 +97,8 @@ class Ejournal extends EJ_Controller {
 
 
 	public function login(){
-		$data['country'] = $this->Library_model->get_library('tblcountries');
+		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
+		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['titles'] = $this->Client_journal_model->getTitles();
@@ -264,7 +265,7 @@ class Ejournal extends EJ_Controller {
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 
-		$data['country'] = $this->Library_model->get_library('tblcountries');
+		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/volumes";
 		$this->_LoadPage('common/body', $data);
@@ -915,7 +916,7 @@ class Ejournal extends EJ_Controller {
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 
-		$data['country'] = $this->Library_model->get_library('tblcountries');
+		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/search_results";
 		$this->_LoadPage('common/body', $data);
@@ -1064,7 +1065,7 @@ class Ejournal extends EJ_Controller {
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['years'] = $this->Journal_model->get_unique_journal_year();
-		$data['country'] = $this->Library_model->get_library('tblcountries');
+		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/advanced";
 
@@ -1429,23 +1430,27 @@ class Ejournal extends EJ_Controller {
 
 	public function create_account(){
 		
-		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email|xss_clean');
-		$this->form_validation->set_rules('title', 'Title', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('first_name', 'First Name', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('middle_name', 'Middle Name', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim|xss_clean');
-		$this->form_validation->set_rules('sex', 'Sex', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('educational_attainment', 'Password', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email|is_unique[tblusers.email]', array('is_unique' => 'Email already in use. Please use different email.'));
+		$this->form_validation->set_rules('title', 'Title', 'required|trim');
+		$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
+		$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
+		$this->form_validation->set_rules('middle_name', 'Middle Name', 'required|trim');
+		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
+		$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
+		$this->form_validation->set_rules('educational_attainment', 'Password', 'required|trim');
+		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
+
 		if($this->input->post('country') == 175){
-			$this->form_validation->set_rules('region', 'Region', 'required|trim|xss_clean');
-			$this->form_validation->set_rules('province', 'Province', 'required|trim|xss_clean');
-			$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+			$this->form_validation->set_rules('region', 'Region', 'required|trim');
+			$this->form_validation->set_rules('province', 'Province', 'required|trim');
+			$this->form_validation->set_rules('city', 'City', 'required|trim');
 		}
-		$this->form_validation->set_rules('contact', 'Contact', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]|xss_clean');
+
+		$this->form_validation->set_rules('contact', 'Contact', 'required|trim');
+		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
+		array('regex_match' => 'Password must contain atleast 1 letter, 1 number and 1 special character.'));
+		// |trim|min_length[8]|max_length[20]
+		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
 
 		$validations = ['new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
 
@@ -1471,6 +1476,53 @@ class Ejournal extends EJ_Controller {
 				}
 			}
 
+			//return password strength
+		
+
+				$password = $this->input->post('new_password');
+			
+				if (strlen($password) >= 8) {
+					$strength += 10;
+				}
+				if (strlen($password) >= 12) {
+					$strength += 15;
+				}
+				if (strlen($password) >= 16) {
+					$strength += 20;
+				}
+			
+				if (preg_match('/[A-Z]/', $password)) {
+					$strength += 15;
+				}
+				if (preg_match('/[a-z]/', $password)) {
+					$strength += 10;
+				}
+				if (preg_match('/[0-9]/', $password)) {
+					$strength += 15;
+				}
+				if (preg_match('/[^A-Za-z0-9]/', $password)) {
+					$strength += 15;
+				}
+			
+
+				if ($strength <= 25) {
+					$bar_color = 'red';
+					$password_strength = 'Weak';
+				} else if ($strength <= 50) {
+					$bar_color = 'orange';
+					$password_strength = 'Good';
+				} else if ($strength <= 75) {
+					$bar_color = 'yellow';
+					$password_strength = 'Fair';
+				}else {
+				  $bar_color = 'green';
+				  $password_strength = 'Excellent';
+				}
+
+				
+				$this->session->set_flashdata('bar_style', 'style="width:'. $strength .'%; background-color:'. $bar_color .'"');
+				$this->session->set_flashdata('password_strength', $password_strength);
+
             // Set flashdata to pass validation errors and form data to the view
             $this->session->set_flashdata('signup_validation_errors', $errors);
             $this->session->set_flashdata('active_link1', '');
@@ -1481,8 +1533,21 @@ class Ejournal extends EJ_Controller {
 		}else{
 
 		}
+		
 	}
+	
 
+    public function check_password_strength($password) {
+        $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/';
+
+        if (!preg_match($regex, $password)) {
+            $this->form_validation->set_message('check_password_strength', 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+            return FALSE;
+        }
+
+        return TRUE;
+
+    }
 	
 
 }

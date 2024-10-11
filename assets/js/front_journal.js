@@ -50,25 +50,27 @@ $(document).ready(function()
   });
   
   $('#signUpForm #new_password').on('keyup', function() {
-    var password = $(this).val();
-    var strength = getPasswordStrength(password);
-    var barColor, passwordStrength;
-    if (strength <= 25) {
-        barColor = 'red';
-        passwordStrength = 'Weak';
-    } else if (strength <= 50) {
-        barColor = 'orange';
-        passwordStrength = 'Good';
-    } else if (strength <= 75) {
-        barColor = 'yellow';
-        passwordStrength = 'Fair';
-    }else {
-      barColor = 'green';
-      passwordStrength = 'Excellent';
+    if($(this).val().length > 0){
+      var password = $(this).val();
+      var strength = getPasswordStrength(password);
+      var barColor, passwordStrength;
+      if (strength <= 25) {
+          barColor = 'red';
+          passwordStrength = 'Weak';
+      } else if (strength <= 50) {
+          barColor = 'orange';
+          passwordStrength = 'Good';
+      } else if (strength <= 75) {
+          barColor = 'yellow';
+          passwordStrength = 'Fair';
+      }else {
+        barColor = 'green';
+        passwordStrength = 'Excellent';
+      }
+      $('#password-strength').text(passwordStrength);
+      $('#password-strength-bar').css('width' , strength + '%');
+      $('#password-strength-bar').css('background-color', barColor);
     }
-    $('#password-strength').text(passwordStrength);
-    $('#password-strength-bar').css('width' , strength + '%');
-    $('#password-strength-bar').css('background-color', barColor);
   });
   
 

@@ -177,10 +177,10 @@ gtag('config', 'G-VDLLX3HKBL');
                                         <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['region']){ echo 'is-invalid';} ?>" id="region" name="region"
                                         <?php if($country_id != 175){ echo 'disabled';} ?> >
                                             <option selected disabled>Select Region</option>
-                                            <?php foreach ($country as $row): ?>
+                                            <?php foreach ($regions as $row): ?>
                                             <?php $region_input = set_value('region', $this->session->flashdata('region')); 
-                                            $selected = ($row->country_id == $region_input) ? 'selected' : '';
-                                            echo '<option value=' . $row->country_id . ' ' . $selected .'>' . $row->country_name . '</option>';?>
+                                            $selected = ($row->region_id == $region_input) ? 'selected' : '';
+                                            echo '<option value=' . $row->region_id . ' ' . $selected .'>' . $row->region_name . '</option>';?>
                                             <?php endforeach;?>
                                         </select>
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['region'] ?></span>
@@ -228,14 +228,17 @@ gtag('config', 'G-VDLLX3HKBL');
                                         <input type="password" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_password']){ echo 'is-invalid';} ?>" id="new_password" name="new_password" placeholder="" value="<?= set_value('new_password', $this->session->flashdata('new_password')); ?>">
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
                                        
-                                        <div class="mt-1">
-                                             <div><span class="fw-bold me-1 fs-6">Password strength:</span><span id="password-strength"></span></div>
+                                        <div class="mt-1" style="font-size:.8rem">
+                                             <div><span class="fw-bold me-1">Password strength:</span><span id="password-strength"></span></div>
                                             <div class="progress mt-1" style="height: .5rem;">
-                                                <div class="progress-bar" role="progressbar" id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div class="progress-bar" role="progressbar" <?= $this->session->flashdata('bar_style')?> id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <div class="mt-1 fs-6 text-muted">
-                                                Use at least 8 characters. At least 1 uppercase. At least 1 number and At least 1 special character.
-                                            </div>
+                                            <!-- <ul class="mt-1 text-muted ps-3">
+                                                <li>8-20 characters long.</li>
+                                                <li>At least 1 letter.</li>
+                                                <li>At lestt 1 number.</li>
+                                                <li>At least 1 special character.</li>
+                                            </ul> -->
                                         </div>
                                     </div>
                                     <div class="col">
