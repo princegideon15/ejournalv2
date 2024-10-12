@@ -11,6 +11,18 @@ gtag('js', new Date());
 gtag('config', 'G-VDLLX3HKBL');
 </script>
 
+//TODO::modify validation mesesage
+<script>
+function validateForm() {
+    var recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        alert('Please complete the reCAPTCHA verification.');
+        return false;
+    }
+    return true;
+}
+</script>
+
 <?php error_reporting(0);?>
 <div class="container-fluid mt-3 p-4">
     <div class="row">
@@ -64,7 +76,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     <div class="tab-pane fade p-3 <?= $this->session->flashdata('active_tab2') ?>" id="create-account-tab-pane" role="tabpanel" aria-labelledby="create-account-tab"
                         tabindex="0">
                         
-                        <?=form_open('client/ejournal/create_account', ['method' => 'post', 'id' => 'signUpForm'])?>
+                        <?=form_open('client/ejournal/create_account', ['method' => 'post', 'id' => 'signUpForm', 'onsubmit' => 'return validateForm();'])?>
                             <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
                             <div class="mb-3">
                                 <label class="form-label" for="new_email"><span
@@ -249,6 +261,9 @@ gtag('config', 'G-VDLLX3HKBL');
                                     </div>
                                 </div>
                             </div>
+                            <div class="mb-3 float-end">
+                                <div class="g-recaptcha" data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6"></div>
+                            </div>
                             <button type="submit" class="btn main-btn w-100">Create</button>
                         <?=form_close()?>
                     </div>
@@ -375,7 +390,7 @@ gtag('config', 'G-VDLLX3HKBL');
                             <!-- foreach of country -->
                             <?php foreach ($country as $c): ?>
                             <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
+    echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                             <?php endforeach;?>
                             <!-- /.end of foreach-->
                         </select>
@@ -453,6 +468,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
         </div>
     </div>
 </div>
+
 <!-- Citation Modal -->
 <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
@@ -501,7 +517,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                             <?php foreach ($country as $c): ?>
                             d
                             <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
+    echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
                             <?php endforeach;?>
                             <!-- /.end of foreach-->
                         </select>

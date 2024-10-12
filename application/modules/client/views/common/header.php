@@ -18,9 +18,7 @@
     <link rel="stylesheet" href="<?php echo base_url("assets/css/jquery-editable-select.min.css");?>"> 
     <link rel="stylesheet" href="<?php echo base_url("assets/css/jquery.loading.css"); ?>">
     <link rel="stylesheet" href="<?php echo base_url("assets/css/landing-page-custom.css"); ?>">
-    <!-- Download SVF icon here
-    https://iconduck.com/search?query=web -->
-    
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body style="overflow-y: scroll !important;">
