@@ -11,12 +11,12 @@ gtag('js', new Date());
 gtag('config', 'G-VDLLX3HKBL');
 </script>
 
-//TODO::modify validation mesesage
 <script>
 function validateForm() {
     var recaptchaResponse = grecaptcha.getResponse();
     if (!recaptchaResponse) {
-        alert('Please complete the reCAPTCHA verification.');
+        // alert('Please complete the reCAPTCHA verification.');
+        $('#g-recaptcha').text('Please complete the reCAPTCHA verification.');
         return false;
     }
     return true;
@@ -201,11 +201,14 @@ function validateForm() {
                                         <label class="form-label" for="province">Province<span
                                                 class="text-danger fw-bold">*</span></label>
                                         <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['province']){ echo 'is-invalid';} ?>" id="province" name="province" <?php if($country_id != 175){ echo 'disabled';} ?>>
-                                            <option selected disabled>Select Region</option>
-                                            <?php foreach ($country as $row): ?>
+                                            <option selected disabled>Select Province</option>
+                                            <?php $provinces = ($this->session->flashdata('provinces')) ? $this->session->flashdata('provinces') : '' ?>
+                                            <?php $jsonData = json_encode($provinces); ?>
+                                            <?php $jsonDataDecoded = json_decode($jsonData, true); ?>
+                                            <?php foreach ($jsonDataDecoded as $row): ?>
                                             <?php $province_input = set_value('province', $this->session->flashdata('province')); 
-                                            $selected = ($row->country_id == $province_input) ? 'selected' : ''; 
-                                            echo '<option value=' . $row->country_id . ' ' . $selected . '>' . $row->country_name . '</option>';?>
+                                            $selected = ($row['province_id'] == $province_input) ? 'selected' : '';
+                                            echo '<option value=' . $row['province_id'] . ' ' . $selected .'>' . $row['province_name'] . '</option>';?>
                                             <?php endforeach;?>
                                         </select>
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['province'] ?></span>
@@ -215,10 +218,13 @@ function validateForm() {
                                                 class="text-danger fw-bold">*</span></label>
                                         <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['city']){ echo 'is-invalid';} ?>" id="city" name="city" <?php if($country_id != 175){ echo 'disabled';} ?>>
                                             <option selected disabled>Select City</option>
-                                            <?php foreach ($country as $row): ?>
+                                            <?php $cities = ($this->session->flashdata('cities')) ? $this->session->flashdata('cities') : '' ?>
+                                            <?php $jsonData = json_encode($cities); ?>
+                                            <?php $jsonDataDecoded = json_decode($jsonData, true); ?>
+                                            <?php foreach ($jsonDataDecoded as $row): ?>
                                             <?php $city_input = set_value('city', $this->session->flashdata('city')); 
-                                            $selected = ($row->country_id == $city_input) ? 'selected' : ''; 
-                                            echo '<option value=' . $row->country_id . ' ' . $selected . '>' . $row->country_name . '</option>';?>
+                                            $selected = ($row['city_id'] == $city_input) ? 'selected' : '';
+                                            echo '<option value=' . $row['city_id'] . ' ' . $selected .'>' . $row['city_name'] . '</option>';?>
                                             <?php endforeach;?>
                                         </select>
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['city'] ?></span>
@@ -261,8 +267,9 @@ function validateForm() {
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 float-end">
+                            <div class="mb-3 float-end ">
                                 <div class="g-recaptcha" data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6"></div>
+                                <p class="text-danger" id="g-recaptcha"></p>
                             </div>
                             <button type="submit" class="btn main-btn w-100">Create</button>
                         <?=form_close()?>

@@ -1437,9 +1437,10 @@ class Ejournal extends EJ_Controller {
 		$this->form_validation->set_rules('middle_name', 'Middle Name', 'required|trim');
 		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
 		$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
-		$this->form_validation->set_rules('educational_attainment', 'Password', 'required|trim');
+		$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
 		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
 
+		//require region,province,city for philippines
 		if($this->input->post('country') == 175){
 			$this->form_validation->set_rules('region', 'Region', 'required|trim');
 			$this->form_validation->set_rules('province', 'Province', 'required|trim');
@@ -1448,8 +1449,7 @@ class Ejournal extends EJ_Controller {
 
 		$this->form_validation->set_rules('contact', 'Contact', 'required|trim');
 		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
-		array('regex_match' => 'Password must contain atleast 1 letter, 1 number and 1 special character.'));
-		// |trim|min_length[8]|max_length[20]
+		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
 
 		$validations = ['new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
@@ -1475,53 +1475,65 @@ class Ejournal extends EJ_Controller {
 
 				}
 			}
-
-			//return password strength
+	
+			//return password data and strenght data
+			$password = $this->input->post('new_password');
+			
+			if (strlen($password) >= 8) {
+				$strength += 10;
+			}
+			if (strlen($password) >= 12) {
+				$strength += 15;
+			}
+			if (strlen($password) >= 16) {
+				$strength += 20;
+			}
 		
+			if (preg_match('/[A-Z]/', $password)) {
+				$strength += 15;
+			}
+			if (preg_match('/[a-z]/', $password)) {
+				$strength += 10;
+			}
+			if (preg_match('/[0-9]/', $password)) {
+				$strength += 15;
+			}
+			if (preg_match('/[^A-Za-z0-9]/', $password)) {
+				$strength += 15;
+			}
 
-				$password = $this->input->post('new_password');
-			
-				if (strlen($password) >= 8) {
-					$strength += 10;
-				}
-				if (strlen($password) >= 12) {
-					$strength += 15;
-				}
-				if (strlen($password) >= 16) {
-					$strength += 20;
-				}
-			
-				if (preg_match('/[A-Z]/', $password)) {
-					$strength += 15;
-				}
-				if (preg_match('/[a-z]/', $password)) {
-					$strength += 10;
-				}
-				if (preg_match('/[0-9]/', $password)) {
-					$strength += 15;
-				}
-				if (preg_match('/[^A-Za-z0-9]/', $password)) {
-					$strength += 15;
-				}
-			
+			if ($strength <= 25) {
+				$bar_color = 'red';
+				$password_strength = 'Weak';
+			} else if ($strength <= 50) {
+				$bar_color = 'orange';
+				$password_strength = 'Good';
+			} else if ($strength <= 75) {
+				$bar_color = 'yellow';
+				$password_strength = 'Fair';
+			}else {
+				$bar_color = 'green';
+				$password_strength = 'Excellent';     
+			}
 
-				if ($strength <= 25) {
-					$bar_color = 'red';
-					$password_strength = 'Weak';
-				} else if ($strength <= 50) {
-					$bar_color = 'orange';
-					$password_strength = 'Good';
-				} else if ($strength <= 75) {
-					$bar_color = 'yellow';
-					$password_strength = 'Fair';
-				}else {
-				  $bar_color = 'green';
-				  $password_strength = 'Excellent';
-				}
+			$this->session->set_flashdata('bar_style', 'style="width:'. $strength .'%; background-color:'. $bar_color .'"');
+			$this->session->set_flashdata('password_strength', $password_strength);
 
-				
-				$this->session->set_flashdata('bar_style', 'style="width:'. $strength .'%; background-color:'. $bar_color .'"');
-				$this->session->set_flashdata('password_strength', $password_strength);
+			//return province value and options if province has value
+			$region = $this->input->post('region');
+
+			if($region > 0){
+				$provinces = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $region));
+				$this->session->set_flashdata('provinces', $provinces);
+			}
+
+			//return city value and options if city has value
+			$province = $this->input->post('province');
+
+			if($province){
+				$cities = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province));
+				$this->session->set_flashdata('cities', $cities);
+			}
 
             // Set flashdata to pass validation errors and form data to the view
             $this->session->set_flashdata('signup_validation_errors', $errors);
@@ -1548,6 +1560,16 @@ class Ejournal extends EJ_Controller {
         return TRUE;
 
     }
+
+	public function get_provinces($region_id){
+		$output = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $region_id));
+		echo json_encode($output);
+	}
+
+	public function get_city($province_id){
+		$output = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province_id));
+		echo json_encode($output);
+	}
 	
 
 }

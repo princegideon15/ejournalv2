@@ -33,12 +33,17 @@ class Library_model extends CI_Model {
      * @param [string] $tbl     table name
      * @return void
      */
-    public function get_library($tbl, $db)
+    public function get_library($tbl, $db, $where = null)
     {
         //$db = members (skms), dboprs (oprs), default (ejournal/dbej)
         $db = $this->load->database($db, TRUE);
         $db->select('*');
         $db->from($tbl);
+
+        if($where){
+            $db->where($where);
+        }
+
         $query = $db->get();
         return $query->result();
     }

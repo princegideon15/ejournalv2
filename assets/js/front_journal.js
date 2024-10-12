@@ -46,8 +46,48 @@ $(document).ready(function()
       $('#signUpForm #region').prop('disabled', false);
       $('#signUpForm #province').prop('disabled', false);
       $('#signUpForm #city').prop('disabled', false);
+      
     }
   });
+
+  $('#signUpForm #region').on('change', function(){
+    let region = $(this).val()
+		$.ajax({
+			type: "GET",
+			url: base_url + "client/ejournal/get_provinces/" + region,
+			dataType: "json",
+			crossDomain: true,
+			success: function(data) {
+        var html = '<option selected disabled>Select Province</option>';
+				$.each(data, function(key, val) {
+          html += '<option value="'+ val.province_id +  '">'+ val.province_name +'</option>';
+				});
+        $('#province').empty().append(html);
+			}
+		});
+  });
+
+  $('#signUpForm #province').on('change', function(){
+    let province = $(this).val()
+		$.ajax({
+			type: "GET",
+			url: base_url + "client/ejournal/get_city/" + province,
+			dataType: "json",
+			crossDomain: true,
+			success: function(data) {
+        var html = '<option selected disabled>Select City</option>';
+				$.each(data, function(key, val) {
+          html += '<option value="'+ val.city_id +  '">'+ val.city_name +'</option>';
+				});
+        $('#city').empty().append(html);
+			}
+		});
+  });
+
+  $('#signUpForm #province').on('change', function(){
+    let province = $(this).val()
+  });
+
   
   $('#signUpForm #new_password').on('keyup', function() {
     if($(this).val().length > 0){
@@ -241,8 +281,9 @@ $(document).ready(function()
              $('#apa_format').val(unescape(apa_format));
         }
       });
-       $('#citationModal p ').text('Thank you!');
-       $('#form_citation').hide();
+
+      $('#citationModal p ').text('Thank you!');
+      $('#form_citation').hide();
        
      }
 });
@@ -1272,5 +1313,9 @@ function getPasswordStrength(password) {
       strength+=15;
   }
   return strength;   
+
+}
+
+function getProvince(id){
 
 }
