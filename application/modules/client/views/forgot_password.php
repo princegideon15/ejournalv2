@@ -57,6 +57,7 @@ gtag('config', 'G-VDLLX3HKBL');
                                 <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this,'reset')">Submit </button>
                             <?=form_close()?>
 
+                            <div class="mt-5"><a class="main-link" href="<?= base_url('client/ejournal/login') ?>">Back to Login</a></div>
                         <?php } ?>
                     </div>
             </div>

@@ -17,6 +17,11 @@ var apa_format;
 var apa_id;
 var fb_clt_id; //feedback client id
 var fn_clt_email; //feedback client email
+var minutes = 5;
+var seconds = 0;
+var intervalId;
+var isStartTimer = false;
+var refCode;
 
 $(document).ready(function()
 {
@@ -36,6 +41,20 @@ $(document).ready(function()
   // });
 
   $('body').tooltip({ selector: '[data-toggle=tooltip]' });
+
+  var url = window.location.pathname; // Get the current path
+  var segments = url.split('/'); // Split the path by '/'
+  // Make sure there are enough segments
+  if (segments.length > 2) {
+    var secondToLastSegment = segments[segments.length - 2];
+    if(secondToLastSegment == 'verify_otp'){
+      refCode = url.split('/').pop();
+      // console.log(refCode);
+      getCurrentOTP(refCode)
+    }
+  } else {
+      // console.log("Not enough segments in the URL.");
+  }
 
   $('#signUpForm #country').on('change', function(){
     if($(this).val() != 175){
@@ -1316,6 +1335,77 @@ function getPasswordStrength(password) {
 
 }
 
-function getProvince(id){
+function startTimer() {
+  intervalId = setInterval(function() {
+      if (seconds === 0) {
+          minutes--;
+          seconds = 59;
+      } else {
+          seconds--;
+      }
 
+      var minutesStr = minutes < 10 ? '0' + minutes : minutes;
+      var secondsStr = seconds < 10 ? '0' + seconds : seconds;
+      // var resendCodeBtnText;
+
+      $('#resend_code').text('Resend Code (' + minutesStr + ':' + secondsStr + ')');
+      if (minutes === 0 && seconds === 0) {
+        clearInterval(intervalId);
+        // Perform action when countdown is finished
+        $('#resend_code').removeClass('disabled');
+        $('#verify_code').addClass('disabled');
+        $('#resend_code').text('Resend Code');
+        $('#resend_code').attr('href', base_url + '/client/login/resend_code/' + refCode);
+      }
+
+      
+
+  }, 1000);
+}
+
+function getCurrentOTP(refCode){
+  var currentDate = new Date();
+  var otpDate;
+  
+  $.ajax({
+    type: "GET",
+    url: base_url + "client/login/get_current_otp/" + refCode,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+      try{
+        otpDate = new Date(data[0]['otp_date']);
+         
+        var diff = currentDate.getTime() - otpDate.getTime();
+        var diffHours = Math.floor(diff / (1000 * 60 * 60));
+        var diffMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        var diffSeconds = Math.floor((diff % (1000 * 60)) / 1000);   
+  
+        if(diffHours == 0){
+          if(diffMinutes < 5 && diffSeconds <= 60){
+            minutes = 4 - diffMinutes;
+            seconds = 60 - diffSeconds;
+            startTimer();
+            $('#resend_code').addClass('disabled');
+            $('#verify_code').removeClass('disabled');
+          }else{
+            clearInterval(intervalId);
+            minutes = 5;
+            seconds = 0;
+            $('#resend_code').removeClass('disabled');
+            $('#verify_code').addClass('disabled');
+          }
+        }else{
+          clearInterval(intervalId);
+          minutes = 5;
+          seconds = 0;
+          $('#resend_code').removeClass('disabled');
+          $('#verify_code').addClass('disabled');
+        }
+      }catch(err){
+        console.log('No Login Request, No code exist.');
+        $('#resend_code').addClass('d-none');
+      }
+    }
+  });
 }

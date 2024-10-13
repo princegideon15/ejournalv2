@@ -50,8 +50,10 @@ gtag('config', 'G-VDLLX3HKBL');
                                 <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['otp']?></span>
                                 <input type="hidden" name="ref" value="<?= $this->session->userdata('otp_ref_code') ?? '' ?>">
                             </div>
-                            <button type="submit" class="btn main-btn w-50 mt-1 <?= $disabled ?>">Verify Code</button>
+                            <button type="submit" class="btn main-btn w-50 mt-1 <?= $disabled ?>" id="verify_code">Verify Code</button>
+                            <a type="button" class="btn main-btn w-50 mt-1 disabled" id="resend_code">Resend Code</a>
                         <?=form_close()?>
+                        <div class="mt-5"><a class="main-link" href="<?= base_url('client/ejournal/login') ?>">Back to Login</a></div>
                     </div>
                     <!-- Create Account -->
                     <div class="tab-pane fade p-3" id="create-account-tab-pane" role="tabpanel" aria-labelledby="create-account-tab"

@@ -1543,7 +1543,7 @@ class Ejournal extends EJ_Controller {
             $this->session->set_flashdata('active_tab2', 'show active');
 			redirect('client/ejournal/login');
 		}else{
-
+			
 		}
 		
 	}

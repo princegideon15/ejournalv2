@@ -228,22 +228,22 @@ class Login extends EJ_Controller {
 		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
 		
 		// send email
-		// $mail->Subject = 'Login Verification';
-		// $mail->Body = $emailBody;
-		// $mail->IsHTML(true);
-		// $mail->smtpConnect([
-		// 	'ssl' => [
-		// 		'verify_peer' => false,
-		// 		'verify_peer_name' => false,
-		// 		'allow_self_signed' => true,
-		// 	],
-		// ]);
+		$mail->Subject = 'Login Verification';
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
 
-		// if (!$mail->Send()) {
-		// 	echo '</br></br>Message could not be sent.</br>';
-		// 	echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
-		// 	exit;
-		// }
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
 
 		$this->session->set_flashdata('otp', '
 											<div class="alert alert-primary d-flex align-items-center w-50">
@@ -346,7 +346,7 @@ class Login extends EJ_Controller {
 		if($isOtpRefExist[0]->otp_ref_code == null){
 			$this->session->set_flashdata('otp', '
 			<div class="alert alert-danger d-flex align-items-center">
-				<i class="oi oi-circle-x me-1"></i>Code expired.
+				<i class="oi oi-circle-x me-1"></i>Link expired.
 			</div>');
 
 			$data['main_title'] = "eJournal";
@@ -359,7 +359,7 @@ class Login extends EJ_Controller {
 			$current_date = date('Y-m-d H:i:s');
 
 			//check if code expired after 5 minutes
-			if ($this->compareDates($otp_date, $current_date)  > 5) {
+			if ($this->compareDates($otp_date, $current_date)  > 4) {
 				$this->session->set_flashdata('otp', '
 				<div class="alert alert-danger d-flex align-items-center">
 					<i class="oi oi-circle-x me-1"></i>Code expired.
@@ -534,11 +534,11 @@ class Login extends EJ_Controller {
 			],
 		]);
 
-		// if (!$mail->Send()) {
-		// 	echo '</br></br>Message could not be sent.</br>';
-		// 	echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
-		// 	exit;
-		// }
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
 
 		$this->session->set_flashdata('reset_password_success', 'Please check your email for your temporary password.');
 		redirect('client/login/forgot_password');
@@ -549,6 +549,16 @@ class Login extends EJ_Controller {
         $this->session->unset_userdata('email');
         $this->session->sess_destroy();
 		redirect('client/ejournal/login');
+	}
 
+	public function get_current_otp($refCode){
+		$output = $this->Login_model->get_current_otp($refCode);
+		echo json_encode($output);
+	}
+
+	public function resend_code($refCode){
+		$output = $this->Login_model->get_current_otp($refCode);
+		$email = $output[0]->email;
+		$this->send_otp($email);
 	}
 }

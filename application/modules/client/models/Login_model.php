@@ -97,4 +97,12 @@ class Login_model extends CI_Model {
 		$this->db->update($this->users, $data, $where);
     }
 
+    public function get_current_otp($refCode){
+        $this->db->select('otp_date, email');
+        $this->db->from($this->users);
+        $this->db->where('otp_ref_code', $refCode);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
