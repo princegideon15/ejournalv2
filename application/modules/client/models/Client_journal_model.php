@@ -598,7 +598,7 @@ class Client_journal_model extends CI_Model {
 	}
 
 	public function get_user_info($email){
-		$this->db->select('p.*');
+		$this->db->select('p.*, otp, otp_ref_code');
 		$this->db->from($this->profile . ' p');
 		$this->db->join($this->user . ' u', 'p.user_id = u.id');
 		$this->db->where('u.email', $email);

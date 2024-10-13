@@ -19,6 +19,9 @@ function validateForm() {
         $('#g-recaptcha').text('Please complete the reCAPTCHA verification.');
         return false;
     }
+
+    $('#create_account').prop('disabled' ,true);
+    $('#create_account').html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading');
     return true;
 }
 </script>
@@ -271,7 +274,7 @@ function validateForm() {
                                 <div class="g-recaptcha" data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6"></div>
                                 <p class="text-danger" id="g-recaptcha"></p>
                             </div>
-                            <button type="submit" class="btn main-btn w-100">Create</button>
+                            <button type="submit" class="btn main-btn w-100" id="create_account">Create Account</button>
                         <?=form_close()?>
                     </div>
             </div>

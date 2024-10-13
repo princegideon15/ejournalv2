@@ -25,6 +25,7 @@ class Ejournal extends EJ_Controller {
 
 		$this->load->model('Client_journal_model');
 		$this->load->model('Library_model');
+		$this->load->model('Login_model');
 		$this->load->model('Search_model');
 		$this->load->model('CSF_model');
 		$this->load->model('Admin/Journal_model');
@@ -1434,7 +1435,7 @@ class Ejournal extends EJ_Controller {
 		$this->form_validation->set_rules('title', 'Title', 'required|trim');
 		$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
-		$this->form_validation->set_rules('middle_name', 'Middle Name', 'required|trim');
+		$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim');
 		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
 		$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
 		$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
@@ -1543,11 +1544,133 @@ class Ejournal extends EJ_Controller {
             $this->session->set_flashdata('active_tab2', 'show active');
 			redirect('client/ejournal/login');
 		}else{
+
+			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
+			$ref_code = random_string('alnum', 16);
+			$email = $this->input->post('new_email');
+			$currentTotalUsers = count($this->Library_model->get_library('tblusers', 'default'));
+			$newUserID = $this->generate_user_id('0000', $currentTotalUsers + 1);
+
+			//save user account
+			$userAccount = [
+				'id' => $newUserID,
+				'email' => $email,
+				'password' => password_hash($this->input->post('new_password'), PASSWORD_BCRYPT),
+				'otp' => $otp, 
+				'otp_date' => date('Y-m-d H:i:s'),
+				'otp_ref_code' => $ref_code,
+				'created_at' => date('Y-m-d H:i:s')
+			];
 			
+			$this->Login_model->create_user_account($userAccount);
+
+			//save user profile
+			$userProfile = [
+				'user_id' => $newUserID,
+				'title' => $this->input->post('title'),
+				'first_name' => $this->input->post('first_name'),
+				'last_name' => $this->input->post('last_name'),
+				'middle_name' => $this->input->post('middle_name'),
+				'extension_name' => $this->input->post('extension_name'),
+				'sex' => $this->input->post('sex'),
+				'educational_attainment' => $this->input->post('educational_attainment'),
+				'affiliation' => $this->input->post('affiliation'),
+				'country' => $this->input->post('country'),
+				'region' => $this->input->post('region'),
+				'province' => $this->input->post('province'),
+				'city' => $this->input->post('city'),
+				'contact' => $this->input->post('contact'),
+				'created_at' => date('Y-m-d H:i:s')
+			];
+
+			$this->Login_model->create_user_profile($userProfile);
+
+			//send email otp for create account
+			// $this->send_otp_new_account($email);
+			//TODO::link and redirection
 		}
 		
 	}
+
+	public function send_otp_new_account($email) {
+		
+		$user = $this->Client_journal_model->get_user_info($email);
+		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
+		$otp = $user['otp'];
+		$ref_code = $user['otp_ref_code'];
+
+		$link = base_url() . 'client/login/verify_otp/'.$ref_code;
+		$sender = 'eJournal';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+		
+		// setup email config	
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
 	
+		$mail->AddAddress($email);
+
+
+		$date = date("F j, Y") . '<br/><br/>';
+
+		$emailBody = 'Dear <strong>'.$name.'</strong>,
+		<br><br>
+		Please enter this code to verify your new account.
+		<br><br>
+		<strong style="font-size:20px">'.$otp.'</strong>
+		<br><br>
+		Or click the link below to redirect in the verification page:
+		<br><br>
+		'.$link.'
+		<br><br>
+		Link not working? Copy and paste the link into your browser.
+		<br><br>
+		This code will only be valid for the next <strong>5 minutes</strong>.
+		<br><br><br>
+		Sincerely,
+		<br><br>
+		NRCP Research Journal
+		<br><br><br>
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		
+		// send email
+		$mail->Subject = 'Verify New Account';
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
+
+		$this->session->set_flashdata('otp', '
+											<div class="alert alert-primary d-flex align-items-center w-50">
+												<i class="oi oi-circle-check me-1"></i>We sent a 6 digit code to your email.
+											</div>');
+		$this->session->set_userdata('otp_ref_code', $ref_code);
+		redirect($link);
+	}
 
     public function check_password_strength($password) {
         $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/';
@@ -1569,6 +1692,21 @@ class Ejournal extends EJ_Controller {
 	public function get_city($province_id){
 		$output = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province_id));
 		echo json_encode($output);
+	}
+
+	function generate_user_id($start = 0000, $end) {
+		$current_number = $start;
+	
+		while ($current_number <= $end) {
+			// Pad the number with leading zeros to ensure 6 digits
+			$formatted_number = str_pad($current_number, 6, '0', STR_PAD_LEFT);
+	
+			// Do something with the formatted number here
+	
+			$current_number++;
+		}
+		
+		return 'NRCP-EJ-'. date('Y') .'-'.$formatted_number . PHP_EOL;
 	}
 	
 

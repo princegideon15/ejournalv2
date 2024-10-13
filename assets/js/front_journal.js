@@ -1297,10 +1297,10 @@ function disableOnSubmit(element, action){
   $(element).prop('disabled' ,true);
 
   if(action == 'reset'){
-    $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Submitting...'); // Submit the form using the native submit() method
+    $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Submitting'); // Submit the form using the native submit() method
     $("#resetPasswordForm").submit();
   }else{
-    $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Logging In...'); // Submit the form using the native submit() method
+    $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Logging In'); // Submit the form using the native submit() method
     $("#loginForm").submit();
   }
 }

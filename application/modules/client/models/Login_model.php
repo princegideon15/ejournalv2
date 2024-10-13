@@ -24,6 +24,7 @@ class Login_model extends CI_Model {
 	private $users = 'tblusers';
 	private $sex = 'tblsex';
 	private $attempts = 'tbllogin_attempts';
+    private $profile = 'tbluser_profiles';
 
 	public function __construct() {
 		parent::__construct();
@@ -104,5 +105,15 @@ class Login_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function create_user_profile($data){
+		$this->db->insert($this->profile, $data);
+    }
+
+    public function create_user_account($data){
+		$this->db->insert($this->users, $data);
+    }
+    
+
 
 }
