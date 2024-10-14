@@ -57,7 +57,7 @@ function validateForm() {
                                 <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('error'); ?>
                             </div>
                         <?php } ?>
-
+                        <!-- password uBOtoPN3 -->
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm', 'class' => 'w-50'])?>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
@@ -72,7 +72,7 @@ function validateForm() {
                             <div class="mb-3 d-flex justify-content-end">
                                 <a class="main-link" href="<?php echo base_url('/client/login/forgot_password');?>">Forgot Password?</a>
                             </div>
-                            <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this, 'login')">Login </button>
+                            <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#loginForm', 'login')">Login </button>
                         <?=form_close()?>
                     </div>
                     <!-- Create Account -->
@@ -96,8 +96,8 @@ function validateForm() {
                                         <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['title']){ echo 'is-invalid';} ?>" name="title" id="title" value="<?= set_value('title', $this->session->flashdata('title')); ?>">
                                             <option selected disabled>Select Title</option>
                                                 <?php foreach ($titles as $row): ?>
-                                                <?php $selected = ($row->title_id == set_value('title', $this->session->flashdata('title')) ? 'selected' : '' ); ?>
-                                                <?php echo '<option value=' . $row->title_id . ' ' . $selected . '>' . $row->title_name . '</option>';?>
+                                                <?php $selected = ($row->title_name == set_value('title', $this->session->flashdata('title')) ? 'selected' : '' ); ?>
+                                                <?php echo '<option value=' . $row->title_name . ' ' . $selected . '>' . $row->title_name . '</option>';?>
                                                 <?php endforeach;?>
                                         </select>
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['title'] ?></span>

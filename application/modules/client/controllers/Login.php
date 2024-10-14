@@ -38,7 +38,7 @@ class Login extends EJ_Controller {
     public function authenticate(){
 
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|xss_clean');
-		$this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]');
+		$this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]|max_length[20]');
 
 		if($this->form_validation->run() == FALSE){
 			$errors = [];
@@ -63,58 +63,64 @@ class Login extends EJ_Controller {
 
 			if ($validateUser) {
 
-				if (password_verify($password, $validateUser[0]->password)) {
-					$this->Login_model->clear_login_attempts($validateUser[0]->email);
-					//send otp to email
-					$this->send_otp($email);
-				}else{
-
-
-					$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->email));
-
-					if($count_attempt == 3){
-
-						$last_attempt_time = $this->Login_model->get_login_attempts($validateUser[0]->email);
-						$last_attempt_time = $last_attempt_time[0]->attempt_time;
-						$current_date = date('Y-m-d H:i:s');
-						$time_remaining = $this->compareDates($last_attempt_time, $current_date);
-
-						$this->send_email_alert($email);
-						
-						if ($time_remaining  > 30) {
-							$this->Login_model->clear_login_attempts($validateUser[0]->email);
-							$this->session->set_flashdata('error', 'Invalid email or password.');
-			
+				//check if account activated
+				if($validateUser[0]->status == 1){
+					if (password_verify($password, $validateUser[0]->password)) {
+						$this->Login_model->clear_login_attempts($validateUser[0]->email);
+						//send otp to email
+						$this->send_login_otp($email);
+					}else{
+	
+	
+						$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->email));
+	
+						if($count_attempt == 3){
+	
+							$last_attempt_time = $this->Login_model->get_login_attempts($validateUser[0]->email);
+							$last_attempt_time = $last_attempt_time[0]->attempt_time;
+							$current_date = date('Y-m-d H:i:s');
+							$time_remaining = $this->compareDates($last_attempt_time, $current_date);
+	
+							$this->send_email_alert($email);
+							
+							if ($time_remaining  > 30) {
+								$this->Login_model->clear_login_attempts($validateUser[0]->email);
+								$this->session->set_flashdata('error', 'Invalid email or password.');
+				
+								//store login attempt
+								$data = [
+									'user_id' => $validateUser[0]->id,
+									'user_email' => $validateUser[0]->email,
+									'attempt_time' => date('Y-m-d H:i:s')
+								];
+	
+								$this->Login_model->store_login_attempts($data); 
+							}
+							else{
+								$this->session->set_flashdata('error', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+							}
+	
+							redirect('client/ejournal/login');
+						}else{
+							//TODO:store in system logs
 							//store login attempt
 							$data = [
 								'user_id' => $validateUser[0]->id,
 								'user_email' => $validateUser[0]->email,
 								'attempt_time' => date('Y-m-d H:i:s')
 							];
-
-							$this->Login_model->store_login_attempts($data); 
+	
+							$this->Login_model->store_login_attempts($data);  
 						}
-						else{
-							$this->session->set_flashdata('error', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
-						}
-
-						redirect('client/ejournal/login');
-					}else{
-						//TODO:store in system logs
-						//store login attempt
-						$data = [
-							'user_id' => $validateUser[0]->id,
-							'user_email' => $validateUser[0]->email,
-							'attempt_time' => date('Y-m-d H:i:s')
-						];
-
-						$this->Login_model->store_login_attempts($data);  
+	
+						$this->session->set_flashdata('error', 'Invalid email or password.');
+						redirect('client/ejournal/login'); 
+					
+	
 					}
-
-					$this->session->set_flashdata('error', 'Invalid email or password.');
-					redirect('client/ejournal/login'); 
-				
-
+				}else{
+					$this->session->set_flashdata('error', 'Account not activated. Please check your email for a create account verification code.');
+					redirect('client/ejournal/login');
 				}
 			} else {
 
@@ -164,7 +170,7 @@ class Login extends EJ_Controller {
 		}
 	}
 
-	public function send_otp($email) {
+	public function send_login_otp($email) {
 		
 		$user = $this->Client_journal_model->get_user_info($email);
 		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
@@ -338,7 +344,6 @@ class Login extends EJ_Controller {
 
 	
 	public function verify_otp($ref){
-		
 		//check if ref code exist
 		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
 
@@ -350,11 +355,10 @@ class Login extends EJ_Controller {
 			</div>');
 
 			$data['main_title'] = "eJournal";
-			$data['main_content'] = "client/otp";
+			$data['main_content'] = "client/login_otp";
 			$data['disabled'] = "disabled";
 			$this->_LoadPage('common/body', $data);
 		}else{
-
 			$otp_date = $isOtpRefExist[0]->otp_date;
 			$current_date = date('Y-m-d H:i:s');
 
@@ -366,14 +370,14 @@ class Login extends EJ_Controller {
 				</div>');
 	
 				$data['main_title'] = "eJournal";
-				$data['main_content'] = "client/otp";
+				$data['main_content'] = "client/login_otp";
 				$data['disabled'] = "disabled";
 				$this->_LoadPage('common/body', $data);
 			} else {
 			
 				$ref_code = $this->input->post('ref');
 			
-				$this->form_validation->set_rules('otp', 'OTP', 'required|trim|min_length[6]');
+				$this->form_validation->set_rules('otp', 'OTP', 'required|trim|min_length[6]|max_length[6]');
 			
 				if($this->form_validation->run() == FALSE){
 					$errors = [];
@@ -385,7 +389,7 @@ class Login extends EJ_Controller {
 					// Set flashdata to pass validation errors and form data to the view
 					$this->session->set_flashdata('validation_errors', $errors);
 					$data['main_title'] = "eJournal";
-					$data['main_content'] = "client/otp";
+					$data['main_content'] = "client/login_otp";
 					$this->_LoadPage('common/body', $data);
 				}else{
 					$otp = $this->input->post('otp');
@@ -404,15 +408,87 @@ class Login extends EJ_Controller {
 															</div>');
 		
 						$data['main_title'] = "eJournal";
-						$data['main_content'] = "client/otp";
+						$data['main_content'] = "client/login_otp";
 						$this->_LoadPage('common/body', $data);
 					}
 				}
 			}
-	
 		}
-
 		
+	}
+	
+	public function new_account_verify_otp($ref){
+		//check if ref code exist
+		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
+
+		//code expired
+		if($isOtpRefExist[0]->otp_ref_code == null){
+			$this->session->set_flashdata('otp', '
+			<div class="alert alert-danger d-flex align-items-center">
+				<i class="oi oi-circle-x me-1"></i>Link expired.
+			</div>');
+
+			$data['main_title'] = "eJournal";
+			$data['main_content'] = "client/new_account_otp";
+			$data['disabled'] = "disabled";
+			$this->_LoadPage('common/body', $data);
+		}else{
+			$otp_date = $isOtpRefExist[0]->otp_date;
+			$current_date = date('Y-m-d H:i:s');
+
+			//check if code expired after 5 minutes
+			// if ($this->compareDates($otp_date, $current_date)  > 4) {
+			// 	$this->session->set_flashdata('otp', '
+			// 	<div class="alert alert-danger d-flex align-items-center">
+			// 		<i class="oi oi-circle-x me-1"></i>Code expired.
+			// 	</div>');
+	
+			// 	$data['main_title'] = "eJournal";
+			// 	$data['main_content'] = "client/new_account_otp";
+			// 	$data['disabled'] = "disabled";
+			// 	$this->_LoadPage('common/body', $data);
+			// } else {
+			
+				$ref_code = $this->input->post('ref');
+			
+				$this->form_validation->set_rules('otp', 'OTP', 'required|trim|min_length[6]|max_length[6]');
+			
+				if($this->form_validation->run() == FALSE){
+					$errors = [];
+		
+					if (form_error('otp')) {
+						$errors['otp'] = strip_tags(form_error('otp'));
+					}
+		
+					// Set flashdata to pass validation errors and form data to the view
+					$this->session->set_flashdata('validation_errors', $errors);
+					$data['main_title'] = "eJournal";
+					$data['main_content'] = "client/new_account_otp";
+					$this->_LoadPage('common/body', $data);
+				}else{
+					$otp = $this->input->post('otp');
+					// Check user credentials using your authentication logic
+					$verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
+					if ($verifyOTP) {
+						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
+						$this->session->set_userdata('email',  $verifyOTP[0]->email);
+						$this->session->unset_userdata('otp_ref_code');
+						$this->Login_model->activateAccount($verifyOTP[0]->id);
+						$this->Login_model->delete_otp($verifyOTP[0]->id);
+						redirect('client/ejournal/');
+					} else {
+						$this->session->set_flashdata('otp', '
+															<div class="alert alert-danger d-flex align-items-center">
+																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
+															</div>');
+		
+						$data['main_title'] = "eJournal";
+						$data['main_content'] = "client/new_account_otp";
+						$this->_LoadPage('common/body', $data);
+					}
+				}
+			// }
+		}
 	}
 
 	function compareDates($date1, $date2) {
@@ -559,6 +635,6 @@ class Login extends EJ_Controller {
 	public function resend_code($refCode){
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->email;
-		$this->send_otp($email);
+		$this->send_login_otp($email);
 	}
 }

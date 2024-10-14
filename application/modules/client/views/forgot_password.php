@@ -54,7 +54,7 @@ gtag('config', 'G-VDLLX3HKBL');
                                     <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="name@example.com">
                                     <span class="invalid-feedback"><?=$this->session->flashdata('validation_errors')['email']?></span>
                                 </div>
-                                <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this,'reset')">Submit </button>
+                                <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#resetPasswordForm', 'reset')">Submit </button>
                             <?=form_close()?>
 
                             <div class="mt-5"><a class="main-link" href="<?= base_url('client/ejournal/login') ?>">Back to Login</a></div>

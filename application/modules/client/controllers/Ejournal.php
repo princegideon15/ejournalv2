@@ -1416,8 +1416,6 @@ class Ejournal extends EJ_Controller {
 		}
 	}
 
-
-
 	public function send_verification_code(){
 		$email = $this->input->post('clt_email');
 		$verification_code =  $this->session->userdata('verification_code');
@@ -1556,6 +1554,7 @@ class Ejournal extends EJ_Controller {
 				'id' => $newUserID,
 				'email' => $email,
 				'password' => password_hash($this->input->post('new_password'), PASSWORD_BCRYPT),
+				'status' => 0,
 				'otp' => $otp, 
 				'otp_date' => date('Y-m-d H:i:s'),
 				'otp_ref_code' => $ref_code,
@@ -1586,20 +1585,19 @@ class Ejournal extends EJ_Controller {
 			$this->Login_model->create_user_profile($userProfile);
 
 			//send email otp for create account
-			// $this->send_otp_new_account($email);
-			//TODO::link and redirection
+			$this->send_create_account_otp($email);
 		}
 		
 	}
 
-	public function send_otp_new_account($email) {
+	public function send_create_account_otp($email) {
 		
 		$user = $this->Client_journal_model->get_user_info($email);
 		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
-		$otp = $user['otp'];
-		$ref_code = $user['otp_ref_code'];
+		$otp = $user[0]->otp;
+		$ref_code = $user[0]->otp_ref_code;
 
-		$link = base_url() . 'client/login/verify_otp/'.$ref_code;
+		$link = base_url() . 'client/login/new_account_verify_otp/'.$ref_code;
 		$sender = 'eJournal';
 		$sender_email = 'nrcp.ejournal@gmail.com';
 		$password = 'fpzskheyxltsbvtg';
@@ -1637,8 +1635,6 @@ class Ejournal extends EJ_Controller {
 		'.$link.'
 		<br><br>
 		Link not working? Copy and paste the link into your browser.
-		<br><br>
-		This code will only be valid for the next <strong>5 minutes</strong>.
 		<br><br><br>
 		Sincerely,
 		<br><br>

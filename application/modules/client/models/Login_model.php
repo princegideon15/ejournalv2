@@ -69,6 +69,10 @@ class Login_model extends CI_Model {
         return $query->result();
     }
 
+    public function activateAccount($id){
+		$this->db->update($this->users, ['status' => 1], ['id' => $id]);
+    }
+
     public function delete_otp($id){
 		$this->db->update($this->users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['id' => $id]);
     }
