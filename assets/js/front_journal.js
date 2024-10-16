@@ -56,6 +56,22 @@ $(document).ready(function()
       // console.log("Not enough segments in the URL.");
   }
 
+  let volumeList = $('#volume_list');
+  let originalHeight = volumeList.height();
+  let showMoreButton = $('#see_more_volumes');
+
+  volumeList.css('height', originalHeight + 'px'); // Set initial height
+
+  showMoreButton.on('click', function() {
+    if (volumeList.height() === originalHeight) {
+      volumeList.css('height', 'auto');
+      showMoreButton.text('Show Less');
+    } else {
+      volumeList.css('height', originalHeight + 'px');
+      showMoreButton.text('Show More');
+    }
+  });
+
   $('#signUpForm #country').on('change', function(){
     if($(this).val() != 175){
       $('#signUpForm #region').prop('disabled', true);

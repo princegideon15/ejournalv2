@@ -78,6 +78,25 @@ class Ejournal extends EJ_Controller {
 	public function index() {
 
 		$this->session->set_userdata('verification_code', $this->token());
+
+		$volumes = [];
+		$issues = [];
+
+		$journals = $this->Client_journal_model->get_journals();
+
+		foreach($journals as $row){
+			$issues = $this->Client_journal_model->get_issues($row->jor_volume);
+			$jor_issues = [];
+			foreach ($issues as $issue) {
+				$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
+			} 
+
+			$vol = $row->jor_volume . ', ' . $row->jor_year;
+			$volumes[$vol] = $jor_issues;
+		}
+
+		//data to display
+		$data['volumes'] = $volumes;
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();
 		$data['client_count'] = $this->Client_journal_model->all_client();
@@ -249,15 +268,14 @@ class Ejournal extends EJ_Controller {
 		$issues = [];
 
 		$journals = $this->Client_journal_model->get_journals();
-
 		foreach($journals as $row){
 			$issues = $this->Client_journal_model->get_issues($row->jor_volume);
 			$jor_issues = [];
 			foreach ($issues as $issue) {
 				$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
 			} 
-
-			$volumes[$row->jor_volume] = $jor_issues;
+			$vol = $row->jor_volume . ', ' . $row->jor_year;
+			$volumes[$vol] = $jor_issues;
 		}
 
 		//data to display

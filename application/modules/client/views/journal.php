@@ -43,7 +43,43 @@ gtag('config', 'G-VDLLX3HKBL');
                 physical, earth, engineering, humanities, social and medical science, which contribute to basic,
                 conceptual and practical scientific advancements including the translation of research to public policy.
             </p>
-            <div class="accordion" id="accordionDivisions">
+
+            
+            <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p>
+
+            <h3>Volumes</h3>
+
+            <div>
+                <ul class="list-unstyled overflow-hidden" id="volume_list"  style="height:200px; min-height:200px">
+                    <?php foreach($volumes as $key => $row):?>
+                        <?php if(strpos($key, 'Adv. Publication') === false){ ?>
+                            <!-- <li><span class="fw-bold h6 text-decoration-underline">Volume <?=$key?></span> -->
+                            <li class="mb-1"><a href="" class="fs-6 main-link cursor-pointer">Volume <?=$key?></a>
+                            
+                                <!-- <ul class="list-unstyled mb-3">
+                                    <?php foreach($row as $val):?>
+                                        <?php   $issue = (
+                                                    ($val[0] == 5) ? 'Special Issue No. 1' :
+                                                    (($val[0] == 6) ? 'Special Issue No. 2' :
+                                                        (($val[0] == 7) ? 'Special Issue No. 3' :
+                                                            (($val[0] == 8) ? 'Special Issue No. 4' : 'Issue ' . $val[0])))
+                                                );
+                                        ?>
+                                    <li><a href="<?=base_url('/client/ejournal/get_issues/'.$key.'/'.$val[1])?>" class="main-link"><?=$issue?></a></li>
+                                    <?php endforeach; ?>
+                                </ul> -->
+                                            
+                            </li>
+                        <?php } ?>
+                    <?php endforeach; ?>
+                </ul>
+                <div class="d-flex gap-1 align-items-center">
+                    <a href="javascript:void(0);" class="text-dark cursor-pointer" id="see_more_volumes">See more</a><span class="fa fa-chevron-circle-right main-link"></span>
+                </div>
+                
+            </div>
+            
+            <!-- <div class="accordion" id="accordionDivisions">
                 <?php foreach($divisions as $row):?>
                 <div class="accordion-item border-0 mb-2">
                     <a href="javascript:void(0);" class="main-link text-decoration-underline" data-bs-toggle="collapse"
@@ -56,7 +92,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     </div>
                 </div>
                 <?php endforeach; ?>
-            </div>
+            </div> -->
         </div>
         <div class="col col-lg-5 p-3">
             <h3>Articles</h3>
@@ -157,9 +193,8 @@ gtag('config', 'G-VDLLX3HKBL');
                     <hr>
                     <?php endforeach;?>
 
-                    <div class="d-flex align-items-center justify-content-end">
-                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><i
-                            class="oi oi-chevron-right text-dark ms-1" style="font-size: .9rem"></i>
+                    <div class="d-flex gap-1 align-items-center justify-content-end">
+                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><span class="fa fa-chevron-circle-right main-link"></span>
                     </div>
                 </div>
                 <!-- Most Accessed -->
@@ -239,9 +274,8 @@ gtag('config', 'G-VDLLX3HKBL');
                     <hr>
                     <?php endforeach;}?>
 
-                    <div class="d-flex align-items-center justify-content-end">
-                        <a href="<?=base_url('/client/ejournal/articles');?>" class="text-dark">View all articles</a><i
-                            class="oi oi-chevron-right text-dark ms-1" style="font-size: .9rem"></i>
+                    <div class="d-flex gap-1 align-items-center justify-content-end">
+                        <a href="<?=base_url('/client/ejournal/articles');?>" class="text-dark">View all articles</a><span class="fa fa-chevron-circle-right main-link"></span>
                     </div>
                 </div>
                 <!-- Advance Publication -->
@@ -325,9 +359,8 @@ gtag('config', 'G-VDLLX3HKBL');
                     <hr>
                     <?php endforeach;?>
 
-                    <div class="d-flex align-items-center justify-content-end">
-                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><i
-                            class="oi oi-chevron-right text-dark ms-1" style="font-size: .9rem"></i>
+                    <div class="d-flex gap-1 align-items-center justify-content-end">
+                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><span class="fa fa-chevron-circle-right main-link"></span>
                     </div>
                 </div>
             </div>
