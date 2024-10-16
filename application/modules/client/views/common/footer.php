@@ -131,7 +131,7 @@
 
 				<p class="small">
 					Address: 51 General Santos Ave, Taguig, Metro Manila </br>
-					Email: <a class="text-dark" href="mailto:nrcp.ejournal@gmail.com" target="_blank">nrcp.ejournal@gmail.com</a></br>
+					Email: <a class="text-dark" href="mailto:ejournal@nrcp.dost.gov.ph" target="_blank">ejournal@nrcp.dost.gov.ph</a></br>
 					Hours: 7AM - 5PM Weekdays </br>
 					Phone: (02) 8837 0409 </br>
 				</p>

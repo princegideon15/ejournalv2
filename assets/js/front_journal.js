@@ -1421,3 +1421,32 @@ function getCurrentOTP(refCode){
     }
   });
 }
+
+function addSearch(element){
+  $(element).html('<span class="fa fa-minus text-danger"></span>');
+
+  $(element).attr('onclick', 'removeSearch(this)');
+  let html = `<div class="row mb-3">
+                                <div class="col col-3">
+                                    <select name="search_filter" id="search_filter" class="form-select">
+                                        <option value="1">All content</option>
+                                        <option value="2">Title</option>
+                                        <option value="3">Author</option>
+                                        <option value="4">Affiliation</option>
+                                        <option value="5">Keywords</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control rounded" name="search" id="advanceSearch" placeholder="Enter search term">
+                                        <button class="btn btn-light ms-1 rounded" type="button" id="button-addon2" onclick="addSearch(this)"><span class="fa fa-plus main-link"></span></button>
+                                    </div>
+                                </div>
+                            </div>`;
+
+                            $('#additional_search').append(html);
+}
+
+function removeSearch(element){
+  $(element).closest('div.row').remove();
+}

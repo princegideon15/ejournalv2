@@ -34,9 +34,15 @@
                                     </select>
                                 </div>
                                 <div class="col">
-                                    <input type="text" class="form-control" name="search" id="advanceSearch" placeholder="Enter search term" value="<?=$search?>">
+                                    <!-- <input type="text" class="form-control" name="search" id="advanceSearch" placeholder="Enter search term" value="<?=$search?>"> -->
+                                    <div class="input-group">
+                                        <input type="text" class="form-control rounded" name="search" id="advanceSearch" placeholder="Enter search term" value="<?=$search?>">
+                                        <button class="btn btn-light ms-1 rounded" type="button" id="button-addon2" onclick="addSearch(this)"><span class="fa fa-plus main-link"></span></button>
+                                    </div>
                                 </div>
                             </div>
+
+                            <span id="additional_search"></span>
 
                             <div class="row mb-3">
                                 <div class="col col-3 align-self-center text-end">Volume:</div>
