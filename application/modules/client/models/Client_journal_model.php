@@ -32,6 +32,7 @@ class Client_journal_model extends CI_Model {
 	private $profile = 'tbluser_profiles';
 	private $user = 'tblusers';
 	private $educations = 'tbleducational_attainment';
+	private $downloads = 'tbldownloads';
 	
 	//oprs tables
 	private $titles = 'tbltitles';
@@ -299,7 +300,8 @@ class Client_journal_model extends CI_Model {
 
 	/** this function save client details upon visiting the website */
 	public function save_client($post) {
-		$this->db->insert($this->clients, $post);
+		// $this->db->insert($this->clients, $post);
+		$this->db->insert($this->downloads, $post);
 		return $this->db->insert_id();
 	}
 

@@ -390,6 +390,32 @@ class Ejournal extends EJ_Controller {
 		}
 	}
 
+	public function download_file($id, $file) {
+
+		//get info of downloader
+		$data = [
+			'dl_art_id' => $id,
+			'dl_user_id' => $this->session->userdata('user_id'),
+			'dl_datetime' => date('Y-m-d H:i:s')
+		];
+		
+		$client_id = $this->Client_journal_model->save_client($data);
+
+        $this->load->helper('download');
+
+		//copy file to another directory
+		//local
+		$file_path = $_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/'.$file;
+		
+		//server manuscript
+		// $from = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/' . $file;
+		// $to = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
+
+        $data = file_get_contents($file_path);
+        $name = basename($file_path);
+        force_download($name, $data);
+    }
+
 	/**
 	 * Send email to author if client requested/downloaded his/her full text pdf
 	 *

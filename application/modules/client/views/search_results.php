@@ -190,16 +190,17 @@ $('.right-inner-addon').hide();
                             </div>
                             <?php if($logged_in){
                                echo '<div class="d-flex gap-1">
-                                <a  data-bs-toggle="modal" data-bs-target="#client_modal"
-                                    class="main-btn btn btn-sm" href="javascript:void(0);"
-                                    role="button" onclick="get_download_id('.$res->art_id.')">
+                                <a class="main-btn btn btn-sm" href="'.base_url('client/ejournal/download_file/'. $res->art_id .'/'.$res->art_full_text_pdf).'"
+                                    role="button">
                                     Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
                                 <a  data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"
-                                    onclick="get_citee_info(\''.addslashes($cite).'\','.$res->art_id.')">
+                                    onclick="get_citation(\''.addslashes($cite).'\','.$res->art_id.')">
                                     Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
                                 </div>';
+                                //  onclick="download_pdf('.$res->art_id.')"
+                                // get_citee_info
                             }else{
                                 echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
                                 Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a>';
