@@ -208,7 +208,7 @@ class Client_journal_model extends CI_Model {
 
 	/** this function get all journals */
 	public function get_journals() {
-		$this->db->select('jor_volume, jor_id, jor_year');
+		$this->db->select('jor_volume, jor_id, jor_issue, jor_year');
 		$this->db->from($this->journals);
 		$this->db->group_by('jor_volume');
 		$this->db->order_by('jor_year', 'desc');
@@ -263,11 +263,12 @@ class Client_journal_model extends CI_Model {
 	}
 
 	/** this function get all articles */
-	public function get_articles($id) {
+	public function get_articles($iss) {
 		$this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn, jor_description, jor_month, jor_year');
 		$this->db->from($this->articles.' a');
 		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
-		$this->db->where('a.art_jor_id', $id);
+		// $this->db->where('a.art_jor_id', $id);
+		$this->db->where('j.jor_issue', $iss);
 		$this->db->order_by('a.art_title', 'asc');
 		$query = $this->db->get();
 		return $query->result();

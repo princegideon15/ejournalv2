@@ -51,10 +51,10 @@ gtag('config', 'G-VDLLX3HKBL');
 
             <div>
                 <ul class="list-unstyled overflow-hidden" id="volume_list"  style="height:200px; min-height:200px">
-                    <?php foreach($volumes as $key => $row):?>
-                        <?php if(strpos($key, 'Adv. Publication') === false){ ?>
+                    <?php foreach($volumes as $row):?>
+                        <?php if(strpos($row->jor_volume, 'Adv. Publication') === false){ ?>
                             <!-- <li><span class="fw-bold h6 text-decoration-underline">Volume <?=$key?></span> -->
-                            <li class="mb-1"><a href="" class="fs-6 main-link cursor-pointer">Volume <?=$key?></a>
+                            <li class="mb-1"><a href="<?=base_url('/client/ejournal/volume/'.$row->jor_volume.'/'.$row->jor_issue)?>" class="fs-6 main-link cursor-pointer">Volume <?= $row->jor_volume ?>, <?= $row->jor_year ?></a>
                             
                                 <!-- <ul class="list-unstyled mb-3">
                                     <?php foreach($row as $val):?>
@@ -73,8 +73,8 @@ gtag('config', 'G-VDLLX3HKBL');
                         <?php } ?>
                     <?php endforeach; ?>
                 </ul>
-                <div class="d-flex gap-1 align-items-center">
-                    <a href="javascript:void(0);" class="text-dark cursor-pointer" id="see_more_volumes">See more</a><span class="fa fa-chevron-circle-right main-link"></span>
+                <div>
+                    <a href="javascript:void(0);" class="text-dark cursor-pointer" id="see_more_volumes">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
                 </div>
                 
             </div>
@@ -194,7 +194,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     <?php endforeach;?>
 
                     <div class="d-flex gap-1 align-items-center justify-content-end">
-                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><span class="fa fa-chevron-circle-right main-link"></span>
+                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
                     </div>
                 </div>
                 <!-- Most Accessed -->
@@ -275,7 +275,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     <?php endforeach;}?>
 
                     <div class="d-flex gap-1 align-items-center justify-content-end">
-                        <a href="<?=base_url('/client/ejournal/articles');?>" class="text-dark">View all articles</a><span class="fa fa-chevron-circle-right main-link"></span>
+                    <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
                     </div>
                 </div>
                 <!-- Advance Publication -->
@@ -360,7 +360,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     <?php endforeach;?>
 
                     <div class="d-flex gap-1 align-items-center justify-content-end">
-                        <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles</a><span class="fa fa-chevron-circle-right main-link"></span>
+                    <a href="<?=base_url('/client/ejournal/articles')?>" class="text-dark">View all articles<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
                     </div>
                 </div>
             </div>

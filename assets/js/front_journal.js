@@ -65,10 +65,10 @@ $(document).ready(function()
   showMoreButton.on('click', function() {
     if (volumeList.height() === originalHeight) {
       volumeList.css('height', 'auto');
-      showMoreButton.text('Show Less');
+      showMoreButton.html('Show Less<span class="fa fa-chevron-circle-left main-link ms-1"></span>');
     } else {
       volumeList.css('height', originalHeight + 'px');
-      showMoreButton.text('Show More');
+      showMoreButton.html('Show More<span class="fa fa-chevron-circle-right main-link ms-1"></span>');
     }
   });
 

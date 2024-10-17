@@ -1,29 +1,31 @@
 <?php error_reporting(0);?>
+<?php $logged_in = $this->session->userdata('user_id'); ?>
 <div class="container-fluid mt-3 p-4">
     <div class="row pt-3">
         <!-- SIDE NAVIGATION -->
         
         <div class="col col-3 p-3">
-            <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
+            <!-- <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a> -->
+            <h5 class="text-dark">Volumes</h5>
             <hr>
-            <h6 class="fw-bold text-decoration-underline fs-5 text-dark">Other Volumes</h6>
             <ul class="list-unstyled">
                 <?php foreach($volumes as $key => $row):?>
-                    <li><span class="fw-bold text-muted text-decoration-underlinex"><?=$key?></span>
-                    <ul class="list-unstyled mb-3">
-                        <?php foreach($row as $val):?>
-                            <?php   $issue = (
-                                        ($val[0] == 5) ? 'Special Issue No. 1' :
-                                        (($val[0] == 6) ? 'Special Issue No. 2' :
-                                            (($val[0] == 7) ? 'Special Issue No. 3' :
-                                                (($val[0] == 8) ? 'Special Issue No. 4' : 'Issue ' . $val[0])))
-                                    );
-                            ?>
-                        <li><a href="<?=base_url('/client/ejournal/get_articles/'.$key.'/'.$val[1])?>" class="main-link"><?=$issue?></a></li>
-                        <?php endforeach; ?>
-                    </ul>
-                
-                    </li>
+                    <?php if(strpos($key, 'Adv. Publication') === false){ ?>
+                        <li><span class="fw-bold text-muted text-decoration-underlinex">Volume <?=$key?></span>
+                            <ul class="list-unstyled mb-3">
+                                <?php foreach($row as $val):?>
+                                    <?php   $issue = (
+                                                ($val[0] == 5) ? 'Special Issue No. 1' :
+                                                (($val[0] == 6) ? 'Special Issue No. 2' :
+                                                    (($val[0] == 7) ? 'Special Issue No. 3' :
+                                                        (($val[0] == 8) ? 'Special Issue No. 4' : 'Issue ' . $val[0])))
+                                            );
+                                    ?>
+                                <li><a href="<?=base_url('/client/ejournal/volume/'.$val[2].'/'.$val[0])?>" class="main-link"><?=$issue?></a></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </li>
+                    <?php } ?>
                 <?php endforeach; ?>
             </ul>
             
@@ -80,14 +82,14 @@
 				endforeach;?>
 
 				<div class="d-flex">
-					<div class="flex-shrink-0">
+					<!-- <div class="flex-shrink-0">
 						<img class="mr-2 img-thumbnail" height="150" width="150"
 						src="<?php echo base_url('assets/uploads/cover/' . $cover . ''); ?>">
-					</div>
-					<div class="flex-grow-1 ms-2 mt-0">
+					</div> -->
+					<div class="flex-grow-1">
 						<p class="mt-0 text-dark">
 							<h2>Volume <?php echo $journal; ?></h2>
-							<h5 class="text-muted small"><?php echo $pub_date; ?></h5>
+							<h5 class="text-muted small">Publication Year: <?php echo $pub_date; ?></h5>
 							<!-- <h5 class="text-muted small">ISSN: <?php echo $issn; ?></h5> -->
 							<h5 class="text-muted small">Articles: <?php echo count($articles); ?></h5>
 							<small class="text-muted"><?php echo $description; ?></small>
@@ -100,12 +102,11 @@
 				<?php $c = 1;foreach ($lat as $row): ?>
 				<?php $coa_arr = (explode(",& ", $row['coa']));?>
 
-				<p class="mt-0 text-dark mb-0"><?php echo $row['title']; ?></p>
+				<p class="mt-0 text-dark mb-0 main-link"><?php echo $row['title']; ?></p>
 				
-				<div class="mt-1">
+				<div class="mt-2">
 					<?php $i = 0; foreach ($coa_arr as $c): ?>
-					<a href="javascript:void(0);" class="text-muted"
-						onclick="author_details('<?php echo $row['id_jor']; ?>','<?php echo $c; ?>')"><?php echo $c; ?></a>
+					<a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $c) ?>" class="text-muted"><?php echo $c; ?></a>
 					<?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted">|</span>'; ?>
 					<?php $i++; ?>
 					<?php endforeach;?>
@@ -118,7 +119,8 @@
 					$string = explode(', ', $keywords);
 					foreach ($string as $i => $key) {
 						if ($key == strip_tags($key)) {
-							echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
+							// echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
+							echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/articles?search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
 						} else {
 							echo $key . '; ';
 						}
@@ -144,21 +146,23 @@
 							title="Cited"><i class="oi oi-document"></i>
 							<?=number_format($row['citations'], 0, '', ',')?></span>
 					</div>
-					<div class="d-flex gap-3">
-						<a data-bs-toggle="modal" data-bs-target="#client_modal"
-							class="main-link text-decoration-underline" href="javascript:void(0);"
-							role="button" onclick="get_download_id(<?=$row['id']?>)">
-							<span class="oi oi-file"></span> Download</a>
-						<a class="main-link text-decoration-underline"
-							onclick="get_download_id(<?=$row['id']?>,'hits','<?=$row['file']?>')"
-							href="javascript:void(0);" role="button">
-							<span class="oi oi-eye"></span> Abstract</a>
-						<a data-bs-toggle="modal" data-bs-target="#citationModal"
-							class="main-link text-decoration-underline" href="javascript:void(0);"
-							role="button"
-							onclick="get_citee_info('<?=addslashes($row['cite'])?>','<?=$row['id']?>')">
-							<span class='oi oi-document'></span> Cite this article</a>
-					</div>
+                    
+                    <?php if($logged_in){
+                               echo '<div class="d-flex gap-1">
+                                <a  data-bs-toggle="modal" data-bs-target="#client_modal"
+                                    class="main-btn btn btn-sm" href="javascript:void(0);"
+                                    role="button" onclick="get_download_id('.$row['id'].')">
+                                    Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                                <a  data-bs-toggle="modal" data-bs-target="#citationModal"
+                                    class="main-btn btn-sm btn " href="javascript:void(0);"
+                                    role="button"
+                                    onclick="get_citee_info(\''.addslashes($row['cite']).'\','.$row['id'].')">
+                                    Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
+                                </div>';
+                            }else{
+                                echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
+                                Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a>';
+                            }?>
 				</div>
 
 				<hr>

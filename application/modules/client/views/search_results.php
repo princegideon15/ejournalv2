@@ -156,7 +156,8 @@ $('.right-inner-addon').hide();
                             $string = explode(', ', $keywords);
                             foreach ($string as $i => $key) {
                                 if ($key == strip_tags($key)) {
-                                    echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
+                                    // echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
+                                    echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/articles?search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
                                 } else {
                                     echo $key . '; ';
                                 }
@@ -168,8 +169,8 @@ $('.right-inner-addon').hide();
                         
                         <div class="text-muted mt-1 small"><?=$res->art_year?></div>
                         
-                        <!-- <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/get_articles/'.$vol.'/'.$jor_id.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div> -->
-                        <div class="text-muted mt-1 small">Volume <?=$res->jor_volume . ' ' . $issue?></div>
+                        <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/volume/'.$vol.'/'.$res->jor_issue.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div>
+                        <!-- <div class="text-muted mt-1 small">Volume <?=$res->jor_volume . ' ' . $issue?></div> -->
                 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class='mb-2 mt-2'>

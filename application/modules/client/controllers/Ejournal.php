@@ -78,25 +78,24 @@ class Ejournal extends EJ_Controller {
 	public function index() {
 
 		$this->session->set_userdata('verification_code', $this->token());
-
-		$volumes = [];
-		$issues = [];
+		
+		// $volumes = [];
+		// $issues = [];
 
 		$journals = $this->Client_journal_model->get_journals();
-
-		foreach($journals as $row){
-			$issues = $this->Client_journal_model->get_issues($row->jor_volume);
-			$jor_issues = [];
-			foreach ($issues as $issue) {
-				$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
-			} 
-
-			$vol = $row->jor_volume . ', ' . $row->jor_year;
-			$volumes[$vol] = $jor_issues;
-		}
+		// foreach($journals as $row){
+		// 	$issues = $this->Client_journal_model->get_issues($row->jor_volume);
+		// 	$jor_issues = [];
+		// 	foreach ($issues as $issue) {
+		// 		$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
+		// 	} 
+		// 	$vol = $row->jor_volume . ', ' . $row->jor_year;
+		// 	$volumes[$vol] = $jor_issues;
+		// }
 
 		//data to display
-		$data['volumes'] = $volumes;
+		// $data['volumes'] = $volumes;
+		$data['volumes'] = $journals;
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();
 		$data['client_count'] = $this->Client_journal_model->all_client();
@@ -261,34 +260,35 @@ class Ejournal extends EJ_Controller {
 		$output = $this->Client_journal_model->get_journal($id);
 		echo json_encode($output);
 	}
+	
+	public function volume($vol,$iss) {
 
-	public function volumes(){
-		
+		//get volums for side menu
 		$volumes = [];
 		$issues = [];
 
 		$journals = $this->Client_journal_model->get_journals();
+
 		foreach($journals as $row){
 			$issues = $this->Client_journal_model->get_issues($row->jor_volume);
 			$jor_issues = [];
 			foreach ($issues as $issue) {
-				$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
-			} 
+				$jor_issues[] = [$issue->jor_issue, $issue->jor_id, $row->jor_volume];
+			}
+
 			$vol = $row->jor_volume . ', ' . $row->jor_year;
 			$volumes[$vol] = $jor_issues;
 		}
 
-		//data to display
+
 		$data['volumes'] = $volumes;
-		$data['journals'] = $this->Client_journal_model->get_journals();
-		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
-		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
-
-		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/volumes";
+		$data['main_content'] = "client/articles";
+		//$data['main_content'] = "client/maintenance";
+		$data['articles'] = $this->Client_journal_model->get_articles($iss);
+		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['selected_journal'] = $vol;
 		$this->_LoadPage('common/body', $data);
-
 	}
 
 	/**
