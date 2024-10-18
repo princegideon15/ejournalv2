@@ -22,6 +22,7 @@ var seconds = 0;
 var intervalId;
 var isStartTimer = false;
 var refCode;
+var article_id;
 
 $(document).ready(function()
 {
@@ -55,6 +56,30 @@ $(document).ready(function()
   } else {
       // console.log("Not enough segments in the URL.");
   }
+
+  
+
+  $('#abstract_modal').on('show.bs.modal', function() {
+    var modalOpenTime = new Date().getTime();
+    var modalTimeout;
+
+    modalTimeout = setTimeout(function() {
+      var currentTime = new Date().getTime();
+      var elapsedTime = currentTime - modalOpenTime;
+      var seconds = elapsedTime / 1000;
+      if (seconds >= 5) {
+        // console.log('Modal has been open for more than 5 seconds');
+        //save hits
+        save_hits(article_id);
+      }
+    }, 5000); // Check after 5 seconds
+
+    $('#abstract_modal').on('hidden.bs.modal', function() {
+      clearTimeout(modalTimeout);
+      // console.log('Modal has been closed');
+    });
+  });
+
 
   let volumeList = $('#volume_list');
   let originalHeight = volumeList.height();
@@ -896,18 +921,13 @@ function get_download_id(id, flag=null, file=null, logged_in = null)
 
   if(flag == 'hits')
   {
+    article_id = id;
     $('#abstract_modal').modal('toggle');
     // $('#abstract_view').removeAttr('src');
     // $('#abstract_view').attr('src', );
     $('#abstract_view').replaceWith($('#abstract_view').clone().attr('src',base_url+"assets/uploads/abstract/"+file+'#toolbar=0&navpanes=0&scrollbar=0'));
-    $.ajax({
-      type:"POST",
-      url: base_url + "client/ejournal/abstract_hits/"+id,
-      async: false
-    });
-  }
-  else if(flag == 'top')
-  {
+
+  }else if(flag == 'top') {
     // $('#top_modal').modal('toggle');
     // $('#client_modal').modal('toggle');
     // $.ajax({
@@ -916,6 +936,14 @@ function get_download_id(id, flag=null, file=null, logged_in = null)
     //   async: false
     // });
   }
+}
+
+function save_hits(id){
+  $.ajax({
+    type:"POST",
+    url: base_url + "client/ejournal/abstract_hits/"+id,
+    async: false
+  });
 }
 
 /**
