@@ -1138,26 +1138,26 @@ class Ejournal extends EJ_Controller {
 	public function save_citation($id)
 	{
 
-		
-
-		$recipient = $this->input->post('cite_email', TRUE);
-		$citation = $this->input->post('cite_value', TRUE);
+		// $recipient = $this->input->post('cite_email', TRUE);
+		// $citation = $this->input->post('cite_value', TRUE);
 
 		
-		$tableName = 'tblcitations';
-		$result = $this->db->list_fields($tableName);
-		$post = array();
+		// $tableName = 'tblcitations';
+		// $result = $this->db->list_fields($tableName);
+		// $post = array();
 
-		foreach ($result as $i => $field) {
-				$post[$field] = $this->input->post($field, TRUE);
-				$client_title = $this->input->post('cite_title', TRUE);
-				$client_name = $this->input->post('cite_name', TRUE);
-				$client_aff = $this->input->post('cite_affiliation', TRUE);
-				$client_country = $this->input->post('cite_country', TRUE);
+		// foreach ($result as $i => $field) {
+		// 		$post[$field] = $this->input->post($field, TRUE);
+		// 		$client_title = $this->input->post('cite_title', TRUE);
+		// 		$client_name = $this->input->post('cite_name', TRUE);
+		// 		$client_aff = $this->input->post('cite_affiliation', TRUE);
+		// 		$client_country = $this->input->post('cite_country', TRUE);
 			
-		}
+		// }
 
-		$post['cite_member'] = $this->input->post('cite_member', TRUE);
+		// $post['cite_member'] = $this->input->post('cite_member', TRUE);
+
+		$post['cite_user_id'] = $this->session->userdata('user_id');
 		$post['cite_art_id'] = $id;
 		$post['date_created'] = date('Y-m-d H:i:s');
 		
@@ -1749,6 +1749,17 @@ class Ejournal extends EJ_Controller {
 		return 'NRCP-EJ-'. date('Y') .'-'.$formatted_number . PHP_EOL;
 	}
 	
+	function profile(){
+		$id = $this->session->userdata('user_id');
+		$data['educations'] = $this->Client_journal_model->getEducations();
+		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
+		$data['titles'] = $this->Client_journal_model->getTitles();
+		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
+		$data['profile'] = $this->Login_model->get_user_profile($id);
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/user_profile";
+		$this->_LoadPage('common/body', $data);
+	}
 
 }
 

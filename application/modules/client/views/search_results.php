@@ -196,7 +196,7 @@ $('.right-inner-addon').hide();
                                 <a  data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"
-                                    onclick="get_citation(\''.addslashes($cite).'\','.$res->art_id.')">
+                                    onclick="get_citee_info(\''.addslashes($cite).'\','.$res->art_id.')">
                                     Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
                                 </div>';
                                 //  onclick="download_pdf('.$res->art_id.')"
@@ -567,11 +567,11 @@ $('.right-inner-addon').hide();
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Please fill up the required fields. Then click SUBMIT to show the APA
+                    <!-- <p>Please fill up the required fields. Then click SUBMIT to show the APA
                         citation</p>
                     <form id="form_citation">
                         
-                    <input type="hidden" id="cite_value" name="cite_value">
+                        <input type="hidden" id="cite_value" name="cite_value">
                         <div class="form-group">
                             <label class="font-weight-bold" for="cite_title">Title<span
                                     class="text-danger font-weight-bold">*</span></label>
@@ -603,13 +603,10 @@ $('.right-inner-addon').hide();
                                     class="text-danger font-weight-bold">*</span></label>
                             <select class="form-control" id="cite_country" name="cite_country"
                                 placeholder="Select Country" style="background-color: white">
-                                <!-- foreach of country -->
                                 <?php foreach ($country as $c): ?>
-                                d
                                 <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-            echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
+                                    echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
                                 <?php endforeach;?>
-                                <!-- /.end of foreach-->
                             </select>
                         </div>
                         <div class="form-group">
@@ -628,9 +625,8 @@ $('.right-inner-addon').hide();
                         </div>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
+                    </form> -->
+
                     <div id="cite_content" class="w-100">
                         <ul class="nav nav-tabs" id="cite_tab" role="tablist">
                             <li class="nav-item">
@@ -644,6 +640,9 @@ $('.right-inner-addon').hide();
                         </div>
                         <button type="button" onClick="copyCitationToClipboard('#apa_format')" class="btn main-btn mt-3 w-100">Copy to clipboard</button>
                     </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>

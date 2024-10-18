@@ -57,8 +57,6 @@ $(document).ready(function()
       // console.log("Not enough segments in the URL.");
   }
 
-  
-
   $('#abstract_modal').on('show.bs.modal', function() {
     var modalOpenTime = new Date().getTime();
     var modalTimeout;
@@ -1251,14 +1249,12 @@ function author_details_search(id, name, url_segment)
 }
 
 function get_citee_info(value,id) {
-
-  $('#citationModal p').val('Please provide us with your Full Name and Email Address. Then click SUBMIT to show the APA citation');
+  // $('#citationModal p').val('Please provide us with your Full Name and Email Address. Then click SUBMIT to show the APA citation');
   $('#form_citation').show();
-  $('#apa_format').val('');
+  $('#apa_format').val(value);
   $('#cite_value').val(value);
   apa_format = value;
   apa_id = id;
-
 }
 
 
@@ -1317,12 +1313,20 @@ function verify_feedback(fb_clt_id, source){
 
 function copyCitationToClipboard(element){
   $(element).select();
-
   var $temp = $("<input>");
   $("body").append($temp);
   $temp.val($(element).text()).select();
   document.execCommand("copy");
   $temp.remove();
+  save_cite(apa_id);
+}
+
+function save_cite(apa_id){
+  $.ajax({
+    type:"POST",
+    url: base_url + "client/ejournal/save_citation/"+apa_id,
+    async: false
+  });
 }
 
 function download_full_paper(logged_in){

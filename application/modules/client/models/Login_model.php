@@ -24,7 +24,7 @@ class Login_model extends CI_Model {
 	private $users = 'tblusers';
 	private $sex = 'tblsex';
 	private $attempts = 'tbllogin_attempts';
-    private $profile = 'tbluser_profiles';
+  private $profile = 'tbluser_profiles';
 
 	public function __construct() {
 		parent::__construct();
@@ -77,7 +77,7 @@ class Login_model extends CI_Model {
 		$this->db->update($this->users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['id' => $id]);
     }
 
-	public function save_otp($data, $where){
+	  public function save_otp($data, $where){
 		$this->db->update($this->users, $data, $where);
     }
 
@@ -116,6 +116,15 @@ class Login_model extends CI_Model {
 
     public function create_user_account($data){
 		$this->db->insert($this->users, $data);
+    }
+
+    public function get_user_profile($id){
+      $this->db->select('p.*, email');
+      $this->db->from($this->users . ' u');
+      $this->db->join($this->profile . ' p', 'u.id = p.user_id');
+      $this->db->where('u.id', $id);
+      $query = $this->db->get();
+      return $query->result();
     }
     
 
