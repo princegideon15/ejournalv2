@@ -114,7 +114,7 @@ class Login_model extends CI_Model {
 		$this->db->insert($this->profile, $data);
     }
 
-    public function create_user_account($data){
+    public function create_user_auth($data){
 		$this->db->insert($this->users, $data);
     }
 
@@ -127,6 +127,28 @@ class Login_model extends CI_Model {
       return $query->result();
     }
     
+    public function check_exist_email($user_id, $email){
+      $this->db->select('*');
+      $this->db->from($this->users);
+      $this->db->where('email !=', $email);
+      $this->db->where('id', $user_id);
+      $query = $this->db->get();
+      // If a matching user is found, return the user object
+      if ($query->num_rows() == 1) {
+          return $query->result();
+          // return $this->db->last_query();
+      } else {
+          // Return false if no user found
+          return false;
+      }
+    }
 
+    public function update_user_auth($data, $where){
+      $this->db->update($this->users, $data, $where);
+    }
+
+    public function update_user_profile($data, $where){
+      $this->db->update($this->profile, $data, $where);
+    }
 
 }

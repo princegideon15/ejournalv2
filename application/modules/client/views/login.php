@@ -129,8 +129,8 @@ function validateForm() {
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['extension_name'] ?></span>
                                     </div>
                                     <div class="col">
-                                        <label class="form-label" for="sex">Sex<span
-                                                class="text-danger fw-bold">*</span></label>
+                                        <label class="form-label" for="sex"><span
+                                        class="text-danger fw-bold">*</span>Sex</label>
                                         <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['sex']){ echo 'is-invalid';} ?>" id="sex" name="sex">
                                             <option selected disabled>Select Sex</option>
                                             <option value="1" <?= (set_value('sex', $this->session->flashdata('sex')) == 1) ? 'selected' : '' ?>>Male</option>
@@ -141,8 +141,8 @@ function validateForm() {
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="educational_attainment">Educational Attainment<span
-                                        class="text-danger fw-bold">*</span></label>
+                                <label class="form-label" for="educational_attainment"><span
+                                class="text-danger fw-bold">*</span>Educational Attainment</label>
                                 <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['educational_attainment']){ echo 'is-invalid';} ?>" id="educational_attainment" name="educational_attainment">
                                     <option selected disabled>Select Educational Attainment</option>
                                     <?php
@@ -166,14 +166,14 @@ function validateForm() {
                                 <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['educational_attainment'] ?></span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="affiliation">Affiliation<span
-                                        class="text-danger fw-bold">*</span></label>
+                                <label class="form-label" for="affiliation"><span
+                                class="text-danger fw-bold">*</span>Affiliation</label>
                                 <input type="text" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['affiliation']){ echo 'is-invalid';} ?>" id="affiliation" name="affiliation"  value="<?= set_value('affiliation', $this->session->flashdata('affiliation')); ?>">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['affiliation'] ?></span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="country">Country<span
-                                        class="text-danger fw-bold">*</span></label>
+                                <label class="form-label" for="country"><span
+                                class="text-danger fw-bold">*</span>Country</label>
                                 <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['country']){ echo 'is-invalid';} ?>" id="country" name="country">
                                     <option disabled>Select Country</option>
                                     <?php foreach ($country as $row): ?>
@@ -187,8 +187,8 @@ function validateForm() {
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col">
-                                        <label class="form-label" for="region">Region<span
-                                                class="text-danger fw-bold">*</span></label>
+                                        <label class="form-label" for="region"><span
+                                        class="text-danger fw-bold">*</span>Region</label>
                                         <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['region']){ echo 'is-invalid';} ?>" id="region" name="region"
                                         <?php if($country_id != 175){ echo 'disabled';} ?> >
                                             <option selected disabled>Select Region</option>
@@ -201,8 +201,8 @@ function validateForm() {
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['region'] ?></span>
                                     </div>
                                     <div class="col">
-                                        <label class="form-label" for="province">Province<span
-                                                class="text-danger fw-bold">*</span></label>
+                                        <label class="form-label" for="province"><span
+                                        class="text-danger fw-bold">*</span>Province</label>
                                         <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['province']){ echo 'is-invalid';} ?>" id="province" name="province" <?php if($country_id != 175){ echo 'disabled';} ?>>
                                             <option selected disabled>Select Province</option>
                                             <?php $provinces = ($this->session->flashdata('provinces')) ? $this->session->flashdata('provinces') : '' ?>
@@ -217,8 +217,8 @@ function validateForm() {
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['province'] ?></span>
                                     </div>
                                     <div class="col">
-                                        <label class="form-label" for="city">City<span
-                                                class="text-danger fw-bold">*</span></label>
+                                        <label class="form-label" for="city"><span
+                                        class="text-danger fw-bold">*</span>City</label>
                                         <select class="form-select <?php if($this->session->flashdata('signup_validation_errors')['city']){ echo 'is-invalid';} ?>" id="city" name="city" <?php if($country_id != 175){ echo 'disabled';} ?>>
                                             <option selected disabled>Select City</option>
                                             <?php $cities = ($this->session->flashdata('cities')) ? $this->session->flashdata('cities') : '' ?>
@@ -235,8 +235,8 @@ function validateForm() {
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="contact">Contact No.<span
-                                        class="text-danger fw-bold">*</span></label>
+                                <label class="form-label" for="contact"><span
+                                class="text-danger fw-bold">*</span>Contact No.</label>
                                 <input type="text" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['contact']){ echo 'is-invalid';} ?>" id="contact" name="contact"
                                     placeholder=""  value="<?= set_value('contact', $this->session->flashdata('contact')); ?>">
                                     <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['contact'] ?></span>
@@ -244,8 +244,8 @@ function validateForm() {
                             <div class="mb-4">
                                 <div class="row">
                                     <div class="col">
-                                        <label class="form-label" for="new_password">Password<span
-                                                class="text-danger fw-bold">*</span></label>
+                                        <label class="form-label" for="new_password"><span
+                                        class="text-danger fw-bold">*</span>Password</label>
                                         <input type="password" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_password']){ echo 'is-invalid';} ?>" id="new_password" name="new_password" placeholder="" value="<?= set_value('new_password', $this->session->flashdata('new_password')); ?>">
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
                                        
@@ -263,8 +263,8 @@ function validateForm() {
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <label class="form-label" for="confirm_password">Confirm Password<span
-                                                class="text-danger fw-bold">*</span></label>
+                                        <label class="form-label" for="confirm_password"><span
+                                        class="text-danger fw-bold">*</span>Confirm Password</label>
                                         <input type="password" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['confirm_password']){ echo 'is-invalid';} ?>" id="confirm_password" name="confirm_password" placeholder="" value="<?= set_value('confirm_password', $this->session->flashdata('confirm_password')); ?>">
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['confirm_password'] ?></span>
                                     </div>

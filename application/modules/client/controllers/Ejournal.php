@@ -1361,11 +1361,6 @@ class Ejournal extends EJ_Controller {
 
 	public function submit_feedback() {
 
-
-
-
-
-
 		$id = $this->session->userdata('client_id');  
 		$ref = $this->session->userdata('fdbk_ref');
 		
@@ -1594,7 +1589,7 @@ class Ejournal extends EJ_Controller {
 			$newUserID = $this->generate_user_id('0000', $currentTotalUsers + 1);
 
 			//save user account
-			$userAccount = [
+			$userAuth = [
 				'id' => $newUserID,
 				'email' => $email,
 				'password' => password_hash($this->input->post('new_password'), PASSWORD_BCRYPT),
@@ -1605,7 +1600,7 @@ class Ejournal extends EJ_Controller {
 				'created_at' => date('Y-m-d H:i:s')
 			];
 			
-			$this->Login_model->create_user_account($userAccount);
+			$this->Login_model->create_user_auth($userAuth);
 
 			//save user profile
 			$userProfile = [
@@ -1749,17 +1744,6 @@ class Ejournal extends EJ_Controller {
 		return 'NRCP-EJ-'. date('Y') .'-'.$formatted_number . PHP_EOL;
 	}
 	
-	function profile(){
-		$id = $this->session->userdata('user_id');
-		$data['educations'] = $this->Client_journal_model->getEducations();
-		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
-		$data['titles'] = $this->Client_journal_model->getTitles();
-		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
-		$data['profile'] = $this->Login_model->get_user_profile($id);
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/user_profile";
-		$this->_LoadPage('common/body', $data);
-	}
 
 }
 

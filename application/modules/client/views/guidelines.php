@@ -5,7 +5,7 @@
             <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
 		</div>
 		<div class="col col-7 p-3">
-					<div class="shadow p-5 mb-5 bg-white rounded">
+					<div class="border p-5 mb-5 bg-white rounded">
 						<div class="row mt-5">
 							<div class="col">
 								 <h3>SUBMISSION OF MANUSCRIPTS</h3>

@@ -44,7 +44,7 @@
                     '.$this->session->userdata('email').'
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="'.base_url('/client/ejournal/profile').'">My Profile</a></li>
+                    <li><a class="dropdown-item" href="'.base_url('/client/login/profile').'">My Profile</a></li>
                     <li><a class="dropdown-item" href="'.base_url('/client/login/logout').'">Logout</a></li>
                   </ul>
                 </li>';
