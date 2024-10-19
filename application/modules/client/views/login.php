@@ -60,13 +60,13 @@ function validateForm() {
                         <!-- password uBOtoPN3 -->
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm', 'class' => 'w-50'])?>
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="name@example.com">
+                                <!-- <label for="email" class="form-label">Email</label> -->
+                                <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="Email">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['email'] ?></span>
                             </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
+                            <div class="input-group mb-3 has-validation">
                                 <input type="password" class="form-control <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
+                                <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#password', '#password_icon')"><i class="fa fa-eye-slash" id="password_icon"></i></a></span>
                                 <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['password'] ?></span>
                             </div>
                             <div class="mb-3 d-flex justify-content-end">
@@ -79,6 +79,12 @@ function validateForm() {
                     <div class="tab-pane fade p-3 <?= $this->session->flashdata('active_tab2') ?>" id="create-account-tab-pane" role="tabpanel" aria-labelledby="create-account-tab"
                         tabindex="0">
                         
+                        <?php if ($this->session->flashdata('error')) { ?>
+                            <div class="alert alert-danger d-flex align-items-center">
+                                <i class="fa fa-info-circle me-1"></i><?php echo $this->session->flashdata('error'); ?>
+                            </div>
+                        <?php } ?>
+
                         <?=form_open('client/ejournal/create_account', ['method' => 'post', 'id' => 'signUpForm', 'onsubmit' => 'return validateForm();'])?>
                             <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
                             <div class="mb-3">
@@ -244,11 +250,12 @@ function validateForm() {
                             <div class="mb-4">
                                 <div class="row">
                                     <div class="col">
-                                        <label class="form-label" for="new_password"><span
-                                        class="text-danger fw-bold">*</span>Password</label>
-                                        <input type="password" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_password']){ echo 'is-invalid';} ?>" id="new_password" name="new_password" placeholder="" value="<?= set_value('new_password', $this->session->flashdata('new_password')); ?>">
-                                        <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
-                                       
+                                        <label class="form-label" for="new_password"><span class="text-danger fw-bold">*</span>Password</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_password']){ echo 'is-invalid';} ?>" id="new_password" name="new_password" placeholder="" value="<?= set_value('new_password', $this->session->flashdata('new_password')); ?>">
+                                            <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#new_password', '#new_passsword_icon')"><i class="fa fa-eye-slash" id="new_passsword_icon"></i></a></span>
+                                            <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
+                                        </div>
                                         <div class="mt-1" style="font-size:.8rem">
                                              <div><span class="fw-bold me-1">Password strength:</span><span id="password-strength"></span></div>
                                             <div class="progress mt-1" style="height: .5rem;">
@@ -265,8 +272,11 @@ function validateForm() {
                                     <div class="col">
                                         <label class="form-label" for="confirm_password"><span
                                         class="text-danger fw-bold">*</span>Confirm Password</label>
+                                        <div class="input-group">
                                         <input type="password" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['confirm_password']){ echo 'is-invalid';} ?>" id="confirm_password" name="confirm_password" placeholder="" value="<?= set_value('confirm_password', $this->session->flashdata('confirm_password')); ?>">
-                                        <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['confirm_password'] ?></span>
+                                            <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);"  onclick="togglePassword('#confirm_password', '#confirm_password_icon')"><i class="fa fa-eye-slash" id="confirm_password_icon"></i></a></span>
+                                            <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['confirm_password'] ?></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

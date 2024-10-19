@@ -1575,6 +1575,7 @@ class Ejournal extends EJ_Controller {
 
             // Set flashdata to pass validation errors and form data to the view
             $this->session->set_flashdata('signup_validation_errors', $errors);
+            $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
             $this->session->set_flashdata('active_link1', '');
             $this->session->set_flashdata('active_link2', 'active');
             $this->session->set_flashdata('active_tab1', '');

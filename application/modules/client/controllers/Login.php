@@ -796,14 +796,12 @@ class Login extends EJ_Controller {
 				
 				//update password
 				$new_password = $this->input->post('new_password');
-				// $new_password['password'] = ($new_password) ?  : null;
 				
-
 				$userAuth = [
 					'email' => $email,
 					'updated_at' => date('Y-m-d H:i:s')
 				];
-				
+
 				if (!empty($new_password)) {
 					$userAuth['password'] = password_hash($new_password, PASSWORD_BCRYPT);
 				}

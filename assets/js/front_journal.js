@@ -57,6 +57,7 @@ $(document).ready(function()
       // console.log("Not enough segments in the URL.");
   }
 
+
   $('#abstract_modal').on('show.bs.modal', function() {
     var modalOpenTime = new Date().getTime();
     var modalTimeout;
@@ -1489,4 +1490,16 @@ function addSearch(element){
 
 function removeSearch(element){
   $(element).closest('div.row').remove();
+}
+
+function togglePassword(elementID, iconID){
+  var passwordInput = $(elementID);
+  var passwordIcon = $(iconID);
+  if (passwordInput.attr('type') === 'password') {
+    passwordInput.attr('type', 'text');
+    passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+  } else {
+    passwordInput.attr('type', 'password');
+    passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+  }
 }

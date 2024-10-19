@@ -19,11 +19,11 @@ gtag('config', 'G-VDLLX3HKBL');
         </div>
         <div class="col col-7 p-3">
             <div class="border rounded p-5 ">
-            <h2>My Profile</h2>
-            <?php if ($this->session->flashdata('message')) { ?>
+                <h2>My Profile</h2>
+                <?php if ($this->session->flashdata('message')) { ?>
                 <?php echo $this->session->flashdata('message'); ?>
-            <?php } ?>
-            <?=form_open('client/login/update_profile', ['id' => 'updateProfileForm'])?>
+                <?php } ?>
+                <?=form_open('client/login/update_profile', ['id' => 'updateProfileForm'])?>
                 <div class="mb-3">
                     <label class="form-label" for="new_email">Email</label>
                     <input type="email"
@@ -47,7 +47,8 @@ gtag('config', 'G-VDLLX3HKBL');
                                 <?php echo '<option value=' . $row->title_name . ' ' . $selected . '>' . $row->title_name . '</option>';?>
                                 <?php endforeach;?>
                             </select>
-                            <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['title'] ?></span>
+                            <span
+                                class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['title'] ?></span>
                         </div>
                         <div class="col">
                             <label class="form-label" for="first_name">First
@@ -228,12 +229,20 @@ gtag('config', 'G-VDLLX3HKBL');
                     <div class="row">
                         <div class="col">
                             <label class="form-label" for="new_password">Password</label>
-                            <input type="password"
-                                class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_password']){ echo 'is-invalid';} ?>"
-                                id="new_password" name="new_password" placeholder=""
-                                value="<?= set_value('new_password', $this->session->flashdata('new_password')); ?>">
-                            <span
-                                class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
+                            <div class="input-group">
+
+                                <input type="password"
+                                    class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_password']){ echo 'is-invalid';} ?>"
+                                    id="new_password" name="new_password" placeholder=""
+                                    value="<?= set_value('new_password', $this->session->flashdata('new_password')); ?>">
+                                <span class="input-group-text bg-white text-muted rounded-end"
+                                    id="inputGroupPrepend3"><a class="text-muted cursor-pointer"
+                                        href="javascript:void(0);"
+                                        onclick="togglePassword('#new_password', '#new_passsword_icon')"><i
+                                            class="fa fa-eye-slash" id="new_passsword_icon"></i></a></span>
+                                <span
+                                    class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
+                            </div>
 
                             <div class="mt-1" style="font-size:.8rem">
                                 <div><span class="fw-bold me-1">Password strength:</span><span
@@ -244,27 +253,31 @@ gtag('config', 'G-VDLLX3HKBL');
                                         aria-label="Success example" aria-valuenow="0" aria-valuemin="0"
                                         aria-valuemax="100"></div>
                                 </div>
-                                <!-- <ul class="mt-1 text-muted ps-3">
-                                            <li>8-20 characters long.</li>
-                                            <li>At least 1 letter.</li>
-                                            <li>At lestt 1 number.</li>
-                                            <li>At least 1 special character.</li>
-                                        </ul> -->
                             </div>
                         </div>
                         <div class="col">
                             <label class="form-label" for="confirm_password">Confirm Password</label>
-                            <input type="password"
-                                class="form-control <?php if($this->session->flashdata('signup_validation_errors')['confirm_password']){ echo 'is-invalid';} ?>"
-                                id="confirm_password" name="confirm_password" placeholder=""
-                                value="<?= set_value('confirm_password', $this->session->flashdata('confirm_password')); ?>">
-                            <span
-                                class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['confirm_password'] ?></span>
+                            <div class="input-group">
+                                <input type="password"
+                                    class="form-control <?php if($this->session->flashdata('signup_validation_errors')['confirm_password']){ echo 'is-invalid';} ?>"
+                                    id="confirm_password" name="confirm_password" placeholder=""
+                                    value="<?= set_value('confirm_password', $this->session->flashdata('confirm_password')); ?>">
+                                <span class="input-group-text bg-white text-muted rounded-end"
+                                    id="inputGroupPrepend3"><a class="text-muted cursor-pointer"
+                                        href="javascript:void(0);"
+                                        onclick="togglePassword('#confirm_password', '#confirm_password_icon')"><i
+                                            class="fa fa-eye-slash" id="confirm_password_icon"></i></a></span>
+
+                                <span
+                                    class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['confirm_password'] ?></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn main-btn w-100" id="update_profile" onclick="disableOnSubmit(this, '#updateProfileForm', 'profile')">Save Changes</button>
-            <?=form_close()?></div>
+                <button type="submit" class="btn main-btn w-100 mt-3" id="update_profile"
+                    onclick="disableOnSubmit(this, '#updateProfileForm', 'profile')">Save Changes</button>
+                <?=form_close()?>
+            </div>
         </div>
         <div class="col col-lg-2 p-3">
             <?php $this->load->view('common/side_panel');?>
