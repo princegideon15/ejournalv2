@@ -85,10 +85,16 @@ $('.right-inner-addon').hide();
                         $c = 1;
                         foreach($results as $res):
 
-                        $title = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_title) : $res->art_title;
-                        $author = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_author) : $res->art_author;
-                        $affiliation = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation) : $res->art_affiliation;
-                        $keywords = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords) : $res->art_keywords;
+                        $title = $res->art_title;
+                        $author = $res->art_author;
+                        $affiliation = $res->art_affiliation;
+                        $keywords = $res->art_keywords;
+                        $file =  $res->art_abstract_file;
+
+                        // $title = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_title) : $res->art_title;
+                        // $author = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_author) : $res->art_author;
+                        // $affiliation = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation) : $res->art_affiliation;
+                        // $keywords = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords) : $res->art_keywords;
                         $file =  $res->art_abstract_file;
                         $get_cover = $this->Search_model->get_cover($res->art_jor_id);
                         $cover = ($get_cover > 0) ? base_url('assets/uploads/cover/'.$get_cover) : base_url('assets/images/unavailable.jpg');
@@ -112,18 +118,18 @@ $('.right-inner-addon').hide();
 
 
                         $server_dir = '/var/www/html/ejournal/assets/uploads/pdf/';
-                        $get_file = filesize($server_dir.$res->art_full_text_pdf);
+                        // $get_file = filesize($server_dir.$res->art_full_text_pdf);
 
 
                         // $get_file = filesize($_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/'.$res->art_full_text_pdf);
 
-                        if ($get_file >= 1048576){
-                        $fsize = round($get_file / 1024 / 1024,1) . ' MB';
-                        } elseif($get_file >= 1024) {
-                        $fsize = round($get_file / 1024,1) . ' KB';
-                        } else {
-                        $fsize = round($get_file,1) . ' bytes';
-                        }
+                        // if ($get_file >= 1048576){
+                        // $fsize = round($get_file / 1024 / 1024,1) . ' MB';
+                        // } elseif($get_file >= 1024) {
+                        // $fsize = round($get_file / 1024,1) . ' KB';
+                        // } else {
+                        // $fsize = round($get_file,1) . ' bytes';
+                        // }
 
                         $coa_arr = (explode(",& ",$coa));
 
@@ -141,7 +147,7 @@ $('.right-inner-addon').hide();
 
                         <div class="mt-2">
                             <?php $i = 0; foreach($coa_arr as $cr):?>
-                            <?php $cc = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $cr) : $cr ;?>
+                            <?php $cc = $cr; ?>
                             <!-- <a href="javascript:void(0);" class="text-muted"
                                 onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>','articles')"><?=$cc;?></a> -->
                             <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $cr) ?>" class="text-muted"><?=$cc;?></a>

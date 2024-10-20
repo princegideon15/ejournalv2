@@ -1490,6 +1490,10 @@ function addSearch(element){
 
 function removeSearch(element){
   $(element).closest('div.row').remove();
+  let len = $('input[name="search[]"]').length;
+  // if(len > 1){
+    $('#advanceSearchBtn').removeClass('disabled');
+  // }
 }
 
 function togglePassword(elementID, iconID){

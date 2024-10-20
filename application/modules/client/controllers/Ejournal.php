@@ -1014,7 +1014,9 @@ class Ejournal extends EJ_Controller {
 	}
 
 	public function advanced(){
-		if(count(array_filter($this->input->get('search[]'))) > 0){
+		if(count(array_filter($this->input->get('search[]'))) > 0 || $this->input->get('single_search')){
+
+		
 			
 			//where dropdowns
 			$searchFields = ['jor_volume', 'jor_issue'];
@@ -1054,9 +1056,14 @@ class Ejournal extends EJ_Controller {
 			// }
 	
 	
-			//advance search query
-			$search = array_filter($this->input->get('search[]'));
-			$search_filter = $this->input->get('search_filter[]');
+			//advance search 
+			if($this->input->get('single_search')){
+				$search = array('search[]' => $this->input->get('single_search'));
+				$search_filter = array('search_filter[]' => 1);
+			}else{
+				$search = array_filter($this->input->get('search[]'));
+				$search_filter = $this->input->get('search_filter[]');
+			}
 			$output = $this->Search_model->advance_search_ejournal($perPage, $start_index, $search, $search_filter, $where_journal, $where_year);
 			$totalRows = $this->Search_model->advance_search_ejournal(null, null, $search, $search_filter, $where_journal, $where_year);
 
@@ -1092,16 +1099,16 @@ class Ejournal extends EJ_Controller {
 			//pagination data to display
 			$data['total_rows'] = count($totalRows);
 			$data['pagination'] = $this->pagination->create_links();
-			$data['page'] = ($page > 0) ? $page : 1;
 			$data['start_index'] = $start_index;
-			$data['per_page'] = $perPage;
 			$actualPerPage = $perPage * $page;
 			$page = ($perPage * $page) - 10;
+			$data['per_page'] = $actualPerPage;
+			$data['page'] = $page;
 			usort($output, function ($a, $b) {
 				// Your comparison logic here
 				return strnatcasecmp($a->art_title, $b->art_title);
 			});
-			$data['result'] = array_slice($output, $page, $actualPerPage);
+			$data['result'] = array_slice($output, $page, $perPage);
 			$data['search'] = $search;
 			$data['filter'] = $this->input->get('search_filter');
 			$data['volume'] = $this->input->get('jor_volume');

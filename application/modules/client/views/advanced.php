@@ -137,15 +137,12 @@
                 </div>
                 </div>
 
-
-
-
                 <?php if(count($results) > 0){ ?>
                     <div class="row mb-0 pb-0">
-                        <div class="col col-auto d-flex align-items-end">
+                        <div class="col col-6 d-flex align-items-end">
                             <?php if($search){ $searches = implode(' and ', $search); ?>
                                 <div class="h6">
-                                    <span class="text-dark fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="text-dark fw-bold"><?=$total_rows;?></span> result(s) of <span class="text-dark fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$searches));?>'</span>
+                                    <span class="text-dark fw-bold"><?=(($per_page - 10) + 1)?> - <?=($per_page - 10) + count($results)?></span> of <span class="text-dark fw-bold"><?=$total_rows;?></span> result(s) of <span class="text-dark fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$searches));?>'</span>
                                 </div>
                             <?php } ?>
                         </div>
@@ -160,15 +157,29 @@
                     
                 <?php $results = $result;
                         $c = 1;
+                        $titles = [];
                         foreach($results as $res):
 
-                        $title = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_title) : $res->art_title;
-                        $author = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_author) : $res->art_author;
-                        $affiliation = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation) : $res->art_affiliation;
-                        $keywords = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords) : $res->art_keywords;
+                            // $title = $res->art_title;
+
+                            // foreach ($search as $word) {
+                            //     $title = preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$word))."\p{L}*/ui", "<b>$0</b>", $title);
+                           
+                            // }
+                            // $titles[] = $title;
+                            // $title = $titles[$index];
+
+                        // $title = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_title) : $res->art_title;
+                        // $author = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_author) : $res->art_author;
+                        // $affiliation = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation) : $res->art_affiliation;
+                        // $keywords = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords) : $res->art_keywords;
+                        $title = $res->art_title;
+                        $author = $res->art_author;
+                        $affiliation = $res->art_affiliation;
+                        $keywords = $res->art_keywords;
                         $file =  $res->art_abstract_file;
-                        $get_cover = $this->Search_model->get_cover($res->art_jor_id);
-                        $cover = ($get_cover > 0) ? base_url('assets/uploads/cover/'.$get_cover) : base_url('assets/images/unavailable.jpg');
+                        // $get_cover = $this->Search_model->get_cover($res->art_jor_id);
+                        // $cover = ($get_cover > 0) ? base_url('assets/uploads/cover/'.$get_cover) : base_url('assets/images/unavailable.jpg');
                         $coas  = $this->Search_model->get_coauthors($res->art_id);
                         $coa =  $this->Client_journal_model->get_author_coauthors($res->art_id);
                         
@@ -194,13 +205,13 @@
 
                         // $get_file = filesize($_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/'.$res->art_full_text_pdf);
 
-                        if ($get_file >= 1048576){
-                        $fsize = round($get_file / 1024 / 1024,1) . ' MB';
-                        } elseif($get_file >= 1024) {
-                        $fsize = round($get_file / 1024,1) . ' KB';
-                        } else {
-                        $fsize = round($get_file,1) . ' bytes';
-                        }
+                        // if ($get_file >= 1048576){
+                        // $fsize = round($get_file / 1024 / 1024,1) . ' MB';
+                        // } elseif($get_file >= 1024) {
+                        // $fsize = round($get_file / 1024,1) . ' KB';
+                        // } else {
+                        // $fsize = round($get_file,1) . ' bytes';
+                        // }
 
                         $coa_arr = (explode(",& ",$coa));
 
@@ -214,14 +225,14 @@
                         <img class="me-3" src="<?=$cover;?>" height="200" width="150" alt="Loading image">
                     </div> -->
                     <div class="flex-grow-1">
-                        <a href="javascript:void(0)" class="mt-0 text-dark mb-0 main-link" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?php ; echo $title;?></a>
+                        <a href="javascript:void(0)" class="mt-0 text-dark mb-0 main-link" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?= $title ?></a>
                         
                         <div class="mt-2">
                             <?php $i = 0; foreach($coa_arr as $cr):?>
-                            <?php $cc = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $cr) : $cr ;?>
+                            <?php $cc = $cr;?>
                             <!-- <a href="javascript:void(0);" class="main-link fs-6"
                                 onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>','advanced')"><?=$cc;?></a> -->
-                            <a href="<?= base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ', '+', $cr) ?>" class="text-muted"><?=$cc;?></a>
+                            <a href="<?= base_url() . 'client/ejournal/advanced?single_search=' . str_replace(' ', '+', $cr) ?>" class="text-muted"><?=$cc;?></a>
                                 
                             <?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted ">|</span>'; ?>
                             <?php $i++; ?>
@@ -233,7 +244,7 @@
                             $string = explode(', ', $keywords);
                             foreach ($string as $i => $key) {
                                 if ($key == strip_tags($key)) {
-                                    echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
+                                    echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/advanced?single_search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
                                 } else {
                                     echo $key . '; ';
                                 }
@@ -246,9 +257,8 @@
                         <div class="text-muted mt-1 small">Pages: <?=$pages?></div>
                         
                         <div class="text-muted mt-1 small"><?=$res->art_year?></div>
-                        
-                        <!-- <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/get_articles/'.$vol.'/'.$jor_id.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div> -->
-                        <div class="text-muted mt-1 small">Volume <?=$res->jor_volume . ' ' . $issue?></div>
+                        <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/volume/'.$vol.'/'.$res->jor_issue.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div>
+                        <!-- <div class="text-muted mt-1 small">Volume <?=$res->jor_volume . ' ' . $issue?></div> -->
                 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class='mb-2 mt-2'>
@@ -296,10 +306,10 @@
                 
                 <?php if(count($results) > 0){ ?>
                     <div class="row mt-2">
-                        <div class="col col-auto d-flex align-items-start">
+                        <div class="col col-6 d-flex align-items-start">
                             <?php if($search){ $searches = implode(' and ', $search);?>
                                 <div class="h6">
-                                    <span class="text-dark fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="text-dark fw-bold"><?=$total_rows;?></span> result(s) of <span class="text-dark fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$searches));?>'</span>
+                                    <span class="text-dark fw-bold"><?=(($per_page - 10) + 1)?> - <?=($per_page - 10) + count($results)?></span> of <span class="text-dark fw-bold"><?=$total_rows;?></span> result(s) of <span class="text-dark fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$searches));?>'</span>
                                 </div>
                             <?php } ?>
                         </div>
