@@ -53,7 +53,7 @@ class Search_model extends CI_Model {
                 $this->db->like($field, $search, 'both');
             }
 
-            $this->db->order_by('art_year', 'desc');
+            // $this->db->order_by('art_year', 'desc');
             $this->db->order_by('art_title', 'asc');
             $this->db->group_by('art_id');
 
@@ -111,46 +111,72 @@ class Search_model extends CI_Model {
 
        /** this function search based on filter and keyword */
     // public function search_ejournal($filter, $keyword)
-    public function advance_search_ejournal($perPage, $start_index, $search = null, $where, $where2)
-    {
-        if($perPage != '' && $start_index != ''){
-            $this->db->limit($perPage, $start_index);
-        }else{
-            $this->db->limit($perPage);
-        }
+    public function advance_search_ejournal($perPage, $start_index, $searches, $search_filter, $where_journal, $where_year)
+    {                                     
+     
+        // if($perPage != '' && $start_index != ''){
+        //     $this->db->limit($perPage, $start_index);
+        // }else{
+        //     $this->db->limit($perPage);
+        // }
 
-        $searchFields = $where;
-        
-       
-     
-     
-        foreach ($searchFields as $field) {
+        $results = [];
+
+        foreach ($searches as $index => $search) {
+
+            switch($search_filter[$index]){
+	
+                case 2: $where_filter = ['art_title'];break;
+                case 3: $where_filter = ['art_author', 'coa_name'];break;
+                case 4: $where_filter = ['art_affiliation'];break;
+                case 5: $where_filter = ['art_keywords'];break;
+                default: $where_filter = ['art_title', 'art_author', 'coa_name', 'art_keywords', 'art_affiliation'];
+            }	
+            
             $this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn, c.*');
             $this->db->from($this->articles.' a');
             $this->db->join($this->journals.' j','a.art_jor_id = j.jor_id');
             $this->db->join($this->coauthors.' c', 'a.art_id = c.coa_art_id', 'left');
-            
-            foreach($where2 as $key => $val){
-                $this->db->where($key, $val);
-            }
-    
-            $search = str_replace("%20", " ", $search);
-            $this->db->like($field, $search, 'both');
-           
 
+            
+            $clean_search = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$search)));
+
+            
+            foreach($where_filter as $index => $field){
+                if(count($where_filter) > 1){
+                    if($index == 0){
+                        $this->db->like($field, $clean_search, 'both');
+                    }else{
+                        $this->db->or_like($field, $clean_search, 'both');
+                    } 
+                }else{
+                    $this->db->like($field, $clean_search, 'both');
+                }
+
+            }
+
+            $this->db->where($where_year);
+    
             $this->db->order_by('art_year', 'desc');
             $this->db->order_by('art_title', 'asc');
             $this->db->group_by('art_id');
-
-    
             $query = $this->db->get();
-
-            if ($query->num_rows() > 0) {
-                break; // Stop the loop if a match is found
-            }
+            $results[] = $query->result();
+            
         }
 
-        return $query->result();
+        $combined_results = array_merge(...$results);
+
+        return $combined_results;
+    }
+
+    public function union_all($queries) {
+        $sql = '';
+        foreach ($queries as $query) {
+            $sql .= '(' . $query->get_compiled_select() . ') UNION ALL ';
+        }
+        $sql = rtrim($sql, ' UNION ALL ');
+        return $this->db->query($sql);
     }
 
     /** this function get journal and article details */

@@ -1014,20 +1014,11 @@ class Ejournal extends EJ_Controller {
 	}
 
 	public function advanced(){
-
-		if($this->input->get('search') != null){
-			//get search filter
-			switch($this->input->get('search_filter')){
-	
-				case 2: $where = ['art_title'];break;
-				case 3: $where = ['art_author', 'coa_name'];break;
-				case 4: $where = ['art_affiliation'];break;
-				case 5: $where = ['art_keywords'];break;
-				default: $where = ['art_title', 'art_author', 'coa_name', 'art_keywords', 'art_affiliation'];
-			}		
-
-			$searchFields = ['jor_volume', 'jor_issue', 'jor_year'];
-			$where2 = [];
+		if(count(array_filter($this->input->get('search[]'))) > 0){
+			
+			//where dropdowns
+			$searchFields = ['jor_volume', 'jor_issue'];
+			$where_journal = [];
 
 			foreach ($searchFields as $field) {
 				$value = $this->input->get($field);
@@ -1036,31 +1027,41 @@ class Ejournal extends EJ_Controller {
 				}
 			}
 
+			//where year from to
+			$where_year = [];
+
+			if($this->input->get('jor_year_from') && $this->input->get('jor_year_to')){
+				$where_year = array('jor_year >=' => $this->input->get('jor_year_from'), 'jor_year <=' => $this->input->get('jor_year_to'));
+			}else if($this->input->get('jor_year_from')){
+				$where_year = array('jor_year' => $this->input->get('jor_year_from'));
+			}else if($this->input->get('jor_year_to')){
+				$where_year = array('jor_year' => $this->input->get('jor_year_to'));
+			}
+
 			//initialize pagination with page, start_index and per page
 			$this->load->library('pagination');
 			$perPage = 10;
-			$page = 0;
-	
+			$page = 1;
 	
 			if($this->input->get('per_page')){
 				$page =  $this->input->get('per_page');
 			}
 	
-			$start_index = 0;
+			// $start_index = 0;
 	
-			if($page != 0){
-				$start_index = $perPage * ($page - 1);
-			}
+			// if($page != 0){
+			// 	$start_index = $perPage * ($page - 1);
+			// }
 	
 	
 			//advance search query
-			$search = $this->input->get('search');
-			$clean_search = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$search)));
-			$output = $this->Search_model->advance_search_ejournal($perPage, $start_index, $clean_search, $where, $where2);
-			$totalRows = $this->Search_model->advance_search_ejournal(null, null, $clean_search, $where, $where2);
+			$search = array_filter($this->input->get('search[]'));
+			$search_filter = $this->input->get('search_filter[]');
+			$output = $this->Search_model->advance_search_ejournal($perPage, $start_index, $search, $search_filter, $where_journal, $where_year);
+			$totalRows = $this->Search_model->advance_search_ejournal(null, null, $search, $search_filter, $where_journal, $where_year);
 
 			//pagination config
-			$config['base_url'] = base_url('client/ejournal/articles');
+			$config['base_url'] = base_url('client/ejournal/advanced');
 			$config['total_rows'] = count($totalRows);
 			$config['per_page'] = $perPage;
 			$config['enable_query_strings'] = true;
@@ -1094,17 +1095,21 @@ class Ejournal extends EJ_Controller {
 			$data['page'] = ($page > 0) ? $page : 1;
 			$data['start_index'] = $start_index;
 			$data['per_page'] = $perPage;
-	
-			//output to display
-			$data['result'] = $output;
+			$actualPerPage = $perPage * $page;
+			$page = ($perPage * $page) - 10;
+			usort($output, function ($a, $b) {
+				// Your comparison logic here
+				return strnatcasecmp($a->art_title, $b->art_title);
+			});
+			$data['result'] = array_slice($output, $page, $actualPerPage);
 			$data['search'] = $search;
 			$data['filter'] = $this->input->get('search_filter');
 			$data['volume'] = $this->input->get('jor_volume');
 			$data['issue'] = $this->input->get('jor_issue');
-			$data['year'] = $this->input->get('jor_year');
+			$data['from'] = $this->input->get('jor_year_from');
+			$data['to'] = $this->input->get('jor_year_to');
 
 		}
-
 
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();

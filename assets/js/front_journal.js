@@ -224,7 +224,7 @@ $(document).ready(function()
   //   $('#' + activeTabSub + '').trigger('click');
   // }
 
-  $('#advanceSearch').on('input', function() {
+  $(document).on('input', 'input[name="search[]"]', function() {
     const button = $('#advanceSearchBtn');
     if ($(this).val().trim() !== '') {
       button.removeClass('disabled');
@@ -1469,7 +1469,7 @@ function addSearch(element){
   $(element).attr('onclick', 'removeSearch(this)');
   let html = `<div class="row mb-3">
                                 <div class="col col-3">
-                                    <select name="search_filter" id="search_filter" class="form-select">
+                                    <select name="search_filter[]" id="search_filter" class="form-select">
                                         <option value="1">All content</option>
                                         <option value="2">Title</option>
                                         <option value="3">Author</option>
@@ -1479,7 +1479,7 @@ function addSearch(element){
                                 </div>
                                 <div class="col">
                                     <div class="input-group">
-                                        <input type="text" class="form-control rounded" name="search" id="advanceSearch" placeholder="Enter search term">
+                                        <input type="text" class="form-control rounded" name="search[]" id="advanceSearch" placeholder="Enter search term">
                                         <button class="btn btn-light ms-1 rounded" type="button" id="button-addon2" onclick="addSearch(this)"><span class="fa fa-plus main-link"></span></button>
                                     </div>
                                 </div>
@@ -1501,5 +1501,18 @@ function togglePassword(elementID, iconID){
   } else {
     passwordInput.attr('type', 'password');
     passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+  }
+}
+
+function clearAdvanceSearch(element){
+
+  var url = window.location.href;
+  
+  if (url.indexOf('?') !== -1) {
+    window.location.href = base_url + '/client/ejournal/advanced';
+  } else {
+    let formID = $(element).closest('form').attr('id');
+    $('#' + formID).trigger('reset');
+    $('#advanceSearchBtn').addClass('disabled');
   }
 }

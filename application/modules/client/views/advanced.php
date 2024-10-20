@@ -10,7 +10,7 @@
         <div class="col col-7 p-3">
             <h3>Advanced search</h3>
 
-            <div class="accordion mb-3" id="accordionPanelsStayOpenExample">
+            <div class="accordion mb-4" id="accordionPanelsStayOpenExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
@@ -23,24 +23,51 @@
                     <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse <?=(count($results) > 0) ? '' : 'show' ?>" aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body">
                         <?=form_open('client/ejournal/advanced', ['method' => 'get', 'id' => 'advancedSearchForm'])?>
-                            <div class="row mb-3">
-                                <div class="col col-3">
-                                    <select name="search_filter" id="search_filter" class="form-select">
-                                        <option value="1"  <?= ($filter == 1) ? 'selected' : ''?> >All content</option>
-                                        <option value="2"  <?= ($filter == 2) ? 'selected' : ''?>>Title</option>
-                                        <option value="3"  <?= ($filter == 3) ? 'selected' : ''?>>Author</option>
-                                        <option value="4"  <?= ($filter == 4) ? 'selected' : ''?>>Affiliation</option>
-                                        <option value="5"  <?= ($filter == 5) ? 'selected' : ''?>>Keywords</option>
-                                    </select>
-                                </div>
-                                <div class="col">
-                                    <!-- <input type="text" class="form-control" name="search" id="advanceSearch" placeholder="Enter search term" value="<?=$search?>"> -->
-                                    <div class="input-group">
-                                        <input type="text" class="form-control rounded" name="search" id="advanceSearch" placeholder="Enter search term" value="<?=$search?>">
-                                        <button class="btn btn-light ms-1 rounded" type="button" id="button-addon2" onclick="addSearch(this)"><span class="fa fa-plus main-link"></span></button>
+
+                        <?php if(count($search) > 0) { ?>
+                            <?php foreach($search as $index => $row){ ?>
+                                <div class="row mb-3">
+                                    <div class="col col-3">
+                                        <select name="search_filter[]" id="search_filter" class="form-select">
+                                            <option value="1"  <?= ($filter[$index] == 1) ? 'selected' : ''?> >All content</option>
+                                            <option value="2"  <?= ($filter[$index] == 2) ? 'selected' : ''?>>Title</option>
+                                            <option value="3"  <?= ($filter[$index] == 3) ? 'selected' : ''?>>Author</option>
+                                            <option value="4"  <?= ($filter[$index] == 4) ? 'selected' : ''?>>Affiliation</option>
+                                            <option value="5"  <?= ($filter[$index] == 5) ? 'selected' : ''?>>Keywords</option>
+                                        </select>
                                     </div>
-                                </div>
-                            </div>
+                                    <div class="col">
+                                        <!-- <input type="text" class="form-control" name="search" id="advanceSearch" placeholder="Enter search term" value="<?=$search?>"> -->
+                                        <div class="input-group">
+                                            <input type="text" class="form-control rounded" name="search[]" id="advanceSearch" placeholder="Enter search term" value="<?=$search[$index]?>">
+                                            <?php if($index < count($search) - 1) { ?>
+                                                <button class="btn btn-light ms-1 rounded" type="button" id="button-addon2" onclick="removeSearch(this)"><span class="fa fa-minus text-danger"></span></button>
+                                            <?php } else { ?>
+                                                <button class="btn btn-light ms-1 rounded" type="button" id="button-addon2" onclick="addSearch(this)"><span class="fa fa-plus main-link"></span></button>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>   
+                            <?php } ?>
+                        <?php } else { ?>
+                                <div class="row mb-3">
+                                    <div class="col col-3">
+                                        <select name="search_filter[]" id="search_filter" class="form-select">
+                                            <option value="1"  <?= ($filter[$index] == 1) ? 'selected' : ''?> >All content</option>
+                                            <option value="2"  <?= ($filter[$index] == 2) ? 'selected' : ''?>>Title</option>
+                                            <option value="3"  <?= ($filter[$index] == 3) ? 'selected' : ''?>>Author</option>
+                                            <option value="4"  <?= ($filter[$index] == 4) ? 'selected' : ''?>>Affiliation</option>
+                                            <option value="5"  <?= ($filter[$index] == 5) ? 'selected' : ''?>>Keywords</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control rounded" name="search[]" id="advanceSearch" placeholder="Enter search term">
+                                            <button class="btn btn-light ms-1 rounded" type="button" id="button-addon2" onclick="addSearch(this)"><span class="fa fa-plus main-link"></span></button>
+                                        </div>
+                                    </div>
+                                </div>   
+                        <?php } ?>
 
                             <span id="additional_search"></span>
 
@@ -48,7 +75,7 @@
                                 <div class="col col-3 align-self-center text-end">Volume:</div>
                                 <div class="col">
                                     <select name="jor_volume" id="jor_volume" class="form-select">  
-                                        <option value=''>Select Volume</option>
+                                        <option disabled selected>Select Volume</option>
                                         <?php foreach($journals as $row):?>    
                                             <option value="<?=$row->jor_volume?>" <?= ($volume == $row->jor_volume) ? 'selected' : ''?> ><?=$row->jor_volume?></option>
                                         <?php endforeach; ?>
@@ -59,7 +86,7 @@
                                 <div class="col col-3 align-self-center text-end">Issue:</div>
                                 <div class="col">
                                     <select name="jor_issue" id="jor_issue" class="form-select">
-                                        <option value=''>Select Issue</option>
+                                        <option disabled selected>Select Issue</option>
                                         <option value="1" <?= ($issue == 1) ? 'selected' : ''?>>1</option>
                                         <option value="2" <?= ($issue == 2) ? 'selected' : ''?>>2</option>
                                         <option value="3" <?= ($issue == 3) ? 'selected' : ''?>>3</option>
@@ -75,19 +102,32 @@
                             <div class="row mb-3">
                                 <div class="col col-3 align-self-center text-end">Year:</div>
                                 <div class="col"> 
-                                    <select name="jor_year" id="jor_year" class="form-select">
-                                        <option value=''>Select Year</option>
-                                        <?php foreach($years as $row):?>    
-                                            <option value="<?=$row->jor_year?>" <?= ($year == $row->jor_year) ? 'selected' : ''?> ><?=$row->jor_year?></option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <div class="row">
+                                        <div class="col">
+                                            <select name="jor_year_from" id="jor_year_from" class="form-select" p>
+                                                <option disabled selected>From</option>
+                                                <?php foreach($years as $row):?>    
+                                                    <option value="<?=$row->jor_year?>" <?= ($from == $row->jor_year) ? 'selected' : ''?> ><?=$row->jor_year?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <select name="jor_year_to" id="jor_year_to" class="form-select">
+                                                <option disabled selected>To</option>
+                                                <?php foreach($years as $row):?>    
+                                                    <option value="<?=$row->jor_year?>" <?= ($to == $row->jor_year) ? 'selected' : ''?> ><?=$row->jor_year?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
                             <div class="row mt-5">
                                 <div class="col col-3"></div>
-                                <div class="col">
-                                    <button type="submit" class="btn main-btn w-50 disabled" id="advanceSearchBtn">Search</button>
+                                <div class="col d-flex gap-2">
+                                    <button type="submit" class="btn main-btn w-50 disabled" id="advanceSearchBtn" onclick="disableOnSubmit(this, '#advancedSearchForm', 'search')">Search</button>
+                                    <button type="button" class="btn btn-secondary w-50" onclick="clearAdvanceSearch(this)">Clear</button>
                                 </div>
                             </div>
                             
@@ -102,14 +142,10 @@
 
                 <?php if(count($results) > 0){ ?>
                     <div class="row mb-0 pb-0">
-                        <div class="col col-6 d-flex align-items-end">
-                            <?php if($search){?>
+                        <div class="col col-auto d-flex align-items-end">
+                            <?php if($search){ $searches = implode(' and ', $search); ?>
                                 <div class="h6">
-                                    <span class="main-link fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="main-link fw-bold"><?=$total_rows;?></span> result(s) of <span class="main-link fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$search));?>'</span>
-                                </div>
-                            <?php }else{ ?>
-                                <div class="h6">
-                                    <span class="main-link fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="main-link fw-bold"><?=$total_rows;?></span> result(s)
+                                    <span class="text-dark fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="text-dark fw-bold"><?=$total_rows;?></span> result(s) of <span class="text-dark fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$searches));?>'</span>
                                 </div>
                             <?php } ?>
                         </div>
@@ -260,14 +296,10 @@
                 
                 <?php if(count($results) > 0){ ?>
                     <div class="row mt-2">
-                        <div class="col col-6 d-flex align-items-start">
-                            <?php if($search){?>
+                        <div class="col col-auto d-flex align-items-start">
+                            <?php if($search){ $searches = implode(' and ', $search);?>
                                 <div class="h6">
-                                    <span class="main-link fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="main-link fw-bold"><?=$total_rows;?></span> result(s) of <span class="main-link fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$search));?>'</span>
-                                </div>
-                            <?php }else{ ?>
-                                <div class="h6">
-                                    <span class="main-link fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="main-link fw-bold"><?=$total_rows;?></span> result(s)
+                                    <span class="text-dark fw-bold"><?=(($per_page * $page - 10) + 1)?> - <?=(($per_page * $page - 10) + 1) + (count($results) - 1)?></span> of <span class="text-dark fw-bold"><?=$total_rows;?></span> result(s) of <span class="text-dark fw-bold">'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$searches));?>'</span>
                                 </div>
                             <?php } ?>
                         </div>
@@ -279,10 +311,10 @@
                     </div>
                 <?php } ?>
 
-                <?php if(count($results) == 0 && $search != null){ ?>
+                <?php if(count($results) == 0 && $search != null){ $searches = implode(' and ', $search);?>
                     <div class="alert alert-secondary d-flex align-items-center" role="alert">
                         <div>
-                        <span class="oi oi-warning"></span> Sorry, no results found for <strong>'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$search))?>'</strong>. Try entering fewer or broader query terms.
+                        <span class="oi oi-warning"></span> Sorry, no results found for <strong>'<?=str_replace('%C3%B1','ñ',str_replace('+',' ',$searches))?>'</strong>. Try entering fewer or broader query terms.
                         </div>
                     </div>
                 <?php } ?>
