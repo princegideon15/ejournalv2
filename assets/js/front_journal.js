@@ -1520,3 +1520,8 @@ function clearAdvanceSearch(element){
     $('#advanceSearchBtn').addClass('disabled');
   }
 }
+
+// data: {
+//   'csrf_test_name': '<?= $this->security->get_csrf_hash(); ?>', // Token
+//   'other_data': 'value'
+// },

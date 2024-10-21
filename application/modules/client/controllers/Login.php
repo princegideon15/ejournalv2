@@ -31,9 +31,11 @@ class Login extends EJ_Controller {
 		$objMail = $this->my_phpmailer->load();
 		$this->load->helper('string');
         $this->load->helper('form');
+        $this->load->helper('security');
         $this->load->library('session'); 
 		$this->load->library('form_validation');
 		error_reporting(0);
+		
 	}
     
     public function authenticate(){
@@ -44,20 +46,20 @@ class Login extends EJ_Controller {
 		if($this->form_validation->run() == FALSE){
 			$errors = [];
 
-            if (form_error('email')) {
-                $errors['email'] = strip_tags(form_error('email'));
-            }
-            if (form_error('password')) {
-                $errors['password'] = strip_tags(form_error('password'));
-            }
+			if (form_error('email')) {
+				$errors['email'] = strip_tags(form_error('email'));
+			}
+			if (form_error('password')) {
+				$errors['password'] = strip_tags(form_error('password'));
+			}
 
-            // Set flashdata to pass validation errors and form data to the view
-            $this->session->set_flashdata('validation_errors', $errors);
+			// Set flashdata to pass validation errors and form data to the view
+			$this->session->set_flashdata('validation_errors', $errors);
 			redirect('client/ejournal/login');
 		}else{
 			
-			$email = $this->input->post('email');
-			$password = $this->input->post('password');
+			$email = $this->input->post('email', TRUE);
+			$password = $this->input->post('password', TRUE);
 		
 			// Check user credentials using your authentication logic
 			$validateUser = $this->Login_model->validate_user($email);
@@ -346,6 +348,7 @@ class Login extends EJ_Controller {
 	
 	public function verify_otp($ref){
 		//check if ref code exist
+		$ref = $this->security->xss_clean($ref);
 		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
 
 		//code expired
@@ -376,7 +379,7 @@ class Login extends EJ_Controller {
 				$this->_LoadPage('common/body', $data);
 			} else {
 			
-				$ref_code = $this->input->post('ref');
+				$ref_code = $this->input->post('ref', TRUE);
 			
 				$this->form_validation->set_rules('otp', 'OTP', 'required|trim|min_length[6]|max_length[6]');
 			
@@ -393,7 +396,7 @@ class Login extends EJ_Controller {
 					$data['main_content'] = "client/login_otp";
 					$this->_LoadPage('common/body', $data);
 				}else{
-					$otp = $this->input->post('otp');
+					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
 					$verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
 					if ($verifyOTP) {
@@ -450,7 +453,7 @@ class Login extends EJ_Controller {
 			// 	$this->_LoadPage('common/body', $data);
 			// } else {
 			
-				$ref_code = $this->input->post('ref');
+				$ref_code = $this->input->post('ref', TRUE);
 			
 				$this->form_validation->set_rules('otp', 'OTP', 'required|trim|min_length[6]|max_length[6]');
 			
@@ -467,7 +470,7 @@ class Login extends EJ_Controller {
 					$data['main_content'] = "client/new_account_otp";
 					$this->_LoadPage('common/body', $data);
 				}else{
-					$otp = $this->input->post('otp');
+					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
 					$verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
 					if ($verifyOTP) {
@@ -526,7 +529,7 @@ class Login extends EJ_Controller {
 			redirect('client/login/forgot_password');
 		}else{
 			
-			$email = $this->input->post('email');
+			$email = $this->input->post('email', TRUE);
 		
 			// Check user credentials using your authentication logic
 			$validateUser = $this->Login_model->validate_user($email);
@@ -693,12 +696,12 @@ class Login extends EJ_Controller {
 					//store entered value to display on redirect
 					if($value == 'country'){
 						if($this->input->post($value)){
-							$this->session->set_flashdata($value, $this->input->post($value));
+							$this->session->set_flashdata($value, $this->input->post($value, TRUE));
 						}else{
 							$this->session->set_flashdata($value, 175);
 						}
 					}else{
-						$this->session->set_flashdata($value, $this->input->post($value));
+						$this->session->set_flashdata($value, $this->input->post($value, TRUE));
 					}
 	
 					//store errors to display on redirect
@@ -709,7 +712,7 @@ class Login extends EJ_Controller {
 				}
 		
 				//return password data and strenght data
-				$password = $this->input->post('new_password');
+				$password = $this->input->post('new_password', TRUE);
 				
 				if (strlen($password) >= 8) {
 					$strength += 10;
@@ -752,7 +755,7 @@ class Login extends EJ_Controller {
 				$this->session->set_flashdata('password_strength', $password_strength);
 	
 				//return province value and options if province has value
-				$region = $this->input->post('region');
+				$region = $this->input->post('region', TRUE);
 	
 				if($region > 0){
 					$provinces = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $region));
@@ -760,7 +763,7 @@ class Login extends EJ_Controller {
 				}
 	
 				//return city value and options if city has value
-				$province = $this->input->post('province');
+				$province = $this->input->post('province', TRUE);
 	
 				if($province){
 					$cities = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province));
@@ -775,7 +778,7 @@ class Login extends EJ_Controller {
 				redirect('client/login/profile');
 			}else{
 	
-				$email = $this->input->post('new_email');
+				$email = $this->input->post('new_email', TRUE);
 				
 				//check if email is exisiting
 				$isExist = $this->Login_model->check_exist_email($id, $email);
@@ -795,7 +798,7 @@ class Login extends EJ_Controller {
 									
 				
 				//update password
-				$new_password = $this->input->post('new_password');
+				$new_password = $this->input->post('new_password', TRUE);
 				
 				$userAuth = [
 					'email' => $email,
@@ -815,19 +818,19 @@ class Login extends EJ_Controller {
 
 				//update user profile
 				$userProfile = [
-					'title' => $this->input->post('title'),
-					'first_name' => $this->input->post('first_name'),
-					'last_name' => $this->input->post('last_name'),
-					'middle_name' => $this->input->post('middle_name'),
-					'extension_name' => $this->input->post('extension_name'),
-					'sex' => $this->input->post('sex'),
-					'educational_attainment' => $this->input->post('educational_attainment'),
-					'affiliation' => $this->input->post('affiliation'),
-					'country' => $this->input->post('country'),
-					'region' => $this->input->post('region'),
-					'province' => $this->input->post('province'),
-					'city' => $this->input->post('city'),
-					'contact' => $this->input->post('contact'),
+					'title' => $this->input->post('title', TRUE),
+					'first_name' => $this->input->post('first_name', TRUE),
+					'last_name' => $this->input->post('last_name', TRUE),
+					'middle_name' => $this->input->post('middle_name', TRUE),
+					'extension_name' => $this->input->post('extension_name', TRUE),
+					'sex' => $this->input->post('sex', TRUE),
+					'educational_attainment' => $this->input->post('educational_attainment', TRUE),
+					'affiliation' => $this->input->post('affiliation', TRUE),
+					'country' => $this->input->post('country', TRUE),
+					'region' => $this->input->post('region', TRUE),
+					'province' => $this->input->post('province', TRUE),
+					'city' => $this->input->post('city', TRUE),
+					'contact' => $this->input->post('contact', TRUE),
 					'updated_at' => date('Y-m-d H:i:s')
 				];
 
@@ -844,6 +847,6 @@ class Login extends EJ_Controller {
 			redirect('/');
 		}
 	}
-
-	
 }
+
+// add set ruls form validation

@@ -168,8 +168,7 @@ gtag('config', 'G-VDLLX3HKBL');
 
                             <div class="mt-2">
                                 <?php $i = 0; foreach ($coa_arr as $c): ?>
-                                <a href="javascript:void(0);" class="text-muted h6"
-                                    onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a>
+                                    <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $c) ?>" class="text-muted"><?=$c;?></a>
                                 <?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'?>
                                 <?php $i++?>
                                 <?php endforeach;?>
@@ -251,8 +250,7 @@ gtag('config', 'G-VDLLX3HKBL');
 
                             <div class="mt-2">
                                 <?php $i = 0; foreach ($coa_arr as $c): ?>
-                                <a href="javascript:void(0);" class="text-muted fs-6"
-                                    onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a>
+                                    <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $c) ?>" class="text-muted"><?=$c;?></a>
                                 <?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'; ?>
                                 <?php $i++; ?>
                                 <?php endforeach;?>
@@ -334,8 +332,7 @@ gtag('config', 'G-VDLLX3HKBL');
 
                             <div class="mt-2">
                                 <?php $i = 0; foreach ($coa_arr as $c): ?>
-                                <a href="javascript:void(0);" class="text-muted h6"
-                                    onclick="author_details('<?=$row['id_jor']?>','<?=$c?>')"><?=$c?></a>
+                                    <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $c) ?>" class="text-muted"><?=$c;?></a>
                                 <?php if($i < (count($coa_arr) - 1)) echo '<span class="text-muted">|</span>'?>
                                 <?php $i++?>
                                 <?php endforeach;?>

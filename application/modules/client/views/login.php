@@ -60,6 +60,7 @@ function validateForm() {
                         <!-- password uBOtoPN3 -->
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm', 'class' => 'w-50'])?>
                             <div class="mb-3">
+                                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
                                 <!-- <label for="email" class="form-label">Email</label> -->
                                 <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="Email">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['email'] ?></span>

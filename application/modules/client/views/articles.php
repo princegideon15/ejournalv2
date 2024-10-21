@@ -102,7 +102,8 @@
 				<?php $c = 1;foreach ($lat as $row): ?>
 				<?php $coa_arr = (explode(",& ", $row['coa']));?>
 
-				<p class="mt-0 text-dark mb-0 main-link"><?php echo $row['title']; ?></p>
+				<!-- <p class="mt-0 text-dark mb-0 main-link"><?php echo $row['title']; ?></p> -->
+                <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $row['art_id'] ?>','hits','<?= $row['file'] ?>')"><?= $row['title'] ?></a>
 				
 				<div class="mt-2">
 					<?php $i = 0; foreach ($coa_arr as $c): ?>

@@ -152,3 +152,6 @@ class Login_model extends CI_Model {
     }
 
 }
+
+
+// use in insert/update function : $this->db->escape();
