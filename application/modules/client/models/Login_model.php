@@ -45,10 +45,11 @@ class Login_model extends CI_Model {
             return false;
         }
     }
-    public function validate_otp($otp, $ref){
+    // public function validate_otp($otp, $ref){
+    public function validate_otp($ref){
         $this->db->select('*');
         $this->db->from($this->users);
-        $this->db->where('otp', $otp);
+        // $this->db->where('otp', $otp);
         $this->db->where('otp_ref_code', $ref);
         $query = $this->db->get();
         // If a matching user is found, return the user object
@@ -111,11 +112,17 @@ class Login_model extends CI_Model {
     }
 
     public function create_user_profile($data){
-		$this->db->insert($this->profile, $data);
+		  $this->db->insert($this->profile, $data);
     }
 
     public function create_user_auth($data){
-		$this->db->insert($this->users, $data);
+      
+      //use escape_str to prevent sql injections
+      foreach ($data as $key => $value) {
+          $data[$key] = $this->db->escape_str($value);
+      }
+
+      $this->db->insert($this->users, $data);
     }
 
     public function get_user_profile($id){

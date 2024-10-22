@@ -10,9 +10,9 @@
  * ----------------------------------------------------------------------------------------------------
  * System Name: Online Research Journal System
  * ----------------------------------------------------------------------------------------------------
- * Author: -
+ * Author: GPDB
  * ----------------------------------------------------------------------------------------------------
- * Date of revision: -
+ * Date of revision: 10-16-2024
  * ----------------------------------------------------------------------------------------------------
  * Copyright Notice:
  * Copyright (C) 2018 by the Department of Science and Technology - National Research Council of the Philiipines
@@ -41,35 +41,6 @@ class Ejournal extends EJ_Controller {
 		error_reporting(0);
 	}
 
-    //added by mark zosa
-	private function token(){
-        // $time =  time();
-        //  return md5($time."nrcp");
-        // $time =  time();
-        $n = 6;
-        //return md5($time."nrcp_token");
-        // Taking a generator string that consists of 
-        // all the numeric digits 
-        $generator = "1357902468";
-
-        // Iterating for n-times and pick a single character 
-        // from generator and append it to $result 
-
-        // Login for generating a random character from generator 
-        //     ---generate a random number 
-        //     ---take modulus of same with length of generator (say i) 
-        //     ---append the character at place (i) from generator to result 
-
-        $result = "";
-
-        for ($i = 1; $i <= $n; $i++) {
-            $result .= substr($generator, (rand() % (strlen($generator))), 1);
-        }
-
-        // Returning the result 
-        return $result;
-    }
-
 	/**
 	 * Display langing page
 	 *
@@ -77,7 +48,7 @@ class Ejournal extends EJ_Controller {
 	 */
 	public function index() {
 
-		$this->session->set_userdata('verification_code', $this->token());
+		// $this->session->set_userdata('verification_code', $this->token());
 		
 		// $volumes = [];
 		// $issues = [];
@@ -113,8 +84,11 @@ class Ejournal extends EJ_Controller {
 		ip_info(); 
 	}
 
-
-
+	/**
+	 * Login page
+	 *
+	 * @return void
+	 */
 	public function login(){
 		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
@@ -128,22 +102,7 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
-	 * Display langing page
-	 *
-	 * @return void
-	 */
-	public function about() {
-
-	
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/about";
-		//$data['main_content'] = "client/maintenance";
-		$data['journals'] = $this->Client_journal_model->get_journals();
-		$this->_LoadPage('common/body', $data);
-	}
-
-	/**
-	 * Display langing page
+	 * Guidelines page
 	 *
 	 * @return void
 	 */
@@ -156,13 +115,11 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
-	 * Display langing page
+	 * Editorial board page
 	 *
 	 * @return void
 	 */
 	public function editorial() {
-
-	
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/editorial";
 		//$data['main_content'] = "client/maintenance";
@@ -172,98 +129,24 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
-	 * Retrieve articles by journal id
-	 *
-	 * @param [int] $id
-	 * @return void
-	 */
-	public function get_articles($vol,$id) {
-
-		//get volums for side menu
-		$volumes = [];
-		$issues = [];
-
-		$journals = $this->Client_journal_model->get_journals();
-
-		foreach($journals as $row){
-			$issues = $this->Client_journal_model->get_issues($row->jor_volume);
-			$jor_issues = [];
-			foreach ($issues as $issue) {
-				$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
-			}
-
-			$volumes[$row->jor_volume] = $jor_issues;
-		}
-
-
-		$data['volumes'] = $volumes;
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/articles";
-		//$data['main_content'] = "client/maintenance";
-		$data['articles'] = $this->Client_journal_model->get_articles($id);
-		$data['journals'] = $this->Client_journal_model->get_journals();
-		$data['selected_journal'] = $vol;
-		$this->_LoadPage('common/body', $data);
-	}
-	
-	/**
-	 * Retrieve articles by journal id
-	 *
-	 * @param [int] $id
-	 * @return void
-	 */
-	public function get_issues($id) {
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/issues";
-		//$data['main_content'] = "client/maintenance";
-		$data['issues'] = $this->Client_journal_model->get_issues($id);
-		$data['journals'] = $this->Client_journal_model->get_journals();
-		$data['selected_journal'] = $id;
-		$this->_LoadPage('common/body', $data);
-	}
-	
-
-	/**
-	 * Retrieve articles by journal id
-	 *
-	 * @param [int] $id
-	 * @return void
-	 */
-	public function get_index($id = null) {
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/indexes";
-		//$data['main_content'] = "client/maintenance";
-		$data['articles'] = $this->Client_journal_model->get_index($id);
-		$data['journals'] = $this->Client_journal_model->get_journals();
-		$data['article_index'] = $id;
-		$this->_LoadPage('common/body', $data);
-	}
-
-	/**
 	 * Retrieve authors/coauthors by article id
 	 *
-	 * @param [int] $id
+	 * @param int $id
 	 * @return void
 	 */
 	public function get_coauthors($id) {
 		$output = $this->Client_journal_model->get_coauthors($id);
 		echo json_encode($output);
 	}
-
+	
 	/**
-	 * Retrieve articles in a journal by journal id
+	 * Volume with issue page and volume list
 	 *
-	 * @param [type] $id
+	 * @param int $vol
+	 * @param int $iss
 	 * @return void
 	 */
-	public function get_journal($id) {
-		$output = $this->Client_journal_model->get_journal($id);
-		echo json_encode($output);
-	}
-	
 	public function volume($vol,$iss) {
-
-		//get volums for side menu
 		$volumes = [];
 		$issues = [];
 
@@ -275,11 +158,9 @@ class Ejournal extends EJ_Controller {
 			foreach ($issues as $issue) {
 				$jor_issues[] = [$issue->jor_issue, $issue->jor_id, $row->jor_volume];
 			}
-
 			$vol = $row->jor_volume . ', ' . $row->jor_year;
 			$volumes[$vol] = $jor_issues;
 		}
-
 
 		$data['volumes'] = $volumes;
 		$data['main_title'] = "eJournal";
@@ -292,104 +173,12 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
-	 * Save client info after requesting full text pdf
+	 * download full text pdf when logged in
 	 *
+	 * @param int $id
+	 * @param string $file
 	 * @return void
 	 */
-	public function download_pdf() {
-		// whether ip is from share internet
-		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-			$ip_address = $_SERVER['HTTP_CLIENT_IP'];
-		}
-		// whether ip is from proxy
-		elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		}
-		// whether ip is from remote address
-		else {
-			$ip_address = $_SERVER['REMOTE_ADDR'];
-		}
-
-		$tableName = 'tblclients';
-		$result = $this->db->list_fields($tableName);
-		$post = array();
-
-		foreach ($result as $i => $field) {
-			if ($field != 'clt_id') {
-				$post[$field] = $this->input->post($field, TRUE);
-			}
-		}
-
-		$client_member = $this->input->post('clt_member');
-		$download_id = $post['clt_journal_downloaded_id'];
-		
-		//$recipient = $post['clt_email'];
-
-		$this->form_validation->set_rules('clt_title', 'Title', 'trim|required|regex_match[/^([a-zA-Z]+\s*)+\.?$/]');
-        $this->form_validation->set_rules('clt_name', 'Full Name', 'trim|required|regex_match[/^([a-zA-Z]|\s)+$/]|max_length[100]');
-		$this->form_validation->set_rules('clt_email', 'Email is required  and should be valid', 'trim|required|valid_email');
-		$this->form_validation->set_rules('clt_age', 'Age', 'trim|required|numeric');
-		$this->form_validation->set_rules('clt_sex', 'Sex', 'trim|required|numeric');
-		$this->form_validation->set_rules('clt_affiliation', 'Affiliation', 'trim|required|regex_match[/^([a-zA-Z]|\s)+$/]|max_length[500]');
-		$this->form_validation->set_rules('clt_country', 'Country', 'trim|required|regex_match[/^([a-zA-Z]|\s)+$/]|max_length[100]');
-		$this->form_validation->set_rules('clt_purpose', 'Purpose', 'trim|required|regex_match[/^([a-zA-Z]|\s)+$/]|max_length[250]');
-		$this->form_validation->set_rules('clt_vcode', 'Verification Code', 'trim|required|regex_match[/^([0-9])+$/]|max_length[6]');
-
-		if ($this->form_validation->run() == FALSE)
-		{
-			//$this->load->view('myform');
-			//$error = 400;
-			if(validation_errors()):
-				echo "<div class='alert alert-danger px-1 py-1 font-weight-bold'>".validation_errors()."</div>";
-			endif;
-		}
-		else
-		{
-			//$verification_code = $this->token();
-			$vcode  						= $this->security->xss_clean($this->input->post('clt_vcode'));
-			//echo $this->session->userdata('verification_code');
-			//echo "<br>";
-			//echo $vcode;
-			if($this->session->userdata('verification_code') == $vcode){
-				$post['clt_title']       		= $this->security->xss_clean(ucfirst($this->input->post('clt_title')));
-				$post['clt_name']       		= $this->security->xss_clean($this->input->post('clt_name'));
-				$post['clt_email']      		= $this->security->xss_clean($this->input->post('clt_email'));
-				$post['clt_age']    			= $this->security->xss_clean($this->input->post('clt_age'));
-				$post['clt_sex']        		= $this->security->xss_clean($this->input->post('clt_sex'));
-				$post['clt_affiliation']        = $this->security->xss_clean($this->input->post('clt_affiliation'));
-				$post['clt_country']            = $this->security->xss_clean($this->input->post('clt_country'));
-				$post['clt_purpose']            = $this->security->xss_clean($this->input->post('clt_purpose'));
-				$post['clt_download_date_time'] = date('Y-m-d H:i:s');
-				$post['clt_ip_address'] 		= $ip_address;
-				//var_dump($post);
-				$client_id = $this->Client_journal_model->save_client(array_filter($post));
-				$ref = random_string('alnum', 8) . date('ymdhis');
-				$fdbk_sess = array(
-					'client_id' => $client_id,
-					'fdbk_ref' => $ref,
-				);
-
-				$this->session->set_userdata($fdbk_sess);
-				// echo $client_id;
-				$recipient = $post['clt_email'];
-				$this->download_pdf_continue($client_id, $download_id, $recipient);
-				//send email to author
-				$this->notify_author($client_id, $download_id, 1); // 1 - downloaded article	
-				$success = trim("success");
-				//echo $success;
-				echo 200;
-				//echo "<div class='alert alert-success font-weight-bold' role='alert'>";
-				//echo "<span class='oi oi-check'></span> Full Text PDF sent! Please check your email.</div><h5 class='text-center'></h5>";
-				//echo "<button class='btn btn-light w-100 font-weight-bold' id='btn_feedback'>Close</button>";
-				
-			}else{
-				echo 401;
-				//echo "<div class='alert alert-danger font-weight-bold'> Wrong Verification code. Please enter the right verification code.</div>";
-				//echo "<button class='btn btn-light w-100 font-weight-bold'  data-dismiss='modal'>Close</button>";
-			}
-		}
-	}
-
 	public function download_file($id, $file) {
 
 		//get info of downloader
@@ -631,8 +420,6 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	public function download_pdf_continue($client_id, $download_id, $recipient) {
-
-
 
 		//Server
 		$file_to_attach = '/var/www/html/ejournal/assets/uploads/pdf/';
@@ -897,7 +684,6 @@ class Ejournal extends EJ_Controller {
 		$perPage = 10;
 		$page = 0;
 
-
 		if($this->input->get('per_page')){
 			$page =  $this->input->get('per_page', TRUE);
 		}
@@ -1013,6 +799,11 @@ class Ejournal extends EJ_Controller {
 
 	}
 
+	/**
+	 * Advanced search page
+	 *
+	 * @return void
+	 */
 	public function advanced(){
 		if(count(array_filter($this->input->get('search[]'))) > 0 || $this->input->get('single_search')){
 			//where dropdowns
@@ -1102,7 +893,7 @@ class Ejournal extends EJ_Controller {
 			$data['per_page'] = $actualPerPage;
 			$data['page'] = $page;
 			usort($output, function ($a, $b) {
-				// Your comparison logic here
+				//sort merged array by article title
 				return strnatcasecmp($a->art_title, $b->art_title);
 			});
 			$data['result'] = array_slice($output, $page, $perPage);
@@ -1349,8 +1140,6 @@ class Ejournal extends EJ_Controller {
 			
 	}
 
-	
-
 	/**
 	 * Display customer service feedback form for testing only
 	 *
@@ -1464,17 +1253,22 @@ class Ejournal extends EJ_Controller {
 		}
 	}
 
-	public function send_verification_code(){
-		$email = $this->input->post('clt_email');
-		$verification_code =  $this->session->userdata('verification_code');
-		//echo $email;
-		//echo $verification_code;
-		echo $email_sent =  $this->email($email, $verification_code);
-		if($email_sent){
-			echo "<div class='alert alert-success font-weight-bold'> The verification code  was sent to your email.</div>";
-		}
-	}
+	// public function send_verification_code(){
+	// 	$email = $this->input->post('clt_email');
+	// 	$verification_code =  $this->session->userdata('verification_code');
+	// 	//echo $email;
+	// 	//echo $verification_code;
+	// 	echo $email_sent =  $this->email($email, $verification_code);
+	// 	if($email_sent){
+	// 		echo "<div class='alert alert-success font-weight-bold'> The verification code  was sent to your email.</div>";
+	// 	}
+	// }
 
+	/**
+	 * Create account
+	 *
+	 * @return void
+	 */
 	public function create_account(){
 		
 		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email|is_unique[tblusers.email]', array('is_unique' => 'Email already in use. Please use different email.'));
@@ -1604,7 +1398,7 @@ class Ejournal extends EJ_Controller {
 				'email' => $email,
 				'password' => password_hash($this->input->post('new_password'), PASSWORD_BCRYPT),
 				'status' => 0,
-				'otp' => $otp, 
+				'otp' => password_hash($otp, PASSWORD_BCRYPT), 
 				'otp_date' => date('Y-m-d H:i:s'),
 				'otp_ref_code' => $ref_code,
 				'created_at' => date('Y-m-d H:i:s')
@@ -1634,16 +1428,22 @@ class Ejournal extends EJ_Controller {
 			$this->Login_model->create_user_profile($userProfile);
 
 			//send email otp for create account
-			$this->send_create_account_otp($email);
+			$this->send_create_account_otp($email, $otp);
 		}
 		
 	}
 
-	public function send_create_account_otp($email) {
+	/**
+	 * Send email with otp code for account creation
+	 *
+	 * @param string $email
+	 * @return void
+	 */
+	public function send_create_account_otp($email, $otp) {
 		
 		$user = $this->Client_journal_model->get_user_info($email);
 		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
-		$otp = $user[0]->otp;
+		// $otp = $user[0]->otp;
 		$ref_code = $user[0]->otp_ref_code;
 
 		$link = base_url() . 'client/login/new_account_verify_otp/'.$ref_code;
@@ -1717,6 +1517,12 @@ class Ejournal extends EJ_Controller {
 		redirect($link);
 	}
 
+	/**
+	 * Password format checker
+	 *
+	 * @param string $password
+	 * @return void
+	 */
     public function check_password_strength($password) {
         $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/';
 
@@ -1729,16 +1535,35 @@ class Ejournal extends EJ_Controller {
 
     }
 
+	/**
+	 * Get provinces by region id
+	 *
+	 * @param int $region_id
+	 * @return void
+	 */
 	public function get_provinces($region_id){
 		$output = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $region_id));
 		echo json_encode($output);
 	}
 
+	/**
+	 * Get cities by province id
+	 *
+	 * @param int $province_id
+	 * @return void
+	 */
 	public function get_city($province_id){
 		$output = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province_id));
 		echo json_encode($output);
 	}
 
+	/**
+	 * Generate user id
+	 *
+	 * @param integer $start
+	 * @param int $end
+	 * @return void
+	 */
 	function generate_user_id($start = 0000, $end) {
 		$current_number = $start;
 	
@@ -1751,10 +1576,235 @@ class Ejournal extends EJ_Controller {
 			$current_number++;
 		}
 		
-		return 'NRCP-EJ-'. date('Y') .'-'.$formatted_number . PHP_EOL;
+		return 'NRCP-EJ-'. date('Y') .'-'.$formatted_number;
 	}
-	
 
 }
-
 /* End of file Ejournal.php */
+
+
+/**
+ * Unused/replaced functions
+ */
+
+ 
+	/**
+	 * Retrieve articles by journal id
+	 *
+	 * @param [int] $id
+	 * @return void
+	 */
+	// public function get_articles($vol,$id) {
+
+	// 	//get volums for side menu
+	// 	$volumes = [];
+	// 	$issues = [];
+
+	// 	$journals = $this->Client_journal_model->get_journals();
+
+	// 	foreach($journals as $row){
+	// 		$issues = $this->Client_journal_model->get_issues($row->jor_volume);
+	// 		$jor_issues = [];
+	// 		foreach ($issues as $issue) {
+	// 			$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
+	// 		}
+
+	// 		$volumes[$row->jor_volume] = $jor_issues;
+	// 	}
+
+
+	// 	$data['volumes'] = $volumes;
+	// 	$data['main_title'] = "eJournal";
+	// 	$data['main_content'] = "client/articles";
+	// 	//$data['main_content'] = "client/maintenance";
+	// 	$data['articles'] = $this->Client_journal_model->get_articles($id);
+	// 	$data['journals'] = $this->Client_journal_model->get_journals();
+	// 	$data['selected_journal'] = $vol;
+	// 	$this->_LoadPage('common/body', $data);
+	// }
+	
+	/**
+	 * Retrieve articles by journal id
+	 *
+	 * @param [int] $id
+	 * @return void
+	 */
+	// public function get_issues($id) {
+	// 	$data['main_title'] = "eJournal";
+	// 	$data['main_content'] = "client/issues";
+	// 	//$data['main_content'] = "client/maintenance";
+	// 	$data['issues'] = $this->Client_journal_model->get_issues($id);
+	// 	$data['journals'] = $this->Client_journal_model->get_journals();
+	// 	$data['selected_journal'] = $id;
+	// 	$this->_LoadPage('common/body', $data);
+	// }
+	
+
+	/**
+	 * Retrieve articles by journal id
+	 *
+	 * @param [int] $id
+	 * @return void
+	 */
+	// public function get_index($id = null) {
+	// 	$data['main_title'] = "eJournal";
+	// 	$data['main_content'] = "client/indexes";
+	// 	//$data['main_content'] = "client/maintenance";
+	// 	$data['articles'] = $this->Client_journal_model->get_index($id);
+	// 	$data['journals'] = $this->Client_journal_model->get_journals();
+	// 	$data['article_index'] = $id;
+	// 	$this->_LoadPage('common/body', $data);
+	// }
+
+	/**
+	 * About page
+	 *
+	 * @return void
+	 */
+	// public function about() {
+	// 	$data['main_title'] = "eJournal";
+	// 	$data['main_content'] = "client/about";
+	// 	//$data['main_content'] = "client/maintenance";
+	// 	$data['journals'] = $this->Client_journal_model->get_journals();
+	// 	$this->_LoadPage('common/body', $data);
+	// }
+
+    //added by mark zosa
+	// private function token(){
+    //     // $time =  time();
+    //     //  return md5($time."nrcp");
+    //     // $time =  time();
+    //     $n = 6;
+    //     //return md5($time."nrcp_token");
+    //     // Taking a generator string that consists of 
+    //     // all the numeric digits 
+    //     $generator = "1357902468";
+
+    //     // Iterating for n-times and pick a single character 
+    //     // from generator and append it to $result 
+
+    //     // Login for generating a random character from generator 
+    //     //     ---generate a random number 
+    //     //     ---take modulus of same with length of generator (say i) 
+    //     //     ---append the character at place (i) from generator to result 
+
+    //     $result = "";
+
+    //     for ($i = 1; $i <= $n; $i++) {
+    //         $result .= substr($generator, (rand() % (strlen($generator))), 1);
+    //     }
+
+    //     // Returning the result 
+    //     return $result;
+    // }
+
+	/**
+	 * Retrieve articles in a journal by journal id
+	 *
+	 * @param [type] $id
+	 * @return void
+	 */
+	// public function get_journal($id) {
+	// 	$output = $this->Client_journal_model->get_journal($id);
+	// 	echo json_encode($output);
+	// }
+
+	/**
+	 * Save client info after requesting full text pdf (unused/replaced)
+	 *
+	 * @return void
+	 */
+	// public function download_pdf() {
+	// 	// whether ip is from share internet
+	// 	if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+	// 		$ip_address = $_SERVER['HTTP_CLIENT_IP'];
+	// 	}
+	// 	// whether ip is from proxy
+	// 	elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+	// 		$ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	// 	}
+	// 	// whether ip is from remote address
+	// 	else {
+	// 		$ip_address = $_SERVER['REMOTE_ADDR'];
+	// 	}
+
+	// 	$tableName = 'tblclients';
+	// 	$result = $this->db->list_fields($tableName);
+	// 	$post = array();
+
+	// 	foreach ($result as $i => $field) {
+	// 		if ($field != 'clt_id') {
+	// 			$post[$field] = $this->input->post($field, TRUE);
+	// 		}
+	// 	}
+
+	// 	$client_member = $this->input->post('clt_member');
+	// 	$download_id = $post['clt_journal_downloaded_id'];
+		
+	// 	//$recipient = $post['clt_email'];
+
+	// 	$this->form_validation->set_rules('clt_title', 'Title', 'trim|required|regex_match[/^([a-zA-Z]+\s*)+\.?$/]');
+    //     $this->form_validation->set_rules('clt_name', 'Full Name', 'trim|required|regex_match[/^([a-zA-Z]|\s)+$/]|max_length[100]');
+	// 	$this->form_validation->set_rules('clt_email', 'Email is required  and should be valid', 'trim|required|valid_email');
+	// 	$this->form_validation->set_rules('clt_age', 'Age', 'trim|required|numeric');
+	// 	$this->form_validation->set_rules('clt_sex', 'Sex', 'trim|required|numeric');
+	// 	$this->form_validation->set_rules('clt_affiliation', 'Affiliation', 'trim|required|regex_match[/^([a-zA-Z]|\s)+$/]|max_length[500]');
+	// 	$this->form_validation->set_rules('clt_country', 'Country', 'trim|required|regex_match[/^([a-zA-Z]|\s)+$/]|max_length[100]');
+	// 	$this->form_validation->set_rules('clt_purpose', 'Purpose', 'trim|required|regex_match[/^([a-zA-Z]|\s)+$/]|max_length[250]');
+	// 	$this->form_validation->set_rules('clt_vcode', 'Verification Code', 'trim|required|regex_match[/^([0-9])+$/]|max_length[6]');
+
+	// 	if ($this->form_validation->run() == FALSE)
+	// 	{
+	// 		//$this->load->view('myform');
+	// 		//$error = 400;
+	// 		if(validation_errors()):
+	// 			echo "<div class='alert alert-danger px-1 py-1 font-weight-bold'>".validation_errors()."</div>";
+	// 		endif;
+	// 	}
+	// 	else
+	// 	{
+	// 		//$verification_code = $this->token();
+	// 		$vcode  						= $this->security->xss_clean($this->input->post('clt_vcode'));
+	// 		//echo $this->session->userdata('verification_code');
+	// 		//echo "<br>";
+	// 		//echo $vcode;
+	// 		if($this->session->userdata('verification_code') == $vcode){
+	// 			$post['clt_title']       		= $this->security->xss_clean(ucfirst($this->input->post('clt_title')));
+	// 			$post['clt_name']       		= $this->security->xss_clean($this->input->post('clt_name'));
+	// 			$post['clt_email']      		= $this->security->xss_clean($this->input->post('clt_email'));
+	// 			$post['clt_age']    			= $this->security->xss_clean($this->input->post('clt_age'));
+	// 			$post['clt_sex']        		= $this->security->xss_clean($this->input->post('clt_sex'));
+	// 			$post['clt_affiliation']        = $this->security->xss_clean($this->input->post('clt_affiliation'));
+	// 			$post['clt_country']            = $this->security->xss_clean($this->input->post('clt_country'));
+	// 			$post['clt_purpose']            = $this->security->xss_clean($this->input->post('clt_purpose'));
+	// 			$post['clt_download_date_time'] = date('Y-m-d H:i:s');
+	// 			$post['clt_ip_address'] 		= $ip_address;
+	// 			//var_dump($post);
+	// 			$client_id = $this->Client_journal_model->save_client(array_filter($post));
+	// 			$ref = random_string('alnum', 8) . date('ymdhis');
+	// 			$fdbk_sess = array(
+	// 				'client_id' => $client_id,
+	// 				'fdbk_ref' => $ref,
+	// 			);
+
+	// 			$this->session->set_userdata($fdbk_sess);
+	// 			// echo $client_id;
+	// 			$recipient = $post['clt_email'];
+	// 			$this->download_pdf_continue($client_id, $download_id, $recipient);
+	// 			//send email to author
+	// 			$this->notify_author($client_id, $download_id, 1); // 1 - downloaded article	
+	// 			$success = trim("success");
+	// 			//echo $success;
+	// 			echo 200;
+	// 			//echo "<div class='alert alert-success font-weight-bold' role='alert'>";
+	// 			//echo "<span class='oi oi-check'></span> Full Text PDF sent! Please check your email.</div><h5 class='text-center'></h5>";
+	// 			//echo "<button class='btn btn-light w-100 font-weight-bold' id='btn_feedback'>Close</button>";
+				
+	// 		}else{
+	// 			echo 401;
+	// 			//echo "<div class='alert alert-danger font-weight-bold'> Wrong Verification code. Please enter the right verification code.</div>";
+	// 			//echo "<button class='btn btn-light w-100 font-weight-bold'  data-dismiss='modal'>Close</button>";
+	// 		}
+	// 	}
+	// }
+

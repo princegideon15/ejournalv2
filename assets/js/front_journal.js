@@ -111,6 +111,7 @@ $(document).ready(function()
 
   $('#signUpForm #region').on('change', function(){
     let region = $(this).val()
+    
 		$.ajax({
 			type: "GET",
 			url: base_url + "client/ejournal/get_provinces/" + region,
@@ -121,8 +122,11 @@ $(document).ready(function()
 				$.each(data, function(key, val) {
           html += '<option value="'+ val.province_id +  '">'+ val.province_name +'</option>';
 				});
-        $('#province').empty().append(html);
-			}
+        $('#signUpForm #province').empty().append(html);
+			},
+      error: function(xhr, status, error) {
+          console.error('Error:', error);
+      }
 		});
   });
 

@@ -175,6 +175,11 @@ class Login extends EJ_Controller {
 
 	public function send_login_otp($email) {
 		
+		// 		$plain_text = 'my_password';
+		// $md5_hash = md5($plain_text);
+
+
+
 		$user = $this->Client_journal_model->get_user_info($email);
 		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
 		$otp = substr(number_format(time() * rand(),0,'',''),0,6);
@@ -182,7 +187,7 @@ class Login extends EJ_Controller {
 
 		$this->Login_model->save_otp(
 			[
-				'otp' => $otp, 
+				'otp' => password_hash($otp, PASSWORD_BCRYPT),
 				'otp_date' => date('Y-m-d H:i:s'),
 				'otp_ref_code' => $ref_code
 			],
@@ -398,8 +403,10 @@ class Login extends EJ_Controller {
 				}else{
 					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
-					$verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
-					if ($verifyOTP) {
+					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
+					$verifyOTP = $this->Login_model->validate_otp($ref_code);
+
+					if (password_verify($otp, $verifyOTP[0]->otp)) {
 						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
 						$this->session->set_userdata('email',  $verifyOTP[0]->email);
 						$this->session->unset_userdata('otp_ref_code');
@@ -472,8 +479,10 @@ class Login extends EJ_Controller {
 				}else{
 					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
-					$verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
-					if ($verifyOTP) {
+					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
+					$verifyOTP = $this->Login_model->validate_otp($ref_code);
+
+					if (password_verify($otp, $verifyOTP[0]->otp)) {
 						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
 						$this->session->set_userdata('email',  $verifyOTP[0]->email);
 						$this->session->unset_userdata('otp_ref_code');
@@ -848,5 +857,3 @@ class Login extends EJ_Controller {
 		}
 	}
 }
-
-// add set ruls form validation
