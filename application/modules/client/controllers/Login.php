@@ -10,9 +10,9 @@
  * ----------------------------------------------------------------------------------------------------
  * System Name: Online Research Journal System
  * ----------------------------------------------------------------------------------------------------
- * Author: -
+ * Author: GPDB
  * ----------------------------------------------------------------------------------------------------
- * Date of revision: -
+ * Date of revision: 10-16-2024
  * ----------------------------------------------------------------------------------------------------
  * Copyright Notice:
  * Copyright (C) 2018 by the Department of Science and Technology - National Research Council of the Philiipines
@@ -35,9 +35,29 @@ class Login extends EJ_Controller {
         $this->load->library('session'); 
 		$this->load->library('form_validation');
 		error_reporting(0);
+
+		//security headers
+		$this->output->set_header("Content-Security-Policy: 
+			default-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com; 
+			script-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
+			style-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
+			font-src 'self' https://*.gstatic.com;
+			img-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com data:; 
+			frame-src 'self' https://*.google.com;"
+		);
+
+		$this->output->set_header('X-Frame-Options: SAMEORIGIN');
+		$this->output->set_header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+		$this->output->set_header('X-XSS-Protection: 1; mode=block');
+		$this->output->set_header('X-Content-Type-Options: nosniff');
 		
 	}
     
+	/**
+	 * Authenticate user login
+	 *
+	 * @return void
+	 */
     public function authenticate(){
 
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|xss_clean');
@@ -134,6 +154,7 @@ class Login extends EJ_Controller {
 					$last_attempt_time = $this->Login_model->get_login_attempts($email);
 					$last_attempt_time = $last_attempt_time[0]->attempt_time;
 					$current_date = date('Y-m-d H:i:s');
+					//check otp valid 5 minutes
 					$time_remaining = $this->compareDates($last_attempt_time, $current_date);
 
 					$this->send_email_alert($email);
@@ -173,13 +194,14 @@ class Login extends EJ_Controller {
 		}
 	}
 
+	/**
+	 * Send login otp
+	 *
+	 * @param string $email
+	 * @return void
+	 */
 	public function send_login_otp($email) {
-		
-		// 		$plain_text = 'my_password';
-		// $md5_hash = md5($plain_text);
-
-
-
+	
 		$user = $this->Client_journal_model->get_user_info($email);
 		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
 		$otp = substr(number_format(time() * rand(),0,'',''),0,6);
@@ -267,6 +289,12 @@ class Login extends EJ_Controller {
 		redirect($link);
 	}
 	
+	/**
+	 * Send email alert notif to admin on login attempt
+	 *
+	 * @param string $email
+	 * @return void
+	 */
 	public function send_email_alert($email) {
 		
 		$user = $this->Client_journal_model->get_user_info($email);
@@ -350,7 +378,12 @@ class Login extends EJ_Controller {
 		}
 	}
 
-	
+	/**
+	 * Verify login otp
+	 *
+	 * @param string $ref
+	 * @return void
+	 */
 	public function verify_otp($ref){
 		//check if ref code exist
 		$ref = $this->security->xss_clean($ref);
@@ -372,6 +405,7 @@ class Login extends EJ_Controller {
 			$current_date = date('Y-m-d H:i:s');
 
 			//check if code expired after 5 minutes
+			//code expired
 			if ($this->compareDates($otp_date, $current_date)  > 4) {
 				$this->session->set_flashdata('otp', '
 				<div class="alert alert-danger d-flex align-items-center">
@@ -413,6 +447,7 @@ class Login extends EJ_Controller {
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
 						redirect('client/ejournal/');
 					} else {
+						//invalid code
 						$this->session->set_flashdata('otp', '
 															<div class="alert alert-danger d-flex align-items-center">
 																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
@@ -428,11 +463,17 @@ class Login extends EJ_Controller {
 		
 	}
 	
+	/**
+	 * Verify create account otp
+	 *
+	 * @param string $ref
+	 * @return void
+	 */
 	public function new_account_verify_otp($ref){
 		//check if ref code exist
 		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
 
-		//code expired
+		//link expired
 		if($isOtpRefExist[0]->otp_ref_code == null){
 			$this->session->set_flashdata('otp', '
 			<div class="alert alert-danger d-flex align-items-center">
@@ -490,6 +531,7 @@ class Login extends EJ_Controller {
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
 						redirect('client/ejournal/');
 					} else {
+						//invalid code
 						$this->session->set_flashdata('otp', '
 															<div class="alert alert-danger d-flex align-items-center">
 																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
@@ -504,6 +546,13 @@ class Login extends EJ_Controller {
 		}
 	}
 
+	/**
+	 * Get minutes for otp 5 mins and locked account 30 mins
+	 *
+	 * @param datetime $date1
+	 * @param datetime $date2
+	 * @return void
+	 */
 	function compareDates($date1, $date2) {
 		$date1 = new DateTime($date1);
 		$date2 = new DateTime($date2);
@@ -511,17 +560,25 @@ class Login extends EJ_Controller {
 		$interval = $date1->diff($date2);
 		$minutes = $interval->h * 60 + $interval->i;
 		
-		//otp valid for 5 minutes
 		return $minutes;
 	}
 
+	/**
+	 * Forgot password page
+	 *
+	 * @return void
+	 */
 	public function forgot_password(){
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/forgot_password";
 		$this->_LoadPage('common/body', $data);
-
 	}
 
+	/**
+	 * Vadalite reset password form
+	 *
+	 * @return void
+	 */
 	public function reset_password(){
 
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|xss_clean');
@@ -553,6 +610,12 @@ class Login extends EJ_Controller {
 		}
 	}
 
+	/**
+	 * Send email for temporary password after reset password request
+	 *
+	 * @param [type] $email
+	 * @return void
+	 */
 	public function send_temp_password($email) {
 		
 		$user = $this->Client_journal_model->get_user_info($email);
@@ -633,6 +696,11 @@ class Login extends EJ_Controller {
 		redirect('client/login/forgot_password');
 	}
 
+	/**
+	 * Logout
+	 *
+	 * @return void
+	 */
 	public function logout(){
         $this->session->unset_userdata('user_id');
         $this->session->unset_userdata('email');
@@ -640,17 +708,34 @@ class Login extends EJ_Controller {
 		redirect('client/ejournal/login');
 	}
 
+	/**
+	 * Get current otp generated for 
+	 *
+	 * @param string $refCode
+	 * @return void
+	 */
 	public function get_current_otp($refCode){
 		$output = $this->Login_model->get_current_otp($refCode);
 		echo json_encode($output);
 	}
 
+	/**
+	 * Resend login otp
+	 *
+	 * @param string $refCode
+	 * @return void
+	 */
 	public function resend_code($refCode){
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->email;
 		$this->send_login_otp($email);
 	}
 	
+	/**
+	 * User profile page
+	 *
+	 * @return void
+	 */
 	function profile(){
 		$id = $this->session->userdata('user_id');
 		if($id){
@@ -669,11 +754,15 @@ class Login extends EJ_Controller {
 		}
 	}
 
+	/**
+	 * Update profile
+	 *
+	 * @return void
+	 */
 	function update_profile(){
 		$id = $this->session->userdata('user_id');
 
 		if($id){
-		
 			$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email');
 			$this->form_validation->set_rules('title', 'Title', 'required|trim');
 			$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
@@ -844,9 +933,7 @@ class Login extends EJ_Controller {
 				];
 
 				//save log on update
-
 				$whereProfile = array('user_id' => $id);
-	
 				$this->Login_model->update_user_profile($userProfile, $whereProfile);
 
 				redirect('client/login/profile');

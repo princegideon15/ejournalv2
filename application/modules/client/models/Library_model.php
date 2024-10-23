@@ -8,9 +8,9 @@
 * ----------------------------------------------------------------------------------------------------
 * System Name: Online Research Journal System 
 * ----------------------------------------------------------------------------------------------------
-* Author: -
+* Author: GPDB
 * ----------------------------------------------------------------------------------------------------
-* Date of revision: -
+* Date of revision: 10-16-2025
 * ----------------------------------------------------------------------------------------------------
 * Copyright Notice:
 * Copyright (C) 2018 by the Department of Science and Technology - National Research Council of the Philiipines
@@ -73,3 +73,4 @@ class Library_model extends CI_Model {
 }
 
 /* End of file Library_model.php */
+?>

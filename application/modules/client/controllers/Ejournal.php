@@ -38,7 +38,24 @@ class Ejournal extends EJ_Controller {
         $this->load->library('session'); 
 		$this->load->helper('security');
 		$this->load->library('form_validation');
+
 		error_reporting(0);
+
+		//security headers
+		$this->output->set_header("Content-Security-Policy: 
+			default-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com; 
+			script-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
+			style-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
+			font-src 'self' https://*.gstatic.com;
+			img-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com data:; 
+			frame-src 'self' https://*.google.com;"
+		);
+
+		$this->output->set_header('X-Frame-Options: SAMEORIGIN');
+		$this->output->set_header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+		$this->output->set_header('X-XSS-Protection: 1; mode=block');
+		$this->output->set_header('X-Content-Type-Options: nosniff');
+
 	}
 
 	/**

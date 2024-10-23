@@ -8,9 +8,9 @@
 * ----------------------------------------------------------------------------------------------------
 * System Name: Online Research Journal System 
 * ----------------------------------------------------------------------------------------------------
-* Author: -
+* Author: GPDB
 * ----------------------------------------------------------------------------------------------------
-* Date of revision: -
+* Date of revision: 10-16-2024
 * ----------------------------------------------------------------------------------------------------
 * Copyright Notice:
 * Copyright (C) 2018 by the Department of Science and Technology - National Research Council of the Philiipines
@@ -271,8 +271,9 @@ class Search_model extends CI_Model {
         return $query->result();
     }
 
-     /** this function get total numbers of clients */
-    public function client_count($id)
+    /** this function get total numbers of clients */
+    
+     public function client_count($id)
     {
         $this->db->select('*');
         $this->db->from($this->clients);
@@ -281,7 +282,7 @@ class Search_model extends CI_Model {
         return $query->num_rows();
     }
 
-     /** this function save client details who viewed an abstract  */
+    /** this function save client details who viewed an abstract  */
     public function save_abstract_hits($post)
     {
         $this->db->insert($this->abstracts, $post);
@@ -298,5 +299,6 @@ class Search_model extends CI_Model {
         return $query->num_rows();
     }
 }
-// use in insert/update function : $this->db->escape();
+
+/* End of file Search_model.php */
 ?>

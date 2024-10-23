@@ -8,9 +8,9 @@
  * ----------------------------------------------------------------------------------------------------
  * System Name: Online Research Journal System
  * ----------------------------------------------------------------------------------------------------
- * Author: -
+ * Author: GPDB
  * ----------------------------------------------------------------------------------------------------
- * Date of revision: -
+ * Date of revision: 10-16-2024
  * ----------------------------------------------------------------------------------------------------
  * Copyright Notice:
  * Copyright (C) 2018 by the Department of Science and Technology - National Research Council of the Philiipines
@@ -250,8 +250,6 @@ class Client_journal_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->result_array();
 	}
-
-	
 
 	/** this function get all issues under each journals */
 	public function get_issues($id) {
@@ -625,4 +623,5 @@ class Client_journal_model extends CI_Model {
 	}
 }
 
+/* End of file Client_journal_model.php */
 ?>
