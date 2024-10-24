@@ -123,9 +123,7 @@ function save_visitor($data)  {
     } else {
         // Insert new data
         $CI->db->insert('tblvisitor_details', $data);
-    }
-
-    
+    }    
 }
 
 function getIP(){

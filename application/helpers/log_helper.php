@@ -9,7 +9,9 @@ function save_log_oprs($user, $action, $id = 0, $role) {
 		'log_insert_id' => $id,
 		'log_user_role' => $role,
 		'date_created' => date('Y-m-d H:i:s'),
-		'notif_open' => '0');
+		'notif_open' => '0',
+		'log_source' => 'Admin'
+	);
 
 	$CI =& get_instance();
 	$oprs = $CI->load->database('dboprs', TRUE);
@@ -22,7 +24,8 @@ function save_log_ej($user, $action, $id = 0) {
 		'log_action' => $action,
 		'log_insert_id' => $id,
 		'date_created' => date('Y-m-d H:i:s'),
-		'notif_shown' => '0');
+		'notif_shown' => '0',
+		'log_source' =>'Client');
 
 	$CI =& get_instance();
 	$ej = $CI->load->database('default', TRUE);

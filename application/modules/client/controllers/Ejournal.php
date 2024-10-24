@@ -64,6 +64,9 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	public function index() {
+
+		// store visitor information
+		ip_info(); 
 		
 		// $volumes = [];
 		// $issues = [];
@@ -94,9 +97,6 @@ class Ejournal extends EJ_Controller {
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/journal";
 		$this->_LoadPage('common/body', $data);
-
-		// store visitor information
-		ip_info(); 
 	}
 
 	/**

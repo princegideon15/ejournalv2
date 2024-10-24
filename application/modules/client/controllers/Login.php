@@ -445,6 +445,8 @@ class Login extends EJ_Controller {
 						$this->session->set_userdata('email',  $verifyOTP[0]->email);
 						$this->session->unset_userdata('otp_ref_code');
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
+						
+						save_log_ej($verifyOTP[0]->id, 'Login successful.');
 						redirect('client/ejournal/');
 					} else {
 						//invalid code
@@ -601,6 +603,7 @@ class Login extends EJ_Controller {
 			$validateUser = $this->Login_model->validate_user($email);
 
 			if ($validateUser) {
+				save_log_ej($validateUser[0]->id, 'Temporary password request email sent.');
 				//send email
 				$this->send_temp_password($validateUser[0]->email);
 			}else{
@@ -702,6 +705,8 @@ class Login extends EJ_Controller {
 	 * @return void
 	 */
 	public function logout(){
+		$id = $this->session->userdata('user_id');
+		save_log_ej($id, 'Logout successful.');
         $this->session->unset_userdata('user_id');
         $this->session->unset_userdata('email');
         $this->session->sess_destroy();
@@ -728,6 +733,7 @@ class Login extends EJ_Controller {
 	public function resend_code($refCode){
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->email;
+		save_log_ej($output[0]->id, 'Resend code.');
 		$this->send_login_otp($email);
 	}
 	
@@ -935,6 +941,8 @@ class Login extends EJ_Controller {
 				//save log on update
 				$whereProfile = array('user_id' => $id);
 				$this->Login_model->update_user_profile($userProfile, $whereProfile);
+
+				save_log_ej($id, 'Updated Profile.');
 
 				redirect('client/login/profile');
 			}
