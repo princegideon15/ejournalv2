@@ -64,8 +64,6 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	public function index() {
-
-		// $this->session->set_userdata('verification_code', $this->token());
 		
 		// $volumes = [];
 		// $issues = [];

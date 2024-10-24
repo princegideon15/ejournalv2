@@ -114,7 +114,17 @@ function ip_info() {
 
 function save_visitor($data)  {
     $CI =& get_instance();  
-    $CI->db->insert('tblvisitor_details',$data);
+    // $CI->db->insert('tblvisitor_details',$data);
+    $existing_data = $CI->db->get_where('tblvisitor_details', ['vis_ip' => $data['vis_ip']])->row();
+
+    if ($existing_data) {
+        // Update existing data
+        $CI->db->update('tblvisitor_details', $data, ['vis_ip' => $data['vis_ip']]);
+    } else {
+        // Insert new data
+        $CI->db->insert('tblvisitor_details', $data);
+    }
+
     
 }
 

@@ -709,7 +709,7 @@ class Login extends EJ_Controller {
 	}
 
 	/**
-	 * Get current otp generated for 
+	 * Get existing reference code for resending otp code
 	 *
 	 * @param string $refCode
 	 * @return void
