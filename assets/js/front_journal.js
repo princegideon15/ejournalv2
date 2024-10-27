@@ -41,6 +41,19 @@ $(document).ready(function()
   
   // });
 
+//   setInterval(function() {
+//     $.ajax({
+//         url: '<?php echo base_url(); ?>your_controller/refresh_session',
+//         type: 'POST',
+//         success: function(response) {
+//             // Handle success
+//         },
+//         error: function(xhr, status, error) {
+//             // Handle error
+//         }
+//     });
+// }, 1000 * 60 * 10); // 10 minutes
+
   $('body').tooltip({ selector: '[data-toggle=tooltip]' });
 
   var url = window.location.pathname; // Get the current path
