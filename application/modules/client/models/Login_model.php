@@ -25,6 +25,7 @@ class Login_model extends CI_Model {
 	private $sex = 'tblsex';
 	private $attempts = 'tbllogin_attempts';
   private $profile = 'tbluser_profiles';
+  private $access_tokens = 'tbluser_access_tokens';
 
 	public function __construct() {
 		parent::__construct();
@@ -157,6 +158,10 @@ class Login_model extends CI_Model {
 
   public function update_user_profile($data, $where){
     $this->db->update($this->profile, $data, $where);
+  }
+
+  public function create_user_access_token($data){
+    $this->db->insert($this->access_tokens, $data);
   }
 
 }

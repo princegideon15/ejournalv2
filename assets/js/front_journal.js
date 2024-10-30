@@ -13,16 +13,17 @@
 * Copyright Notice:
 * Copyright (C) 2019 By the Department of Science and Technology - National Research Council of the Philippines
 */
-var apa_format;
-var apa_id;
-var fb_clt_id; //feedback client id
-var fn_clt_email; //feedback client email
-var minutes = 5;
-var seconds = 0;
-var intervalId;
-var isStartTimer = false;
-var refCode;
-var article_id;
+var apa_format,       //apa format for article
+apa_id,               //article id
+fb_clt_id,            //feedback client id
+fn_clt_email,         //feedback client email
+minutes = 5,          //otp timer
+seconds = 0,          //otp timer
+intervalId,           //otp timer
+isStartTimer = false, //otp timer
+refCode,              //reference code for otp
+accessToken,          //user access token generated on logged in
+article_id;           //article id 
 
 $(document).ready(function()
 {
@@ -1538,7 +1539,110 @@ function clearAdvanceSearch(element){
   }
 }
 
+function getUserAccessToken(){
+  
+  $.ajax({
+    type: "GET",
+    url: base_url + "client/ejournal/get_provinces/" + region,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+      console.log(data);
+    }
+  }); 
+}
+
 // data: {
 //   'csrf_test_name': '<?= $this->security->get_csrf_hash(); ?>', // Token
 //   'other_data': 'value'
 // },
+
+// const currentPath = window.location.pathname;
+
+// // Check if the path does NOT consist of '/login/*' or '/register'
+// if (!currentPath.includes('/login') && !currentPath.includes('/register') && !currentPath.includes('/reset') && !currentPath.includes('/change')) {
+
+//   let inactivityTime = function () {
+
+//     const storedData = localStorage.getItem('userToken');
+
+//     if (storedData) {
+//       // Parse the JSON string to an object
+//       const parsedData = JSON.parse(storedData);
+      
+//       // Access the value property
+//       const value = parsedData.value;
+
+//       var CURRENT_TOKEN = value;
+//     }
+
+//     // const CURRENT_TOKEN = localStorage.getItem('userToken'); // Key for storing expiration in localStorage
+//     const TOKEN_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+//     let timeout;
+
+//     function resetTimer() {
+//         clearTimeout(timeout);
+
+//         localStorage.setItem('userToken', JSON.stringify({
+//             value: CURRENT_TOKEN,
+//             expires: Date.now() + (60 * 60 * 1000) // Expires in 1 hour
+//         }));
+        
+//         timeout = setTimeout(() => {
+
+//             Swal.fire({
+//               title: "Session Expired",
+//               text: "Your session has expired. Please log in again.",
+//               icon: "info",
+//               confirmButtonColor: "#0c6bcb",
+            
+//             }).then(function () {
+//               // logoutUser();
+//               localStorage.removeItem("userToken");
+//               window.location = '/logout';
+//             });
+            
+//             // Add any other action you want to perform on inactivity
+//         }, 60 * 60 * 1000); // 10 minutes in milliseconds
+//     }
+
+//     function setupEvents() {
+//         window.addEventListener("mousemove", resetTimer);
+//         window.addEventListener("mousedown", resetTimer);
+//         window.addEventListener("keypress", resetTimer);
+//         window.addEventListener("touchstart", resetTimer);
+//         window.addEventListener("click", resetTimer);
+//         window.addEventListener("scroll", resetTimer);
+//         window.addEventListener("keydown", resetTimer);
+//     }
+    
+
+
+//     setupEvents();
+//     resetTimer(); // Initialize the timer
+//   };
+
+//   const userToken = localStorage.getItem('userToken');
+//   if(userToken){
+//     inactivityTime();
+//   }
+
+
+//   checkLocalStorageExpiration();
+// } else {
+//     // console.log("The URL consists of /login/* or /register");
+// }
+
+
+// function logoutUser() {
+//   localStorage.clear();
+//   window.location.href = app_url + "/logout";
+// }
+
+// // Checking expiration on page load
+// function checkLocalStorageExpiration() {
+//     const data = JSON.parse(localStorage.getItem('userToken'));
+//     if (data && data.expires < Date.now()) {
+//         localStorage.removeItem('userToken');
+//     }
+// }

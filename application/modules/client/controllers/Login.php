@@ -93,8 +93,6 @@ class Login extends EJ_Controller {
 						//send otp to email
 						$this->send_login_otp($email);
 					}else{
-	
-	
 						$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->email));
 	
 						if($count_attempt == 3){
@@ -210,6 +208,7 @@ class Login extends EJ_Controller {
 		$this->Login_model->save_otp(
 			[
 				'otp' => password_hash($otp, PASSWORD_BCRYPT),
+				// 'otp' => $otp,
 				'otp_date' => date('Y-m-d H:i:s'),
 				'otp_ref_code' => $ref_code
 			],
@@ -437,16 +436,37 @@ class Login extends EJ_Controller {
 				}else{
 					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
-					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
-					$verifyOTP = $this->Login_model->validate_otp($ref_code);
+					$verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
+					// $verifyOTP = $this->Login_model->validate_otp($ref_code);
 
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
+					// if ($verifyOTP) {
+						//set session values
 						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
-						$this->session->set_userdata('email',  $verifyOTP[0]->email);
+						$this->session->set_userdata('email', $verifyOTP[0]->email);
 						$this->session->unset_userdata('otp_ref_code');
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
 						
+						//save log
 						save_log_ej($verifyOTP[0]->id, 'Login successful.');
+
+						//create access token
+						$token = uniqid();
+						$token = password_hash($token, PASSWORD_BCRYPT);
+						$this->session->set_userdata('access_token', $token);
+
+						$expiration_time = time() + 1200; // 20 minutes in seconds
+						$expired_at = date('Y-m-d H:i:s', $expiration_time);
+
+						$tokenData = [
+							'tkn_user_id' => $verifyOTP[0]->id,
+							'tkn_value' => $token,
+							'tkn_created_at' => date('Y-m-d H:i:s'),
+							'tkn_expired_at' => $expired_at
+						];
+						
+						$this->Login_model->create_user_access_token($tokenData);
+
 						redirect('client/ejournal/');
 					} else {
 						//invalid code
