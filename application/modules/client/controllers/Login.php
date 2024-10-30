@@ -788,7 +788,7 @@ class Login extends EJ_Controller {
 				$this->form_validation->set_rules('city', 'City', 'required|trim');
 			}
 	
-			$this->form_validation->set_rules('contact', 'Contact', 'required|trim');
+			$this->form_validation->set_rules('contact', 'Contact', 'required|trim|numeric|exact_length[11]');
 			$this->form_validation->set_rules('new_password', 'Password', 'trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
 			array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|matches[new_password]');
