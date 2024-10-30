@@ -124,7 +124,8 @@ class Ejournal extends EJ_Controller {
 	public function guidelines() {
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/guidelines";
-		//$data['main_content'] = "client/maintenance";
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$this->_LoadPage('common/body', $data);
 	}
@@ -137,7 +138,8 @@ class Ejournal extends EJ_Controller {
 	public function editorial() {
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/editorial";
-		//$data['main_content'] = "client/maintenance";
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['editorials_vol_year'] = $this->Client_journal_model->get_unique_editorials();
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$this->_LoadPage('common/body', $data);
@@ -173,17 +175,16 @@ class Ejournal extends EJ_Controller {
 			foreach ($issues as $issue) {
 				$jor_issues[] = [$issue->jor_issue, $issue->jor_id, $row->jor_volume];
 			}
-			$vol = $row->jor_volume . ', ' . $row->jor_year;
-			$volumes[$vol] = $jor_issues;
+			$volume = $row->jor_volume . ', ' . $row->jor_year;
+			$volumes[$volume] = $jor_issues;
 		}
 
 		$data['volumes'] = $volumes;
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/articles";
-		//$data['main_content'] = "client/maintenance";
-		$data['articles'] = $this->Client_journal_model->get_articles($iss);
+		$data['articles'] = $this->Client_journal_model->get_articles($vol,$iss);
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['selected_journal'] = $vol;
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/articles";
 		$this->_LoadPage('common/body', $data);
 	}
 
