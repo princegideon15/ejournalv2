@@ -262,12 +262,13 @@ class Client_journal_model extends CI_Model {
 	}
 
 	/** this function get all articles */
-	public function get_articles($iss) {
+	public function get_articles($vol,$iss) {
 		$this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn, jor_description, jor_month, jor_year');
 		$this->db->from($this->articles.' a');
 		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
 		// $this->db->where('a.art_jor_id', $id);
 		$this->db->where('j.jor_issue', $iss);
+		$this->db->where('j.jor_volume', $vol);
 		$this->db->order_by('a.art_title', 'asc');
 		$query = $this->db->get();
 		return $query->result();

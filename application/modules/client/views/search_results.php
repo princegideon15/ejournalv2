@@ -198,7 +198,7 @@ $('.right-inner-addon').hide();
                                echo '<div class="d-flex gap-1">
                                 <a class="main-btn btn btn-sm" href="'.base_url('client/ejournal/download_file/'. $res->art_id .'/'.$res->art_full_text_pdf).'"
                                     role="button">
-                                    Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                                    Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
                                 <a  data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"
@@ -207,9 +207,6 @@ $('.right-inner-addon').hide();
                                 </div>';
                                 //  onclick="download_pdf('.$res->art_id.')"
                                 // get_citee_info
-                            }else{
-                                echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
-                                Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a>';
                             }?>
                         </div>
                     </div>

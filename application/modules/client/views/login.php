@@ -52,9 +52,9 @@ function validateForm() {
                     <!-- Login -->
                     <div class="tab-pane fade p-3 <?= $this->session->flashdata('active_tab1') ?? 'show active'?>" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                         tabindex="0">
-                        <?php if ($this->session->flashdata('error')) { ?>
+                        <?php if ($this->session->flashdata('error_login')) { ?>
                             <div class="alert alert-danger d-flex align-items-center">
-                                <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('error'); ?>
+                                <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('error_login'); ?>
                             </div>
                         <?php } ?>
                         <!-- password uBOtoPN3 -->
@@ -245,7 +245,7 @@ function validateForm() {
                                 <label class="form-label" for="contact"><span
                                 class="text-danger fw-bold">*</span>Contact No.</label>
                                 <input type="text" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['contact']){ echo 'is-invalid';} ?>" id="contact" name="contact"
-                                    placeholder=""  value="<?= set_value('contact', $this->session->flashdata('contact')); ?>">
+                                    placeholder="11-digit"  value="<?= set_value('contact', $this->session->flashdata('contact')); ?>">
                                     <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['contact'] ?></span>
                             </div>
                             <div class="mb-4">

@@ -88,11 +88,11 @@
 					</div> -->
 					<div class="flex-grow-1">
 						<p class="mt-0 text-dark">
-							<h2>Volume <?php echo $journal; ?></h2>
-							<h5 class="text-muted small">Publication Year: <?php echo $pub_date; ?></h5>
-							<!-- <h5 class="text-muted small">ISSN: <?php echo $issn; ?></h5> -->
-							<h5 class="text-muted small">Articles: <?php echo count($articles); ?></h5>
-							<small class="text-muted"><?php echo $description; ?></small>
+							<h2>Volume <?= $journal; ?></h2>
+							<h5 class="text-muted small">Publication Year: <?= $pub_date; ?></h5>
+							<!-- <h5 class="text-muted small">ISSN: <?= $issn; ?></h5> -->
+							<h5 class="text-muted small">Articles: <?= count($articles); ?></h5>
+							<h5 class="text-muted small">Description: <?= $description ?? '-'; ?></h5>
 						</p>
 					</div>
 				</div>
@@ -160,9 +160,6 @@
                                     onclick="get_citee_info(\''.addslashes($row['cite']).'\','.$row['id'].')">
                                     Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
                                 </div>';
-                            }else{
-                                echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
-                                Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a>';
                             }?>
 				</div>
 
@@ -190,15 +187,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Abstract</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <embed id="abstract_view" WMODE="transparent" width="100%" height="700px" type="application/pdf">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">Close</button>
                     <!-- <button type="button" class="btn btn-danger" id="download_pdf"><span
 							class="oi oi-data-transfer-download"></span> Request Full Text PDF</button> -->
                 </div>
@@ -211,7 +206,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
         </div>
         <div class="modal-body">
           <img src="" class="enlargeImageModalSource" style="width: 100%;height:50%">
@@ -225,7 +220,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
@@ -241,16 +236,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Abstract</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <embed id="top_abstract_view" WMODE="transparent" width="100%" height="700px"
                         type="application/pdf">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">Close</button>
                     <!-- <button type="button" class="btn btn-danger" id="top_download_pdf"><span
 							class="oi oi-data-transfer-download"></span> Request Full Text PDF</button> -->
                 </div>
@@ -270,7 +263,7 @@
                             <small>This file will be sent to your email</small>
                         </div>
                     </div>
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button> -->
                 </div>
@@ -369,7 +362,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                     </div>
 
                     <button type="button" class="btn btn-outline-secondary" id="btn_cancel_client_info"
-                        data-dismiss="modal">Cancel</button>
+                        data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger" id="btn_submit_client_info"
                         name="btn_submit_client_info"><span class="oi oi-check"></span> Submit</button>
                     </form>
@@ -384,9 +377,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                 </div>
@@ -402,9 +393,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Citation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Please provide us with your Full Name and Email Address. Then click SUBMIT to show the APA
@@ -466,7 +455,7 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                                     NRCP member?</label>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
@@ -498,7 +487,7 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                 <div class="modal-header pb-0">
                     <p><span class="modal-title font-weight-bold h3">Your Feedback</span><br />
                     </p>
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button> -->
                 </div>
@@ -618,7 +607,7 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                         </div> -->
 
                         <div class="form-group text-right mt-3 pb-0 mb-0">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary">Submit Feedback</button>
                         </div>
                     </form>
@@ -638,7 +627,7 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                 <div class="modal-header border-0 mb-0 pb-0">
                     <img src="<?php echo base_url('assets/images/nrcp.png');?>" width="30" height="30" alt="">
                     <img src="<?php echo base_url('assets/images/ejicon-07.png');?>" width="30" height="30" alt="">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 
                         <span aria-hidden="true">&times;</span>
                     </button>

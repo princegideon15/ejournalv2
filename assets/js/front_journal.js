@@ -55,7 +55,7 @@ $(document).ready(function()
 //     });
 // }, 1000 * 60 * 10); // 10 minutes
 
-  $('body').tooltip({ selector: '[data-toggle=tooltip]' });
+  $('body').tooltip({ selector: '[data-bs-toggle=tooltip]' });
 
   var url = window.location.pathname; // Get the current path
   var segments = url.split('/'); // Split the path by '/'

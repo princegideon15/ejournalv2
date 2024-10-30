@@ -68,22 +68,9 @@ class Ejournal extends EJ_Controller {
 		// store visitor information
 		ip_info(); 
 		
-		// $volumes = [];
-		// $issues = [];
-
 		$journals = $this->Client_journal_model->get_journals();
-		// foreach($journals as $row){
-		// 	$issues = $this->Client_journal_model->get_issues($row->jor_volume);
-		// 	$jor_issues = [];
-		// 	foreach ($issues as $issue) {
-		// 		$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
-		// 	} 
-		// 	$vol = $row->jor_volume . ', ' . $row->jor_year;
-		// 	$volumes[$vol] = $jor_issues;
-		// }
 
 		//data to display
-		// $data['volumes'] = $volumes;
 		$data['volumes'] = $journals;
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();
@@ -124,7 +111,8 @@ class Ejournal extends EJ_Controller {
 	public function guidelines() {
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/guidelines";
-		//$data['main_content'] = "client/maintenance";
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$this->_LoadPage('common/body', $data);
 	}
@@ -137,7 +125,8 @@ class Ejournal extends EJ_Controller {
 	public function editorial() {
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/editorial";
-		//$data['main_content'] = "client/maintenance";
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['editorials_vol_year'] = $this->Client_journal_model->get_unique_editorials();
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$this->_LoadPage('common/body', $data);
@@ -173,17 +162,18 @@ class Ejournal extends EJ_Controller {
 			foreach ($issues as $issue) {
 				$jor_issues[] = [$issue->jor_issue, $issue->jor_id, $row->jor_volume];
 			}
-			$vol = $row->jor_volume . ', ' . $row->jor_year;
-			$volumes[$vol] = $jor_issues;
+			$volume = $row->jor_volume . ', ' . $row->jor_year;
+			$volumes[$volume] = $jor_issues;
 		}
 
 		$data['volumes'] = $volumes;
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/articles";
-		//$data['main_content'] = "client/maintenance";
-		$data['articles'] = $this->Client_journal_model->get_articles($iss);
+		$data['articles'] = $this->Client_journal_model->get_articles($vol,$iss);
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['selected_journal'] = $vol;
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/articles";
 		$this->_LoadPage('common/body', $data);
 	}
 
@@ -209,15 +199,15 @@ class Ejournal extends EJ_Controller {
 
 		//copy file to another directory
 		//local
-		$file_path = $_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/'.$file;
+		$file_path = $_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/' . $file;
 		
 		//server manuscript
 		// $from = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/' . $file;
 		// $to = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
 
         $data = file_get_contents($file_path);
-        $name = basename($file_path);
-        force_download($name, $data);
+        // $name = basename($file_path);
+        force_download($file, $data);
     }
 
 	/**
@@ -1303,7 +1293,7 @@ class Ejournal extends EJ_Controller {
 			$this->form_validation->set_rules('city', 'City', 'required|trim');
 		}
 
-		$this->form_validation->set_rules('contact', 'Contact', 'required|trim');
+		$this->form_validation->set_rules('contact', 'Contact', 'required|trim|numeric|exact_length[11]');
 		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
 		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');

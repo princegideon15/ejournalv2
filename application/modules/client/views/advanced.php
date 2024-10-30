@@ -5,7 +5,7 @@
 <div class="container-fluid mt-3 p-4">
     <div class="row pt-3">
         <div class="col col-3 p-3">
-            <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
+            <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">View All Articles</a>
         </div>
         <div class="col col-7 p-3">
             <h3>Advanced search</h3>
@@ -286,16 +286,13 @@
                                 <a  data-bs-toggle="modal" data-bs-target="#client_modal"
                                     class="main-btn btn btn-sm" href="javascript:void(0);"
                                     role="button" onclick="get_download_id('.$res->art_id.')">
-                                    Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                                    Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
                                 <a  data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"
                                     onclick="get_citee_info(\''.addslashes($cite).'\','.$res->art_id.')">
                                     Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
                                 </div>';
-                            }else{
-                                echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
-                                Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a>';
                             }?>
                         </div>
                     </div>
