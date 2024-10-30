@@ -1,3 +1,5 @@
+
+<?php $logged_in = $this->session->userdata('user_id'); ?>
 <div class="card bg-light border-0">
                 <div class="card-body">
                     <h6 class="card-title fw-bold d-block">Journal Information</h6>

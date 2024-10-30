@@ -286,7 +286,7 @@
                                 <a  data-bs-toggle="modal" data-bs-target="#client_modal"
                                     class="main-btn btn btn-sm" href="javascript:void(0);"
                                     role="button" onclick="get_download_id('.$res->art_id.')">
-                                    Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                                    Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
                                 <a  data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"

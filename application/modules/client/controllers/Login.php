@@ -571,6 +571,8 @@ class Login extends EJ_Controller {
 	 * @return void
 	 */
 	public function forgot_password(){
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/forgot_password";
 		$this->_LoadPage('common/body', $data);

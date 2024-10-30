@@ -68,22 +68,9 @@ class Ejournal extends EJ_Controller {
 		// store visitor information
 		ip_info(); 
 		
-		// $volumes = [];
-		// $issues = [];
-
 		$journals = $this->Client_journal_model->get_journals();
-		// foreach($journals as $row){
-		// 	$issues = $this->Client_journal_model->get_issues($row->jor_volume);
-		// 	$jor_issues = [];
-		// 	foreach ($issues as $issue) {
-		// 		$jor_issues[] = [$issue->jor_issue, $issue->jor_id];
-		// 	} 
-		// 	$vol = $row->jor_volume . ', ' . $row->jor_year;
-		// 	$volumes[$vol] = $jor_issues;
-		// }
 
 		//data to display
-		// $data['volumes'] = $volumes;
 		$data['volumes'] = $journals;
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();
@@ -212,15 +199,15 @@ class Ejournal extends EJ_Controller {
 
 		//copy file to another directory
 		//local
-		$file_path = $_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/'.$file;
+		$file_path = $_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/' . $file;
 		
 		//server manuscript
 		// $from = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/' . $file;
 		// $to = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
 
         $data = file_get_contents($file_path);
-        $name = basename($file_path);
-        force_download($name, $data);
+        // $name = basename($file_path);
+        force_download($file, $data);
     }
 
 	/**
