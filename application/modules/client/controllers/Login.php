@@ -61,7 +61,7 @@ class Login extends EJ_Controller {
     public function authenticate(){
 
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|xss_clean');
-		$this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]|max_length[20]');
+		$this->form_validation->set_rules('password', 'Password', 'required|trim');
 
 		if($this->form_validation->run() == FALSE){
 			$errors = [];
@@ -108,7 +108,7 @@ class Login extends EJ_Controller {
 							
 							if ($time_remaining  > 30) {
 								$this->Login_model->clear_login_attempts($validateUser[0]->email);
-								$this->session->set_flashdata('error', 'Invalid email or password.');
+								$this->session->set_flashdata('error_login', 'Invalid email or password.');
 				
 								//store login attempt
 								$data = [
@@ -120,7 +120,7 @@ class Login extends EJ_Controller {
 								$this->Login_model->store_login_attempts($data); 
 							}
 							else{
-								$this->session->set_flashdata('error', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+								$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
 							}
 	
 							redirect('client/ejournal/login');
@@ -136,13 +136,13 @@ class Login extends EJ_Controller {
 							$this->Login_model->store_login_attempts($data);  
 						}
 	
-						$this->session->set_flashdata('error', 'Invalid email or password.');
+						$this->session->set_flashdata('error_login', 'Invalid email or password.');
 						redirect('client/ejournal/login'); 
 					
 	
 					}
 				}else{
-					$this->session->set_flashdata('error', 'Account not activated. Please check your email for a create account verification code.');
+					$this->session->set_flashdata('error_login', 'Account not activated. Please check your email for a create account verification code.');
 					redirect('client/ejournal/login');
 				}
 			} else {
@@ -161,7 +161,7 @@ class Login extends EJ_Controller {
 					
 					if ($time_remaining  > 30) {
 						$this->Login_model->clear_login_attempts($email);
-						$this->session->set_flashdata('error', 'Invalid email or password.');
+						$this->session->set_flashdata('error_login', 'Invalid email or password.');
 						
 						//store login attempt
 						$data = [
@@ -172,7 +172,7 @@ class Login extends EJ_Controller {
 						$this->Login_model->store_login_attempts($data); 
 					}
 					else{
-						$this->session->set_flashdata('error', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+						$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
 					}
 
 					redirect('client/ejournal/login');
@@ -188,7 +188,7 @@ class Login extends EJ_Controller {
 				}
 
 			
-				$this->session->set_flashdata('error', 'Invalid email or password.');
+				$this->session->set_flashdata('error_login', 'Invalid email or password.');
 				redirect('client/ejournal/login');
 			}
 		}
