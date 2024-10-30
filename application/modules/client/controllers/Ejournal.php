@@ -183,6 +183,8 @@ class Ejournal extends EJ_Controller {
 		$data['articles'] = $this->Client_journal_model->get_articles($vol,$iss);
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['selected_journal'] = $vol;
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/articles";
 		$this->_LoadPage('common/body', $data);

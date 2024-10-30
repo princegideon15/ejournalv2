@@ -207,9 +207,6 @@ $('.right-inner-addon').hide();
                                 </div>';
                                 //  onclick="download_pdf('.$res->art_id.')"
                                 // get_citee_info
-                            }else{
-                                echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
-                                Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a>';
                             }?>
                         </div>
                     </div>
