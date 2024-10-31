@@ -339,9 +339,7 @@ class Login extends EJ_Controller {
 
 		$emailBody = 'Dear Admin,
 		<br><br>
-		There have been multiple unsuccessful login attempts/
-		<br><br>
-		<strong>Details:</strong>
+		There have been multiple unsuccessful login attempts.
 		<br><br>
 		Name: <strong>'.$name.'</strong>
 		<br>
@@ -405,7 +403,7 @@ class Login extends EJ_Controller {
 
 			//check if code expired after 5 minutes
 			//code expired
-			if ($this->compareDates($otp_date, $current_date)  > 4) {
+			if ($this->compareDates($otp_date, $current_date) > 4) {
 				$this->session->set_flashdata('otp', '
 				<div class="alert alert-danger d-flex align-items-center">
 					<i class="oi oi-circle-x me-1"></i>Code expired.
@@ -436,11 +434,11 @@ class Login extends EJ_Controller {
 				}else{
 					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
-					$verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
-					// $verifyOTP = $this->Login_model->validate_otp($ref_code);
-
-					if (password_verify($otp, $verifyOTP[0]->otp)) {
+					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
+					$verifyOTP = $this->Login_model->validate_otp($ref_code);
+					
 					// if ($verifyOTP) {
+					if (password_verify($otp, $verifyOTP[0]->otp)) {
 						//set session values
 						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
 						$this->session->set_userdata('email', $verifyOTP[0]->email);
@@ -492,6 +490,7 @@ class Login extends EJ_Controller {
 	 * @return void
 	 */
 	public function new_account_verify_otp($ref){
+		$ref = $this->security->xss_clean($ref);
 		//check if ref code exist
 		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
 
@@ -728,7 +727,10 @@ class Login extends EJ_Controller {
 	 */
 	public function logout(){
 		$id = $this->session->userdata('user_id');
-		save_log_ej($id, 'Logout successful.');
+		$this->Login_model->delete_access_token($id);
+		if($id){
+			save_log_ej($id, 'Logout successful.');
+		}
         $this->session->unset_userdata('user_id');
         $this->session->unset_userdata('email');
         $this->session->sess_destroy();
@@ -742,6 +744,8 @@ class Login extends EJ_Controller {
 	 * @return void
 	 */
 	public function get_current_otp($refCode){
+		
+		$refCode = $this->security->xss_clean($refCode);
 		$output = $this->Login_model->get_current_otp($refCode);
 		echo json_encode($output);
 	}
@@ -753,6 +757,7 @@ class Login extends EJ_Controller {
 	 * @return void
 	 */
 	public function resend_code($refCode){
+		$refCode = $this->security->xss_clean($refCode);
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->email;
 		save_log_ej($output[0]->id, 'Resend code.');
@@ -766,6 +771,7 @@ class Login extends EJ_Controller {
 	 */
 	function profile(){
 		$id = $this->session->userdata('user_id');
+
 		if($id){
 			$data['profile'] = $this->Login_model->get_user_profile($id);
 			$data['educations'] = $this->Client_journal_model->getEducations();
@@ -971,6 +977,16 @@ class Login extends EJ_Controller {
 
 		}else{
 			redirect('/');
+		}
+	}
+
+	function get_access_token(){
+		$id = $this->session->userdata('user_id');
+		if ($id) {
+			$accessToken = $this->Login_model->get_access_token($id);
+			echo $accessToken[0]->tkn_value;
+		}else{
+			echo 0;
 		}
 	}
 }

@@ -92,15 +92,20 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	public function login(){
-		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
-		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
-		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
-		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
-		$data['titles'] = $this->Client_journal_model->getTitles();
-		$data['educations'] = $this->Client_journal_model->getEducations();
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/login";
-		$this->_LoadPage('common/body', $data);
+
+		if (!$this->session->userdata('user_id')) {
+			$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
+			$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
+			$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+			$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+			$data['titles'] = $this->Client_journal_model->getTitles();
+			$data['educations'] = $this->Client_journal_model->getEducations();
+			$data['main_title'] = "eJournal";
+			$data['main_content'] = "client/login";
+			$this->_LoadPage('common/body', $data);
+		}else{
+			redirect('/');
+		}
 	}
 
 	/**

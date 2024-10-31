@@ -106,7 +106,7 @@ class Login_model extends CI_Model {
   }
 
   public function get_current_otp($refCode){
-      $this->db->select('otp_date, email');
+      $this->db->select('otp_date, id, email');
       $this->db->from($this->users);
       $this->db->where('otp_ref_code', $refCode);
       $query = $this->db->get();
@@ -163,7 +163,19 @@ class Login_model extends CI_Model {
   public function create_user_access_token($data){
     $this->db->insert($this->access_tokens, $data);
   }
+  
+  public function delete_access_token($id){
+    $this->db->delete($this->access_tokens, ['tkn_user_id' => $id]);
+  }
 
+  public function get_access_token($id){
+    
+    $this->db->select('tkn_value');
+    $this->db->from($this->access_tokens);
+    $this->db->where('tkn_user_id', $id);
+    $query = $this->db->get();
+    return $query->result();
+  }
 }
 
 /* End of file Login_model.php */

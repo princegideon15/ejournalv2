@@ -52,12 +52,13 @@ function validateForm() {
                     <!-- Login -->
                     <div class="tab-pane fade p-3 <?= $this->session->flashdata('active_tab1') ?? 'show active'?>" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                         tabindex="0">
+
                         <?php if ($this->session->flashdata('error_login')) { ?>
-                            <div class="alert alert-danger d-flex align-items-center">
+                            <div class="alert alert-danger d-flex align-items-center w-50">
                                 <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('error_login'); ?>
                             </div>
                         <?php } ?>
-                        <!-- password uBOtoPN3 -->
+                        
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm', 'class' => 'w-50'])?>
                             <div class="mb-3">
                                 <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
