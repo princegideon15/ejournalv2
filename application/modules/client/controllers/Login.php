@@ -456,6 +456,9 @@ class Login extends EJ_Controller {
 						$expiration_time = time() + 1200; // 20 minutes in seconds
 						$expired_at = date('Y-m-d H:i:s', $expiration_time);
 
+						
+						$this->Login_model->delete_access_token($verifyOTP[0]->id);
+
 						$tokenData = [
 							'tkn_user_id' => $verifyOTP[0]->id,
 							'tkn_value' => $token,
@@ -737,6 +740,21 @@ class Login extends EJ_Controller {
 		redirect('client/ejournal/login');
 	}
 
+	public function destroy_user_session(){
+		$id = $this->session->userdata('user_id');
+		$token = $this->input->post('user_access_token');
+		$output = $this->Login_model->get_access_token($id);
+		if($output[0]->tkn_value == $token){
+			save_log_ej($id, 'Session expired.');
+			$this->Login_model->delete_access_token($id);
+			$this->session->unset_userdata('user_id');
+			$this->session->unset_userdata('email');
+			$this->session->sess_destroy();
+		}else{
+			echo 'Error destroying session.';
+		}
+	}
+
 	/**
 	 * Get existing reference code for resending otp code
 	 *
@@ -984,7 +1002,8 @@ class Login extends EJ_Controller {
 		$id = $this->session->userdata('user_id');
 		if ($id) {
 			$accessToken = $this->Login_model->get_access_token($id);
-			echo $accessToken[0]->tkn_value;
+			$token =  $accessToken[0]->tkn_value;
+			echo trim($token);
 		}else{
 			echo 0;
 		}

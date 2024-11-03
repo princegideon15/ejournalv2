@@ -43,7 +43,7 @@ $(document).ready(function()
     }
   }); 
 
-  accessToken = accessToken.responseText;
+  accessToken = (accessToken.responseText).trim();
   
   $('body').tooltip({ selector: '[data-bs-toggle=tooltip]' });
 
@@ -701,6 +701,9 @@ $('#citationModal .close').click(function(){
         if (idleTime >= 1200) { // 20 minutes in seconds
             // Trigger logout or other actions
             clearInterval(timerInterval); // Stop the timer
+
+            destroyUserSession();
+
             Swal.fire({
               title: "Session Expired",
               text: "You have been idle for 20 minutes. Please log in again.",
@@ -708,9 +711,10 @@ $('#citationModal .close').click(function(){
               confirmButtonColor: "#0c6bcb",
             
             }).then(function () {
-              window.location = base_url + "client/login/logout";
+              window.location = base_url + "client/ejournal/login/";
             });
         }
+        console.log(idleTime);
     }, 1000); // Check every 1 second
   }
 
@@ -1582,3 +1586,14 @@ function getUserAccessToken(){
 //   'csrf_test_name': '<?= $this->security->get_csrf_hash(); ?>', // Token
 //   'other_data': 'value'
 // },
+
+function destroyUserSession(){
+  $.ajax({
+    type: "POST",
+    url: base_url + "client/login/destroy_user_session/" ,
+    data: { user_access_token : accessToken },
+    success: function(data) {
+      console.log(data);
+    }
+  });
+}
