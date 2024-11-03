@@ -123,6 +123,20 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
+	 * Editorial policy page
+	 *
+	 * @return void
+	 */
+	public function policy() {
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/policy";
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['journals'] = $this->Client_journal_model->get_journals();
+		$this->_LoadPage('common/body', $data);
+	}
+
+	/**
 	 * Editorial board page
 	 *
 	 * @return void
