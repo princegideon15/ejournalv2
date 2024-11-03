@@ -714,7 +714,6 @@ $('#citationModal .close').click(function(){
               window.location = base_url + "client/ejournal/login/";
             });
         }
-        console.log(idleTime);
     }, 1000); // Check every 1 second
   }
 
