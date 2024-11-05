@@ -9,8 +9,7 @@ function save_log_oprs($user, $action, $id = 0, $role) {
 		'log_insert_id' => $id,
 		'log_user_role' => $role,
 		'date_created' => date('Y-m-d H:i:s'),
-		'notif_open' => '0',
-		'log_source' => 'Admin'
+		'notif_open' => '0'
 	);
 
 	$CI =& get_instance();

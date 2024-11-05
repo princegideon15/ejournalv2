@@ -994,7 +994,8 @@
 										<input type="hidden" id="delete_edt_id" value="<?php echo $e->edt_id; ?>">
 										<td><?php echo $c++; ?></td>
 										<td><?php echo $issue . 'Volume ' . $e->edt_volume . ', ' . $e->edt_year ?></td>
-										<td><img class="img-thumbnail" src="<?php echo base_url('assets/uploads/editorial/'. $e->edt_photo .''); ?>" style="width:50px;height:50px;"></td>
+										<!-- <td><img class="img-thumbnail" src="<?php echo base_url('assets/uploads/editorial/'. $e->edt_photo .''); ?>" style="width:50px;height:50px;"></td> -->
+										<td><img class="img-thumbnail" src="" style="width:50px;height:50px;"></td>
 										<td><?php echo $e->edt_name; ?></td>
 										<td><?php echo ($e->edt_sex == 1) ? 'Male' : 'Female'; ?></td>
 										<td><?php echo $e->edt_position; ?></td>
