@@ -116,7 +116,7 @@ class Login extends EJ_Controller {
 								];
 	
 								$this->Login_model->store_login_attempts($data); 
-								save_log_ej($validateUser[0]->id, 'Account locked for 30 minutes.');
+								save_log_ej($validateUser[0]->id, 'Account locked for 30 minutes');
 							}
 							else{
 								$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
@@ -169,7 +169,7 @@ class Login extends EJ_Controller {
 
 						$this->Login_model->store_login_attempts($data); 
 						
-						save_log_ej(0, 'Unregistered account locked for 30 minutes.');
+						save_log_ej(0, 'Unregistered account locked for 30 minutes');
 					}
 					else{
 						$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
@@ -447,7 +447,7 @@ class Login extends EJ_Controller {
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
 						
 						//save log
-						save_log_ej($verifyOTP[0]->id, 'Login successful.');
+						save_log_ej($verifyOTP[0]->id, 'Login successful');
 
 						//create access token
 						$token = uniqid();
@@ -628,7 +628,7 @@ class Login extends EJ_Controller {
 			$validateUser = $this->Login_model->validate_user($email);
 
 			if ($validateUser) {
-				save_log_ej($validateUser[0]->id, 'Temporary password request email sent.');
+				save_log_ej($validateUser[0]->id, 'Temporary password request email sent');
 				//send email
 				$this->send_temp_password($validateUser[0]->email);
 			}else{
@@ -733,7 +733,7 @@ class Login extends EJ_Controller {
 		$id = $this->session->userdata('user_id');
 		$this->Login_model->delete_access_token($id);
 		if($id){
-			save_log_ej($id, 'Logout successful.');
+			save_log_ej($id, 'Logout successful');
 		}
         $this->session->unset_userdata('user_id');
         $this->session->unset_userdata('email');
@@ -746,7 +746,7 @@ class Login extends EJ_Controller {
 		$token = $this->input->post('user_access_token');
 		$output = $this->Login_model->get_access_token($id);
 		if($output[0]->tkn_value == $token){
-			save_log_ej($id, 'Session expired.');
+			save_log_ej($id, 'Session expired');
 			$this->Login_model->delete_access_token($id);
 			$this->session->unset_userdata('user_id');
 			$this->session->unset_userdata('email');
@@ -779,7 +779,7 @@ class Login extends EJ_Controller {
 		$refCode = $this->security->xss_clean($refCode);
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->email;
-		save_log_ej($output[0]->id, 'Resend code.');
+		save_log_ej($output[0]->id, 'Resend code');
 		$this->send_login_otp($email);
 	}
 	
@@ -989,7 +989,7 @@ class Login extends EJ_Controller {
 				$whereProfile = array('user_id' => $id);
 				$this->Login_model->update_user_profile($userProfile, $whereProfile);
 
-				save_log_ej($id, 'Updated Profile.');
+				save_log_ej($id, 'Updated Profile');
 
 				redirect('client/login/profile');
 			}

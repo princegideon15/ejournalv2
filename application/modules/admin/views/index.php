@@ -84,9 +84,10 @@
 					<?php }?>
 					<a data-toggle="tab" data-parent="#manage-editorials" id="editorial-list"  href="#editorials" role="tab" class="list-group-item list-group-item-action  sub-item"><i class="oi oi-eye" title="oi-eye" aria-hidden="true"></i> Editorial Boards</a>
 				</div>
-				<a class="list-group-item list-group-item-action " id="guidelines-list" data-toggle="tab" href="#guidelines" role="tab" aria-controls="home"><i class="oi oi-task" title="oi-task" aria-hidden="true"></i> Manage Guidelines</a>
-				<a class="list-group-item list-group-item-action " id="guidelines-list" data-toggle="tab" href="#home" role="tab" aria-controls="home"><i class="oi oi-home" title="oi-home" aria-hidden="true"></i> Manage Home</a>
-				<a class="list-group-item list-group-item-action " id="guidelines-list" data-toggle="tab" href="#mail" role="tab" aria-controls="mail"><i class="oi oi-envelope-open" title="oi-mail" aria-hidden="true"></i> Manage Email Notifications</a>
+				<a class="list-group-item list-group-item-action" data-toggle="tab" href="#guidelines" role="tab" aria-controls="home"><i class="oi oi-task" title="oi-task" aria-hidden="true"></i> Manage Guidelines</a>
+				<a class="list-group-item list-group-item-action" data-toggle="tab" href="#home" role="tab" aria-controls="home"><i class="oi oi-home" title="oi-home" aria-hidden="true"></i> Manage Home</a>
+				<a class="list-group-item list-group-item-action" data-toggle="tab" href="#mail" role="tab" aria-controls="mail"><i class="oi oi-envelope-open" title="oi-mail" aria-hidden="true"></i> Manage Email Notifications</a>
+				<a class="list-group-item list-group-item-action" data-toggle="tab" href="#logs" role="tab" aria-controls="logs"><i class="oi oi-envelope-open" title="oi-mail" aria-hidden="true"></i> Activity Logs</a>
 				<?php if ($this->session->userdata('_oprs_type_num') == 8 || $this->session->userdata('_oprs_type_num') == 8 || $this->session->userdata('_oprs_type_num') == 3) {?>
 				<a class="list-group-item list-group-item-action text-info font-weight-bold" href="<?php echo base_url('oprs/dashboard'); ?>"><i class="oi oi-pencil" title="oi-pencil" aria-hidden="true"></i> eReview</a>
 				<?php }?>
@@ -1066,6 +1067,39 @@
 					</div>
 				</div>
 				<!-- EMAIL -->
+
+				<!-- LOGS -->
+				<div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="articles">
+					<div class="jumbotron text-white">
+						<h1 class="h3">Activity Logs</h1>
+						<div class='no-margin table-responsive'>
+								<table id="table-activities" class="table table-hover" style="font-size:14px">
+									<thead class="thead-dark">
+										<tr>
+											<th scope="col">User name</th>
+											<th scope="col">Activity</th>
+											<th scope="col">IP Adress/Browser</th>
+											<th scope="col">Date</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- TODO: to be continued order table desc -->
+										<?php if ($all_logs != null) {?>
+										<?php $c = 1;foreach ($all_logs as $row): ?>
+										<tr>
+											<td><?= $row->email ?? '-'; ?></td>
+											<td><?= $row->log_action; ?></td>
+											<td><?= $row->log_browser ?? '-'; ?>/<?= $row->log_browser ?? '-'; ?></td>
+											<td><?= $row->date_created; ?></td>
+										</tr>
+											<?php endforeach;?>
+											<?php }?>
+									</tbody>
+								</table>
+						</div>
+					</div>
+				</div>
+				<!--   -->
 			</div>
 		</div>
 		

@@ -42,7 +42,7 @@ class Dashboard extends EJ_Controller {
 
 	
 	public function index() {
-
+//TODO:replace by timer in jquery
 		if ($this->session->userdata('_oprs_logged_in')) {
 
 			//session expiration and timeout
@@ -53,28 +53,28 @@ class Dashboard extends EJ_Controller {
 
 				//Check to see if our "last action" session
 				//variable has been set.
-				if (isset($_SESSION['last_action'])) {
-					//Figure out how many seconds have passed
-					//since the user was last active.
-					$secondsInactive = time() - $_SESSION['last_action'];
+				// if (isset($_SESSION['last_action'])) {
+				// 	//Figure out how many seconds have passed
+				// 	//since the user was last active.
+				// 	$secondsInactive = time() - $_SESSION['last_action'];
 
-					//Convert our minutes into seconds.
-					$expireAfterSeconds = $expireAfter * 60;
+				// 	//Convert our minutes into seconds.
+				// 	$expireAfterSeconds = $expireAfter * 60;
 
-					//Check to see if they have been inactive for too long.
-					if ($secondsInactive >= $expireAfterSeconds) {
-						//User has been inactive for too long.
-						//Kill their session.
-						// is_offline(_UserIdFromSession());
-						// session_unset();
-						$array_msg = array('icon' => 'oi-warning', 'class' => 'alert-info', 'msg' => 'Your session has expired.');
-						$this->session->set_flashdata('_oprs_sess_expire_msg', $array_msg);
-						redirect('oprs/login/logout');
-					}
-				}
+				// 	//Check to see if they have been inactive for too long.
+				// 	if ($secondsInactive >= $expireAfterSeconds) {
+				// 		//User has been inactive for too long.
+				// 		//Kill their session.
+				// 		// is_offline(_UserIdFromSession());
+				// 		// session_unset();
+				// 		$array_msg = array('icon' => 'oi-warning', 'class' => 'alert-info', 'msg' => 'Your session has expired.');
+				// 		$this->session->set_flashdata('_oprs_sess_expire_msg', $array_msg);
+				// 		redirect('oprs/login/logout');
+				// 	}
+				// }
 
 				// Assign the current timestamp as the user's latest activity
-				$_SESSION['last_action'] = time();
+				// $_SESSION['last_action'] = time();
 				
 			
 		if($this->session->userdata('sys_acc') == 1 || $this->session->userdata('sys_acc') == 3 ){
