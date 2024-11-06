@@ -283,7 +283,7 @@ class Login extends EJ_Controller {
 
 		$this->session->set_flashdata('otp', '
 											<div class="alert alert-primary d-flex align-items-center w-50">
-												<i class="oi oi-circle-check me-1"></i>We sent a 6 digit code to your email.
+												<i class="oi oi-circle-check me-1"></i>Please check your email for the 6-digit code.
 											</div>');
 		$this->session->set_userdata('otp_ref_code', $ref_code);
 		redirect($link);

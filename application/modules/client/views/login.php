@@ -93,7 +93,7 @@ function validateForm() {
                                 <label class="form-label" for="new_email"><span
                                 class="text-danger fw-bold">*</span>Email</label>
                                 <input type="email" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_email']){ echo 'is-invalid';} ?>" id="new_email" name="new_email"
-                                    placeholder="Valid Email Address" value="<?= set_value('new_email', $this->session->flashdata('new_email')); ?>">
+                                    placeholder="Enter valid email address" value="<?= set_value('new_email', $this->session->flashdata('new_email')); ?>">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_email'] ?></span>
                             </div>
                             <div class="mb-3">
