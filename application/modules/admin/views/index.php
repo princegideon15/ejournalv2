@@ -1066,40 +1066,53 @@
 						</div>
 					</div>
 				</div>
-				<!-- EMAIL -->
+				<!-- /.EMAIL -->
 
 				<!-- LOGS -->
 				<div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="articles">
 					<div class="jumbotron text-white">
 						<h1 class="h3">Activity Logs</h1>
+						<div class="mt-4 mb-3">
+							<label for="dateFrom">Date From:</label>
+							<input type="date" id="dateFrom">
+							<label for="dateTo">Date To:</label>
+							<input type="date" id="dateTo">
+						</div>
 						<div class='no-margin table-responsive'>
-								<table id="table-activities" class="table table-hover" style="font-size:14px">
-									<thead class="thead-dark">
-										<tr>
-											<th scope="col">User name</th>
-											<th scope="col">Activity</th>
-											<th scope="col">IP Adress/Browser</th>
-											<th scope="col">Date</th>
-										</tr>
-									</thead>
-									<tbody>
-										<!-- TODO: to be continued order table desc -->
-										<?php if ($all_logs != null) {?>
-										<?php $c = 1;foreach ($all_logs as $row): ?>
-										<tr>
-											<td><?= $row->email ?? '-'; ?></td>
-											<td><?= $row->log_action; ?></td>
-											<td><?= $row->log_browser ?? '-'; ?>/<?= $row->log_browser ?? '-'; ?></td>
-											<td><?= $row->date_created; ?></td>
-										</tr>
-											<?php endforeach;?>
-											<?php }?>
-									</tbody>
-								</table>
+							<table id="activityLogsTable" class="table table-hover" style="font-size:14px">
+								<thead class="thead-dark">
+									<tr>
+										<th scope="col">User name</th>
+										<th scope="col">Activity</th>
+										<th scope="col">IP Adress/Browser</th>
+										<th scope="col">Date</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php if ($all_logs != null) {?>
+									<?php $c = 1;foreach ($all_logs as $row): ?>
+									<?php 
+									$timestamp = strtotime($row->date_created);
+									$formattedDate = date('Y-m-d H:i:s A', $timestamp); 
+									?>
+
+									<tr>
+										<td><?= $row->email ?? '-'; ?></td>
+										<td><?= $row->log_action; ?></td>
+										<td><?= $row->log_browser ?? '-'; ?> / <?= $row->log_browser ?? '-'; ?></td>
+										<td><?= $formattedDate; ?></td>
+									</tr>
+										<?php endforeach;?>
+										<?php }?>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<button class="btn btn-danger" data-toggle="modal" data-target="#clear_log_modal">Clear Logs</button>
 						</div>
 					</div>
 				</div>
-				<!--   -->
+				<!-- /.LOGD  -->
 			</div>
 		</div>
 		
@@ -1111,6 +1124,28 @@
 		</div>
 		<!-- Copyright -->
 </div>
+
+<!-- CLEAR LOGS MODAL -->
+<div class="modal" id="clear_log_modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Clear Activity Logs</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to clear all activity logs? This action is irreversible. A backup file (Excel) will be downloaded before clearing the logs.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="confirmClearLogs()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.CLEAR LOGS MODAL -->
 
 <!-- ARTICLE MODAL -->
 <div class="modal fade" id="article_modal" tabindex="-1" role="dialog" aria-labelledby="article_modal" aria-hidden="true">

@@ -140,7 +140,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Citees',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied Citees to clipboard');
@@ -151,7 +151,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Citees',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported Citees as excel');
@@ -162,7 +162,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Citees',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported Citees as pdf');
@@ -172,7 +172,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Citees',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed Citees');
@@ -195,7 +195,7 @@ $(document).ready(function () {
 	//                 extend: 'copy',
 	//                 text: 'Copy to clipboard',
 	//                 messageTop: 'List of Author Registry',
-	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal', 
+	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal', 
 	//                 action: function(e, dt, node, config)
 	//                 {
 	//                   // action saved to logs table
@@ -207,7 +207,7 @@ $(document).ready(function () {
 	//                 extend: 'excel',
 	//                 text: 'Export as Excel',
 	//                 messageTop: 'List of Author Registry',
-	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal', 
+	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal', 
 	//                 action: function(e, dt, node, config)
 	//                 {
 	//                   // action saved to logs table
@@ -219,7 +219,7 @@ $(document).ready(function () {
 	//                 extend: 'pdf',
 	//                 text: 'Export as PDF',
 	//                 messageTop: 'List of Author Registry',
-	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal', 
+	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal', 
 	//                 action: function(e, dt, node, config)
 	//                 {
 	//                   // action saved to logs table
@@ -230,7 +230,7 @@ $(document).ready(function () {
 	//             {
 	//                 extend: 'print',
 	//                 messageTop: 'List of Author Registry',
-	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal', 
+	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal', 
 	//                 action: function(e, dt, node, config)
 	//                 {
 	//                   // action saved to logs table
@@ -269,7 +269,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied list of Articles to clipboard');
@@ -280,7 +280,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported list of Articles as excel');
@@ -291,7 +291,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported list of Articles as pdf');
@@ -301,7 +301,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed list of Articles');
@@ -350,7 +350,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Journals',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					exportOptions: {
 						columns: ':not(:last-child)',
 					},
@@ -364,7 +364,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Journals',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					exportOptions: {
 						columns: ':not(:last-child)',
 					},
@@ -378,7 +378,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Journals',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					exportOptions: {
 						columns: ':not(:last-child)',
 					},
@@ -391,7 +391,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Journals',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					exportOptions: {
 						columns: ':not(:last-child)',
 					},
@@ -454,7 +454,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List Popular Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied popular articles to clipboard');
@@ -465,7 +465,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List Popular Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported popular articles as excel');
@@ -476,7 +476,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List Popular Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported popular articles as pdf');
@@ -486,7 +486,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List Popular Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed popular articles');
@@ -552,7 +552,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Clients',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied list of clients to clipboard');
@@ -563,7 +563,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Clients',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported list of clients as excel');
@@ -574,7 +574,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Clients',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					orientation: 'landscape',
 					pageSize: 'LEGAL',
 					action: function (e, dt, node, config) {
@@ -586,7 +586,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Clients',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed list of clients');
@@ -651,7 +651,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Abstract Hits',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied abstract hits to clipboard');
@@ -662,7 +662,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Abstract Hits',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported abstract hits as excel');
@@ -673,7 +673,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Abstract Hits',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported abstract hits as pdf');
@@ -683,7 +683,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Abstract Hits',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed abstract hits');
@@ -715,7 +715,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Editorial Boards',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied editorial boards to clipboard');
@@ -726,7 +726,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Editorial Boards',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported editorial boards as excel');
@@ -737,7 +737,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Editorial Boards',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported editorial boards as pdf');
@@ -747,7 +747,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Editorial Boards',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed editorial boards');
@@ -778,7 +778,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Activity Logs',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied activity logs to clipboard');
@@ -789,7 +789,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Activity Logs',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported activity logs as excel');
@@ -800,7 +800,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Activity Logs',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported activity logs as pdf');
@@ -810,7 +810,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Activity Logs',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed activity logs');
@@ -820,6 +820,110 @@ $(document).ready(function () {
 			]
 		});
 	}
+
+	// check and display export button if privilege to export is enabled
+	if (prv_exp == 0) {
+		$('#activityLogsTable').DataTable();
+	} else {
+		$('#activityLogsTable').DataTable({
+			"order": [
+				[3, "desc"]
+			],
+			dom: 'lBfrtip',
+			buttons: [{
+					extend: 'copy',
+					text: 'Copy to clipboard',
+					messageTop: 'List of Activity Logs',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+					action: function (e, dt, node, config) {
+						// action saved to logs table
+						log_export('copied activity logs to clipboard');
+						$.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+					}
+				},
+				{
+					extend: 'excel',
+					text: 'Export as Excel',
+					messageTop: 'List of Activity Logs',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+					action: function (e, dt, node, config) {
+						// action saved to logs table
+						log_export('exported activity logs as excel');
+						$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+					}
+				},
+				{
+					extend: 'pdf',
+					text: 'Export as PDF',
+					messageTop: 'List of Activity Logs',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+					action: function (e, dt, node, config) {
+						// action saved to logs table
+						log_export('exported activity logs as pdf');
+						$.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+					}
+				},
+				{
+					extend: 'print',
+					messageTop: 'List of Activity Logs',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+					action: function (e, dt, node, config) {
+						// action saved to logs table
+						log_export('printed activity logs');
+						window.print();
+					}
+				}
+			]
+		});
+	}
+
+	// initiate and disable sorting on clicking first column first row 
+	var alt = $('#activityLogsTable').DataTable();
+
+    // Custom date range filter
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+
+			if (settings.nTable.id !== 'activityLogsTable') {
+                return true; // Bypass filtering for other tables
+            }
+
+            // Get the date column value
+            var dateColumnData = data[3]; // Assume date is in the first column (index 0). Adjust if needed.
+            var min = $('#dateFrom').val();
+            var max = $('#dateTo').val();
+
+			// Parse the date from the table and filter input values
+			var date = moment(dateColumnData, 'YYYY-MM-DD HH:mm:ss A'); // Use format 'YYYY-MM-DD HH:mm:ss A'
+			var minDate = min ? moment(min, 'YYYY-MM-DD') : null;
+			var maxDate = max ? moment(max, 'YYYY-MM-DD') : null;
+
+             // Filter by date range
+			 if (
+                (!minDate || date.isSameOrAfter(minDate)) &&
+                (!maxDate || date.isSameOrBefore(maxDate))
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+	
+	alt.on('order.dt search.dt', function () {
+		alt.column(0, {
+			search: 'applied',
+			order: 'applied'
+		}).nodes().each(function (cell, i) {
+			cell.innerHTML = i + 1;
+		});
+	}).draw();
+
+    // Event listeners for the date inputs
+    $('#dateFrom, #dateTo').on('change', function() {
+        alt.draw(); // Redraw the table with the new filter applied
+    });
+
 
 	// trigger click on side navigation to create journal
 	$('#btn-create-journal').click(function () {
@@ -3544,4 +3648,8 @@ function edit_email_content(id) {
 	$('#emailContentModal').modal('toggle');
 
 
+}
+
+function confirmClearLogs(){
+	//TODO:export excel csv file and delete acitvit logs in the system
 }
