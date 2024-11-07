@@ -1107,9 +1107,11 @@
 								</tbody>
 							</table>
 						</div>
+						<?php if($all_logs){ ?>
 						<div>
-							<button class="btn btn-danger" data-toggle="modal" data-target="#clear_log_modal">Clear Logs</button>
+							<button class="btn btn-danger" id="clearLogs" data-toggle="modal" data-target="#clear_log_modal">Clear Logs</button>
 						</div>
+						<?php } ?>
 					</div>
 				</div>
 				<!-- /.LOGD  -->
@@ -1140,7 +1142,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="confirmClearLogs()">Confirm</button>
+        <button type="button" class="btn btn-primary" onclick="confirmClearLogs(this)">Confirm</button>
       </div>
     </div>
   </div>

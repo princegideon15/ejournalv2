@@ -110,6 +110,13 @@ class Log_model extends CI_Model {
 	public function save_log_export($data) {
 		$this->db->insert($this->logs, $data);
 	}
+	
+	public function get_logs_only(){
+		return $this->db->get($this->logs)->result();
+	}
+	public function clear_logs(){
+		$this->db->truncate($this->logs);
+	}
 }
 
 ?>

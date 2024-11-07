@@ -22,6 +22,11 @@ class Backup extends EJ_Controller {
 	public function __construct() {
 		parent::__construct();
 
+         // Load the necessary helpers and models
+         $this->load->helper('download');
+         $this->load->database();
+         $this->load->model('Log_model');
+
 		if (!$this->session->userdata('_oprs_logged_in')) {
 			redirect('oprs/login');
 		}
@@ -172,6 +177,37 @@ class Backup extends EJ_Controller {
         echo '1';
 
 		save_log_ej(_UserIdFromSession(), 'imported backup of EJOURNAL database. ('.$filename.')','');
+    }
+
+    public function export_clear_log(){
+         // Fetch data from the model
+         $data = $this->Log_model->get_logs_only(); // Customize this method in your model to fetch required data
+
+         // Convert data to CSV format
+         $csv_data = $this->format_csv($data);
+ 
+         // Set CSV file name
+         $file_name = 'exported_data_' . date('Y-m-d') . '.csv';
+
+         $data = $this->Log_model->clear_logs(); // Customize this method in your model to fetch required data
+ 
+         // Force download the CSV file
+         force_download($file_name, $csv_data);
+    }
+
+    private function format_csv($data) {
+        $csv = '';
+        if (!empty($data)) {
+            // Get the header
+            $header = array_keys((array) $data[0]);
+            $csv .= implode(',', $header) . "\n";
+
+            // Get the data rows
+            foreach ($data as $row) {
+                $csv .= implode(',', (array) $row) . "\n";
+            }
+        }
+        return $csv;
     }
 
 }

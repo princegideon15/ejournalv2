@@ -3650,6 +3650,36 @@ function edit_email_content(id) {
 
 }
 
-function confirmClearLogs(){
-	//TODO:export excel csv file and delete acitvit logs in the system
+function confirmClearLogs(element){
+
+	$('.btn').attr('disabled', true);
+	$(element).text('Clearing logs...');
+
+    $.ajax({
+		url: base_url + "admin/backup/export_clear_log/",
+        type: 'GET',
+		// dataType: "json",
+        xhrFields: {
+            responseType: 'blob' // Handle binary data
+        },
+        success: function(data) {
+            // Create a downloadable link for the blob
+            let downloadUrl = window.URL.createObjectURL(data);
+            let a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'exported_data.csv';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+			
+			location.reload();
+        },
+        error: function() {
+            alert("Failed to export data.");
+        },
+		finally: function(){
+			location.reload();
+		}
+    });
+
 }
