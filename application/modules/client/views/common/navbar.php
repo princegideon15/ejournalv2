@@ -36,7 +36,8 @@
           <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/articles');?>">Articles</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a>
+          <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/submission');?>">Submit manuscript</a>
+          <!-- <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a> -->
         </li>
         <?php if($logged_in) {
           echo '<li class="nav-item dropdown">

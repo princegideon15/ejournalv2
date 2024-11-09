@@ -44,10 +44,14 @@ gtag('config', 'G-VDLLX3HKBL');
                 conceptual and practical scientific advancements including the translation of research to public policy.
             </p>
 
-            
             <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p>
 
-            <h3>Volumes</h3>
+            
+            <div>
+                <a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark cursor-pointer">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
+            </div>
+
+            <h3 class="mt-3">Volumes</h3>
 
             <div>
                 <ul class="list-unstyled overflow-hidden" id="volume_list"  style="height:200px; min-height:200px">

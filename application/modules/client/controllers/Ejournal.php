@@ -91,7 +91,7 @@ class Ejournal extends EJ_Controller {
 	 *
 	 * @return void
 	 */
-	public function login(){
+	public function login($flag = null){
 
 		if (!$this->session->userdata('user_id')) {
 			$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
@@ -102,6 +102,13 @@ class Ejournal extends EJ_Controller {
 			$data['educations'] = $this->Client_journal_model->getEducations();
 			$data['main_title'] = "eJournal";
 			$data['main_content'] = "client/login";
+
+			if($flag){
+				$this->session->set_flashdata('active_link1', '');
+				$this->session->set_flashdata('active_link2', 'active');
+				$this->session->set_flashdata('active_tab1', '');
+				$this->session->set_flashdata('active_tab2', 'show active');
+			}
 			$this->_LoadPage('common/body', $data);
 		}else{
 			redirect('/');
@@ -1601,6 +1608,26 @@ class Ejournal extends EJ_Controller {
 		}
 		
 		return 'NRCP-EJ-'. date('Y') .'-'.$formatted_number;
+	}
+
+	function submission(){
+		$journals = $this->Client_journal_model->get_journals();
+
+		//data to display
+		$data['volumes'] = $journals;
+		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['popular'] = $this->Client_journal_model->top_five();
+		$data['client_count'] = $this->Client_journal_model->all_client();
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
+		$data['latest'] = $this->Client_journal_model->latest_journal();
+		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
+		$data['divisions'] = $this->Client_journal_model->getDivisions();
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/submission";
+		$this->_LoadPage('common/body', $data);
+
 	}
 
 }
