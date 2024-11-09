@@ -23,8 +23,6 @@ gtag('config', 'G-VDLLX3HKBL');
             <?php if ($this->session->flashdata('otp')) { ?>
                 <?php echo $this->session->flashdata('otp'); ?>
             <?php } ?>
-
-            <?= $otp ?>
             
             <?=form_open('client/login/verify_otp/'.$this->session->userdata('otp_ref_code') ?? '', ['method' => 'post', 'id' => 'verifyOTPForm'])?>
                 <div class="mb-3">
