@@ -1,4 +1,6 @@
 <?php error_reporting(0);?>
+<?php $logged_in = $this->session->userdata('user_id'); ?>
+
 <div class="container-fluid">
     <div class="row pt-3">
         <div class="col col-3 p-3">
@@ -16,13 +18,15 @@
                                 you need to have an account with the eJournal.
                             </p>
 
-                            <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/ejournal/login/create_account');?>" target="_blank">Sign up here.</a></p>
+                            <?php if(!$logged_in) { ?>
+                                <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/ejournal/login/create_account');?>" target="_blank">Sign up here.</a></p>
+                            <?php } ?>
 
                             <!-- <a role="button" href="http://researchjournal.nrcp.dost.gov.ph/oprs/login" target="_blank" class="btn main-btn">Start Submission</a> -->
                             <a role="button" href="<?php echo base_url('/oprs/login');?>" target="_blank" class="btn main-btn">Start Submission</a>
                         </div>
-
-                        <div class="mt-5">
+                        <hr class="my-3">
+                        <div>
                             <h6 class="fw-bold">NRCP Member</h6>
                             <p>To submit manuscript, and to check the status of your submission,
                                 you need to have an account with the eJournal.
@@ -30,7 +34,7 @@
 
                             <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="https://skms.nrcp.dost.gov.ph/main/register" target="_blank">Sign up here.</a></p>
 
-                            <a role="button" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank" class="btn main-btn">Start Submission</a>
+                            <a role="button" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank" class="btn btn-dark">Start Submission</a>
                         </div>
 
             
