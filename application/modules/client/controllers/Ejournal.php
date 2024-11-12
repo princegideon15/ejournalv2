@@ -1610,7 +1610,8 @@ class Ejournal extends EJ_Controller {
 		return 'NRCP-EJ-'. date('Y') .'-'.$formatted_number;
 	}
 
-	function submission(){
+	function submission($create_author_account = null){
+
 		$journals = $this->Client_journal_model->get_journals();
 
 		//data to display
@@ -1624,8 +1625,15 @@ class Ejournal extends EJ_Controller {
 		$data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+
+		if($create_author_account){
+			$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
+			$data['main_content'] = "client/create_author_account";
+		}else{
+			$data['main_content'] = "client/submission";
+		}
+		
 		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/submission";
 		$this->_LoadPage('common/body', $data);
 
 	}

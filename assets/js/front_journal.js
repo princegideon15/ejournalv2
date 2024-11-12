@@ -717,6 +717,23 @@ $('#citationModal .close').click(function(){
     }, 1000); // Check every 1 second
   }
 
+  // $('input[name="author_type"]').on('click', function(){
+  //   let authType = this.value;
+
+  //   if(authType == 1){
+  //     $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
+  //       let inputType = $(this).attr('type');
+  //       console.log(inputType);
+  //       if(inputType != 'radio' && inputType != 'password' && inputType != 'email'){
+  //         $(this).attr('disabled', true);
+  //       }
+  //     });
+  //   }else{
+  //     $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
+  //       $(this).attr('disabled', false);
+  //     });
+  //   }
+  // })
 });
 
 

@@ -13,20 +13,20 @@
                                 
                         <h3>Submit Manuscript</h3>
                         <div class="mt-3">
-                            <h6 class="fw-bold">NRCP Non-Member</h6>
+                            <!-- <h6 class="fw-bold">NRCP Non-Member</h6> -->
                             <p>To submit manuscript, and to check the status of your submission,
-                                you need to have an account with the eJournal.
+                                you need to have an account with the Online Peer Review System (eReview).
                             </p>
 
                             <?php if(!$logged_in) { ?>
-                                <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/ejournal/login/create_account');?>" target="_blank">Sign up here.</a></p>
+                                <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/ejournal/submission/create_account');?>" target="_blank">Sign up here.</a></p>
                             <?php } ?>
 
                             <!-- <a role="button" href="http://researchjournal.nrcp.dost.gov.ph/oprs/login" target="_blank" class="btn main-btn">Start Submission</a> -->
                             <a role="button" href="<?php echo base_url('/oprs/login');?>" target="_blank" class="btn main-btn">Start Submission</a>
                         </div>
                         <hr class="my-3">
-                        <div>
+                        <!-- <div>
                             <h6 class="fw-bold">NRCP Member</h6>
                             <p>To submit manuscript, and to check the status of your submission,
                                 you need to have an account with the eJournal.
@@ -35,7 +35,7 @@
                             <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="https://skms.nrcp.dost.gov.ph/main/register" target="_blank">Sign up here.</a></p>
 
                             <a role="button" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank" class="btn btn-dark">Start Submission</a>
-                        </div>
+                        </div> -->
 
             
 							<!-- </div>
