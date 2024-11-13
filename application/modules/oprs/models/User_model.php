@@ -2,14 +2,19 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 class User_model extends CI_Model {
 	// oprs
-	private $users = 'tblusers';
+	private $oprs_users = 'tblusers';
 	private $nonmembers = 'tblnonmembers';
 	private $reviewers = 'tblreviewers';
 	private $privileges = 'tblprivileges';
 	private $roles = 'tblroles';
 	// skms
-	private $members = 'tblusers';
+	private $skms_users = 'tblusers';
 	private $personal = 'tblpersonal_profiles';
+	private $membership = 'tblmembers';
+	// ejournal
+	private $ejournal_users = 'tblusers';
+
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->database(ENVIRONMENT);
@@ -112,7 +117,7 @@ class User_model extends CI_Model {
 		} else {
 			$members = $this->load->database('members', true);
 			$members->select('usr_name');
-			$members->from($this->members);
+			$members->from($this->skms_users);
 			$members->where('usr_id', $id);
 			$query = $members->get();
 			$result = $query->result_array();
@@ -178,7 +183,7 @@ class User_model extends CI_Model {
 		} else {
 			$members = $this->load->database('members', true);
 			$members->select('*');
-			$members->from($this->members);
+			$members->from($this->skms_users);
 			$members->where('usr_name', $email);
 			$query2 = $members->get();
 			$rows2 = $query2->num_rows();
@@ -374,7 +379,7 @@ class User_model extends CI_Model {
 			if ($src == '_sk') {
 				$members = $this->load->database('members', true);
 				$members->select('*');
-				$members->from($this->members . ' m');
+				$members->from($this->skms_users . ' m');
 				$members->join($this->personal . ' p', 'm.usr_id = p.pp_usr_id');
 				$members->where('m.usr_id', $id);
 				$query = $members->get();
@@ -429,6 +434,20 @@ class User_model extends CI_Model {
 		$oprs->select('*');
 		$oprs->from($this->users);
 		$query = $oprs->get();
+		return $query->num_rows();
+	}
+
+	public function check_author_email_skms($email){
+
+		$members = $this->load->database('members', true);
+		$members->select('*');
+		$members->from($this->skms_users);
+		$members->join($this->membership, 'usr_id = mem_usr_id');
+		$members->where('usr_grp_id', '3');
+		$members->where('mem_status !=', '3');
+		$members->where('mem_status !=', NULL);
+		$members->where('usr_name', $email);
+		$query = $members->get();
 		return $query->num_rows();
 	}
 }

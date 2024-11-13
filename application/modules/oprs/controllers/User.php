@@ -232,4 +232,5 @@ class User extends OPRS_Controller {
 		$where['prv_usr_id'] = $id;
 		$this->User_model->set_privilege($post, $where);
 	}
+
 }

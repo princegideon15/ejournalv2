@@ -150,7 +150,7 @@ $(document).ready(function()
 		});
   });
 
-  $('#signUpForm #new_password').on('keyup', function() {
+  $('#signUpForm #new_password, #authorSignUpForm #new_password').on('keyup', function() {
     if($(this).val().length > 0){
       var password = $(this).val();
       var strength = getPasswordStrength(password);
@@ -717,23 +717,63 @@ $('#citationModal .close').click(function(){
     }, 1000); // Check every 1 second
   }
 
-  // $('input[name="author_type"]').on('click', function(){
-  //   let authType = this.value;
+  $('input[name="author_type"]').on('click', function(){
+    let authType = this.value;
 
-  //   if(authType == 1){
-  //     $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
-  //       let inputType = $(this).attr('type');
-  //       console.log(inputType);
-  //       if(inputType != 'radio' && inputType != 'password' && inputType != 'email'){
-  //         $(this).attr('disabled', true);
-  //       }
-  //     });
-  //   }else{
-  //     $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
-  //       $(this).attr('disabled', false);
-  //     });
-  //   }
-  // })
+    if(authType == 1){
+      $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
+        let inputType = $(this).attr('type');
+        if(inputType != 'radio' && inputType != 'password' && inputType != 'email'){
+          $(this).attr('disabled', true);
+        }
+      });
+    }else{
+      $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
+        let inputID = $(this).attr('id');
+        if(inputID != 'region' && inputID != 'province' && inputID != 'city'){
+          $(this).attr('disabled', false);
+        }
+      });
+    }
+
+    $('#create_account').removeClass('disabled');
+  })
+
+  $('#authorSignUpForm #new_email').on('blur', function(){
+    
+    let email = $(this).val();
+
+    if(email){
+      let member = $('input[name="author_type"]:checked').val();
+      
+      let formData = {
+        'email' : email,
+        'member' : member
+      };
+
+      $.ajax({
+        type: 'POST',
+        url: base_url + "oprs/signup/check_author_email/",
+				// cache: false,
+				// contentType: false,
+				// processData: false,
+        data: formData,
+        success: function (response) {
+
+          if(response == 1){
+            $('#new_email').removeClass('is-invalid')
+            $('.invalid-feedback').text();
+            $('#create_account').removeClass('disabled');
+          }else{
+            $('#new_email').addClass('is-invalid')
+            $('.invalid-feedback').text('Email does not exist.');
+            $('#create_account').addClass('disabled');
+          }
+        }
+      });
+    }
+
+  });
 });
 
 

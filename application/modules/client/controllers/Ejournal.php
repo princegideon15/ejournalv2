@@ -1638,6 +1638,189 @@ class Ejournal extends EJ_Controller {
 
 	}
 
+	function create_author_account(){
+		
+		$member = $this->input->post('author_type', TRUE);
+
+		if($member == 2){
+			$this->form_validation->set_rules('title', 'Title', 'required|trim');
+			$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
+			$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
+			$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim');
+			$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
+			$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
+			$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
+			$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
+	
+			//require region,province,city for philippines
+			if($this->input->post('country') == 175){
+				$this->form_validation->set_rules('region', 'Region', 'required|trim');
+				$this->form_validation->set_rules('province', 'Province', 'required|trim');
+				$this->form_validation->set_rules('city', 'City', 'required|trim');
+			}
+	
+			$this->form_validation->set_rules('contact', 'Contact', 'required|trim|numeric|exact_length[11]');
+		}
+		
+		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email');
+		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
+		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
+		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
+
+		$validations = ['author_type', 'new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
+
+		if($this->form_validation->run() == FALSE){
+			$errors = [];
+
+			foreach($validations as $value){
+				//store entered value to display on redirect
+				if($value == 'country'){
+					if($this->input->post($value)){
+						$this->session->set_flashdata($value, $this->input->post($value));
+					}else{
+						$this->session->set_flashdata($value, 175);
+					}
+				}else{
+					$this->session->set_flashdata($value, $this->input->post($value));
+				}
+
+				//store errors to display on redirect
+				if (form_error($value)) {
+					$errors[$value] = strip_tags(form_error($value));
+
+				}
+			}
+	
+			//return password data and strenght data
+			$password = $this->input->post('new_password');
+			
+			if (strlen($password) >= 8) {
+				$strength += 10;
+			}
+			if (strlen($password) >= 12) {
+				$strength += 15;
+			}
+			if (strlen($password) >= 16) {
+				$strength += 20;
+			}
+		
+			if (preg_match('/[A-Z]/', $password)) {
+				$strength += 15;
+			}
+			if (preg_match('/[a-z]/', $password)) {
+				$strength += 10;
+			}
+			if (preg_match('/[0-9]/', $password)) {
+				$strength += 15;
+			}
+			if (preg_match('/[^A-Za-z0-9]/', $password)) {
+				$strength += 15;
+			}
+
+			if ($strength <= 25) {
+				$bar_color = 'red';
+				$password_strength = 'Weak';
+			} else if ($strength <= 50) {
+				$bar_color = 'orange';
+				$password_strength = 'Good';
+			} else if ($strength <= 75) {
+				$bar_color = 'yellow';
+				$password_strength = 'Fair';
+			}else {
+				$bar_color = 'green';
+				$password_strength = 'Excellent';     
+			}
+
+			$this->session->set_flashdata('bar_style', 'style="width:'. $strength .'%; background-color:'. $bar_color .'"');
+			$this->session->set_flashdata('password_strength', $password_strength);
+
+			//return province value and options if province has value
+			$region = $this->input->post('region');
+
+			if($region > 0){
+				$provinces = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $region));
+				$this->session->set_flashdata('provinces', $provinces);
+			}
+
+			//return city value and options if city has value
+			$province = $this->input->post('province');
+
+			if($province){
+				$cities = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province));
+				$this->session->set_flashdata('cities', $cities);
+			}
+
+            // Set flashdata to pass validation errors and form data to the view
+            $this->session->set_flashdata('signup_validation_errors', $errors);
+            $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
+			redirect('client/ejournal/submission/create_account');
+		}else{
+
+			echo $member;
+
+			echo 'register account';
+			//TODO:create account
+
+			return false;
+
+			if($member == 1){ // nrcp member
+
+				//get user email
+				//create new password for oprs
+				//send otp
+
+			}else{ // non-member
+
+				//get user email and password etc to save in oprs table
+				//send otp
+			}
+
+			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
+			$ref_code = random_string('alnum', 16);
+			$email = $this->input->post('new_email');
+			$currentTotalUsers = count($this->Library_model->get_library('tblusers', 'default'));
+			$newUserID = $this->generate_user_id('0000', $currentTotalUsers + 1);
+
+			//save user account
+			$userAuth = [
+				'id' => $newUserID,
+				'email' => $email,
+				'password' => password_hash($this->input->post('new_password'), PASSWORD_BCRYPT),
+				'status' => 0,
+				'otp' => password_hash($otp, PASSWORD_BCRYPT), 
+				'otp_date' => date('Y-m-d H:i:s'),
+				'otp_ref_code' => $ref_code,
+				'created_at' => date('Y-m-d H:i:s')
+			];
+			
+			$this->Login_model->create_user_auth($userAuth);
+
+			//save user profile
+			$userProfile = [
+				'user_id' => $newUserID,
+				'title' => $this->input->post('title'),
+				'first_name' => $this->input->post('first_name'),
+				'last_name' => $this->input->post('last_name'),
+				'middle_name' => $this->input->post('middle_name'),
+				'extension_name' => $this->input->post('extension_name'),
+				'sex' => $this->input->post('sex'),
+				'educational_attainment' => $this->input->post('educational_attainment'),
+				'affiliation' => $this->input->post('affiliation'),
+				'country' => $this->input->post('country'),
+				'region' => $this->input->post('region'),
+				'province' => $this->input->post('province'),
+				'city' => $this->input->post('city'),
+				'contact' => $this->input->post('contact'),
+				'created_at' => date('Y-m-d H:i:s')
+			];
+
+			$this->Login_model->create_user_profile($userProfile);
+
+			//send email otp for create account
+			$this->send_create_account_otp($email, $otp);
+		}
+	}
+
 }
 /* End of file Ejournal.php */
 

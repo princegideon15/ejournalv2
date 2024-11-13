@@ -50,8 +50,23 @@ class Signup extends OPRS_Controller {
 		$data['word'] = $captcha['word'];
 		echo json_encode($data);
 	}
+	
 	public function verify_email() {
 		$output = $this->User_model->verify_email($this->input->post('non_email', true));
+		echo $output;
+	}
+
+	
+	public function check_author_email(){
+		$email = $this->input->post('email', TRUE);
+		$member = $this->input->post('member', TRUE);
+		
+		if($member == 1){
+			$output = $this->User_model->check_author_email_skms($email);
+		}else{
+			$output = $this->User_model->check_author_email_ejournal($email);
+		}
+
 		echo $output;
 	}
 }
