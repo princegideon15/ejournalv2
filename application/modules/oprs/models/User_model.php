@@ -438,7 +438,6 @@ class User_model extends CI_Model {
 	}
 
 	public function check_author_email_skms($email){
-
 		$members = $this->load->database('members', true);
 		$members->select('*');
 		$members->from($this->skms_users);
@@ -448,6 +447,14 @@ class User_model extends CI_Model {
 		$members->where('mem_status !=', NULL);
 		$members->where('usr_name', $email);
 		$query = $members->get();
+		return $query->num_rows();
+	}
+
+	public function check_author_email_ejournal($email){
+		$this->db->select('*');
+		$this->db->from($this->ejournal_users);
+		$this->db->where('email', $email);
+		$query = $this->db->get();
 		return $query->num_rows();
 	}
 }

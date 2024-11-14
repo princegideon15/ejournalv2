@@ -754,12 +754,8 @@ $('#citationModal .close').click(function(){
       $.ajax({
         type: 'POST',
         url: base_url + "oprs/signup/check_author_email/",
-				// cache: false,
-				// contentType: false,
-				// processData: false,
         data: formData,
         success: function (response) {
-
           if(response == 1){
             $('#new_email').removeClass('is-invalid')
             $('.invalid-feedback').text();

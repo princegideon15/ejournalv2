@@ -35,6 +35,7 @@ class Signup extends OPRS_Controller {
 		$post['date_created'] = date('Y-m-d H:i:s');
 		$this->User_model->add_user(array_filter($post));
 	}
+	
 	public function refresh_captcha() {
 		$config = array(
 			'img_url' => base_url() . 'assets/image_for_captcha/',
