@@ -457,6 +457,21 @@ class User_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
+
+	public function get_nrcp_member_info($email){
+		$members = $this->load->database('members', true);
+		$members->select('usr_id, pp_contact');
+		$members->from($this->skms_users);
+		$members->join($this->personal, 'usr_id = pp_usr_id');
+		$members->where('usr_name', $email);
+		$query = $members->get();
+		return $query->row_array();
+	}
+
+	public function create_author_account($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->oprs_users, $data);
+	}
 }
 
 /* End of file User_model.php */

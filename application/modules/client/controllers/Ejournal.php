@@ -28,6 +28,7 @@ class Ejournal extends EJ_Controller {
 		$this->load->model('Login_model');
 		$this->load->model('Search_model');
 		$this->load->model('CSF_model');
+		$this->load->model('Oprs/User_model');
 		$this->load->model('Admin/Journal_model');
 		$this->load->model('Admin/Email_model');
 		$this->load->library("My_phpmailer");
@@ -1627,6 +1628,8 @@ class Ejournal extends EJ_Controller {
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 
 		if($create_author_account){
+			$data['titles'] = $this->Client_journal_model->getTitles();
+			$data['educations'] = $this->Client_journal_model->getEducations();
 			$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 			$data['main_content'] = "client/create_author_account";
 		}else{
@@ -1755,19 +1758,36 @@ class Ejournal extends EJ_Controller {
             $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
 			redirect('client/ejournal/submission/create_account');
 		}else{
-
-			echo $member;
-
-			echo 'register account';
-			//TODO:create account
-
-			return false;
-
+			$email = $this->input->post('new_email', TRUE);
+			$password = $this->input->post('new_password');
+			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
+			$ref_code = random_string('alnum', 16);
+			
 			if($member == 1){ // nrcp member
 
-				//get user email
-				//create new password for oprs
-				//send otp
+				// get member info
+				$result = $this->User_model->get_nrcp_member_info($email);
+
+				// create author account in oprs
+				$data = [
+					'usr_id' => $result['usr_id'],
+					'usr_username' => $email,
+					'usr_password' => password_hash($password, PASSWORD_BCRYPT),
+					'usr_contact' => $result['pp_contact'],
+					'usr_desc' => 'Author',
+					'usr_role' => 6,
+					'usr_status' => 0,
+					'date_created' => date('Y-m-d H:i:s'),
+					'usr_sys_acc' => 2,
+					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
+					'otp_date' => date('Y-m-d H:i:s'),
+					'otp_ref_code' => $ref_code
+				];
+				
+				$this->User_model->create_author_account($data);
+
+				// save author type in tblauthor_type
+				//TODO:save author type in tblauthor_type
 
 			}else{ // non-member
 
@@ -1775,49 +1795,8 @@ class Ejournal extends EJ_Controller {
 				//send otp
 			}
 
-			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
-			$ref_code = random_string('alnum', 16);
-			$email = $this->input->post('new_email');
-			$currentTotalUsers = count($this->Library_model->get_library('tblusers', 'default'));
-			$newUserID = $this->generate_user_id('0000', $currentTotalUsers + 1);
-
-			//save user account
-			$userAuth = [
-				'id' => $newUserID,
-				'email' => $email,
-				'password' => password_hash($this->input->post('new_password'), PASSWORD_BCRYPT),
-				'status' => 0,
-				'otp' => password_hash($otp, PASSWORD_BCRYPT), 
-				'otp_date' => date('Y-m-d H:i:s'),
-				'otp_ref_code' => $ref_code,
-				'created_at' => date('Y-m-d H:i:s')
-			];
-			
-			$this->Login_model->create_user_auth($userAuth);
-
-			//save user profile
-			$userProfile = [
-				'user_id' => $newUserID,
-				'title' => $this->input->post('title'),
-				'first_name' => $this->input->post('first_name'),
-				'last_name' => $this->input->post('last_name'),
-				'middle_name' => $this->input->post('middle_name'),
-				'extension_name' => $this->input->post('extension_name'),
-				'sex' => $this->input->post('sex'),
-				'educational_attainment' => $this->input->post('educational_attainment'),
-				'affiliation' => $this->input->post('affiliation'),
-				'country' => $this->input->post('country'),
-				'region' => $this->input->post('region'),
-				'province' => $this->input->post('province'),
-				'city' => $this->input->post('city'),
-				'contact' => $this->input->post('contact'),
-				'created_at' => date('Y-m-d H:i:s')
-			];
-
-			$this->Login_model->create_user_profile($userProfile);
-
 			//send email otp for create account
-			$this->send_create_account_otp($email, $otp);
+			// $this->send_create_account_otp($email, $otp);
 		}
 	}
 

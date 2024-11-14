@@ -35,7 +35,7 @@ class Signup extends OPRS_Controller {
 		$post['date_created'] = date('Y-m-d H:i:s');
 		$this->User_model->add_user(array_filter($post));
 	}
-	
+
 	public function refresh_captcha() {
 		$config = array(
 			'img_url' => base_url() . 'assets/image_for_captcha/',
@@ -69,5 +69,19 @@ class Signup extends OPRS_Controller {
 		}
 
 		echo $output;
+	}
+
+	public function register_author(){
+		
+		$email = $this->input->post('email', TRUE);
+		$member = $this->input->post('member', TRUE);
+		
+		if($member == 1){
+			// save skms member info to oprs author
+			$output = $this->User_model->check_author_email_skms($email);
+		}else{
+			// save ejournal client info to oprs as author
+			$output = $this->User_model->check_author_email_ejournal($email);
+		}
 	}
 }

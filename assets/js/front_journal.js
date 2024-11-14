@@ -721,6 +721,7 @@ $('#citationModal .close').click(function(){
     let authType = this.value;
 
     if(authType == 1){
+      // disabled some fields
       $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
         let inputType = $(this).attr('type');
         if(inputType != 'radio' && inputType != 'password' && inputType != 'email'){
@@ -728,12 +729,27 @@ $('#citationModal .close').click(function(){
         }
       });
     }else{
+      // enabled some fields
       $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
         let inputID = $(this).attr('id');
         if(inputID != 'region' && inputID != 'province' && inputID != 'city'){
           $(this).attr('disabled', false);
         }
       });
+
+      // check if email exist as client in ejournal
+      let email = $('#new_email').val();
+      let member = authType;
+  
+      if(email && member){
+        
+        let formData = {
+          'email' : email,
+          'member' : member
+        };
+  
+        checkEmail(formData);
+      }
     }
 
     $('#create_account').removeClass('disabled');
@@ -742,36 +758,81 @@ $('#citationModal .close').click(function(){
   $('#authorSignUpForm #new_email').on('blur', function(){
     
     let email = $(this).val();
+    let member = $('input[name="author_type"]:checked').val();
 
-    if(email){
-      let member = $('input[name="author_type"]:checked').val();
+    if(email && member){
       
       let formData = {
         'email' : email,
         'member' : member
       };
 
-      $.ajax({
-        type: 'POST',
-        url: base_url + "oprs/signup/check_author_email/",
-        data: formData,
-        success: function (response) {
-          if(response == 1){
-            $('#new_email').removeClass('is-invalid')
-            $('.invalid-feedback').text();
-            $('#create_account').removeClass('disabled');
-          }else{
-            $('#new_email').addClass('is-invalid')
-            $('.invalid-feedback').text('Email does not exist.');
-            $('#create_account').addClass('disabled');
-          }
-        }
-      });
+      checkEmail(formData);
     }
 
   });
 });
 
+
+function checkEmail(formData){
+  
+  $.ajax({
+    type: 'POST',
+    url: base_url + "oprs/signup/check_author_email/",
+    data: formData,
+    success: function (response) {
+      if(formData['member'] == 1){
+        if(response == 1){
+          $('#new_email').removeClass('is-invalid')
+          $('.invalid-feedback').text();
+          $('#create_account').removeClass('disabled');
+        }else{
+          $('#new_email').addClass('is-invalid')
+          $('.invalid-feedback').text('Email does not exist.');
+          $('#create_account').addClass('disabled');
+        }
+      }else{
+        if(response == 1){
+  
+          Swal.fire({
+            title: "Email is already existing!",
+            text: "Do you want to register this account as author?",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#adb5bd",
+            confirmButtonColor: "#0c6bcb",
+            confirmButtonText: "Proceed"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              register_author_acccount(formData);
+            } else {
+              $('#authorSignUpForm')[0].reset();
+            }
+          });
+  
+          $('#create_account').addClass('disabled');
+        }else{
+          $('#new_email').removeClass('is-invalid')
+          $('.invalid-feedback').text();
+          $('#create_account').removeClass('disabled');
+        }
+      }
+    }
+  });
+
+}
+
+function register_author_acccount(formData){
+  $.ajax({
+    type: 'POST',
+    url: base_url + "oprs/signup/register_author/",
+    data: formData,
+    success: function (response) {
+      console.log(response);
+      //redirect to OTP
+    }
+  });
+}
 
 /**
  * get all articles per journal
