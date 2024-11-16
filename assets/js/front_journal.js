@@ -99,20 +99,22 @@ $(document).ready(function()
     }
   });
 
-  $('#signUpForm #country').on('change', function(){
+  $('#country').on('change', function(){
+    let form = $('form').attr('id');
     if($(this).val() != 175){
-      $('#signUpForm #region').prop('disabled', true);
-      $('#signUpForm #province').prop('disabled', true);
-      $('#signUpForm #city').prop('disabled', true);
+      $('#' + form + ' #region').prop('disabled', true);
+      $('#' + form + ' #province').prop('disabled', true);
+      $('#' + form + ' #city').prop('disabled', true);
     }else{
-      $('#signUpForm #region').prop('disabled', false);
-      $('#signUpForm #province').prop('disabled', false);
-      $('#signUpForm #city').prop('disabled', false);
+      $('#' + form + ' #region').prop('disabled', false);
+      $('#' + form + ' #province').prop('disabled', false);
+      $('#' + form + ' #city').prop('disabled', false);
       
     }
   });
 
-  $('#signUpForm #region').on('change', function(){
+  $('#region').on('change', function(){
+    let form = $('form').attr('id');
     let region = $(this).val()
     
 		$.ajax({
@@ -125,7 +127,7 @@ $(document).ready(function()
 				$.each(data, function(key, val) {
           html += '<option value="'+ val.province_id +  '">'+ val.province_name +'</option>';
 				});
-        $('#signUpForm #province').empty().append(html);
+        $('#' + form + ' #province').empty().append(html);
 			},
       error: function(xhr, status, error) {
           console.error('Error:', error);
@@ -133,7 +135,8 @@ $(document).ready(function()
 		});
   });
 
-  $('#signUpForm #province').on('change', function(){
+  $('#province').on('change', function(){
+    let form = $('form').attr('id');
     let province = $(this).val()
 		$.ajax({
 			type: "GET",
@@ -145,12 +148,13 @@ $(document).ready(function()
 				$.each(data, function(key, val) {
           html += '<option value="'+ val.city_id +  '">'+ val.city_name +'</option>';
 				});
-        $('#city').empty().append(html);
+        $('#' + form + ' #city').empty().append(html);
 			}
 		});
   });
 
-  $('#signUpForm #new_password, #authorSignUpForm #new_password').on('keyup', function() {
+  $('#new_password').on('keyup', function() {
+    $("#password_strength_container").removeClass('d-none');
     if($(this).val().length > 0){
       var password = $(this).val();
       var strength = getPasswordStrength(password);
@@ -732,9 +736,9 @@ $('#citationModal .close').click(function(){
       // enabled some fields
       $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
         let inputID = $(this).attr('id');
-        if(inputID != 'region' && inputID != 'province' && inputID != 'city'){
+        // if(inputID != 'region' && inputID != 'province' && inputID != 'city'){
           $(this).attr('disabled', false);
-        }
+        // }
       });
 
       // check if email exist as client in ejournal
@@ -775,12 +779,13 @@ $('#citationModal .close').click(function(){
 
 
 function checkEmail(formData){
-  
   $.ajax({
     type: 'POST',
     url: base_url + "oprs/signup/check_author_email/",
+    dataType: 'json',
     data: formData,
     success: function (response) {
+      console.log("🚀 ~ checkEmail ~ response:", response)
       if(formData['member'] == 1){
         if(response == 1){
           $('#new_email').removeClass('is-invalid')
@@ -792,10 +797,10 @@ function checkEmail(formData){
           $('#create_account').addClass('disabled');
         }
       }else{
-        if(response == 1){
+        if(response['ej'] == 1 && response['op'] == 0){
   
           Swal.fire({
-            title: "Email is already existing!",
+            title: "Email already exists in eJournal",
             text: "Do you want to register this account as author?",
             icon: "warning",
             showCancelButton: true,
@@ -807,9 +812,16 @@ function checkEmail(formData){
               register_author_acccount(formData);
             } else {
               $('#authorSignUpForm')[0].reset();
+              $('form input, select').removeClass('is-invalid');
+              $('.alert-danger').alert('close');
             }
           });
   
+          $('#create_account').addClass('disabled');
+        }else if(response['ej'] >= 1 && response['op'] >= 1){
+          let oprs_url = base_url + "oprs/login";
+          $('#new_email').addClass('is-invalid')
+          $('.invalid-feedback').html('Email already exist as Author. Click <a class="text-danger text-decoration-underline fw-bold" href="' + oprs_url +'">here</a> to login as Author.');
           $('#create_account').addClass('disabled');
         }else{
           $('#new_email').removeClass('is-invalid')

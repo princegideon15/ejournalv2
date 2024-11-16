@@ -64,15 +64,16 @@ class Signup extends OPRS_Controller {
 		
 		if($member == 1){
 			$output = $this->User_model->check_author_email_skms($email);
+			echo $output;
 		}else{
 			$output = $this->User_model->check_author_email_ejournal($email);
+			echo json_encode($output);
 		}
 
-		echo $output;
 	}
 
 	public function register_author(){
-		
+		//for otp
 		$email = $this->input->post('email', TRUE);
 		$member = $this->input->post('member', TRUE);
 		

@@ -1420,15 +1420,16 @@ class Ejournal extends EJ_Controller {
 
 			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
 			$ref_code = random_string('alnum', 16);
-			$email = $this->input->post('new_email');
-			$currentTotalUsers = count($this->Library_model->get_library('tblusers', 'default'));
-			$newUserID = $this->generate_user_id('0000', $currentTotalUsers + 1);
+			$email = $this->input->post('new_email', TRUE);
+			
+			$lastUserID = $this->get_last_user_id();
+			$newUserID = $this->generate_user_id('0000', intval($lastUserID) + 1);
 
 			//save user account
 			$userAuth = [
 				'id' => $newUserID,
 				'email' => $email,
-				'password' => password_hash($this->input->post('new_password'), PASSWORD_BCRYPT),
+				'password' => password_hash($this->input->post('new_password', TRUE), PASSWORD_BCRYPT),
 				'status' => 0,
 				'otp' => password_hash($otp, PASSWORD_BCRYPT), 
 				'otp_date' => date('Y-m-d H:i:s'),
@@ -1441,19 +1442,19 @@ class Ejournal extends EJ_Controller {
 			//save user profile
 			$userProfile = [
 				'user_id' => $newUserID,
-				'title' => $this->input->post('title'),
-				'first_name' => $this->input->post('first_name'),
-				'last_name' => $this->input->post('last_name'),
-				'middle_name' => $this->input->post('middle_name'),
-				'extension_name' => $this->input->post('extension_name'),
-				'sex' => $this->input->post('sex'),
-				'educational_attainment' => $this->input->post('educational_attainment'),
-				'affiliation' => $this->input->post('affiliation'),
-				'country' => $this->input->post('country'),
-				'region' => $this->input->post('region'),
-				'province' => $this->input->post('province'),
-				'city' => $this->input->post('city'),
-				'contact' => $this->input->post('contact'),
+				'title' => $this->input->post('title', TRUE),
+				'first_name' => $this->input->post('first_name', TRUE),
+				'last_name' => $this->input->post('last_name', TRUE),
+				'middle_name' => $this->input->post('middle_name', TRUE),
+				'extension_name' => $this->input->post('extension_name', TRUE),
+				'sex' => $this->input->post('sex', TRUE),
+				'educational_attainment' => $this->input->post('educational_attainment', TRUE),
+				'affiliation' => $this->input->post('affiliation', TRUE),
+				'country' => $this->input->post('country', TRUE),
+				'region' => $this->input->post('region', TRUE),
+				'province' => $this->input->post('province', TRUE),
+				'city' => $this->input->post('city', TRUE),
+				'contact' => $this->input->post('contact', TRUE),
 				'created_at' => date('Y-m-d H:i:s')
 			];
 
@@ -1630,6 +1631,7 @@ class Ejournal extends EJ_Controller {
 		if($create_author_account){
 			$data['titles'] = $this->Client_journal_model->getTitles();
 			$data['educations'] = $this->Client_journal_model->getEducations();
+			$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
 			$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 			$data['main_content'] = "client/create_author_account";
 		}else{
@@ -1759,7 +1761,8 @@ class Ejournal extends EJ_Controller {
 			redirect('client/ejournal/submission/create_account');
 		}else{
 			$email = $this->input->post('new_email', TRUE);
-			$password = $this->input->post('new_password');
+			$password = $this->input->post('new_password', TRUE);
+			$contact = $this->input->post('contact', TRUE);
 			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
 			$ref_code = random_string('alnum', 16);
 			
@@ -1777,6 +1780,7 @@ class Ejournal extends EJ_Controller {
 					'usr_desc' => 'Author',
 					'usr_role' => 6,
 					'usr_status' => 0,
+					'usr_category' => $member,
 					'date_created' => date('Y-m-d H:i:s'),
 					'usr_sys_acc' => 2,
 					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
@@ -1786,18 +1790,78 @@ class Ejournal extends EJ_Controller {
 				
 				$this->User_model->create_author_account($data);
 
-				// save author type in tblauthor_type
-				//TODO:save author type in tblauthor_type
-
 			}else{ // non-member
 
-				//get user email and password etc to save in oprs table
-				//send otp
+				$lastUserID = $this->get_last_user_id();
+				$newUserID = $this->generate_user_id('0000', intval($lastUserID) + 1);
+
+				// save in ejournal
+				// save user account
+				$userAuth = [
+					'id' => $newUserID,
+					'email' => $email,
+					'password' => password_hash($password, PASSWORD_BCRYPT),
+					'status' => 0,
+					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
+					'otp_date' => date('Y-m-d H:i:s'),
+					'otp_ref_code' => $ref_code,
+					'created_at' => date('Y-m-d H:i:s')
+				];
+				
+				$this->Login_model->create_user_auth($userAuth);
+
+				// save user profile
+				$userProfile = [
+					'user_id' => $newUserID,
+					'title' => $this->input->post('title', TRUE),
+					'first_name' => $this->input->post('first_name', TRUE),
+					'last_name' => $this->input->post('last_name', TRUE),
+					'middle_name' => $this->input->post('middle_name', TRUE),
+					'extension_name' => $this->input->post('extension_name', TRUE),
+					'sex' => $this->input->post('sex', TRUE),
+					'educational_attainment' => $this->input->post('educational_attainment', TRUE),
+					'affiliation' => $this->input->post('affiliation', TRUE),
+					'country' => $this->input->post('country', TRUE),
+					'region' => $this->input->post('region', TRUE),
+					'province' => $this->input->post('province', TRUE),
+					'city' => $this->input->post('city', TRUE),
+					'contact' => $this->input->post('contact', TRUE),
+					'created_at' => date('Y-m-d H:i:s')
+				];
+
+				$this->Login_model->create_user_profile($userProfile);
+
+				// create author account in oprs
+				$data = [
+					'usr_id' => $newUserID,
+					'usr_username' => $email,
+					'usr_password' => password_hash($password, PASSWORD_BCRYPT),
+					'usr_contact' => $contact,
+					'usr_desc' => 'Author',
+					'usr_role' => 6,
+					'usr_status' => 0,
+					'usr_category' => $member,
+					'date_created' => date('Y-m-d H:i:s'),
+					'usr_sys_acc' => 2,
+					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
+					'otp_date' => date('Y-m-d H:i:s'),
+					'otp_ref_code' => $ref_code
+				];
+				
+				$this->User_model->create_author_account($data);
 			}
 
 			//send email otp for create account
 			// $this->send_create_account_otp($email, $otp);
 		}
+	}
+
+	function get_last_user_id(){
+		$currentTotalUsers = $this->Library_model->get_library('tblusers', 'default');
+		$lastUserID = end($currentTotalUsers);
+		$lastUserID = $lastUserID->id;
+		$lastUserID = end(explode('-', $lastUserID));
+		return $lastUserID;
 	}
 
 }

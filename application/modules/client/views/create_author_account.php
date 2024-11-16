@@ -13,6 +13,7 @@ gtag('config', 'G-VDLLX3HKBL');
 
 <script>
 function validateForm() {
+    $('#google_recaptchav2_container').removeClass('d-none');
     var recaptchaResponse = grecaptcha.getResponse();
     if (!recaptchaResponse) {
         // alert('Please complete the reCAPTCHA verification.');
@@ -65,7 +66,7 @@ function validateForm() {
                             <label class="form-label" for="new_email"><span
                             class="text-danger fw-bold">*</span>Email</label>
                             <input type="email" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['new_email']){ echo 'is-invalid';} ?>" id="new_email" name="new_email"
-                                placeholder="Enter valid email address" value="<?= set_value('new_email', $this->session->flashdata('new_email')); ?>">
+                                placeholder="Enter valid email address" value="<?= set_value('new_email', $this->session->flashdata('new_email')); ?>" required>
                             <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_email'] ?></span>
                         </div>
                         <div class="mb-3">
@@ -231,16 +232,7 @@ function validateForm() {
                                         <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
                                     </div>
                                     <div class="mt-1" style="font-size:.8rem">
-                                            <div><span class="fw-bold me-1">Password strength:</span><span id="password-strength"></span></div>
-                                        <div class="progress mt-1" style="height: .5rem;">
-                                            <div class="progress-bar" role="progressbar" <?= $this->session->flashdata('bar_style')?> id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <!-- <ul class="mt-1 text-muted ps-3">
-                                            <li>8-20 characters long.</li>
-                                            <li>At least 1 letter.</li>
-                                            <li>At lestt 1 number.</li>
-                                            <li>At least 1 special character.</li>
-                                        </ul> -->
+                                       
                                     </div>
                                 </div>
                                 <div class="col">
@@ -254,11 +246,30 @@ function validateForm() {
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3 float-end ">
+                        <div>
+                            
+                        <div class="card mb-3 d-none" id="password_strength_container">
+                            <div class="card-body text-secondary">
+                                <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="password-strength"></span></div>
+                                <div class="progress mt-1" style="height: .5rem;">
+                                    <div class="progress-bar" role="progressbar" <?= $this->session->flashdata('bar_style')?> id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <ul class="mt-3 small text-muted ps-3">
+                                    <li>8-20 characters long.</li>
+                                    <li>At least 1 letter.</li>
+                                    <li>At lestt 1 number.</li>
+                                    <li>At least 1 special character.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        </div>
+                        <div class="mb-3 w-100 d-none" id="google_recaptchav2_container">
+                            <div id="recaptcha"></div>
                             <div class="g-recaptcha" data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6"></div>
                             <p class="text-danger" id="g-recaptcha"></p>
                         </div>
-                        <button type="submit" class="btn main-btn w-100  <?= ($author_type == 1) ? '' : 'disabled' ?> " id="create_account">Create Account</button>
+                        <button type="submit" class="btn main-btn w-100 <?= ($this->session->flashdata('author_type') > 0) ? '' : 'disabled' ?>" id="create_account">Create Account</button>
                     <?=form_close()?>
                 </div>
         </div>
@@ -508,7 +519,7 @@ function validateForm() {
                             style="background-color: white">
                             <!-- foreach of country -->
                             <?php foreach ($country as $c): ?>
-                            d
+                            
                             <?php $selected = ($c->country_id == '175') ? 'selected' : '';
     echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
                             <?php endforeach;?>

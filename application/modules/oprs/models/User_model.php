@@ -455,7 +455,17 @@ class User_model extends CI_Model {
 		$this->db->from($this->ejournal_users);
 		$this->db->where('email', $email);
 		$query = $this->db->get();
-		return $query->num_rows();
+		$ej_count_exist = $query->num_rows();
+
+		$oprs = $this->load->database('dboprs', true);
+		$oprs->select('*');
+		$oprs->from($this->oprs_users);
+		$oprs->where('usr_username', $email);
+		$query = $oprs->get();
+		$oprs_count_exist = $query->num_rows();
+
+		$output = ['ej' => $ej_count_exist, 'op' => $oprs_count_exist];
+		return $output;
 	}
 
 	public function get_nrcp_member_info($email){
