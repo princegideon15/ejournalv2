@@ -487,89 +487,6 @@ class Login extends EJ_Controller {
 		
 	}
 	
-	/**
-	 * Verify create account otp
-	 *
-	 * @param string $ref
-	 * @return void
-	 */
-	public function new_account_verify_otp($ref){
-		$ref = $this->security->xss_clean($ref);
-		//check if ref code exist
-		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
-
-		//link expired
-		if($isOtpRefExist[0]->otp_ref_code == null){
-			$this->session->set_flashdata('otp', '
-			<div class="alert alert-danger d-flex align-items-center">
-				<i class="oi oi-circle-x me-1"></i>Link expired.
-			</div>');
-
-			$data['main_title'] = "eJournal";
-			$data['main_content'] = "client/new_account_otp";
-			$data['disabled'] = "disabled";
-			$this->_LoadPage('common/body', $data);
-		}else{
-			$otp_date = $isOtpRefExist[0]->otp_date;
-			$current_date = date('Y-m-d H:i:s');
-
-			//check if code expired after 5 minutes
-			// if ($this->compareDates($otp_date, $current_date)  > 4) {
-			// 	$this->session->set_flashdata('otp', '
-			// 	<div class="alert alert-danger d-flex align-items-center">
-			// 		<i class="oi oi-circle-x me-1"></i>Code expired.
-			// 	</div>');
-	
-			// 	$data['main_title'] = "eJournal";
-			// 	$data['main_content'] = "client/new_account_otp";
-			// 	$data['disabled'] = "disabled";
-			// 	$this->_LoadPage('common/body', $data);
-			// } else {
-			
-				$ref_code = $this->input->post('ref', TRUE);
-			
-				$this->form_validation->set_rules('otp', 'OTP', 'required|trim|min_length[6]|max_length[6]');
-			
-				if($this->form_validation->run() == FALSE){
-					$errors = [];
-		
-					if (form_error('otp')) {
-						$errors['otp'] = strip_tags(form_error('otp'));
-					}
-		
-					// Set flashdata to pass validation errors and form data to the view
-					$this->session->set_flashdata('validation_errors', $errors);
-					$data['main_title'] = "eJournal";
-					$data['main_content'] = "client/new_account_otp";
-					$this->_LoadPage('common/body', $data);
-				}else{
-					$otp = $this->input->post('otp', TRUE);
-					// Check user credentials using your authentication logic
-					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
-					$verifyOTP = $this->Login_model->validate_otp($ref_code);
-
-					if (password_verify($otp, $verifyOTP[0]->otp)) {
-						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
-						$this->session->set_userdata('email',  $verifyOTP[0]->email);
-						$this->session->unset_userdata('otp_ref_code');
-						$this->Login_model->activateAccount($verifyOTP[0]->id);
-						$this->Login_model->delete_otp($verifyOTP[0]->id);
-						redirect('client/ejournal/');
-					} else {
-						//invalid code
-						$this->session->set_flashdata('otp', '
-															<div class="alert alert-danger d-flex align-items-center">
-																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
-															</div>');
-		
-						$data['main_title'] = "eJournal";
-						$data['main_content'] = "client/new_account_otp";
-						$this->_LoadPage('common/body', $data);
-					}
-				}
-			// }
-		}
-	}
 
 	/**
 	 * Get minutes for otp 5 mins and locked account 30 mins
@@ -779,9 +696,10 @@ class Login extends EJ_Controller {
 		$refCode = $this->security->xss_clean($refCode);
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->email;
-		save_log_ej($output[0]->id, 'Resend code');
+		save_log_ej($output[0]->id, 'Resend login otp code');
 		$this->send_login_otp($email);
 	}
+		
 	
 	/**
 	 * User profile page

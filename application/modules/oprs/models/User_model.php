@@ -11,6 +11,7 @@ class User_model extends CI_Model {
 	private $skms_users = 'tblusers';
 	private $personal = 'tblpersonal_profiles';
 	private $membership = 'tblmembers';
+	private $titles = 'tbltitles';
 	// ejournal
 	private $ejournal_users = 'tblusers';
 
@@ -28,7 +29,7 @@ class User_model extends CI_Model {
 	 */
 	public function add_user($data) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->insert($this->users, $data);
+		$oprs->insert($this->oprs_users, $data);
 		if (_UserRoleFromSession() == 3) {
 			save_log_oprs(_UserIdFromSession(), 'added user', $oprs->insert_id(), _UserRoleFromSession());
 		}
@@ -87,14 +88,14 @@ class User_model extends CI_Model {
 	public function get_user($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('usr_status, role_name, usr_sys_acc, usr_username, usr_id, usr_logout_time, usr_role');
-		$oprs->from($this->users . ' a');
+		$oprs->from($this->oprs_users . ' a');
 		$oprs->join($this->roles . ' r', 'a.usr_role = r.role_id');
 		$oprs->where_not_in('a.row_id', $id);
 		$query = $oprs->get();
 		return $query->result();
 
 		
-		$oprs->from($this->users . ' a');
+		$oprs->from($this->oprs_users . ' a');
 		$oprs->join($this->privileges . ' p', 'a.usr_id = p.prv_usr_id');
 	}
 
@@ -107,7 +108,7 @@ class User_model extends CI_Model {
 	public function get_user_name($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('usr_username');
-		$oprs->from($this->users);
+		$oprs->from($this->oprs_users);
 		$oprs->where('usr_id', $id);
 		$query = $oprs->get();
 		$result = $query->result_array();
@@ -134,8 +135,26 @@ class User_model extends CI_Model {
 	public function get_user_info($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
-		$oprs->from($this->users);
+		$oprs->from($this->oprs_users);
 		$oprs->where('usr_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function get_user_info_by_email($email) {
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->oprs_users);
+		$oprs->where('usr_username', $email);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function validate_otp_ref($ref){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->oprs_users);
+		$oprs->where('otp_ref_code', $ref);
 		$query = $oprs->get();
 		return $query->result();
 	}
@@ -148,7 +167,7 @@ class User_model extends CI_Model {
 	 */
 	public function create_temp_reviewer($data) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->insert($this->users, $data);
+		$oprs->insert($this->oprs_users, $data);
 		return $oprs->affected_rows();
 	}
 
@@ -206,7 +225,7 @@ class User_model extends CI_Model {
 	public function verify_user_email($email, $role, $sys) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
-		$oprs->from($this->users);
+		$oprs->from($this->oprs_users);
 		$oprs->where('usr_username', $email);
 		$query = $oprs->get();
 		$rows = $query->num_rows();
@@ -226,7 +245,7 @@ class User_model extends CI_Model {
 	 */
 	public function disable_reviewer($post, $where) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->users, $post, $where);
+		$oprs->update($this->oprs_users, $post, $where);
 	}
 
 	/**
@@ -238,7 +257,7 @@ class User_model extends CI_Model {
 	 */
 	public function update_user($post, $where) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->users, $post, $where);
+		$oprs->update($this->oprs_users, $post, $where);
 		save_log_oprs(_UserIdFromSession(), 'updated an account', $where['usr_id'], _UserRoleFromSession());
 	}
 
@@ -251,7 +270,7 @@ class User_model extends CI_Model {
 	 */
 	public function activate_deactivate_account($post, $where) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->users, $post, $where);
+		$oprs->update($this->oprs_users, $post, $where);
 		$action = ($post['usr_status'] == 2) ? 'deactivated user' : 'activated user';
 		save_log_oprs(_UserIdFromSession(), $action, $where['usr_id'], _UserRoleFromSession());
 	}
@@ -265,7 +284,7 @@ class User_model extends CI_Model {
 	 */
 	public function reset_password($data, $where) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->users, $data, $where);
+		$oprs->update($this->oprs_users, $data, $where);
 		return $oprs->affected_rows();
 	}
 
@@ -278,7 +297,7 @@ class User_model extends CI_Model {
 	 */
 	public function change_user_type($data, $where) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->users, $data, $where);
+		$oprs->update($this->oprs_users, $data, $where);
 		return $oprs->affected_rows();
 	}
 
@@ -290,7 +309,7 @@ class User_model extends CI_Model {
 	 */
 	public function remove_user($where) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->delete($this->users, $where);
+		$oprs->delete($this->oprs_users, $where);
 		return $oprs->affected_rows();
 	}
 
@@ -303,7 +322,7 @@ class User_model extends CI_Model {
 	 */
 	public function change_password($data, $where) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->users, $data, $where);
+		$oprs->update($this->oprs_users, $data, $where);
 		return $oprs->affected_rows();
 	}
 
@@ -316,7 +335,7 @@ class User_model extends CI_Model {
 	 */
 	public function upload_dp($data, $where) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->users, $data, $where);
+		$oprs->update($this->oprs_users, $data, $where);
 		return $oprs->affected_rows();
 	}
 
@@ -329,7 +348,7 @@ class User_model extends CI_Model {
 	public function verify_old_password($data) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('usr_password');
-		$oprs->from($this->users);
+		$oprs->from($this->oprs_users);
 		$oprs->where('usr_id', _UserIdFromSession());
 		$oprs->where('usr_role', _UserRoleFromSession());
 		$query = $oprs->get();
@@ -385,7 +404,7 @@ class User_model extends CI_Model {
 				$query = $members->get();
 			} else {
 				$oprs->select('*');
-				$oprs->from($this->users);
+				$oprs->from($this->oprs_users);
 				$oprs->where('usr_id', $id);
 				$query = $oprs->get();
 			}
@@ -402,7 +421,7 @@ class User_model extends CI_Model {
 	public function get_user_by_role($role) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('p.*, a.usr_id, a.usr_username, a.usr_sys_acc');
-		$oprs->from($this->users . ' a');
+		$oprs->from($this->oprs_users . ' a');
 		$oprs->join($this->privileges . ' p', 'a.usr_id = p.prv_usr_id');
 		$oprs->where_not_in('a.row_id', _UserIdFromSession());
 		$oprs->where('a.usr_role', $role);
@@ -432,7 +451,7 @@ class User_model extends CI_Model {
 		
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
-		$oprs->from($this->users);
+		$oprs->from($this->oprs_users);
 		$query = $oprs->get();
 		return $query->num_rows();
 	}
@@ -470,9 +489,10 @@ class User_model extends CI_Model {
 
 	public function get_nrcp_member_info($email){
 		$members = $this->load->database('members', true);
-		$members->select('usr_id, pp_contact');
+		$members->select('usr_id, pp_contact, title_name, pp_first_name, pp_last_name');
 		$members->from($this->skms_users);
 		$members->join($this->personal, 'usr_id = pp_usr_id');
+		$members->join($this->titles, 'pp_title = title_id');
 		$members->where('usr_name', $email);
 		$query = $members->get();
 		return $query->row_array();

@@ -18,10 +18,9 @@
                                 you need to have an account with the Online Peer Review System (eReview).
                             </p>
 
-                            <?php if(!$logged_in) { ?>
+                             <?php if($logged_in != 'disable this') { ?> 
                                 <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/ejournal/submission/create_account');?>" target="_blank">Sign up here.</a></p>
-                            <?php } ?>
-
+                             <?php } ?> 
                             <!-- <a role="button" href="http://researchjournal.nrcp.dost.gov.ph/oprs/login" target="_blank" class="btn main-btn">Start Submission</a> -->
                             <a role="button" href="<?php echo base_url('/oprs/login');?>" target="_blank" class="btn main-btn">Start Submission</a>
                         </div>

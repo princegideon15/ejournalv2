@@ -60,7 +60,7 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
-	 * Display langing page
+	 * Display landing page
 	 *
 	 * @return void
 	 */
@@ -1140,7 +1140,7 @@ class Ejournal extends EJ_Controller {
 	 *
 	 * @return void
 	 */
-	public function customer_service() {
+	public function customer_service() { 
 		
 		
 		$id = $this->session->userdata('client_id');
@@ -1238,336 +1238,6 @@ class Ejournal extends EJ_Controller {
 		$this->_LoadPage('common/body', $data);
 	}
 
-	private function email($recipient, $verification_code){
-		$sender = 'eJournal Admin';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
-		// setup email config
-		$mail = new PHPMailer;
-		$mail->isSMTP();
-		$mail->Host = "smtp.gmail.com";
-		// Specify main and backup server
-		$mail->SMTPAuth = true;
-		$mail->Port = 465;
-		// Enable SMTP authentication
-		$mail->Username = $sender_email;
-		// SMTP username
-		$mail->Password = $password;
-		// SMTP password
-		$mail->SMTPSecure = 'ssl';
-		// Enable encryption, 'ssl' also accepted
-		$mail->From = $sender_email;
-		$mail->FromName = $sender;
-
-		$mail->AddAddress($recipient);
-		$emailBody = "Your verification code is: <br><div style='font-size:2.5em;font-weight:bold;'>".$verification_code."</div>"; ;
-		// send email
-		$mail->Subject = "Verification Code";
-		$mail->Body = $emailBody;
-		$mail->IsHTML(true);
-		$mail->smtpConnect([
-			'ssl' => [
-				'verify_peer' => false,
-				'verify_peer_name' => false,
-				'allow_self_signed' => true,
-			],
-		]);
-
-		if (!$mail->Send()) {
-			echo '<div class="alert alert-danger font-weight-bold">';
-			echo 'Message could not be sent.</br>';
-			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
-			echo '</div>';
-			echo '<div class="btn btn-warning btn-block small font-weight-bold" id="send_verification_code" onclick="send_verification_code()" style="font-size:0.9em; width:100%;" title="Click this button to get the verification code emailed to you."><sup class="text-danger font-weight-bold">*</sup>Click the button to get the verification code emailed to you.</div>';
-			exit;
-		}else{
-			echo "<div class='alert alert-success font-weight-bold'> Verification code was sent to your email.</div>";
-		}
-	}
-
-	// public function send_verification_code(){
-	// 	$email = $this->input->post('clt_email');
-	// 	$verification_code =  $this->session->userdata('verification_code');
-	// 	//echo $email;
-	// 	//echo $verification_code;
-	// 	echo $email_sent =  $this->email($email, $verification_code);
-	// 	if($email_sent){
-	// 		echo "<div class='alert alert-success font-weight-bold'> The verification code  was sent to your email.</div>";
-	// 	}
-	// }
-
-	/**
-	 * Create account
-	 *
-	 * @return void
-	 */
-	public function create_account(){
-		
-		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email|is_unique[tblusers.email]', array('is_unique' => 'Email already in use. Please use different email.'));
-		$this->form_validation->set_rules('title', 'Title', 'required|trim');
-		$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
-		$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
-		$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim');
-		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
-		$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
-		$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
-		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
-
-		//require region,province,city for philippines
-		if($this->input->post('country') == 175){
-			$this->form_validation->set_rules('region', 'Region', 'required|trim');
-			$this->form_validation->set_rules('province', 'Province', 'required|trim');
-			$this->form_validation->set_rules('city', 'City', 'required|trim');
-		}
-
-		$this->form_validation->set_rules('contact', 'Contact', 'required|trim|numeric|exact_length[11]');
-		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
-		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
-		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
-
-		$validations = ['new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
-
-		if($this->form_validation->run() == FALSE){
-			$errors = [];
-
-			foreach($validations as $value){
-				//store entered value to display on redirect
-				if($value == 'country'){
-					if($this->input->post($value)){
-						$this->session->set_flashdata($value, $this->input->post($value));
-					}else{
-						$this->session->set_flashdata($value, 175);
-					}
-				}else{
-					$this->session->set_flashdata($value, $this->input->post($value));
-				}
-
-				//store errors to display on redirect
-				if (form_error($value)) {
-					$errors[$value] = strip_tags(form_error($value));
-
-				}
-			}
-	
-			//return password data and strenght data
-			$password = $this->input->post('new_password');
-			
-			if (strlen($password) >= 8) {
-				$strength += 10;
-			}
-			if (strlen($password) >= 12) {
-				$strength += 15;
-			}
-			if (strlen($password) >= 16) {
-				$strength += 20;
-			}
-		
-			if (preg_match('/[A-Z]/', $password)) {
-				$strength += 15;
-			}
-			if (preg_match('/[a-z]/', $password)) {
-				$strength += 10;
-			}
-			if (preg_match('/[0-9]/', $password)) {
-				$strength += 15;
-			}
-			if (preg_match('/[^A-Za-z0-9]/', $password)) {
-				$strength += 15;
-			}
-
-			if ($strength <= 25) {
-				$bar_color = 'red';
-				$password_strength = 'Weak';
-			} else if ($strength <= 50) {
-				$bar_color = 'orange';
-				$password_strength = 'Good';
-			} else if ($strength <= 75) {
-				$bar_color = 'yellow';
-				$password_strength = 'Fair';
-			}else {
-				$bar_color = 'green';
-				$password_strength = 'Excellent';     
-			}
-
-			$this->session->set_flashdata('bar_style', 'style="width:'. $strength .'%; background-color:'. $bar_color .'"');
-			$this->session->set_flashdata('password_strength', $password_strength);
-
-			//return province value and options if province has value
-			$region = $this->input->post('region');
-
-			if($region > 0){
-				$provinces = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $region));
-				$this->session->set_flashdata('provinces', $provinces);
-			}
-
-			//return city value and options if city has value
-			$province = $this->input->post('province');
-
-			if($province){
-				$cities = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province));
-				$this->session->set_flashdata('cities', $cities);
-			}
-
-            // Set flashdata to pass validation errors and form data to the view
-            $this->session->set_flashdata('signup_validation_errors', $errors);
-            $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
-            $this->session->set_flashdata('active_link1', '');
-            $this->session->set_flashdata('active_link2', 'active');
-            $this->session->set_flashdata('active_tab1', '');
-            $this->session->set_flashdata('active_tab2', 'show active');
-			redirect('client/ejournal/login');
-		}else{
-
-			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
-			$ref_code = random_string('alnum', 16);
-			$email = $this->input->post('new_email', TRUE);
-			
-			$lastUserID = $this->get_last_user_id();
-			$newUserID = $this->generate_user_id('0000', intval($lastUserID) + 1);
-
-			//save user account
-			$userAuth = [
-				'id' => $newUserID,
-				'email' => $email,
-				'password' => password_hash($this->input->post('new_password', TRUE), PASSWORD_BCRYPT),
-				'status' => 0,
-				'otp' => password_hash($otp, PASSWORD_BCRYPT), 
-				'otp_date' => date('Y-m-d H:i:s'),
-				'otp_ref_code' => $ref_code,
-				'created_at' => date('Y-m-d H:i:s')
-			];
-			
-			$this->Login_model->create_user_auth($userAuth);
-
-			//save user profile
-			$userProfile = [
-				'user_id' => $newUserID,
-				'title' => $this->input->post('title', TRUE),
-				'first_name' => $this->input->post('first_name', TRUE),
-				'last_name' => $this->input->post('last_name', TRUE),
-				'middle_name' => $this->input->post('middle_name', TRUE),
-				'extension_name' => $this->input->post('extension_name', TRUE),
-				'sex' => $this->input->post('sex', TRUE),
-				'educational_attainment' => $this->input->post('educational_attainment', TRUE),
-				'affiliation' => $this->input->post('affiliation', TRUE),
-				'country' => $this->input->post('country', TRUE),
-				'region' => $this->input->post('region', TRUE),
-				'province' => $this->input->post('province', TRUE),
-				'city' => $this->input->post('city', TRUE),
-				'contact' => $this->input->post('contact', TRUE),
-				'created_at' => date('Y-m-d H:i:s')
-			];
-
-			$this->Login_model->create_user_profile($userProfile);
-
-			//send email otp for create account
-			$this->send_create_account_otp($email, $otp);
-		}
-		
-	}
-
-	/**
-	 * Send email with otp code for account creation
-	 *
-	 * @param string $email
-	 * @return void
-	 */
-	public function send_create_account_otp($email, $otp) {
-		
-		$user = $this->Client_journal_model->get_user_info($email);
-		$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
-		// $otp = $user[0]->otp;
-		$ref_code = $user[0]->otp_ref_code;
-
-		$link = base_url() . 'client/login/new_account_verify_otp/'.$ref_code;
-		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
-		
-		// setup email config	
-		$mail = new PHPMailer;
-		$mail->isSMTP();
-		$mail->Host = "smtp.gmail.com";
-		// Specify main and backup server
-		$mail->SMTPAuth = true;
-		$mail->Port = 465;
-		// Enable SMTP authentication
-		$mail->Username = $sender_email;
-		// SMTP username
-		$mail->Password = $password;
-		// SMTP password
-		$mail->SMTPSecure = 'ssl';
-		// Enable encryption, 'ssl' also accepted
-		$mail->From = $sender_email;
-		$mail->FromName = $sender;
-	
-		$mail->AddAddress($email);
-
-
-		$date = date("F j, Y") . '<br/><br/>';
-
-		$emailBody = 'Dear <strong>'.$name.'</strong>,
-		<br><br>
-		Please enter this code to verify your new account.
-		<br><br>
-		<strong style="font-size:20px">'.$otp.'</strong>
-		<br><br>
-		Or click the link below to redirect in the verification page:
-		<br><br>
-		'.$link.'
-		<br><br>
-		Link not working? Copy and paste the link into your browser.
-		<br><br><br>
-		Sincerely,
-		<br><br>
-		NRCP Research Journal
-		<br><br><br>
-		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
-		
-		// send email
-		$mail->Subject = 'Verify New Account';
-		$mail->Body = $emailBody;
-		$mail->IsHTML(true);
-		$mail->smtpConnect([
-			'ssl' => [
-				'verify_peer' => false,
-				'verify_peer_name' => false,
-				'allow_self_signed' => true,
-			],
-		]);
-
-		if (!$mail->Send()) {
-			echo '</br></br>Message could not be sent.</br>';
-			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
-			exit;
-		}
-
-		$this->session->set_flashdata('otp', '
-											<div class="alert alert-primary d-flex align-items-center w-50">
-												<i class="oi oi-circle-check me-1"></i>We sent a 6 digit code to your email.
-											</div>');
-		$this->session->set_userdata('otp_ref_code', $ref_code);
-		redirect($link);
-	}
-
-	/**
-	 * Password format checker
-	 *
-	 * @param string $password
-	 * @return void
-	 */
-    public function check_password_strength($password) {
-        $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/';
-
-        if (!preg_match($regex, $password)) {
-            $this->form_validation->set_message('check_password_strength', 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
-            return FALSE;
-        }
-
-        return TRUE;
-
-    }
-
 	/**
 	 * Get provinces by region id
 	 *
@@ -1591,27 +1261,11 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
-	 * Generate user id
+	 * Display submission page with create author account link
 	 *
-	 * @param integer $start
-	 * @param int $end
+	 * @param string $create_author_account
 	 * @return void
 	 */
-	function generate_user_id($start = 0000, $end) {
-		$current_number = $start;
-	
-		while ($current_number <= $end) {
-			// Pad the number with leading zeros to ensure 6 digits
-			$formatted_number = str_pad($current_number, 6, '0', STR_PAD_LEFT);
-	
-			// Do something with the formatted number here
-	
-			$current_number++;
-		}
-		
-		return 'NRCP-EJ-'. date('Y') .'-'.$formatted_number;
-	}
-
 	function submission($create_author_account = null){
 
 		$journals = $this->Client_journal_model->get_journals();
@@ -1643,227 +1297,6 @@ class Ejournal extends EJ_Controller {
 
 	}
 
-	function create_author_account(){
-		
-		$member = $this->input->post('author_type', TRUE);
-
-		if($member == 2){
-			$this->form_validation->set_rules('title', 'Title', 'required|trim');
-			$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
-			$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
-			$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim');
-			$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
-			$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
-			$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
-			$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
-	
-			//require region,province,city for philippines
-			if($this->input->post('country') == 175){
-				$this->form_validation->set_rules('region', 'Region', 'required|trim');
-				$this->form_validation->set_rules('province', 'Province', 'required|trim');
-				$this->form_validation->set_rules('city', 'City', 'required|trim');
-			}
-	
-			$this->form_validation->set_rules('contact', 'Contact', 'required|trim|numeric|exact_length[11]');
-		}
-		
-		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email');
-		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
-		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
-		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
-
-		$validations = ['author_type', 'new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
-
-		if($this->form_validation->run() == FALSE){
-			$errors = [];
-
-			foreach($validations as $value){
-				//store entered value to display on redirect
-				if($value == 'country'){
-					if($this->input->post($value)){
-						$this->session->set_flashdata($value, $this->input->post($value));
-					}else{
-						$this->session->set_flashdata($value, 175);
-					}
-				}else{
-					$this->session->set_flashdata($value, $this->input->post($value));
-				}
-
-				//store errors to display on redirect
-				if (form_error($value)) {
-					$errors[$value] = strip_tags(form_error($value));
-
-				}
-			}
-	
-			//return password data and strenght data
-			$password = $this->input->post('new_password');
-			
-			if (strlen($password) >= 8) {
-				$strength += 10;
-			}
-			if (strlen($password) >= 12) {
-				$strength += 15;
-			}
-			if (strlen($password) >= 16) {
-				$strength += 20;
-			}
-		
-			if (preg_match('/[A-Z]/', $password)) {
-				$strength += 15;
-			}
-			if (preg_match('/[a-z]/', $password)) {
-				$strength += 10;
-			}
-			if (preg_match('/[0-9]/', $password)) {
-				$strength += 15;
-			}
-			if (preg_match('/[^A-Za-z0-9]/', $password)) {
-				$strength += 15;
-			}
-
-			if ($strength <= 25) {
-				$bar_color = 'red';
-				$password_strength = 'Weak';
-			} else if ($strength <= 50) {
-				$bar_color = 'orange';
-				$password_strength = 'Good';
-			} else if ($strength <= 75) {
-				$bar_color = 'yellow';
-				$password_strength = 'Fair';
-			}else {
-				$bar_color = 'green';
-				$password_strength = 'Excellent';     
-			}
-
-			$this->session->set_flashdata('bar_style', 'style="width:'. $strength .'%; background-color:'. $bar_color .'"');
-			$this->session->set_flashdata('password_strength', $password_strength);
-
-			//return province value and options if province has value
-			$region = $this->input->post('region');
-
-			if($region > 0){
-				$provinces = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $region));
-				$this->session->set_flashdata('provinces', $provinces);
-			}
-
-			//return city value and options if city has value
-			$province = $this->input->post('province');
-
-			if($province){
-				$cities = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province));
-				$this->session->set_flashdata('cities', $cities);
-			}
-
-            // Set flashdata to pass validation errors and form data to the view
-            $this->session->set_flashdata('signup_validation_errors', $errors);
-            $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
-			redirect('client/ejournal/submission/create_account');
-		}else{
-			$email = $this->input->post('new_email', TRUE);
-			$password = $this->input->post('new_password', TRUE);
-			$contact = $this->input->post('contact', TRUE);
-			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
-			$ref_code = random_string('alnum', 16);
-			
-			if($member == 1){ // nrcp member
-
-				// get member info
-				$result = $this->User_model->get_nrcp_member_info($email);
-
-				// create author account in oprs
-				$data = [
-					'usr_id' => $result['usr_id'],
-					'usr_username' => $email,
-					'usr_password' => password_hash($password, PASSWORD_BCRYPT),
-					'usr_contact' => $result['pp_contact'],
-					'usr_desc' => 'Author',
-					'usr_role' => 6,
-					'usr_status' => 0,
-					'usr_category' => $member,
-					'date_created' => date('Y-m-d H:i:s'),
-					'usr_sys_acc' => 2,
-					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
-					'otp_date' => date('Y-m-d H:i:s'),
-					'otp_ref_code' => $ref_code
-				];
-				
-				$this->User_model->create_author_account($data);
-
-			}else{ // non-member
-
-				$lastUserID = $this->get_last_user_id();
-				$newUserID = $this->generate_user_id('0000', intval($lastUserID) + 1);
-
-				// save in ejournal
-				// save user account
-				$userAuth = [
-					'id' => $newUserID,
-					'email' => $email,
-					'password' => password_hash($password, PASSWORD_BCRYPT),
-					'status' => 0,
-					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
-					'otp_date' => date('Y-m-d H:i:s'),
-					'otp_ref_code' => $ref_code,
-					'created_at' => date('Y-m-d H:i:s')
-				];
-				
-				$this->Login_model->create_user_auth($userAuth);
-
-				// save user profile
-				$userProfile = [
-					'user_id' => $newUserID,
-					'title' => $this->input->post('title', TRUE),
-					'first_name' => $this->input->post('first_name', TRUE),
-					'last_name' => $this->input->post('last_name', TRUE),
-					'middle_name' => $this->input->post('middle_name', TRUE),
-					'extension_name' => $this->input->post('extension_name', TRUE),
-					'sex' => $this->input->post('sex', TRUE),
-					'educational_attainment' => $this->input->post('educational_attainment', TRUE),
-					'affiliation' => $this->input->post('affiliation', TRUE),
-					'country' => $this->input->post('country', TRUE),
-					'region' => $this->input->post('region', TRUE),
-					'province' => $this->input->post('province', TRUE),
-					'city' => $this->input->post('city', TRUE),
-					'contact' => $this->input->post('contact', TRUE),
-					'created_at' => date('Y-m-d H:i:s')
-				];
-
-				$this->Login_model->create_user_profile($userProfile);
-
-				// create author account in oprs
-				$data = [
-					'usr_id' => $newUserID,
-					'usr_username' => $email,
-					'usr_password' => password_hash($password, PASSWORD_BCRYPT),
-					'usr_contact' => $contact,
-					'usr_desc' => 'Author',
-					'usr_role' => 6,
-					'usr_status' => 0,
-					'usr_category' => $member,
-					'date_created' => date('Y-m-d H:i:s'),
-					'usr_sys_acc' => 2,
-					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
-					'otp_date' => date('Y-m-d H:i:s'),
-					'otp_ref_code' => $ref_code
-				];
-				
-				$this->User_model->create_author_account($data);
-			}
-
-			//send email otp for create account
-			// $this->send_create_account_otp($email, $otp);
-		}
-	}
-
-	function get_last_user_id(){
-		$currentTotalUsers = $this->Library_model->get_library('tblusers', 'default');
-		$lastUserID = end($currentTotalUsers);
-		$lastUserID = $lastUserID->id;
-		$lastUserID = end(explode('-', $lastUserID));
-		return $lastUserID;
-	}
-
 }
 /* End of file Ejournal.php */
 
@@ -1872,6 +1305,64 @@ class Ejournal extends EJ_Controller {
  * Unused/replaced functions
  */
 
+ 
+	// private function email($recipient, $verification_code){
+	// 	$sender = 'eJournal Admin';
+	// 	$sender_email = 'nrcp.ejournal@gmail.com';
+	// 	$password = 'fpzskheyxltsbvtg';
+	// 	// setup email config
+	// 	$mail = new PHPMailer;
+	// 	$mail->isSMTP();
+	// 	$mail->Host = "smtp.gmail.com";
+	// 	// Specify main and backup server
+	// 	$mail->SMTPAuth = true;
+	// 	$mail->Port = 465;
+	// 	// Enable SMTP authentication
+	// 	$mail->Username = $sender_email;
+	// 	// SMTP username
+	// 	$mail->Password = $password;
+	// 	// SMTP password
+	// 	$mail->SMTPSecure = 'ssl';
+	// 	// Enable encryption, 'ssl' also accepted
+	// 	$mail->From = $sender_email;
+	// 	$mail->FromName = $sender;
+
+	// 	$mail->AddAddress($recipient);
+	// 	$emailBody = "Your verification code is: <br><div style='font-size:2.5em;font-weight:bold;'>".$verification_code."</div>"; ;
+	// 	// send email
+	// 	$mail->Subject = "Verification Code";
+	// 	$mail->Body = $emailBody;
+	// 	$mail->IsHTML(true);
+	// 	$mail->smtpConnect([
+	// 		'ssl' => [
+	// 			'verify_peer' => false,
+	// 			'verify_peer_name' => false,
+	// 			'allow_self_signed' => true,
+	// 		],
+	// 	]);
+
+	// 	if (!$mail->Send()) {
+	// 		echo '<div class="alert alert-danger font-weight-bold">';
+	// 		echo 'Message could not be sent.</br>';
+	// 		echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+	// 		echo '</div>';
+	// 		echo '<div class="btn btn-warning btn-block small font-weight-bold" id="send_verification_code" onclick="send_verification_code()" style="font-size:0.9em; width:100%;" title="Click this button to get the verification code emailed to you."><sup class="text-danger font-weight-bold">*</sup>Click the button to get the verification code emailed to you.</div>';
+	// 		exit;
+	// 	}else{
+	// 		echo "<div class='alert alert-success font-weight-bold'> Verification code was sent to your email.</div>";
+	// 	}
+	// }
+
+	// public function send_verification_code(){
+	// 	$email = $this->input->post('clt_email');
+	// 	$verification_code =  $this->session->userdata('verification_code');
+	// 	//echo $email;
+	// 	//echo $verification_code;
+	// 	echo $email_sent =  $this->email($email, $verification_code);
+	// 	if($email_sent){
+	// 		echo "<div class='alert alert-success font-weight-bold'> The verification code  was sent to your email.</div>";
+	// 	}
+	// }
  
 	/**
 	 * Retrieve articles by journal id

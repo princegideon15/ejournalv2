@@ -13,7 +13,7 @@
 * Copyright Notice:
 * Copyright (C) 2019 By the Department of Science and Technology - National Research Council of the Philippines
 */
-let apa_format,       //apa format for article
+var apa_format,       //apa format for article
 apa_id,               //article id
 fb_clt_id,            //feedback client id
 fn_clt_email,         //feedback client email
@@ -52,9 +52,11 @@ $(document).ready(function()
   // Make sure there are enough segments
   if (segments.length > 2) {
     var secondToLastSegment = segments[segments.length - 2];
-    if(secondToLastSegment == 'verify_otp'){
-      refCode = url.split('/').pop();
-      getCurrentOTP(refCode)
+    refCode = url.split('/').pop();
+    if(secondToLastSegment == 'verify_otp' || secondToLastSegment == 'new_account_verify_otp'){ // login otp
+      getCurrentOTP(refCode, 1);
+    }else{ // create ejournal client account otp
+      getCurrentOTP(refCode, 2);
     }
   } else {
       // console.log("Not enough segments in the URL.");
@@ -99,8 +101,8 @@ $(document).ready(function()
     }
   });
 
-  $('#country').on('change', function(){
-    let form = $('form').attr('id');
+  $(' #country').on('change', function(){
+    let form = $(this).closest('form').attr('id');
     if($(this).val() != 175){
       $('#' + form + ' #region').prop('disabled', true);
       $('#' + form + ' #province').prop('disabled', true);
@@ -114,7 +116,7 @@ $(document).ready(function()
   });
 
   $('#region').on('change', function(){
-    let form = $('form').attr('id');
+    let form = $(this).closest('form').attr('id');
     let region = $(this).val()
     
 		$.ajax({
@@ -136,7 +138,7 @@ $(document).ready(function()
   });
 
   $('#province').on('change', function(){
-    let form = $('form').attr('id');
+    let form = $(this).closest('form').attr('id');
     let province = $(this).val()
 		$.ajax({
 			type: "GET",
@@ -1571,7 +1573,20 @@ function startTimer() {
         $('#resend_code').removeClass('disabled');
         $('#verify_code').addClass('disabled');
         $('#resend_code').text('Resend Code');
-        $('#resend_code').attr('href', base_url + '/client/login/resend_code/' + refCode);
+
+        var url = window.location.pathname; // Get the current path
+        var segments = url.split('/'); // Split the path by '/'
+        var secondToLastSegment = segments[segments.length - 2];
+
+        console.log("🚀 ~ intervalId=setInterval ~ secondToLastSegment:", secondToLastSegment)
+        refCode = url.split('/').pop();
+        if(secondToLastSegment == 'verify_otp'){ // login otp
+          $('#resend_code').attr('href', base_url + '/client/login/resend_login_code/' + refCode);
+        }else if(secondToLastSegment == 'new_account_verify_otp'){ // create ejournal client account otp
+          $('#resend_code').attr('href', base_url + 'client/signup/resend_new_client_account_code/' + refCode);
+        }
+
+        
       }
 
       
@@ -1579,13 +1594,15 @@ function startTimer() {
   }, 1000);
 }
 
-function getCurrentOTP(refCode){
+function getCurrentOTP(refCode, otpType){
   var currentDate = new Date();
   var otpDate;
+  var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : '';
+  
   
   $.ajax({
     type: "GET",
-    url: base_url + "client/login/get_current_otp/" + refCode,
+    url: url,
     dataType: "json",
     crossDomain: true,
     success: function(data) {
