@@ -548,12 +548,19 @@ class Login extends EJ_Controller {
 					$verifyOTP = $this->Login_model->validate_otp($ref_code);
 
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
-						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
-						$this->session->set_userdata('email',  $verifyOTP[0]->email);
+						// $this->session->set_userdata('user_id', $verifyOTP[0]->id);
+						// $this->session->set_userdata('email',  $verifyOTP[0]->email);
 						$this->session->unset_userdata('otp_ref_code');
 						$this->Login_model->activateAccount($verifyOTP[0]->id);
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
-						redirect('client/ejournal/');
+						
+						
+						$this->session->set_flashdata('success', '
+															<div class="alert alert-success d-flex align-items-center w-50">
+																<i class="oi oi-check me-1"></i>Account created successfully. You can now login.
+															</div>');
+
+						redirect('client/ejournal/login');
 					} else {
 						//invalid code
 						$this->session->set_flashdata('otp', '

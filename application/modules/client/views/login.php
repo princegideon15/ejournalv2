@@ -58,6 +58,10 @@ function validateForm() {
                                 <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('error_login'); ?>
                             </div>
                         <?php } ?>
+
+                        <?php if ($this->session->flashdata('success')) { ?>
+                            <?php echo $this->session->flashdata('success'); ?>
+                        <?php } ?>
                         
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm', 'class' => 'w-50'])?>
                             <div class="mb-3">
