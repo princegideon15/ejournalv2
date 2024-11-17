@@ -507,7 +507,7 @@ class Login extends EJ_Controller {
 		$date2 = new DateTime($date2);
 	
 		$interval = $date1->diff($date2);
-		$minutes = $interval->h * 60 + $interval->i;
+		$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
 		
 		return $minutes;
 	}

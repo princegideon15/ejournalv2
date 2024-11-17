@@ -1594,6 +1594,7 @@ function startTimer() {
 }
 
 function getCurrentOTP(refCode, otpType){
+  console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
   var currentDate = new Date();
   var otpDate;
   var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : '';
@@ -1624,6 +1625,18 @@ function getCurrentOTP(refCode, otpType){
             clearInterval(intervalId);
             minutes = 5;
             seconds = 0;
+            
+            var url = window.location.pathname; // Get the current path
+            var segments = url.split('/'); // Split the path by '/'
+            var secondToLastSegment = segments[segments.length - 2];
+    
+            refCode = url.split('/').pop();
+            if(secondToLastSegment == 'verify_otp'){ // login otp
+              $('#resend_code').attr('href', base_url + 'client/login/resend_login_code/' + refCode);
+            }else if(secondToLastSegment == 'new_account_verify_otp'){ // create ejournal client account otp
+              $('#resend_code').attr('href', base_url + 'client/signup/resend_new_client_account_code/' + refCode);
+            }
+            
             $('#resend_code').removeClass('disabled');
             $('#verify_code').addClass('disabled');
           }

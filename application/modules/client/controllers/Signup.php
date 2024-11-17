@@ -736,6 +736,7 @@ class Signup extends EJ_Controller {
 			$otp_date = $isOtpRefExist[0]->otp_date;
 			$current_date = date('Y-m-d H:i:s');
 
+			echo $this->compareDates($otp_date, $current_date);
 			//check if code expired after 5 minutes
 			if ($this->compareDates($otp_date, $current_date)  > 4) {
 				$this->session->set_flashdata('otp', '
@@ -772,12 +773,16 @@ class Signup extends EJ_Controller {
 					$verifyOTP = $this->Login_model->validate_otp($ref_code);
 
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
-						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
-						$this->session->set_userdata('email',  $verifyOTP[0]->email);
+						// $this->session->set_userdata('user_id', $verifyOTP[0]->id);
+						// $this->session->set_userdata('email',  $verifyOTP[0]->email);
 						$this->session->unset_userdata('otp_ref_code');
 						$this->Login_model->activateAccount($verifyOTP[0]->id);
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
-						redirect('client/ejournal/');
+						$this->session->set_flashdata('success', '
+						<div class="alert alert-success d-flex align-items-center w-50">
+							<i class="oi oi-check me-1"></i>Account created successfully. You can now login.
+						</div>');
+						redirect('client/ejournal/login');
 					} else {
 						//invalid code
 						$this->session->set_flashdata('otp', '
@@ -806,7 +811,7 @@ class Signup extends EJ_Controller {
 		$date2 = new DateTime($date2);
 	
 		$interval = $date1->diff($date2);
-		$minutes = $interval->h * 60 + $interval->i;
+		$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
 		
 		return $minutes;
 	}
