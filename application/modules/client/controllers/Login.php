@@ -383,14 +383,21 @@ class Login extends EJ_Controller {
 	 * @return void
 	 */
 	public function verify_otp($ref){
-		//check if ref code exist
+		// check if ref code exist
 		$ref = $this->security->xss_clean($ref);
 		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
+		
+		$otp_date = $isOtpRefExist[0]->otp_date;
+		$current_date = date('Y-m-d H:i:s');
+		if($this->compareDates($otp_date, $current_date) > 30){
+			// remove otp info if more than 30mins no action
+			$this->Login_model->delete_otp($isOtpRefExist[0]->id);
+			$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
+		}
 
-		//code expired
-		if($isOtpRefExist[0]->otp_ref_code == null){
+		if($isOtpRefExist[0]->otp_ref_code == null){ //link expired
 			$this->session->set_flashdata('otp', '
-			<div class="alert alert-danger d-flex align-items-center">
+			<div class="alert alert-danger d-flex align-items-center w-50">
 				<i class="oi oi-circle-x me-1"></i>Link expired.
 			</div>');
 
@@ -398,21 +405,21 @@ class Login extends EJ_Controller {
 			$data['main_content'] = "client/login_otp";
 			$data['disabled'] = "disabled";
 			$this->_LoadPage('common/body', $data);
-		}else{
-			$otp_date = $isOtpRefExist[0]->otp_date;
-			$current_date = date('Y-m-d H:i:s');
+		}else{ // code expire
+			// $otp_date = $isOtpRefExist[0]->otp_date;
+			// $current_date = date('Y-m-d H:i:s');
 
-			//check if code expired after 5 minutes
-			//code expired
+			// check if code expired after 5 minutes
 			if ($this->compareDates($otp_date, $current_date) > 4) {
 				$this->session->set_flashdata('otp', '
 				<div class="alert alert-danger d-flex align-items-center">
 					<i class="oi oi-circle-x me-1"></i>Code expired.
 				</div>');
 	
+				$data['ref_code'] = $isOtpRefExist[0]->otp_ref_code;
+				$data['disabled'] = "disabled";
 				$data['main_title'] = "eJournal";
 				$data['main_content'] = "client/login_otp";
-				$data['disabled'] = "disabled";
 				$this->_LoadPage('common/body', $data);
 			} else {
 			
@@ -692,7 +699,7 @@ class Login extends EJ_Controller {
 	 * @param string $refCode
 	 * @return void
 	 */
-	public function resend_code($refCode){
+	public function resend_login_code($refCode){
 		$refCode = $this->security->xss_clean($refCode);
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->email;

@@ -1578,10 +1578,9 @@ function startTimer() {
         var segments = url.split('/'); // Split the path by '/'
         var secondToLastSegment = segments[segments.length - 2];
 
-        console.log("🚀 ~ intervalId=setInterval ~ secondToLastSegment:", secondToLastSegment)
         refCode = url.split('/').pop();
         if(secondToLastSegment == 'verify_otp'){ // login otp
-          $('#resend_code').attr('href', base_url + '/client/login/resend_login_code/' + refCode);
+          $('#resend_code').attr('href', base_url + 'client/login/resend_login_code/' + refCode);
         }else if(secondToLastSegment == 'new_account_verify_otp'){ // create ejournal client account otp
           $('#resend_code').attr('href', base_url + 'client/signup/resend_new_client_account_code/' + refCode);
         }
@@ -1735,7 +1734,7 @@ function destroyUserSession(){
     url: base_url + "client/login/destroy_user_session/" ,
     data: { user_access_token : accessToken },
     success: function(data) {
-      console.log(data);
+      // console.log(data);
     }
   });
 }
