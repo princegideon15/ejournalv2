@@ -367,7 +367,7 @@ class Signup extends EJ_Controller {
 		//link expired
 		if($isOtpRefExist[0]->otp_ref_code == null){
 			$this->session->set_flashdata('otp', '
-			<div class="alert alert-danger d-flex align-items-center">
+			<div class="alert alert-danger d-flex align-items-center w-50">
 				<i class="oi oi-circle-x me-1"></i>Link expired.
 			</div>');
 
@@ -424,7 +424,7 @@ class Signup extends EJ_Controller {
 					} else {
 						//invalid code
 						$this->session->set_flashdata('otp', '
-															<div class="alert alert-danger d-flex align-items-center">
+															<div class="alert alert-danger d-flex align-items-center w-50">
 																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
 															</div>');
 		
@@ -724,7 +724,7 @@ class Signup extends EJ_Controller {
 		//link expired
 		if($isOtpRefExist[0]->otp_ref_code == null){
 			$this->session->set_flashdata('otp', '
-			<div class="alert alert-danger d-flex align-items-center">
+			<div class="alert alert-danger d-flex align-items-center w-50">
 				<i class="oi oi-circle-x me-1"></i>Link expired.
 			</div>');
 
@@ -736,15 +736,15 @@ class Signup extends EJ_Controller {
 			$otp_date = $isOtpRefExist[0]->otp_date;
 			$current_date = date('Y-m-d H:i:s');
 
-			echo $this->compareDates($otp_date, $current_date);
 			//check if code expired after 5 minutes
 			if ($this->compareDates($otp_date, $current_date)  > 4) {
 				$this->session->set_flashdata('otp', '
-				<div class="alert alert-danger d-flex align-items-center">
+				<div class="alert alert-danger d-flex align-items-center w-50">
 					<i class="oi oi-circle-x me-1"></i>Code expired.
 				</div>');
-	
+				
 				$data['main_title'] = "eJournal";
+				$data['resend_link'] = base_url() . 'client/signup/resend_new_client_account_code/' . $ref;
 				$data['main_content'] = "client/new_account_otp";
 				$data['disabled'] = "disabled";
 				$this->_LoadPage('common/body', $data);
@@ -786,7 +786,7 @@ class Signup extends EJ_Controller {
 					} else {
 						//invalid code
 						$this->session->set_flashdata('otp', '
-															<div class="alert alert-danger d-flex align-items-center">
+															<div class="alert alert-danger d-flex align-items-center w-50">
 																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
 															</div>');
 		

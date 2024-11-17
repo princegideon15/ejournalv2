@@ -24,7 +24,6 @@ gtag('config', 'G-VDLLX3HKBL');
                 <?php echo $this->session->flashdata('otp'); ?>
             <?php } ?>
 
-            <?= $otp ?>
             
             <?=form_open('client/signup/new_account_verify_otp/'.$this->session->userdata('otp_ref_code') ?? '', ['method' => 'post', 'id' => 'verifyOTPForm'])?>
                 <div class="mb-3">
@@ -34,7 +33,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     <input type="hidden" name="ref" value="<?= $this->session->userdata('otp_ref_code') ?? '' ?>">
                 </div>
                 <button type="submit" class="btn main-btn w-50 mt-1 <?= $disabled ?>" id="verify_code" onclick="disableOnSubmit(this, '#verifyOTPForm', 'verify')">Verify Code</button>
-                <a type="button" class="btn main-btn w-50 mt-1 disabled" id="resend_code" onclick="disableOnSubmit(this, '#verifyOTPForm', 'resend')">Resend Code</a>
+                <a type="button" class="btn main-btn w-50 mt-1 disabled" href="<?= $resend_link ? $resend_link : '#' ?>" id="resend_code" onclick="disableOnSubmit(this, '#verifyOTPForm', 'resend')">Resend Code</a>
             <?=form_close()?>
             <div class="mt-5"><a class="main-link" href="<?= base_url('client/ejournal/login') ?>">Back to Login</a></div>
         </div>
