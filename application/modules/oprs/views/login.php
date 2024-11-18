@@ -47,6 +47,11 @@
                       <?php
               }?>
 
+              
+            <?php if ($this->session->flashdata('success')) { ?>
+                <?php echo $this->session->flashdata('success'); ?>
+            <?php } ?>
+
             <?php echo form_open('oprs/login/authenticate'); ?>
               <div class="form-group mt-3 login">
                 <div class="input-group mb-2">

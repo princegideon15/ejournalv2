@@ -53,9 +53,10 @@ $(document).ready(function()
   if (segments.length > 2) {
     var secondToLastSegment = segments[segments.length - 2];
     refCode = url.split('/').pop();
-    if(secondToLastSegment == 'verify_otp' || secondToLastSegment == 'new_account_verify_otp'){ // login otp
+    console.log(secondToLastSegment);
+    if(secondToLastSegment == 'verify_otp' || secondToLastSegment == 'new_account_verify_otp'){ // login otp, create client account otp
       getCurrentOTP(refCode, 1);
-    }else{ // create ejournal client account otp
+    }else{ // create author account otp
       getCurrentOTP(refCode, 2);
     }
   } else {
@@ -787,12 +788,15 @@ function checkEmail(formData){
     dataType: 'json',
     data: formData,
     success: function (response) {
-      console.log("🚀 ~ checkEmail ~ response:", response)
       if(formData['member'] == 1){
-        if(response == 1){
+        if(response == 1){ // nrcp member and not oprs author
           $('#new_email').removeClass('is-invalid')
           $('.invalid-feedback').text();
           $('#create_account').removeClass('disabled');
+        }else if(response == 2){
+          $('#new_email').addClass('is-invalid')
+          $('.invalid-feedback').text('Email already in use.');
+          $('#create_account').addClass('disabled');
         }else{
           $('#new_email').addClass('is-invalid')
           $('.invalid-feedback').text('Email does not exist.');
@@ -1594,10 +1598,10 @@ function startTimer() {
 }
 
 function getCurrentOTP(refCode, otpType){
-  console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
+  // console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
   var currentDate = new Date();
   var otpDate;
-  var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : '';
+  var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : base_url + "client/signup/get_current_otp_oprs/" + refCode;
   
   
   $.ajax({
@@ -1606,6 +1610,7 @@ function getCurrentOTP(refCode, otpType){
     dataType: "json",
     crossDomain: true,
     success: function(data) {
+      console.log("🚀 ~ getCurrentOTP ~ data:", data)
       try{
         otpDate = new Date(data[0]['otp_date']);
          
@@ -1635,6 +1640,8 @@ function getCurrentOTP(refCode, otpType){
               $('#resend_code').attr('href', base_url + 'client/login/resend_login_code/' + refCode);
             }else if(secondToLastSegment == 'new_account_verify_otp'){ // create ejournal client account otp
               $('#resend_code').attr('href', base_url + 'client/signup/resend_new_client_account_code/' + refCode);
+            }else{ // author_account_verify_otp
+              $('#resend_code').attr('href', base_url + 'client/signup/resend_author_account_code/' + refCode);
             }
             
             $('#resend_code').removeClass('disabled');

@@ -233,4 +233,9 @@ class User extends OPRS_Controller {
 		$this->User_model->set_privilege($post, $where);
 	}
 
+	public function check_email_oprs($email){
+		$output = $this->User_model->get_user_info_by_email($email);
+		return $output;
+	}
+
 }

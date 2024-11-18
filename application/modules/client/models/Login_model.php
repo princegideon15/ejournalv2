@@ -20,12 +20,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Login_model extends CI_Model {
 
+  // ejournal
 	private $clients = 'tblclients';
 	private $users = 'tblusers';
 	private $sex = 'tblsex';
 	private $attempts = 'tbllogin_attempts';
   private $profile = 'tbluser_profiles';
   private $access_tokens = 'tbluser_access_tokens';
+
+  // oprs
+	private $oprs_users = 'tblusers';
 
 	public function __construct() {
 		parent::__construct();
@@ -51,7 +55,6 @@ class Login_model extends CI_Model {
   public function validate_otp($ref){
       $this->db->select('*');
       $this->db->from($this->users);
-      // $this->db->where('otp', $otp);
       $this->db->where('otp_ref_code', $ref);
       $query = $this->db->get();
       // If a matching user is found, return the user object
@@ -72,16 +75,31 @@ class Login_model extends CI_Model {
       return $query->result();
   }
 
-  public function activateAccount($id){
+  public function activate_account($id){
     $this->db->update($this->users, ['status' => 1], ['id' => $id]);
+  }
+
+  public function activate_account_oprs($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+    $oprs->update($this->oprs_users, ['usr_status' => 1], ['usr_id' => $id]);
   }
 
   public function delete_otp($id){
     $this->db->update($this->users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['id' => $id]);
   }
 
+  public function delete_otp_oprs($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+    $oprs->update($this->oprs_users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['usr_id' => $id]);
+  }
+
   public function save_otp($data, $where){
     $this->db->update($this->users, $data, $where);
+  }
+
+  public function save_otp_oprs($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+    $oprs->update($this->oprs_users, $data, $where);
   }
 
   public function store_login_attempts($data){
@@ -112,6 +130,15 @@ class Login_model extends CI_Model {
       $query = $this->db->get();
       return $query->result();
   }
+
+  public function get_current_otp_oprs($refCode){
+		$oprs = $this->load->database('dboprs', TRUE);
+    $oprs->select('otp, otp_ref_code, otp_date, usr_id, usr_username');
+    $oprs->from($this->oprs_users);
+    $oprs->where('otp_ref_code', $refCode);
+    $query = $oprs->get();
+    return $query->result();
+}
 
   public function create_user_profile($data){
     $this->db->insert($this->profile, $data);

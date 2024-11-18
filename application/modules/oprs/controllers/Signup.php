@@ -62,9 +62,21 @@ class Signup extends OPRS_Controller {
 		$email = $this->input->post('email', TRUE);
 		$member = $this->input->post('member', TRUE);
 		
-		if($member == 1){
-			$output = $this->User_model->check_author_email_skms($email);
-			echo $output;
+		if($member == 1){ // check if skms member
+			$isNrcpMember = $this->User_model->check_author_email_skms($email);
+
+			if($isNrcpMember == 1){ // check if existing in oprs
+				$isAuthorAccount = $this->User_model->get_user_info_by_email($email);
+				if(count($isAuthorAccount) > 0){
+					// existing as author
+					echo 2;
+				}else{
+					// not existing as author
+					echo 1;
+				}
+			}else{ // email is not member
+				echo $isNrcpMember;
+			}
 		}else{
 			$output = $this->User_model->check_author_email_ejournal($email);
 			echo json_encode($output);

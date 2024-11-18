@@ -502,6 +502,15 @@ class User_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->insert($this->oprs_users, $data);
 	}
+
+	public function get_current_otp($refCode){
+		$this->db->select('otp_date, usr_id, usr_username');
+		$this->db->from($this->oprs_users);
+		$this->db->where('otp_ref_code', $refCode);
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
 }
 
 /* End of file User_model.php */

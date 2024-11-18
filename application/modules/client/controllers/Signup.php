@@ -249,14 +249,14 @@ class Signup extends EJ_Controller {
 				$name = $user_info['title_name'] . ' ' . $user_info['pp_first_name'] . ' ' . $user_info['pp_last_name'];
 				$otp_info = $this->User_model->get_user_info_by_email($email);
 				$ref_code = $otp_info[0]->otp_ref_code;
-				$link = base_url() . 'client/ejournal/author_account_verify_otp/'.$ref_code;
+				$link = base_url() . 'client/signup/author_account_verify_otp/'.$ref_code;
 			}else{ // oprs member
 				$user_info = $this->Client_journal_model->get_user_info($email);
 				$name = $user_info[0]->title . ' ' . $user_info[0]->first_name . ' ' . $user_info[0]->last_name;
 				
 				$otp_info = $this->User_model->get_user_info_by_email($email);
 				$ref_code = $otp_info[0]->otp_ref_code;
-				$link = base_url() . 'client/ejournal/author_account_verify_otp/'.$ref_code;
+				$link = base_url() . 'client/signup/author_account_verify_otp/'.$ref_code;
 			}	
 		}
 
@@ -361,9 +361,9 @@ class Signup extends EJ_Controller {
 	
 	public function author_account_verify_otp($ref){
 		$ref = $this->security->xss_clean($ref);
+		$this->session->set_userdata('otp_ref_code', $ref);
 		//check if ref code exist
-		$isOtpRefExist = $this->User_model->validate_otp_ref($ref);
-
+		$isOtpRefExist = $this->Login_model->get_current_otp_oprs($ref);
 		//link expired
 		if($isOtpRefExist[0]->otp_ref_code == null){
 			$this->session->set_flashdata('otp', '
@@ -380,17 +380,18 @@ class Signup extends EJ_Controller {
 			$current_date = date('Y-m-d H:i:s');
 
 			//check if code expired after 5 minutes
-			// if ($this->compareDates($otp_date, $current_date)  > 4) {
-			// 	$this->session->set_flashdata('otp', '
-			// 	<div class="alert alert-danger d-flex align-items-center">
-			// 		<i class="oi oi-circle-x me-1"></i>Code expired.
-			// 	</div>');
+			if ($this->compareDates($otp_date, $current_date)  > 4) {
+				$this->session->set_flashdata('otp', '
+				<div class="alert alert-danger d-flex align-items-center w-50">
+					<i class="oi oi-circle-x me-1"></i>Code expired.
+				</div>');
 	
-			// 	$data['main_title'] = "eJournal";
-			// 	$data['main_content'] = "client/author_account_otp";
-			// 	$data['disabled'] = "disabled";
-			// 	$this->_LoadPage('common/body', $data);
-			// } else {
+				$data['main_title'] = "eJournal";
+				$data['resend_link'] = base_url() . 'client/signup/resend_author_account_code/' . $ref;
+				$data['main_content'] = "client/author_account_otp";
+				$data['disabled'] = "disabled";
+				$this->_LoadPage('common/body', $data);
+			} else {
 			
 				$ref_code = $this->input->post('ref', TRUE);
 			
@@ -410,22 +411,26 @@ class Signup extends EJ_Controller {
 					$this->_LoadPage('common/body', $data);
 				}else{
 					$otp = $this->input->post('otp', TRUE);
+					
 					// Check user credentials using your authentication logic
-					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
-					$verifyOTP = $this->Login_model->validate_otp($ref_code);
+					$verifyOTP = $this->Login_model->get_current_otp_oprs($ref_code);
 
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
-						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
-						$this->session->set_userdata('email',  $verifyOTP[0]->email);
 						$this->session->unset_userdata('otp_ref_code');
-						$this->Login_model->activateAccount($verifyOTP[0]->id);
-						$this->Login_model->delete_otp($verifyOTP[0]->id);
-						redirect('client/ejournal/');
+						$this->Login_model->activate_account_oprs($verifyOTP[0]->usr_id);
+						$this->Login_model->delete_otp_oprs($verifyOTP[0]->usr_id);
+
+						$this->session->set_flashdata('success', '
+						<div class="alert alert-success">
+							<span class="fa fa-check mr-1"></span>Author account created successfully. You can now login.
+						</div>');
+
+						redirect('oprs/login');
 					} else {
 						//invalid code
 						$this->session->set_flashdata('otp', '
 															<div class="alert alert-danger d-flex align-items-center w-50">
-																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
+																<i class="fa fa-circle-x me-1"></i>Invalid code. Try again.
 															</div>');
 		
 						$data['main_title'] = "eJournal";
@@ -433,8 +438,30 @@ class Signup extends EJ_Controller {
 						$this->_LoadPage('common/body', $data);
 					}
 				}
-			// }
+			}
 		}
+	}
+
+	public function resend_author_account_code($refCode){
+
+		$refCode = $this->security->xss_clean($refCode);
+		$output = $this->Login_model->get_current_otp_oprs($refCode);
+		$email = $output[0]->usr_username;
+		$otp = substr(number_format(time() * rand(),0,'',''),0,6);
+		$ref_code = random_string('alnum', 16);
+
+		$this->Login_model->save_otp_oprs(
+			[
+				'otp' => password_hash($otp, PASSWORD_BCRYPT),
+				'otp_date' => date('Y-m-d H:i:s'),
+				'otp_ref_code' => $ref_code
+			],
+			['usr_username' => $email]
+		);
+
+		save_log_ej($output[0]->usr_id, 'Resend author account otp code');
+		
+		$this->send_create_account_otp($email, $otp, 'author', 1);
 	}
 
 	/**
@@ -769,14 +796,11 @@ class Signup extends EJ_Controller {
 				}else{
 					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
-					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
 					$verifyOTP = $this->Login_model->validate_otp($ref_code);
 
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
-						// $this->session->set_userdata('user_id', $verifyOTP[0]->id);
-						// $this->session->set_userdata('email',  $verifyOTP[0]->email);
 						$this->session->unset_userdata('otp_ref_code');
-						$this->Login_model->activateAccount($verifyOTP[0]->id);
+						$this->Login_model->activate_account($verifyOTP[0]->id);
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
 						$this->session->set_flashdata('success', '
 						<div class="alert alert-success d-flex align-items-center w-50">
@@ -814,6 +838,13 @@ class Signup extends EJ_Controller {
 		$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
 		
 		return $minutes;
+	}
+
+	public function get_current_otp_oprs($refCode){
+		
+		$refCode = $this->security->xss_clean($refCode);
+		$output = $this->Login_model->get_current_otp_oprs($refCode);
+		echo json_encode($output);
 	}
 
 

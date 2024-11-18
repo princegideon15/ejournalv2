@@ -42,7 +42,7 @@
                     </div>
                 <?php } ?>
 
-                <?=form_open('client/ejournal/create_author_account', ['method' => 'post', 'id' => 'authorSignUpForm', 'onsubmit' => 'return validateForm();'])?>
+                <?=form_open('client/signup/create_author_account', ['method' => 'post', 'id' => 'authorSignUpForm', 'onsubmit' => 'return validateForm();'])?>
                     <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
                     <div class="mb-3">
                         <div class="form-check">
