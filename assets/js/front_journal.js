@@ -64,6 +64,11 @@ $(document).ready(function()
   }
 
 
+  $('#resend_code').on('click', function(){
+    $(this).addClass('disabled').html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading');
+  });
+
+
   $('#abstract_modal').on('show.bs.modal', function() {
     var modalOpenTime = new Date().getTime();
     var modalTimeout;
@@ -1587,6 +1592,8 @@ function startTimer() {
           $('#resend_code').attr('href', base_url + 'client/login/resend_login_code/' + refCode);
         }else if(secondToLastSegment == 'new_account_verify_otp'){ // create ejournal client account otp
           $('#resend_code').attr('href', base_url + 'client/signup/resend_new_client_account_code/' + refCode);
+        }else{
+          $('#resend_code').attr('href', base_url + 'client/signup/author_account_verify_otp/' + refCode);
         }
 
         
@@ -1610,7 +1617,7 @@ function getCurrentOTP(refCode, otpType){
     dataType: "json",
     crossDomain: true,
     success: function(data) {
-      console.log("🚀 ~ getCurrentOTP ~ data:", data)
+      // console.log("🚀 ~ getCurrentOTP ~ data:", data)
       try{
         otpDate = new Date(data[0]['otp_date']);
          

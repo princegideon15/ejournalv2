@@ -745,6 +745,7 @@ class Signup extends EJ_Controller {
 	 */
 	public function new_account_verify_otp($ref){
 		$ref = $this->security->xss_clean($ref);
+		$this->session->set_userdata('otp_ref_code', $ref);
 		//check if ref code exist
 		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
 
