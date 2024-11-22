@@ -250,14 +250,14 @@ class Signup extends EJ_Controller {
 				$otp_info = $this->User_model->get_user_info_by_email($email);
 				$ref_code = $otp_info[0]->otp_ref_code;
 				$link = base_url() . 'client/signup/author_account_verify_otp/'.$ref_code;
-			}else{ // oprs member
+			}else { // oprs member
 				$user_info = $this->Client_journal_model->get_user_info($email);
 				$name = $user_info[0]->title . ' ' . $user_info[0]->first_name . ' ' . $user_info[0]->last_name;
 				
 				$otp_info = $this->User_model->get_user_info_by_email($email);
 				$ref_code = $otp_info[0]->otp_ref_code;
 				$link = base_url() . 'client/signup/author_account_verify_otp/'.$ref_code;
-			}	
+			}
 		}
 
 		$sender = 'eJournal';
@@ -328,7 +328,11 @@ class Signup extends EJ_Controller {
 											</div>');
 		$this->session->set_userdata('otp_ref_code', $ref_code);
 
-		redirect($link);
+		if($nrcp_member == 3){
+			echo $link;
+		}else{
+			redirect($link);
+		}
 	}
 
 	/**
@@ -659,7 +663,7 @@ class Signup extends EJ_Controller {
 					'usr_contact' => $result['pp_contact'],
 					'usr_desc' => 'Author',
 					'usr_role' => 6,
-					'usr_status' => 0,
+					'usr_status' => 2,
 					'usr_category' => $member,
 					'date_created' => date('Y-m-d H:i:s'),
 					'usr_sys_acc' => 2,
@@ -719,7 +723,7 @@ class Signup extends EJ_Controller {
 					'usr_contact' => $contact,
 					'usr_desc' => 'Author',
 					'usr_role' => 6,
-					'usr_status' => 0,
+					'usr_status' => 2,
 					'usr_category' => $member,
 					'date_created' => date('Y-m-d H:i:s'),
 					'usr_sys_acc' => 2,
@@ -736,6 +740,35 @@ class Signup extends EJ_Controller {
 		}
 	}
 
+	function register_author_account(){
+
+			$email = $this->input->post('email', TRUE);
+			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
+			$ref_code = random_string('alnum', 16);
+
+			// get client info
+			$result = $this->Login_model->get_client_info($email);
+			// create author account in oprs
+			$data = [
+				'usr_id' => $result[0]->id,
+				'usr_username' => $email,
+				'usr_password' => $result[0]->password,
+				'usr_contact' => $result[0]->contact,
+				'usr_desc' => 'Author',
+				'usr_role' => 6,
+				'usr_status' => 2,
+				'usr_category' => 2,
+				'date_created' => date('Y-m-d H:i:s'),
+				'usr_sys_acc' => 2,
+				'otp' => password_hash($otp, PASSWORD_BCRYPT), 
+				'otp_date' => date('Y-m-d H:i:s'),
+				'otp_ref_code' => $ref_code
+			];
+			
+			$this->User_model->create_author_account($data);
+
+			$this->send_create_account_otp($email, $otp, 'author', 3); // register existing client account as author
+	}
     
 	/**
 	 * Verify create account otp

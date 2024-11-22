@@ -51,6 +51,15 @@ class Login_model extends CI_Model {
       }
   }
 
+  public function get_client_info($email){
+      $this->db->select('id, password, contact');
+      $this->db->from($this->users);
+      $this->db->join($this->profile, 'id = user_id');
+      $this->db->where('email', $email);
+      $query = $this->db->get();
+      return $query->result();
+  }
+
   // public function validate_otp($otp, $ref){
   public function validate_otp($ref){
       $this->db->select('*');
@@ -81,7 +90,7 @@ class Login_model extends CI_Model {
 
   public function activate_account_oprs($id){
 		$oprs = $this->load->database('dboprs', TRUE);
-    $oprs->update($this->oprs_users, ['usr_status' => 1], ['usr_id' => $id]);
+    $oprs->update($this->oprs_users, ['usr_status' => 0], ['usr_id' => $id]);
   }
 
   public function delete_otp($id){
@@ -185,6 +194,10 @@ class Login_model extends CI_Model {
 
   public function update_user_profile($data, $where){
     $this->db->update($this->profile, $data, $where);
+  }
+
+  public function activate_oprs_account($data, $where){
+    $this->db->update($this->oprs_users, $data, $where);
   }
 
   public function create_user_access_token($data){

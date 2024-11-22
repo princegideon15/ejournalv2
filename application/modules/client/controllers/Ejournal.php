@@ -88,35 +88,6 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
-	 * Login page
-	 *
-	 * @return void
-	 */
-	public function login($flag = null){
-
-		if (!$this->session->userdata('user_id')) {
-			$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
-			$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
-			$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
-			$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
-			$data['titles'] = $this->Client_journal_model->getTitles();
-			$data['educations'] = $this->Client_journal_model->getEducations();
-			$data['main_title'] = "eJournal";
-			$data['main_content'] = "client/login";
-
-			if($flag){
-				$this->session->set_flashdata('active_link1', '');
-				$this->session->set_flashdata('active_link2', 'active');
-				$this->session->set_flashdata('active_tab1', '');
-				$this->session->set_flashdata('active_tab2', 'show active');
-			}
-			$this->_LoadPage('common/body', $data);
-		}else{
-			redirect('/');
-		}
-	}
-
-	/**
 	 * Guidelines page
 	 *
 	 * @return void

@@ -38,19 +38,6 @@ class Login extends OPRS_Controller {
 			}
 		}
 
-		// $this->delete_captcha();
-		// $config = array(
-		// 	'img_url' => base_url() . 'assets/image_for_captcha/',
-		// 	'img_path' => 'assets/image_for_captcha/',
-		// 	'word_length' => 5,
-		// 	'img_width' => 150,
-		// 	'font_path' => FCPATH . 'captcha/font/verdana.ttf',
-		// 	'font_size' => 20,
-		// );
-		// $captcha = create_captcha($config);
-		// $data['cword'] = $captcha['word'];
-		// $data['captchaImg'] = $captcha['image'];
-
 		$data['main_title'] = "OPRS";
 		$data['titles'] = $this->Library_model->get_titles();
 		$data['main_content'] = "oprs/login";
@@ -74,7 +61,16 @@ class Login extends OPRS_Controller {
 			$usr_role = $this->input->post('usr_role');
 			if ($this->Login_model->authenticate_user($usr_name, $usr_role)) {
 				$hash = $this->Login_model->authenticate_user($usr_name, $usr_role);
+				
+				if($hash[0]->usr_status == 2){
+					// incorrect password
+					$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-danger', 'msg' => 'Account not activated. Please verify your account.');
+					$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+					redirect('oprs/login');
+				}
+
 				$count_hash = count($hash);
+
 				foreach ($hash as $row) {
 					$pass = $row->usr_password;
 					$type_num = $row->usr_role;
@@ -160,6 +156,7 @@ class Login extends OPRS_Controller {
 						$x++;
 					}
 				}
+
 				if ($x == 2 && $count_hash == 2) {
 					// incorrect password
 					$array_msg = array('icon' => 'fa fa-times', 'class' => 'alert-danger', 'msg' => 'Incorrect Password.');
@@ -171,6 +168,9 @@ class Login extends OPRS_Controller {
 					$this->session->set_flashdata('_oprs_login_msg', $array_msg);
 					redirect('oprs/login');
 				}
+
+				//redirect to otp page
+				//TODO:
 			} else {
 				if ($this->Login_model->authenticate_member($usr_name)) {
 					$hash = $this->Login_model->authenticate_member($usr_name);

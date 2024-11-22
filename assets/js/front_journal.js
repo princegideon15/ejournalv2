@@ -53,7 +53,7 @@ $(document).ready(function()
   if (segments.length > 2) {
     var secondToLastSegment = segments[segments.length - 2];
     refCode = url.split('/').pop();
-    console.log(secondToLastSegment);
+    
     if(secondToLastSegment == 'verify_otp' || secondToLastSegment == 'new_account_verify_otp'){ // login otp, create client account otp
       getCurrentOTP(refCode, 1);
     }else{ // create author account otp
@@ -848,11 +848,12 @@ function checkEmail(formData){
 function register_author_acccount(formData){
   $.ajax({
     type: 'POST',
-    url: base_url + "oprs/signup/register_author/",
+    url: base_url + "client/signup/register_author_account/",
     data: formData,
     success: function (response) {
-      console.log(response);
-      //redirect to OTP
+      console.log("🚀 ~ register_author_acccount ~ response:", response)
+      //TODO: display loading
+      window.location.href = response;
     }
   });
 }
@@ -1662,7 +1663,7 @@ function getCurrentOTP(refCode, otpType){
           $('#verify_code').addClass('disabled');
         }
       }catch(err){
-        console.log('No Login Request, No code exist.');
+        // console.log('No Login Request, No code exist.');
         $('#resend_code').addClass('d-none');
       }
     }
