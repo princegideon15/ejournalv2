@@ -750,14 +750,14 @@ class Login extends EJ_Controller {
 		redirect('client/login');
 	}
 	
-	// function get_access_token(){
-	// 	$id = $this->session->userdata('user_id');
-	// 	if ($id) {
-	// 		$accessToken = $this->Login_model->get_access_token($id);
-	// 		$token =  $accessToken[0]->tkn_value;
-	// 		echo trim($token);
-	// 	}else{
-	// 		echo 0;
-	// 	}
-	// }
+	function get_access_token(){
+		$id = $this->session->userdata('user_id');
+		if ($id) {
+			$accessToken = $this->Login_model->get_access_token($id);
+			$token =  $accessToken[0]->tkn_value;
+			echo trim($token);
+		}else{
+			echo 0;
+		}
+	}
 }

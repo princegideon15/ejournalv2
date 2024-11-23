@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="<?php echo base_url("assets/css/jquery-editable-select.min.css");?>"> 
     <link rel="stylesheet" href="<?php echo base_url("assets/css/jquery.loading.css"); ?>">
     <link rel="stylesheet" href="<?php echo base_url("assets/css/landing-page-custom.css"); ?>">
+    <link rel="stylesheet" href="<?php echo base_url("assets/css/dataTables.bootstrap4.min.css"); ?>">
+    <link rel="stylesheet" href="<?php echo base_url("assets/css/select.dataTables.min.css"); ?>">
+    <link rel="stylesheet" href="<?php echo base_url("assets/css/buttons.dataTables.min.css"); ?>">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 

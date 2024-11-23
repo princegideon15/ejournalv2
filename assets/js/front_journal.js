@@ -30,7 +30,7 @@ $(document).ready(function()
   //get user access token
   accessToken = $.ajax({
     type: "GET",
-    url: base_url + "/client/login/get_access_token/",
+    url: base_url + "client/login/get_access_token/",
     async:false,
     crossDomain: true,
     success: function(data) {
@@ -46,6 +46,8 @@ $(document).ready(function()
   accessToken = (accessToken.responseText).trim();
   
   $('body').tooltip({ selector: '[data-bs-toggle=tooltip]' });
+
+  $('#my-downloads-table').DataTable();
 
   var url = window.location.pathname; // Get the current path
   var segments = url.split('/'); // Split the path by '/'

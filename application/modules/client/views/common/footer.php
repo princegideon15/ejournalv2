@@ -182,6 +182,15 @@
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery.loading.js"); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url("assets/js/bootstrap-notify.js");?>"></script> 
 
+<!-- datatables -->
+<script src="<?php echo base_url("assets/js/jquery.dataTables.min.js"); ?>"></script>
+<script src="<?php echo base_url("assets/js/dataTables.bootstrap4.min.js"); ?>"></script>
+<!-- /.datatables -->
+
+<!-- select datatables -->
+<script src="<?php echo base_url("assets/js/dataTables.select.min.js"); ?>"></script>
+<!-- /.select datatables -->
+
 <script type="text/javascript" src="<?php echo base_url("assets/js/front_journal.js");?>"></script>
 
     

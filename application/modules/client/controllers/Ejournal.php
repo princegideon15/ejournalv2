@@ -1243,6 +1243,7 @@ class Ejournal extends EJ_Controller {
 
 	public function article($id){
 		// data to display
+		$data['article'] = $this->Client_journal_model->get_article($id);
 		$data['volumes'] = $journals;
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();

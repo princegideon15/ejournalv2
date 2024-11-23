@@ -6,7 +6,13 @@
             <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
         </div>
         <div class="col-7 p-3">
-            display article data here
+            <div class="border p-5 mb-5 bg-white rounded">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="fw-bold"><?= $article[0]->art_title ?></h5>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col col-2 p-3">
             <?php $this->load->view('common/side_panel');?>
