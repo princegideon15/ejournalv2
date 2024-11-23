@@ -315,8 +315,9 @@ class Client_journal_model extends CI_Model {
 
 	/** this function get article details */
 	public function get_article($id) {
-		$this->db->select('*');
-		$this->db->from($this->articles);
+		$this->db->select('article.* , jor_volume, jor_issue');
+		$this->db->from($this->articles . ' article');
+		$this->db->join($this->journals, 'art_jor_id = jor_id');
 		$this->db->where('art_id', $id);
 		$query = $this->db->get();
 		return $query->result();

@@ -9,7 +9,88 @@
             <div class="border p-5 mb-5 bg-white rounded">
                 <div class="row">
                     <div class="col">
+                        
+                        <?php 
+                            
+                            $coa =  $this->Client_journal_model->get_author_coauthors($article[0]->art_id);
+                            $coa_arr = (explode(",& ",$coa));
+                            $issue = (
+                                ($article[0]->jor_issue == 5) ? 'Special Issue No. 1' :
+                                (($article[0]->jor_issue == 6) ? 'Special Issue No. 2' :
+                                    (($article[0]->jor_issue == 7) ? 'Special Issue No. 3' :
+                                        (($article[0]->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $article[0]->jor_issue)))
+                            );
+                            $pdf = $this->Client_journal_model->count_pdf($article[0]->art_id);
+                            $abs = $this->Client_journal_model->count_abstract($article[0]->art_id);
+                            $citations = $this->Client_journal_model->count_citation($article[0]->art_id);
+                            $cite =  $this->Client_journal_model->get_citation($article[0]->art_id) . ' ('. $article[0]->art_year .'). ' . ucfirst(strtolower($article[0]->art_title)) . '. NRCP Research Journal, Volume ' . $article[0]->jor_volume . ', ' . $issue . ', ' . $article[0]->art_page;
+    
+
+                        ?>
+
                         <h5 class="fw-bold"><?= $article[0]->art_title ?></h5>
+                        <div class="mt-2">
+                            <?php $i = 0; foreach($coa_arr as $cr):?>
+                            <?php $cc = $cr; ?>
+                            <!-- <a href="javascript:void(0);" class="text-muted"
+                                onclick="author_details_search('<?=$jor_id;?>','<?=$cr;?>','articles')"><?=$cc;?></a> -->
+                            <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $cr) ?>" class="text-muted"><?=$cc;?></a>
+                                
+                            <?php if($i < (count($coa_arr) - 1)) echo '<span class="font-italic text-muted ">|</span>'; ?>
+                            <?php $i++; ?>
+                            <?php endforeach;?>
+                        </div>
+                        <div class="text-muted mt-3 small">Keywords:
+                            <?php
+                            $string = explode(', ', $article[0]->art_keywords);
+                            foreach ($string as $i => $key) {
+                                if ($key == strip_tags($key)) {
+                                    // echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/advanced?search_filter=1&search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
+                                    echo ' <a class="text-muted" href="' . base_url() . 'client/ejournal/articles?search=' . str_replace(' ','+',$key) . '">' . $key . '</a>; ';
+                                } else {
+                                    echo $key . '; ';
+                                }
+                            }
+                            ?>
+                        </div>
+                        <div class="text-muted mt-1 small">Pages: <?=$article[0]->art_page?></div>
+                        
+                        <div class="text-muted mt-1 small">Year Published: <?=$article[0]->art_year?></div>
+                        
+                        <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/volume/'.$article[0]->jor_volume.'/'.$article[0]->jor_issue.'');?>">Volume <?=$article[0]->jor_volume . ' ' . $issue?></a></div>
+
+                        <div class='mb-5 mt-3'>
+                            <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                title="Full Text Downloads"><i class="oi oi-data-transfer-download"></i>
+                                <?=number_format($pdf, 0, '', ',')?> Downloads</span>
+                            <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                title="Abstract Hits"><i class="oi oi-eye"></i>
+                                <?=number_format($abs, 0, '', ',')?> Abstract Hits</span>
+                            <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                title="Cited"><i class="oi oi-document"></i>
+                                <?=number_format($citations, 0, '', ',')?> Citations</span>
+                        </div>
+                        <h5>Abstract</h5>
+                        <hr>
+                        <embed class="mb-3" src="<?= base_url('assets/uploads/abstract/'.$article[0]->art_abstract_file) ?>" width="100%" height="700px" type="application/pdf">
+
+                        <?php if($logged_in){
+                            echo '<div class="d-flex gap-1">
+                            <a class="main-btn btn" href="'.base_url('client/ejournal/download_file/'. $article[0]->art_id .'/'.$article[0]->art_full_text_pdf).'"
+                                role="button">
+                                Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                            <a  data-bs-toggle="modal" data-bs-target="#citationModal"
+                                class="main-btn btn " href="javascript:void(0);"
+                                role="button"
+                                onclick="get_citee_info(\''.addslashes($cite).'\','.$article[0]->art_id.')">
+                                Cite this article  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
+                            <button 
+                                class="btn btn-outline-dark text-darl" href="javascript:void(0);"
+                                role="button"
+                                onclick="share_article('.$article[0]->art_id.')">
+                                Share <span class="oi oi-share ms-1" style="font-size:.8rem"></span></button>
+                            </div>';
+                        }?>
                     </div>
                 </div>
             </div>
@@ -234,8 +315,9 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
             </div>
         </div>
     </div>
-    <!-- Citation Modal -->
-    <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    
+     <!-- CITATION MODAL -->
+     <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -243,9 +325,10 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Please provide us with your Full Name and Email Address. Then click SUBMIT to show the APA
+                    <!-- <p>Please fill up the required fields. Then click SUBMIT to show the APA
                         citation</p>
                     <form id="form_citation">
+                        
                         <input type="hidden" id="cite_value" name="cite_value">
                         <div class="form-group">
                             <label class="font-weight-bold" for="cite_title">Title<span
@@ -254,7 +337,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                                 placeholder="Mr. / Ms. / Dr.">
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-bold" for="cite_name">Name<span
+                        <label class="font-weight-bold" for="cite_name">Name<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <input type="text" class="form-control" id="cite_name" name="cite_name"
                                 placeholder="Full name">
@@ -271,25 +354,21 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                         <div class="form-group">
                             <label class="font-weight-bold" for="clt_affiliation">Affiliation<span
                                     class="text-danger font-weight-bold">*</span></label>
-                            <input type="text" class="form-control" id="cite_affiliation" name="cite_affiliation"
-                                placeholder="Affiliation">
+                            <input type="text" class="form-control" id="cite_affiliation" name="cite_affiliation" placeholder="Affiliation">
                         </div>
                         <div class="form-group">
                             <label class="font-weight-bold" for="cite_country">Country<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <select class="form-control" id="cite_country" name="cite_country"
                                 placeholder="Select Country" style="background-color: white">
-                                <!-- foreach of country -->
                                 <?php foreach ($country as $c): ?>
-                                d
                                 <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
+                                    echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
                                 <?php endforeach;?>
-                                <!-- /.end of foreach-->
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-bold" for="cite_email">Email<span
+                        <label class="font-weight-bold" for="cite_email">Email<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <input type="email" class="form-control" id="cite_email" name="cite_email"
                                 placeholder="Email">
@@ -304,13 +383,12 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                         </div>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
+                    </form> -->
+
                     <div id="cite_content" class="w-100">
                         <ul class="nav nav-tabs" id="cite_tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#apa" role="tab">APA</a>
+                                <a class="nav-link active" data-bs-toggle="tab" href="#apa" role="tab">APA</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="cite_tab_content">
@@ -318,9 +396,11 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                                 <textarea id="apa_format" class="form-control" readonly rows="5"></textarea>
                             </div>
                         </div>
-                        <button type="button" onClick="copyCitationToClipboard('#apa_format')"
-                            class="btn btn-outline-primary mt-3 w-100">Copy to clipboard</button>
+                        <button type="button" onClick="copyCitationToClipboard('#apa_format')" class="btn main-btn mt-3 w-100">Copy to clipboard</button>
                     </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>
