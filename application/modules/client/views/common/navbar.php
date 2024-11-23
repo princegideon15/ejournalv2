@@ -42,10 +42,15 @@
         <?php if($logged_in) {
           echo '<li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    '.$this->session->userdata('email').'
+                    '.$this->session->userdata('name').'
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="'.base_url('/client/login/profile').'">My Profile</a></li>
+                  
+                    <li><p class="dropdown-header pb-0">Logged in as <strong>CLIENT</strong></p></li>
+                    <li><p class="dropdown-header pt-0">Last visit: ' . $this->session->userdata('last_visit_date') . '</p></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="'.base_url('/client/user/profile').'">My Profile</a></li>
+                    <li><a class="dropdown-item" href="'.base_url('/client/user/downloads').'">My Downloads</a></li>
                     <li><a class="dropdown-item" href="'.base_url('/client/login/logout').'">Logout</a></li>
                   </ul>
                 </li>';

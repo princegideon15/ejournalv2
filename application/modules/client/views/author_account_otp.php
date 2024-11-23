@@ -12,7 +12,7 @@ gtag('config', 'G-VDLLX3HKBL');
 </script>
 
 <?php error_reporting(0);?>
-<div class="container-fluid mt-3 p-4">
+<div class="container-fluid mt-2 p-4">
     <div class="row">
         <div class="col col-lg-4">
 

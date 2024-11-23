@@ -176,7 +176,7 @@ class Ejournal extends EJ_Controller {
 	}
 
 	/**
-	 * download full text pdf when logged in
+	 * Download full text pdf when logged in
 	 *
 	 * @param int $id
 	 * @param string $file
@@ -184,7 +184,7 @@ class Ejournal extends EJ_Controller {
 	 */
 	public function download_file($id, $file) {
 
-		//get info of downloader
+		// get info of downloader
 		$data = [
 			'dl_art_id' => $id,
 			'dl_user_id' => $this->session->userdata('user_id'),
@@ -616,7 +616,7 @@ class Ejournal extends EJ_Controller {
 		}
 		// whether ip is from remote address
 		else {
-			$ip_address = $_['REMOTE_ADDR'];
+			$ip_address = $_SERVER['REMOTE_ADDR'];
 		}
 
 		$post = array();
@@ -682,7 +682,7 @@ class Ejournal extends EJ_Controller {
 	 */
 	public function articles() {
 
-		//initialize pagination with page, start_index and per page
+		// initialize pagination with page, start_index and per page
 		$this->load->library('pagination');
 		$perPage = 10;
 		$page = 0;
@@ -697,7 +697,7 @@ class Ejournal extends EJ_Controller {
 			$start_index = $perPage * ($page - 1);
 		}
 
-		//search query
+		// search query
 		if($this->input->get('search') != null){
 			$search = $this->input->get('search', TRUE);
 			$clean_search = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$search)));
@@ -708,7 +708,7 @@ class Ejournal extends EJ_Controller {
 			$totalRows = $this->Search_model->search_ejournal(null, null, null);
 		}
 
-		//pagination config
+		// pagination config
 		$config['base_url'] = base_url('client/ejournal/articles');
 		$config['total_rows'] = count($totalRows);
 		$config['per_page'] = $perPage;
@@ -735,7 +735,7 @@ class Ejournal extends EJ_Controller {
 		$config['num_tag_close'] = '</span></li>';
 
 
-		//pagination data to display
+		// pagination data to display
 		$this->pagination->initialize($config);
 		$data['total_rows'] = count($totalRows);
 		$data['pagination'] = $this->pagination->create_links();
@@ -743,7 +743,7 @@ class Ejournal extends EJ_Controller {
 		$data['start_index'] = $start_index;
 		$data['per_page'] = $perPage;
 
-		//search result to display
+		// search result to display
 		$data['result'] = $output;
 		$data['search'] = $search;
 		$data['journals'] = $this->Client_journal_model->get_journals();
@@ -809,7 +809,7 @@ class Ejournal extends EJ_Controller {
 	 */
 	public function advanced(){
 		if(count(array_filter($this->input->get('search[]'))) > 0 || $this->input->get('single_search')){
-			//where dropdowns
+			// where dropdowns
 			$searchFields = ['jor_volume', 'jor_issue'];
 			$where_journal = [];
 
@@ -820,7 +820,7 @@ class Ejournal extends EJ_Controller {
 				}
 			}
 
-			//where year from to
+			// where year from to
 			$where_year = [];
 
 			if($this->input->get('jor_year_from') && $this->input->get('jor_year_to')){
@@ -831,7 +831,7 @@ class Ejournal extends EJ_Controller {
 				$where_year = array('jor_year' => $this->input->get('jor_year_to', TRUE));
 			}
 
-			//initialize pagination with page, start_index and per page
+			// initialize pagination with page, start_index and per page
 			$this->load->library('pagination');
 			$perPage = 10;
 			$page = 1;
@@ -840,14 +840,7 @@ class Ejournal extends EJ_Controller {
 				$page =  $this->input->get('per_page', TRUE);
 			}
 	
-			// $start_index = 0;
-	
-			// if($page != 0){
-			// 	$start_index = $perPage * ($page - 1);
-			// }
-	
-	
-			//advance search 
+			// advance search 
 			if($this->input->get('single_search')){
 				$search = array('search[]' => $this->input->get('single_search', TRUE));
 				$search_filter = array('search_filter[]' => 1);
@@ -855,10 +848,10 @@ class Ejournal extends EJ_Controller {
 				$search = array_filter($this->input->get('search[]'));
 				$search_filter = $this->input->get('search_filter[]', TRUE);
 			}
-			$output = $this->Search_model->advance_search_ejournal($perPage, $start_index, $search, $search_filter, $where_journal, $where_year);
-			$totalRows = $this->Search_model->advance_search_ejournal(null, null, $search, $search_filter, $where_journal, $where_year);
+			$output = $this->Search_model->advance_search_ejournal($search, $search_filter, $where_journal, $where_year);
+			$totalRows = $this->Search_model->advance_search_ejournal($search, $search_filter, $where_journal, $where_year);
 
-			//pagination config
+			// pagination config
 			$config['base_url'] = base_url('client/ejournal/advanced');
 			$config['total_rows'] = count($totalRows);
 			$config['per_page'] = $perPage;
@@ -887,16 +880,15 @@ class Ejournal extends EJ_Controller {
 	
 			$this->pagination->initialize($config);
 	
-			//pagination data to display
+			// pagination data to display
 			$data['total_rows'] = count($totalRows);
 			$data['pagination'] = $this->pagination->create_links();
-			$data['start_index'] = $start_index;
 			$actualPerPage = $perPage * $page;
 			$page = ($perPage * $page) - 10;
 			$data['per_page'] = $actualPerPage;
 			$data['page'] = $page;
 			usort($output, function ($a, $b) {
-				//sort merged array by article title
+				// sort merged array by article title
 				return strnatcasecmp($a->art_title, $b->art_title);
 			});
 			$data['result'] = array_slice($output, $page, $perPage);
@@ -932,33 +924,15 @@ class Ejournal extends EJ_Controller {
 		echo json_encode($output);
 	}
 
+	//TODO:save citation on copy to clipboard button ???
 	/**
-	 * Save info of client after citing article
+	 * Save info of client after citing article 
 	 *
 	 * @param [int] $id		article id
 	 * @return void
 	 */
 	public function save_citation($id)
 	{
-
-		// $recipient = $this->input->post('cite_email', TRUE);
-		// $citation = $this->input->post('cite_value', TRUE);
-
-		
-		// $tableName = 'tblcitations';
-		// $result = $this->db->list_fields($tableName);
-		// $post = array();
-
-		// foreach ($result as $i => $field) {
-		// 		$post[$field] = $this->input->post($field, TRUE);
-		// 		$client_title = $this->input->post('cite_title', TRUE);
-		// 		$client_name = $this->input->post('cite_name', TRUE);
-		// 		$client_aff = $this->input->post('cite_affiliation', TRUE);
-		// 		$client_country = $this->input->post('cite_country', TRUE);
-			
-		// }
-
-		// $post['cite_member'] = $this->input->post('cite_member', TRUE);
 
 		$post['cite_user_id'] = $this->session->userdata('user_id');
 		$post['cite_art_id'] = $id;
@@ -1113,7 +1087,6 @@ class Ejournal extends EJ_Controller {
 	 */
 	public function customer_service() { 
 		
-		
 		$id = $this->session->userdata('client_id');
 		$ref = $this->session->userdata('fdbk_ref');   
 
@@ -1237,11 +1210,11 @@ class Ejournal extends EJ_Controller {
 	 * @param string $create_author_account
 	 * @return void
 	 */
-	function submission($create_author_account = null){
+	public function submission($create_author_account = null){
 
 		$journals = $this->Client_journal_model->get_journals();
 
-		//data to display
+		// data to display
 		$data['volumes'] = $journals;
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();
@@ -1266,6 +1239,23 @@ class Ejournal extends EJ_Controller {
 		$data['main_title'] = "eJournal";
 		$this->_LoadPage('common/body', $data);
 
+	}
+
+	public function article($id){
+		// data to display
+		$data['volumes'] = $journals;
+		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['popular'] = $this->Client_journal_model->top_five();
+		$data['client_count'] = $this->Client_journal_model->all_client();
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
+		$data['latest'] = $this->Client_journal_model->latest_journal();
+		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
+		$data['divisions'] = $this->Client_journal_model->getDivisions();
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/article_page";
+		$this->_LoadPage('common/body', $data);
 	}
 
 }

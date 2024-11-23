@@ -8,7 +8,7 @@ $('.right-inner-addon').hide();
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
-<div class="container-fluid mt-3 p-4">
+<div class="container-fluid mt-2 p-4">
     <!-- <div class="row mt-5">
         <div class="col">
             <div class="btn-group" role="group" aria-label="Basic example">
@@ -21,7 +21,7 @@ $('.right-inner-addon').hide();
             </div>
         </div>
     </div> -->
-    <div class="row pt-3">
+    <div class="row">
         <div class="col col-3 p-3">
             <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
         </div>

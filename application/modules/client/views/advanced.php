@@ -2,8 +2,8 @@
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
-<div class="container-fluid mt-3 p-4">
-    <div class="row pt-3">
+<div class="container-fluid mt-2 p-4">
+    <div class="row">
         <div class="col col-3 p-3">
             <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">View All Articles</a>
         </div>

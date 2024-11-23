@@ -10,19 +10,29 @@ class Login extends OPRS_Controller {
 		$this->load->model('Review_model');
 		$this->load->model('Library_model');
 		$this->load->model('Email_model');
+		$this->load->helper('string');
+        $this->load->helper('form');
+        $this->load->helper('security');
+        $this->load->library('session'); 
+		$this->load->library('form_validation');
+
 		$objMail = $this->my_phpmailer->load();
+
+			//security headers
+			$this->output->set_header("Content-Security-Policy: 
+			default-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com; 
+			script-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
+			style-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
+			font-src 'self' https://*.gstatic.com;
+			img-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com data:; 
+			frame-src 'self' https://*.google.com;"
+		);
+
+		$this->output->set_header('X-Frame-Options: SAMEORIGIN');
+		$this->output->set_header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+		$this->output->set_header('X-XSS-Protection: 1; mode=block');
+		$this->output->set_header('X-Content-Type-Options: nosniff');
 	}
-
-	// public function delete_captcha() {
-	// 	$dir = $_SERVER['DOCUMENT_ROOT'] . '/oprs/assets/image_for_captcha/';
-	// 	$files = scandir($dir);
-	// 	foreach ($files as $file) {
-	// 		// unlink($dir.$file, 0777);
-	// 		@chmod($dir . $file, 0777);
-	// 		@unlink($dir . $file);
-	// 	}
-	// }
-
 	/**
 	 * Display login page
 	 *
@@ -42,8 +52,9 @@ class Login extends OPRS_Controller {
 		$data['titles'] = $this->Library_model->get_titles();
 		$data['main_content'] = "oprs/login";
 		$this->_LoadPage('common/body', $data);
-		$this->session->unset_userdata('_oprs_login_msg');
-		$this->session->unset_userdata('_oprs_sign_up_msg');
+
+		// $this->session->unset_userdata('_oprs_login_msg');
+		// $this->session->unset_userdata('_oprs_sign_up_msg');
 	}
 
 	/**
@@ -52,6 +63,25 @@ class Login extends OPRS_Controller {
 	 * @return  void
 	 */
 	public function authenticate() {
+
+		$this->form_validation->set_rules('usr_username', 'Email', 'required|trim|valid_email|xss_clean');
+		$this->form_validation->set_rules('usr_password', 'Password', 'required|trim');
+
+		if($this->form_validation->run() == FALSE){
+			$errors = [];
+
+			if (form_error('usr_username')) {
+				$errors['email'] = strip_tags(form_error('usr_username'));
+			}
+			if (form_error('usr_password')) {
+				$errors['password'] = strip_tags(form_error('usr_password'));
+			}
+
+			// Set flashdata to pass validation errors and form data to the view
+			$this->session->set_flashdata('validation_errors', $errors);
+			redirect('oprs/login');
+		}
+
 		$login = $this->input->post('admin_login', true);
 		$remember = $this->input->post('oprs_remember', true);
 		$x = 0;

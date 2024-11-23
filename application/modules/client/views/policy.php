@@ -1,6 +1,6 @@
 <?php error_reporting(0);?>
-<div class="container-fluid">
-    <div class="row pt-3">
+<div class="container-fluid mt-2 p-4">
+    <div class="row">
         <div class="col col-3 p-3">
             <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
 		</div>

@@ -6,7 +6,7 @@
  * File Name: Signup.php
  * ----------------------------------------------------------------------------------------------------
  * Purpose of this file:
- * To manage data to display in client landing page
+ * To manage sign up, otp, email.
  * ----------------------------------------------------------------------------------------------------
  * System Name: Online Research Journal System
  * ----------------------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ class Signup extends EJ_Controller {
 		$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
 		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
 
-		//require region,province,city for philippines
+		// require region,province,city for philippines
 		if($this->input->post('country') == 175){
 			$this->form_validation->set_rules('region', 'Region', 'required|trim');
 			$this->form_validation->set_rules('province', 'Province', 'required|trim');
@@ -115,6 +115,7 @@ class Signup extends EJ_Controller {
 	
 			//return password data and strenght data
 			$password = $this->input->post('new_password');
+			$strength = 0;
 			
 			if (strlen($password) >= 8) {
 				$strength += 10;
@@ -179,7 +180,7 @@ class Signup extends EJ_Controller {
             $this->session->set_flashdata('active_link2', 'active');
             $this->session->set_flashdata('active_tab1', '');
             $this->session->set_flashdata('active_tab2', 'show active');
-			redirect('client/ejournal/login');
+			redirect('client/login');
 		}else{
 
 			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
@@ -362,13 +363,18 @@ class Signup extends EJ_Controller {
 		$this->send_create_account_otp($email, $otp, 'client', null);
 	}
 
-	
+	/**
+	 * Verify otp for author account signup
+	 *
+	 * @param string $ref
+	 * @return void
+	 */
 	public function author_account_verify_otp($ref){
 		$ref = $this->security->xss_clean($ref);
 		$this->session->set_userdata('otp_ref_code', $ref);
-		//check if ref code exist
+		// check if ref code exist
 		$isOtpRefExist = $this->Login_model->get_current_otp_oprs($ref);
-		//link expired
+		// link expired
 		if($isOtpRefExist[0]->otp_ref_code == null){
 			$this->session->set_flashdata('otp', '
 			<div class="alert alert-danger d-flex align-items-center w-50">
@@ -383,7 +389,7 @@ class Signup extends EJ_Controller {
 			$otp_date = $isOtpRefExist[0]->otp_date;
 			$current_date = date('Y-m-d H:i:s');
 
-			//check if code expired after 5 minutes
+			// check if code expired after 5 minutes
 			if ($this->compareDates($otp_date, $current_date)  > 4) {
 				$this->session->set_flashdata('otp', '
 				<div class="alert alert-danger d-flex align-items-center w-50">
@@ -408,7 +414,7 @@ class Signup extends EJ_Controller {
 						$errors['otp'] = strip_tags(form_error('otp'));
 					}
 		
-					// Set flashdata to pass validation errors and form data to the view
+					// set flashdata to pass validation errors and form data to the view
 					$this->session->set_flashdata('validation_errors', $errors);
 					$data['main_title'] = "eJournal";
 					$data['main_content'] = "client/author_account_otp";
@@ -416,7 +422,7 @@ class Signup extends EJ_Controller {
 				}else{
 					$otp = $this->input->post('otp', TRUE);
 					
-					// Check user credentials using your authentication logic
+					// check user credentials using your authentication logic
 					$verifyOTP = $this->Login_model->get_current_otp_oprs($ref_code);
 
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
@@ -431,7 +437,7 @@ class Signup extends EJ_Controller {
 
 						redirect('oprs/login');
 					} else {
-						//invalid code
+						// invalid code
 						$this->session->set_flashdata('otp', '
 															<div class="alert alert-danger d-flex align-items-center w-50">
 																<i class="fa fa-circle-x me-1"></i>Invalid code. Try again.
@@ -446,6 +452,12 @@ class Signup extends EJ_Controller {
 		}
 	}
 
+	/**
+	 * Resend email for otp of autho account signup
+	 *
+	 * @param string $refCode
+	 * @return void
+	 */
 	public function resend_author_account_code($refCode){
 
 		$refCode = $this->security->xss_clean($refCode);
@@ -494,7 +506,7 @@ class Signup extends EJ_Controller {
 	 * @param int $end
 	 * @return void
 	 */
-	function generate_user_id($start = 0000, $end) {
+	public function generate_user_id($start = 0000, $end) {
 		$current_number = $start;
 	
 		while ($current_number <= $end) {
@@ -514,7 +526,7 @@ class Signup extends EJ_Controller {
 	 *
 	 * @return void
 	 */
-	function get_last_user_id(){
+	public function get_last_user_id(){
 		$currentTotalUsers = $this->Library_model->get_library('tblusers', 'default');
 		$lastUserID = end($currentTotalUsers);
 		$lastUserID = $lastUserID->id;
@@ -527,7 +539,7 @@ class Signup extends EJ_Controller {
 	 *
 	 * @return void
 	 */
-	function create_author_account(){
+	public function create_author_account(){
 		
 		$member = $this->input->post('author_type', TRUE);
 
@@ -740,17 +752,22 @@ class Signup extends EJ_Controller {
 		}
 	}
 
-	function register_author_account(){
+	/**
+	 * Register existing client account as author
+	 *
+	 * @return void
+	 */
+	public function register_author_account(){
 
 			$email = $this->input->post('email', TRUE);
 			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
 			$ref_code = random_string('alnum', 16);
 
 			// get client info
-			$result = $this->Login_model->get_client_info($email);
+			$result = $this->Login_model->get_user_info($email);
 			// create author account in oprs
 			$data = [
-				'usr_id' => $result[0]->id,
+				'usr_id' => $result[0]->user_id,
 				'usr_username' => $email,
 				'usr_password' => $result[0]->password,
 				'usr_contact' => $result[0]->contact,
@@ -840,7 +857,7 @@ class Signup extends EJ_Controller {
 						<div class="alert alert-success d-flex align-items-center w-50">
 							<i class="oi oi-check me-1"></i>Account created successfully. You can now login.
 						</div>');
-						redirect('client/ejournal/login');
+						redirect('client/login');
 					} else {
 						//invalid code
 						$this->session->set_flashdata('otp', '
@@ -874,6 +891,12 @@ class Signup extends EJ_Controller {
 		return $minutes;
 	}
 
+	/**
+	 * Get existing OTP ref code for resend link verification
+	 *
+	 * @param string $refCode
+	 * @return void
+	 */
 	public function get_current_otp_oprs($refCode){
 		
 		$refCode = $this->security->xss_clean($refCode);

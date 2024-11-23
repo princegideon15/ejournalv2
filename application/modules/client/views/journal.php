@@ -15,7 +15,7 @@ gtag('config', 'G-VDLLX3HKBL');
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
-<div class="container-fluid mt-3 p-4">
+<div class="container-fluid mt-2 p-4">
     <div class="row">
         <div class="col col-lg-5 p-3">
             <div class="d-flex flex-column mb-3 w-75">
@@ -432,7 +432,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     echo '<button type="button" class="btn main-btn" id="top_download_pdf">
                     Download Full Paper <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></button>';
                 } else {
-                    echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
+                    echo '<a type="button" class="btn main-btn" href="'.base_url('client/login').'">
                     Login to Get Access <span class="oi oi-account-login ms-2"></span></a>';
                 }?>
             </div>

@@ -47,27 +47,21 @@
                       <?php
               }?>
 
-              
+            <!-- success author account creation -->
             <?php if ($this->session->flashdata('success')) { ?>
                 <?php echo $this->session->flashdata('success'); ?>
             <?php } ?>
 
             <?php echo form_open('oprs/login/authenticate'); ?>
               <div class="form-group mt-3 login">
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text"><span class="fa fa-user"></span></div>
-                  </div>
-                  <input class="form-control form-control-lg" id="usr_username" name="usr_username" type="text" placeholder="Username" value="<?php if (isset($_COOKIE['oprs_cookie_user'])) {echo $_COOKIE['oprs_cookie_user'];}?>" required>
-                </div> 
+                  <input class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="usr_username" name="usr_username" type="text" placeholder="Email" value="<?php if (isset($_COOKIE['oprs_cookie_user'])) {echo $_COOKIE['oprs_cookie_user'];}?>">
+                 <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['email'] ?></span>
+                
               </div>
               <div class="form-group">
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text"><span class="fa fa-lock"></span></div>
-                  </div>
-                  <input class="form-control form-control-lg" id="usr_password" name="usr_password" type="password" placeholder="Password" value="<?php if (isset($_COOKIE['oprs_cookie_pass'])) {echo $_COOKIE['oprs_cookie_pass'];}?>" required>
-                </div>
+                  <input class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>" id="usr_password" name="usr_password" type="password" placeholder="Password" value="<?php if (isset($_COOKIE['oprs_cookie_pass'])) {echo $_COOKIE['oprs_cookie_pass'];}?>">
+                  <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['password'] ?></span>
+                
               </div>
               <div class="form-group text-left">
                 <div class="custom-control custom-checkbox">

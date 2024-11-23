@@ -29,9 +29,15 @@ class Search_model extends CI_Model {
         parent::__construct();
         $this->load->database(ENVIRONMENT);
     }
-
-    /** this function search based on filter and keyword */
-    // public function search_ejournal($filter, $keyword)
+    
+    /**
+     * Basic search in landing page
+     *
+     * @param int $perPage
+     * @param int $start_index
+     * @param string $search
+     * @return void
+     */
     public function search_ejournal($perPage, $start_index, $search = null)
     {
         if($perPage != '' && $start_index != ''){
@@ -109,17 +115,19 @@ class Search_model extends CI_Model {
           
     }
 
-       /** this function search based on filter and keyword */
-    // public function search_ejournal($filter, $keyword)
-    public function advance_search_ejournal($perPage, $start_index, $searches, $search_filter, $where_journal, $where_year)
+    /**
+     * Advanced search
+     *
+     * @param int $perPage
+     * @param int $start_index
+     * @param string $searches
+     * @param int $search_filter
+     * @param int $where_journal
+     * @param int $where_year
+     * @return void
+     */
+    public function advance_search_ejournal($searches, $search_filter, $where_journal, $where_year)
     {                                     
-     
-        // if($perPage != '' && $start_index != ''){
-        //     $this->db->limit($perPage, $start_index);
-        // }else{
-        //     $this->db->limit($perPage);
-        // }
-
         $results = [];
 
         foreach ($searches as $index => $search) {

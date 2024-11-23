@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File Name: Client_journal_model.php
+ * File Name: Login_model.php
  * ----------------------------------------------------------------------------------------------------
  * Purpose of this file:
  * To manage client data input and system output
@@ -51,19 +51,10 @@ class Login_model extends CI_Model {
       }
   }
 
-  public function get_client_info($email){
-      $this->db->select('id, password, contact');
+  public function validate_otp($ref){
+      $this->db->select('id, email, CONCAT(first_name," ",last_name) as name, otp');
       $this->db->from($this->users);
       $this->db->join($this->profile, 'id = user_id');
-      $this->db->where('email', $email);
-      $query = $this->db->get();
-      return $query->result();
-  }
-
-  // public function validate_otp($otp, $ref){
-  public function validate_otp($ref){
-      $this->db->select('*');
-      $this->db->from($this->users);
       $this->db->where('otp_ref_code', $ref);
       $query = $this->db->get();
       // If a matching user is found, return the user object
@@ -147,7 +138,7 @@ class Login_model extends CI_Model {
     $oprs->where('otp_ref_code', $refCode);
     $query = $oprs->get();
     return $query->result();
-}
+  }
 
   public function create_user_profile($data){
     $this->db->insert($this->profile, $data);
@@ -155,7 +146,7 @@ class Login_model extends CI_Model {
 
   public function create_user_auth($data){
     
-    //use escape_str to prevent sql injections
+    // use escape_str to prevent sql injections
     foreach ($data as $key => $value) {
         $data[$key] = $this->db->escape_str($value);
     }
@@ -213,6 +204,16 @@ class Login_model extends CI_Model {
     $this->db->select('tkn_value');
     $this->db->from($this->access_tokens);
     $this->db->where('tkn_user_id', $id);
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function get_last_visit_date($id){
+    $this->db->select('date_created');
+    $this->db->from('tbllogs');
+    $this->db->where('log_user_id', $id);
+    $this->db->order_by('date_created', 'DESC');
+    $this->db->limit(1, 1);
     $query = $this->db->get();
     return $query->result();
   }

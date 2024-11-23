@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Client_journal_model extends CI_Model {
 
-	//ejournal tables
+	// ejournal tables
 	private $journals = 'tbljournals';
 	private $articles = 'tblarticles';
 	private $coauthors = 'tblcoauthors';
@@ -34,7 +34,7 @@ class Client_journal_model extends CI_Model {
 	private $educations = 'tbleducational_attainment';
 	private $downloads = 'tbldownloads';
 	
-	//oprs tables
+	// oprs tables
 	private $titles = 'tbltitles';
 
 	public function __construct() {
@@ -206,8 +206,7 @@ class Client_journal_model extends CI_Model {
 		return $comma_separated;
 	
 	}
-
-	/** this function get all journals */
+	
 	public function get_journals() {
 		$this->db->select('jor_volume, jor_id, jor_issue, jor_year');
 		$this->db->from($this->journals);
@@ -517,19 +516,6 @@ class Client_journal_model extends CI_Model {
 		return array('authors' => $result, 'coas' => $result2);
 	}
 
-	public function advancePublication() {
-
-		$this->db->select('a.*, j.jor_volume, j.jor_issue');
-		$this->db->from($this->articles.' a');
-		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
-		$this->db->where('jor_volume', 'Adv. Publication');
-		$this->db->order_by('a.date_created', 'desc');
-		$this->db->limit(5);
-
-		$query = $this->db->get();
-		return $query->result();
-	}
-
 	public function save_citation($post) {
 		$this->db->insert($this->citations, $post);
 		return $this->db->insert_id();
@@ -540,24 +526,6 @@ class Client_journal_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from($this->citations);
 		$this->db->where('cite_art_id',$id);
-		return $this->db->get()->num_rows();
-		
-	}
-
-	public function totalCitationsCurrentYear()
-	{
-		$this->db->select('*');
-		$this->db->from($this->citations);
-		$this->db->where('YEAR(date_created)',date('Y'));
-		return $this->db->get()->num_rows();
-		
-	}
-
-	public function totalDownloadsCurrentYear()
-	{
-		$this->db->select('*');
-		$this->db->from($this->clients);
-		$this->db->where('YEAR(clt_download_date_time)',date('Y'));
 		return $this->db->get()->num_rows();
 		
 	}
@@ -619,6 +587,48 @@ class Client_journal_model extends CI_Model {
 	public function getEducations(){
 		$this->db->select('*');
 		$this->db->from($this->educations);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function advancePublication() {
+
+		$this->db->select('a.*, j.jor_volume, j.jor_issue');
+		$this->db->from($this->articles.' a');
+		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
+		$this->db->where('jor_volume', 'Adv. Publication');
+		$this->db->order_by('a.date_created', 'desc');
+		$this->db->limit(5);
+
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
+	public function totalCitationsCurrentYear()
+	{
+		$this->db->select('*');
+		$this->db->from($this->citations);
+		$this->db->where('YEAR(date_created)',date('Y'));
+		return $this->db->get()->num_rows();
+		
+	}
+
+	public function totalDownloadsCurrentYear()
+	{
+		$this->db->select('*');
+		$this->db->from($this->clients);
+		$this->db->where('YEAR(clt_download_date_time)',date('Y'));
+		return $this->db->get()->num_rows();
+		
+	}
+
+	public function get_client_downloads($id){
+		$this->db->select('dl_datetime, article.*, jor_volume, jor_issue');
+		$this->db->from($this->downloads );
+		$this->db->join($this->articles . ' article', 'dl_art_id = art_id');
+		$this->db->join($this->journals, 'art_jor_id = jor_id');
+		$this->db->where('dl_user_id', $id);
+		$this->db->order_by('dl_datetime', 'DESC');
 		$query = $this->db->get();
 		return $query->result();
 	}
