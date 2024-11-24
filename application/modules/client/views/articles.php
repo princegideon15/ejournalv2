@@ -89,7 +89,7 @@
 					<div class="flex-grow-1">
 						<p class="mt-0 text-dark">
 							<h2>Volume <?= $journal; ?></h2>
-							<h5 class="text-muted small">Publication Year: <?= $pub_date; ?></h5>
+							<h5 class="text-muted small">Year Published: <?= $pub_date; ?></h5>
 							<!-- <h5 class="text-muted small">ISSN: <?= $issn; ?></h5> -->
 							<h5 class="text-muted small">Articles: <?= count($articles); ?></h5>
 							<h5 class="text-muted small">Description: <?= $description ?? '-'; ?></h5>

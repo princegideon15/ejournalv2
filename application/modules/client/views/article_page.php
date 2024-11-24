@@ -72,10 +72,11 @@
                         </div>
                         <h5>Abstract</h5>
                         <hr>
-                        <embed class="mb-3" src="<?= base_url('assets/uploads/abstract/'.$article[0]->art_abstract_file) ?>" width="100%" height="700px" type="application/pdf">
 
+                        <embed class="mb-3" src="<?= base_url('assets/uploads/abstract/'.$article[0]->art_abstract_file) ?>" width="100%" height="700px" type="application/pdf">
+                        
                         <?php if($logged_in){
-                            echo '<div class="d-flex gap-1">
+                            echo '<div class="d-flex gap-1 mb-3">
                             <a class="main-btn btn" href="'.base_url('client/ejournal/download_file/'. $article[0]->art_id .'/'.$article[0]->art_full_text_pdf).'"
                                 role="button">
                                 Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
@@ -84,13 +85,17 @@
                                 role="button"
                                 onclick="get_citee_info(\''.addslashes($cite).'\','.$article[0]->art_id.')">
                                 Cite this article  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
-                            <button 
-                                class="btn btn-outline-dark text-darl" href="javascript:void(0);"
-                                role="button"
-                                onclick="share_article('.$article[0]->art_id.')">
-                                Share <span class="oi oi-share ms-1" style="font-size:.8rem"></span></button>
+                           
+                           
+                            </div>
+                            
+                             <div class="input-group">
+                                <button class="btn btn-outline-dark" type="button" id="share_link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Copy to clipboard">Share <span class="oi oi-share ms-1"></span></button>
+                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="'. base_url('client/ejournal/artcile/'. $article[0]->art_id) . '" readonly>
                             </div>';
                         }?>
+
+
                     </div>
                 </div>
             </div>

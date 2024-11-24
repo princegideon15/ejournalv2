@@ -47,6 +47,21 @@ $(document).ready(function()
   
   $('body').tooltip({ selector: '[data-bs-toggle=tooltip]' });
 
+  $('#share_link').on('click', function(){
+    $(this).html('Copied <span class="fa fa-check"></span>');
+
+    // Get the input element
+    let textToCopy = $('#share_link_article').val();
+    navigator.clipboard.writeText(textToCopy);
+
+    const tooltipInstance = bootstrap.Tooltip.getInstance(this);
+    if (tooltipInstance) {
+        tooltipInstance.dispose(); // Completely removes the tooltip
+    }
+    
+    setTimeout(() => $(this).html('Share <span class="oi oi-share ms-1"></span>'), 3000); // Hide after 1 second
+  });
+
   $('#my-downloads-table').DataTable();
 
   var url = window.location.pathname; // Get the current path

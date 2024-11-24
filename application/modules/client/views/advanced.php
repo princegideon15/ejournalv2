@@ -256,7 +256,7 @@
                         
                         <div class="text-muted mt-1 small">Pages: <?=$pages?></div>
                         
-                        <div class="text-muted mt-1 small"><?=$res->art_year?></div>
+                        <div class="text-muted mt-1 small">Year Published: <?=$res->art_year?></div>
                         <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/volume/'.$vol.'/'.$res->jor_issue.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div>
                         <!-- <div class="text-muted mt-1 small">Volume <?=$res->jor_volume . ' ' . $issue?></div> -->
                 
