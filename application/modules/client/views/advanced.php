@@ -225,7 +225,8 @@
                         <img class="me-3" src="<?=$cover;?>" height="200" width="150" alt="Loading image">
                     </div> -->
                     <div class="flex-grow-1">
-                        <a href="javascript:void(0)" class="mt-0 text-dark mb-0 main-link" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?= $title ?></a>
+                        <a href="<?= base_url() . 'client/ejournal/article/' . $res->art_id ?>" class="mt-0 text-dark mb-0 main-link"><?= $title ?></a>
+                        <!-- <a href="javascript:void(0)" class="mt-0 text-dark mb-0 main-link" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?= $title ?></a> -->
                         
                         <div class="mt-2">
                             <?php $i = 0; foreach($coa_arr as $cr):?>

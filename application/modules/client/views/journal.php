@@ -167,7 +167,7 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <!-- <a href="javascript:void(0);" class="main-link h6" onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a> -->
-                                <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a>
+                                <a href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
                             </div>
 
                             <div class="mt-2">
@@ -248,7 +248,8 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <!-- <a href="javascript:void(0);" class="main-link h6" onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Most Accessed')"><?=$row['title']?></a> -->
-                                <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a>
+                                <!-- <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a> -->
+                                <a href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
                             </div>
 
 
@@ -331,7 +332,8 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <!-- <a href="javascript:void(0);" class="main-link h6" onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Advance Publication')"><?=$row['title']?></a> -->
-                                <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a>
+                                <!-- <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a> -->
+                                <a href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
                             </div>
 
                             <div class="mt-2">

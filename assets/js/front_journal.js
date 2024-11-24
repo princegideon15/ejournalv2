@@ -23,7 +23,8 @@ intervalId,           //otp timer
 isStartTimer = false, //otp timer
 refCode,              //reference code for otp
 accessToken,          //user access token generated on logged in
-article_id;           //article id 
+article_id,           //article id 
+article_page_timeout; //article page timeout for saving abstract hits         
 
 $(document).ready(function()
 {
@@ -58,7 +59,7 @@ $(document).ready(function()
     if (tooltipInstance) {
         tooltipInstance.dispose(); // Completely removes the tooltip
     }
-    
+
     setTimeout(() => $(this).html('Share <span class="oi oi-share ms-1"></span>'), 3000); // Hide after 1 second
   });
 
@@ -73,8 +74,28 @@ $(document).ready(function()
     
     if(secondToLastSegment == 'verify_otp' || secondToLastSegment == 'new_account_verify_otp'){ // login otp, create client account otp
       getCurrentOTP(refCode, 1);
-    }else{ // create author account otp
+    }else if(secondToLastSegment == 'author_account_verify_otp'){ // create author account otp
       getCurrentOTP(refCode, 2);
+    }else if(secondToLastSegment == 'article'){ // save hits if page is viewd for more than 5 seconds
+      let art_id = url.split('/').pop();
+      console.log(art_id);
+      let article_page_view_time = new Date().getTime();
+  
+      article_page_timeout = setTimeout(function() {
+        let currentTime = new Date().getTime();
+        let elapsedTime = currentTime - article_page_view_time;
+        let seconds = elapsedTime / 1000;
+        if (seconds >= 5) {
+          // console.log('page has been open for more than 5 seconds');
+          //save hits
+          save_hits(art_id);
+        }
+      }, 5000); // Check after 5 seconds
+    }else{
+      // clear only if timeout exists
+      if(article_page_timeout){
+        clearTimeout(article_page_timeout);
+      }
     }
   } else {
       // console.log("Not enough segments in the URL.");
@@ -86,26 +107,26 @@ $(document).ready(function()
   });
 
 
-  $('#abstract_modal').on('show.bs.modal', function() {
-    var modalOpenTime = new Date().getTime();
-    var modalTimeout;
+  // $('#abstract_modal').on('show.bs.modal', function() {
+  //   var modalOpenTime = new Date().getTime();
+  //   var modalTimeout;
 
-    modalTimeout = setTimeout(function() {
-      var currentTime = new Date().getTime();
-      var elapsedTime = currentTime - modalOpenTime;
-      var seconds = elapsedTime / 1000;
-      if (seconds >= 5) {
-        // console.log('Modal has been open for more than 5 seconds');
-        //save hits
-        save_hits(article_id);
-      }
-    }, 5000); // Check after 5 seconds
+  //   modalTimeout = setTimeout(function() {
+  //     var currentTime = new Date().getTime();
+  //     var elapsedTime = currentTime - modalOpenTime;
+  //     var seconds = elapsedTime / 1000;
+  //     if (seconds >= 5) {
+  //       // console.log('Modal has been open for more than 5 seconds');
+  //       //save hits
+  //       save_hits(article_id);
+  //     }
+  //   }, 5000); // Check after 5 seconds
 
-    $('#abstract_modal').on('hidden.bs.modal', function() {
-      clearTimeout(modalTimeout);
-      // console.log('Modal has been closed');
-    });
-  });
+  //   $('#abstract_modal').on('hidden.bs.modal', function() {
+  //     clearTimeout(modalTimeout);
+  //     // console.log('Modal has been closed');
+  //   });
+  // });
 
 
   let volumeList = $('#volume_list');
@@ -1148,6 +1169,7 @@ function get_download_id(id, flag=null, file=null, logged_in = null)
 }
 
 function save_hits(id){
+  console.log("🚀 ~ save_hits ~ id:", id)
   $.ajax({
     type:"POST",
     url: base_url + "client/ejournal/abstract_hits/"+id,
@@ -1623,7 +1645,7 @@ function startTimer() {
 }
 
 function getCurrentOTP(refCode, otpType){
-  // console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
+  console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
   var currentDate = new Date();
   var otpDate;
   var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : base_url + "client/signup/get_current_otp_oprs/" + refCode;
