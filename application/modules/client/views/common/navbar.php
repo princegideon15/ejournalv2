@@ -1,4 +1,25 @@
 
+
+<style>
+    .rating-star {
+        font-size: 3rem;
+        cursor: pointer;
+        color: gray;
+        padding-top: 0;
+        margin-top: 0;
+    }
+    .rating-star.selected {
+        color: gold;
+    }
+    .character-counter {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+    }
+    .character-counter.exceeded {
+        color: red;
+    }
+</style>
+
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
 <nav class="navbar navbar-expand-lg fixed-topx custom-border">
@@ -51,14 +72,17 @@
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="'.base_url('/client/user/profile').'">My Profile</a></li>
                     <li><a class="dropdown-item" href="'.base_url('/client/user/downloads').'">My Downloads</a></li>
-                    <li><a class="dropdown-item" href="'.base_url('/client/login/logout').'">Logout</a></li>
+                    <li><a class="dropdown-item" onclick="logout()">Logout</a></li>
                   </ul>
                 </li>';
         }else{
           echo '<li class="nav-item">
-                  <a class="nav-link text-dark" href="'.base_url('/client/login').'">Login</a>
+                  <a class="nav-link text-dark" id="logout" href="'.base_url('/client/login').'">Login</a>
                 </li>';
         } ?>
+
+        
+
         
       </ul>
        
@@ -67,26 +91,108 @@
       </span>
     </div>
   </div>
-
-  
-  
-
-
-  <!-- <a class="navbar-brand ml-2 font-weight-bold" href="https://researchjournal.nrcp.dost.gov.ph/">eJournal</a> -->
-
-    <!-- <form method="post" class="dropdown form-inline my-2 my-lg-0 ">
-       <select class="form-control bg-dark text-white font-weight-bold" id="search_filter">
-      <option value="1">Title</option>
-      <option value="2">Author</option>
-      <option value="3" selected> Keywords</option>
-    </select>
-    <div class="right-inner-addon">
-        <i class="oi oi-magnifying-glass  "></i>
-        <input type="text"
-               class="form-control border-primary text-primary" 
-               placeholder="Search" id="search_ejournal" />
-    </div>
-    </form> -->
   </div>
 </nav>
 
+<!-- FEEDBACK MODAL -->
+<div class="modal fade" id="feedbackModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- <div class="modal-header pb-0">
+        <p><span class="modal-title font-weight-bold h3">Your feedback</span><br/>
+        <small>We would like your feedback to improve our system.</small></p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div> -->
+      <div class="modal-body p-4">
+        <h5 class="fw-bold main-link">Thank you for visiting the eJournal website!</h5>
+        <p>To improve the performance of the system, kindly provide us your feedback.</p>
+        <form id="feedback_form">
+            <h6 class="fw-bold mb-0">User Interface</h6>
+            <div class="d-flex gap-3 mb-0">
+              <span class="rating-star rate-ui" data-value="1">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="2">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="3">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="4">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="5">&#9733;</span>
+            </div>
+            <textarea class="form-control" id="fb_suggest_ui" rows="3" placeholder="Type your suggestions here..." maxlength="300"></textarea>
+            <div id="char_count_ui" class="character-counter text-muted">0 / 300 characters</div>
+            
+            <!-- <div class="feedback-container ui-container">
+                <div class="feedback-item">
+                    <label for="ui-1" data-toggle="tooltip" data-placement="bottom" title="Sad">
+                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-1" value="1" >
+                        <span >🙁</span>
+                    </label>
+                </div>
+
+                <div class="feedback-item">
+                    <label for="ui-2" data-toggle="tooltip" data-placement="bottom" title="Neutral">
+                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-2" value="2">
+                        <span>😶</span>
+                    </label>
+                </div>
+
+                <div class="feedback-item">
+                    <label for="ui-3" data-toggle="tooltip" data-placement="bottom" title="Happy">
+                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-3" value="3">
+                        <span>🙂</span>
+                    </label>
+                </div>
+            </div> -->
+
+            <!-- <div class="form-group mt-0">
+                <label for="fb_suggest_ui"></label>
+            </div> -->
+
+            <hr/>
+
+            <h6 class="fw-bold mb-0">User Experience</h6>
+            <div class="d-flex gap-3 mb-0">
+              <span class="rating-star rate-ux" data-value="1">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="2">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="3">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="4">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="5">&#9733;</span>
+            </div>
+
+            <textarea class="form-control" name="fb_suggest_ux" id="fb_suggest_ux" rows="3" placeholder="Type your suggestions here..." maxlength="300"></textarea>
+            <div id="char_count_ux" class="character-counter text-muted">0 / 300 characters</div>
+            <!-- <div id="charCount" class="character-counter">0 / 200 characters</div> -->
+            <!-- <p class="font-weight-bold h4 text-center">User Experience</p>
+            <div class="feedback-container ux-container">
+                <div class="feedback-item">
+                    <label for="ux-1" data-toggle="tooltip" data-placement="bottom" title="Sad">
+                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-1" value="1">
+                        <span>🙁</span>
+                    </label>
+                </div>
+
+                <div class="feedback-item">
+                    <label for="ux-2" data-toggle="tooltip" data-placement="bottom" title="Nuetral">
+                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-2" value="2">
+                        <span>😶</span>
+                    </label>
+                </div>
+
+                <div class="feedback-item">
+                    <label for="ux-3" data-toggle="tooltip" data-placement="bottom" title="Happy">
+                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-3" value="3">
+                        <span>🙂</span>
+                    </label>
+                </div>
+            </div> -->
+            
+            <!-- <div class="form-group mt-0">
+                <label for="fb_suggest_ux"></label>
+            </div> -->
+        </form>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-light" type="button" data-bs-dismiss="modal">Later</button>
+          <button type="button" id="submit_feedback" class="btn main-btn" disabled>Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /FEEDBACK MODAL -->

@@ -28,7 +28,101 @@ article_page_timeout; //article page timeout for saving abstract hits
 
 $(document).ready(function()
 {
-  //get user access token
+  // feedback suggestion box character limit
+  let $textArea = $("#fb_suggest_ui");
+  let $charCount = $("#char_count_ui");
+  let maxLength = $textArea.attr("maxlength");
+
+  $textArea.on("input", function () {
+      let currentLength = $(this).val().length;
+      $charCount.text(`${currentLength} / ${maxLength} characters`);
+
+      if (currentLength > maxLength) {
+          $charCount.addClass("exceeded");
+      } else {
+          $charCount.removeClass("exceeded");
+      }
+  });
+
+  let $textArea2 = $("#fb_suggest_ux");
+  let $charCount2 = $("#char_count_ux");
+  let maxLength2 = $textArea2.attr("maxlength");
+
+  $textArea2.on("input", function () {
+      let currentLength = $(this).val().length;
+      $charCount2.text(`${currentLength} / ${maxLength2} characters`);
+
+      if (currentLength > maxLength2) {
+          $charCount2.addClass("exceeded");
+      } else {
+          $charCount2.removeClass("exceeded");
+      }
+  });
+
+  // csf ui ux star rating
+  let selectedRatingUI = 0;
+  let selectedRatingUX = 0;
+
+  $('.rate-ui').on('mouseover', function () {
+      const value = $(this).data('value');
+      $('.rate-ui').each(function () {
+          $(this).toggleClass('selected', $(this).data('value') <= value);
+      });
+  });
+
+  $('.rate-ui').on('mouseleave', function () {
+      $('.rate-ui').each(function () {
+          $(this).toggleClass('selected', $(this).data('value') <= selectedRatingUI);
+      });
+  });
+
+  $('.rate-ui').on('click', function () {
+      selectedRatingUI = $(this).data('value');
+      // $('#rating-message').text(`You rated ${selectedRating} out of 5.`);
+      if(selectedRatingUI > 0 && selectedRatingUX > 0){
+        $('#submit_feedback').prop('disabled', false);
+      }
+  });
+  
+  $('.rate-ux').on('mouseover', function () {
+      const value = $(this).data('value');
+      $('.rate-ux').each(function () {
+          $(this).toggleClass('selected', $(this).data('value') <= value);
+      });
+  });
+
+  $('.rate-ux').on('mouseleave', function () {
+      $('.rate-ux').each(function () {
+          $(this).toggleClass('selected', $(this).data('value') <= selectedRatingUX);
+      });
+  });
+
+  $('.rate-ux').on('click', function () {
+      selectedRatingUX = $(this).data('value');
+      // $('#rating-message').text(`You rated ${selectedRating} out of 5.`)
+      
+      if(selectedRatingUI > 0 && selectedRatingUX > 0){
+        $('#submit_feedback').prop('disabled', false);
+      }
+  });
+
+  $('#submit_feedback').on('click', function(){
+
+    let uiSuggestion = $('#fb_suggest_ui').val();
+    let uxSuggestion = $('#fb_suggest_ux').val();
+    
+    let data = {
+      'ui' : selectedRatingUI,
+      'ux' : selectedRatingUX,
+      'ui_sug' : uiSuggestion,
+      'ux_sug' : uxSuggestion
+    };
+
+    console.log(data);
+    //TODO::save function, validation, sweet alert2, logout
+  });
+  
+  // get user access token
   accessToken = $.ajax({
     type: "GET",
     url: base_url + "client/login/get_access_token/",
@@ -76,9 +170,8 @@ $(document).ready(function()
       getCurrentOTP(refCode, 1);
     }else if(secondToLastSegment == 'author_account_verify_otp'){ // create author account otp
       getCurrentOTP(refCode, 2);
-    }else if(secondToLastSegment == 'article'){ // save hits if page is viewd for more than 5 seconds
+    }else if(secondToLastSegment == 'article'){ // save hits if page is viewed for more than 5 seconds
       let art_id = url.split('/').pop();
-      console.log(art_id);
       let article_page_view_time = new Date().getTime();
   
       article_page_timeout = setTimeout(function() {
@@ -741,13 +834,13 @@ $('#citationModal .close').click(function(){
   let idleTime = 0;
 
   if(accessToken != 0){
-
     $(document).on('mousemove keydown scroll', function() {
         idleTime = 0;
     });
 
     let timerInterval = setInterval(function() {
         idleTime += 1;
+        
         if (idleTime >= 1200) { // 20 minutes in seconds
             // Trigger logout or other actions
             clearInterval(timerInterval); // Stop the timer
@@ -761,7 +854,7 @@ $('#citationModal .close').click(function(){
               confirmButtonColor: "#0c6bcb",
             
             }).then(function () {
-              window.location = base_url + "client/ejournal/login/";
+              window.location = base_url + "client/login/";
             });
         }
     }, 1000); // Check every 1 second
@@ -1767,28 +1860,31 @@ function clearAdvanceSearch(element){
   }
 }
 
-function getUserAccessToken(){
-
- 
-  $.ajax({
-    type: "GET",
-    url: base_url + "/client/login/get_access_token/",
-    crossDomain: true,
-    success: function(data) {
-      if(data != 0){
-        accessToken = data;
-        console.log('start timer');
-      }else{
-        console.log('do not start timer');
-      }
-    },
-    error: function(xhr, status, error) {
-      reject(error);
-    }
-  }); 
-
+function logout(){
+  $('#feedbackModal').modal('toggle');
 }
 
+// function getUserAccessToken(){
+
+ 
+//   $.ajax({
+//     type: "GET",
+//     url: base_url + "/client/login/get_access_token/",
+//     crossDomain: true,
+//     success: function(data) {
+//       if(data != 0){
+//         accessToken = data;
+//         console.log('start timer');
+//       }else{
+//         console.log('do not start timer');
+//       }
+//     },
+//     error: function(xhr, status, error) {
+//       reject(error);
+//     }
+//   }); 
+
+// }
 
 // data: {
 //   'csrf_test_name': '<?= $this->security->get_csrf_hash(); ?>', // Token
