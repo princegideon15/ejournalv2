@@ -11,19 +11,16 @@
     gtag('config', 'G-VDLLX3HKBL');
 
 
-        
-    function validateForm() {
-        $('#google_recaptchav2_container').removeClass('d-none');
-        var recaptchaResponse = grecaptcha.getResponse();
-        if (!recaptchaResponse) {
-            // alert('Please complete the reCAPTCHA verification.');
-            $('#g-recaptcha').text('Please complete the reCAPTCHA verification.');
-            return false;
-        }
+    let recaptchaWidgetId_create_client_account;
 
-        $('#create_account').prop('disabled' ,true);
-        $('#create_account').html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading');
-        return true;
+    // Initialize reCAPTCHA and store the widget ID
+    window.onload = function () {
+        recaptchaWidgetId_create_client_account = grecaptcha.render('captcha_client', {
+            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+            'callback': onRecaptchaSuccess,
+            'expired-callback': onRecaptchaExpired
+        });
+
     }
 
 </script>
@@ -91,7 +88,7 @@
                             </div>
                         <?php } ?>
 
-                        <?=form_open('client/signup/create_account', ['method' => 'post', 'id' => 'signUpForm', 'onsubmit' => 'return validateForm();'])?>
+                        <?=form_open('client/signup/create_account', ['method' => 'post', 'id' => 'signUpForm'])?>
                             <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
                             <div class="mb-3">
                                 <label class="form-label" for="new_email"><span
@@ -290,13 +287,12 @@
                                 </div>
                             </div>
 
-                            <div class="mb-3 w-100 d-none" id="google_recaptchav2_container">
-                                <div id="recaptcha"></div>
-                                <div class="g-recaptcha" data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6"></div>
+                            <div class="mb-3 w-100" id="google_recaptchav2_container">
+                                <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_client"></div>
                                 <p class="text-danger" id="g-recaptcha"></p>
                             </div>
 
-                            <button type="submit" class="btn main-btn w-100" id="create_account">Create Account</button>
+                            <button type="submit" class="btn main-btn w-100" id="create_account" disabled>Create Account</button>
                         <?=form_close()?>
                     </div>
             </div>

@@ -20,6 +20,20 @@
     }
 </style>
 
+<script>
+  let recaptchaWidgetId_logout;
+
+  // Initialize reCAPTCHA and store the widget ID
+  window.onload = function () {
+      recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
+          'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+          'callback': onRecaptchaSuccess,
+          'expired-callback': onRecaptchaExpired
+      });
+  };
+
+</script>
+
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
 <nav class="navbar navbar-expand-lg fixed-topx custom-border">
@@ -106,6 +120,7 @@
       <div class="modal-body p-4">
         <h5 class="fw-bold main-link">Thank you for visiting the eJournal website!</h5>
         <p>To improve the performance of the system, kindly provide us your feedback.</p>
+        <hr>
         <form id="feedback_form">
             <h6 class="fw-bold mb-0">User Interface</h6>
             <div class="d-flex gap-3 mb-0">
@@ -186,6 +201,12 @@
             <!-- <div class="form-group mt-0">
                 <label for="fb_suggest_ux"></label>
             </div> -->
+
+            <div class="mt-3 mb-0 w-100" id="google_recaptchav2_container">
+                <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_logout"></div>
+                <p class="text-danger" id="g-recaptcha"></p>
+            </div>
+
         </form>
       </div>
       <div class="modal-footer">

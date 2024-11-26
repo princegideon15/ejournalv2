@@ -13,21 +13,23 @@
 * Copyright Notice:
 * Copyright (C) 2019 By the Department of Science and Technology - National Research Council of the Philippines
 */
-var apa_format,       //apa format for article
-apa_id,               //article id
-fb_clt_id,            //feedback client id
-fn_clt_email,         //feedback client email
-minutes = 5,          //otp timer
-seconds = 0,          //otp timer
-intervalId,           //otp timer
-isStartTimer = false, //otp timer
-refCode,              //reference code for otp
-accessToken,          //user access token generated on logged in
-article_id,           //article id 
-article_page_timeout; //article page timeout for saving abstract hits         
+var apa_format,       // apa format for article
+apa_id,               // article id
+fb_clt_id,            // feedback client id
+fn_clt_email,         // feedback client email
+minutes = 5,          // otp timer
+seconds = 0,          // otp timer
+intervalId,           // otp timer
+isStartTimer = false, // otp timer
+refCode,              // reference code for otp
+accessToken,          // user access token generated on logged in
+article_id,           // article id 
+article_page_timeout, // article page timeout for saving abstract hits         
+current_button_id = "#create_account";    // button to enable/disable for catpcha        
 
 $(document).ready(function()
 {
+
   // feedback suggestion box character limit
   let $textArea = $("#fb_suggest_ui");
   let $charCount = $("#char_count_ui");
@@ -79,9 +81,9 @@ $(document).ready(function()
   $('.rate-ui').on('click', function () {
       selectedRatingUI = $(this).data('value');
       // $('#rating-message').text(`You rated ${selectedRating} out of 5.`);
-      if(selectedRatingUI > 0 && selectedRatingUX > 0){
-        $('#submit_feedback').prop('disabled', false);
-      }
+      // if(selectedRatingUI > 0 && selectedRatingUX > 0){
+      //   $('#submit_feedback').prop('disabled', false);
+      // }
   });
   
   $('.rate-ux').on('mouseover', function () {
@@ -101,9 +103,9 @@ $(document).ready(function()
       selectedRatingUX = $(this).data('value');
       // $('#rating-message').text(`You rated ${selectedRating} out of 5.`)
       
-      if(selectedRatingUI > 0 && selectedRatingUX > 0){
-        $('#submit_feedback').prop('disabled', false);
-      }
+      // if(selectedRatingUI > 0 && selectedRatingUX > 0){
+      //   $('#submit_feedback').prop('disabled', false);
+      // }
   });
 
   $('#submit_feedback').on('click', function(){
@@ -118,7 +120,15 @@ $(document).ready(function()
       'ux_sug' : uxSuggestion
     };
 
-    console.log(data);
+    const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
+
+    if (captcha) {
+        // alert("reCAPTCHA is checked and valid!");
+        alert('logout');
+    } else {
+        console.log("Please complete the reCAPTCHA!");
+    }
+
     //TODO::save function, validation, sweet alert2, logout
   });
   
@@ -1862,6 +1872,7 @@ function clearAdvanceSearch(element){
 
 function logout(){
   $('#feedbackModal').modal('toggle');
+  current_button_id = '#submit_feedback';
 }
 
 // function getUserAccessToken(){
@@ -1900,4 +1911,15 @@ function destroyUserSession(){
       // console.log(data);
     }
   });
+}
+
+function onRecaptchaSuccess(token) {
+  console.log("reCAPTCHA validated!");
+  $(current_button_id).prop('disabled', false); // Enable submit button
+}
+
+// Callback when reCAPTCHA expires
+function onRecaptchaExpired() {
+  console.log("reCAPTCHA expired.");
+  $(current_button_id).prop('disabled', true);
 }
