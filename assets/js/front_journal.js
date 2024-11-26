@@ -124,12 +124,50 @@ $(document).ready(function()
 
     if (captcha) {
         // alert("reCAPTCHA is checked and valid!");
-        alert('logout');
+        $.ajax({
+          type: "POST",
+          url: base_url + 'client/feedback/submit_csf_ui_ux',
+          data:  data,
+          cache: false,
+          crossDomain: true,
+          success: function(data) {
+            $('#feedbackModal').modal('toggle');
+            if(data == 1){
+              let timerInterval;
+              Swal.fire({
+                title: "Thank you for your feedback.",
+                html: "Logging out...",
+                icon: "success",
+                allowOutsideClick: false, // Prevent closing by clicking outside
+                allowEscapeKey: false,   // Prevent closing with the Escape key
+                allowEnterKey: false,    // Prevent closing with the Enter key
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: () => {
+                  Swal.showLoading();
+                  // const timer = Swal.getPopup().querySelector("b");
+                  // timerInterval = setInterval(() => {
+                  //   timer.textContent = `${Swal.getTimerLeft()}`;
+                  // }, 100);
+                },
+                willClose: () => {
+                  clearInterval(timerInterval);
+                }
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  window.location.href = base_url + "client/login/logout/";
+                }
+              });
+            }else{
+              console.log('Something went wrong.');
+            }
+          }
+        });
     } else {
         console.log("Please complete the reCAPTCHA!");
     }
 
-    //TODO::save function, validation, sweet alert2, logout
   });
   
   // get user access token

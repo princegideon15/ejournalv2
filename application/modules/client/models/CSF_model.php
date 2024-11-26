@@ -53,6 +53,11 @@ class CSF_model extends CI_Model {
       return $query->num_rows();
 
     }
+
+    public function save_csf_ui_ux($post){
+      $this->db->insert('tblcsf_uiux', $post);
+      return $this->db->affected_rows();
+    }
 }
 
 /* End of file Library_model.php */
