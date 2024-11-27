@@ -123,6 +123,7 @@ $(document).ready(function()
     const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
 
     if (captcha) {
+      $(this).prop('disabled', true);
         // alert("reCAPTCHA is checked and valid!");
         $.ajax({
           type: "POST",

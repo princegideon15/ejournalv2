@@ -1181,6 +1181,28 @@ class Ejournal extends EJ_Controller {
 		$data['main_content'] = "client/success";
 		$this->_LoadPage('common/body', $data);
 	}
+	
+	/**
+	 * Display CSF-ARTA page
+	 */
+	public function csf_arta(){
+		
+		//$data['main_content'] = "client/maintenance";
+		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
+		$data['client_types'] = $this->Library_model->get_csf_client_types();
+		$data['cc1'] = $this->Library_model->get_csf_cc1();
+		$data['cc2'] = $this->Library_model->get_csf_cc2();
+		$data['cc3'] = $this->Library_model->get_csf_cc3();
+		$data['sqd'] = $this->Library_model->get_csf_sqd();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/arta";
+		$this->_LoadPage('common/body', $data);
+
+	}
+
+	public function submit_arta(){
+		
+	}
 
 	/**
 	 * Get provinces by region id

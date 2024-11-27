@@ -70,6 +70,38 @@ class Library_model extends CI_Model {
 		$query = $skms->get();
 		return $query->result();
     }
+
+    public function get_csf_client_types(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_client_type');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+   
+    public function get_csf_cc1(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_cc1');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function get_csf_cc2(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_cc2');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function get_csf_cc3(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_cc3');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function get_csf_sqd(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_sqd');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
 
 /* End of file Library_model.php */
