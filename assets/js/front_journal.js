@@ -30,6 +30,13 @@ current_button_id = "#create_account";    // button to enable/disable for catpch
 $(document).ready(function()
 {
 
+  $('#arta_age').on('keypress', function(e) {
+    var charCode = (e.which) ? e.which : e.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      e.preventDefault(); // Prevent any non-numeric input
+    }
+  });
+
   // feedback suggestion box character limit
   let $textArea = $("#fb_suggest_ui");
   let $charCount = $("#char_count_ui");
@@ -1961,4 +1968,13 @@ function onRecaptchaSuccess(token) {
 function onRecaptchaExpired() {
   console.log("reCAPTCHA expired.");
   $(current_button_id).prop('disabled', true);
+}
+
+
+function checkOnlyOne(checkbox) {
+  let name = $(checkbox).attr('name');
+  const checkboxes = document.querySelectorAll('input[name="' + name + '"]');
+  checkboxes.forEach((cb) => {
+    if (cb !== checkbox) cb.checked = false;
+  });
 }

@@ -1201,7 +1201,80 @@ class Ejournal extends EJ_Controller {
 	}
 
 	public function submit_arta(){
+
 		
+		$this->form_validation->set_rules('arta_ctype', 'Client type', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sex', 'Sex', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_age', 'Age', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_region', 'Region of residence', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_service', 'Service availed', 'required|trim');
+		$this->form_validation->set_rules('arta_cc1', 'CC1', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_cc2', 'CC2', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_cc3', 'CC3', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sqd1', 'SQD1', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sqd2', 'SQD2', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sqd3', 'SQD3', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sqd4', 'SQD4', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sqd5', 'SQD5', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sqd6', 'SQD6', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sqd7', 'SQD7', 'required|integer|trim');
+		$this->form_validation->set_rules('arta_sqd8', 'SQD8', 'required|integer|trim');
+
+		
+		$validations = [
+						'arta_ctype', 
+						'arta_sex', 
+						'arta_age', 
+						'arta_region', 
+						'arta_service', 
+						'arta_cc1', 
+						'arta_cc2', 
+						'arta_cc3', 
+						'arta_sqd1', 
+						'arta_sqd2', 
+						'arta_sqd3', 
+						'arta_sqd4', 
+						'arta_sqd5', 
+						'arta_sqd6', 
+						'arta_sqd7',
+						'arta_sqd8'
+					];
+
+		if($this->form_validation->run() == FALSE){
+			$errors = [];
+			foreach($validations as $value){
+				//store entered value to display on redirect
+				$this->session->set_flashdata($value, $this->input->post($value));
+				
+				//store errors to display on redirect
+				if (form_error($value)) {
+					$errors[$value] = strip_tags(form_error($value));
+
+				}
+			}
+
+            // Set flashdata to pass validation errors and form data to the view
+            $this->session->set_flashdata('csf_arta_validation_errors', $errors);
+			redirect('client/ejournal/csf_arta');
+
+		}else{
+			$tableName = 'tblcsf_arta';
+			$result = $this->db->list_fields($tableName);
+			$post = array();
+	
+			foreach ($result as $i => $field) {
+				$post[$field] = $this->input->post($field, TRUE);
+			}
+	
+			$post['arta_user_id'] = $this->session->userdata('user_id');
+			$post['arta_agency'] = 'NRCP';
+			$post['arta_email'] = $this->session->userdata('email');
+			$post['arta_created_at'] = date('Y-m-d H:i:s');
+
+			print_r($post);
+			//TODO:save to databsae and show success page
+		}
+
 	}
 
 	/**

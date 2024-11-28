@@ -211,3 +211,19 @@ a:hover {
     /* color: #006eb1 !important;
     text-decoration: underline; */
 }
+
+/* Modify the default checkbox */
+.form-check-input {
+    width: 1.25em;
+    height: 1.25em;
+    border: 2px solid #ced4da; /* Change border color */
+    background-color: white; /* Default background color */
+    transition: background-color 0.3s, border-color 0.3s;
+    }
+
+/* Checkbox when checked */
+.form-check-input:checked {
+background-color: #00588f; /* Change to desired color */
+border-color: #00588f;
+}
+
