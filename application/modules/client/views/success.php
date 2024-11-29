@@ -3,7 +3,7 @@
 	  <div class="col-8">
         <div class="jumbotron text-center">
                 <h3>Thank you for your feedback!</h3>
-                <p><a href="<?php echo base_url();?>">Home</a></p>
+                <p><a class="main-link" href="<?php echo base_url();?>">Home</a></p>
         </div>
       </div>
     </div>

@@ -29,8 +29,8 @@ class Client_journal_model extends CI_Model {
 	private $editorials = 'tbleditorials';
 	private $citations = 'tblcitations';
 	private $divisions = 'tbldivisions';
-	private $profile = 'tbluser_profiles';
-	private $user = 'tblusers';
+	private $profiles = 'tbluser_profiles';
+	private $users = 'tblusers';
 	private $educations = 'tbleducational_attainment';
 	private $downloads = 'tbldownloads';
 	
@@ -570,8 +570,8 @@ class Client_journal_model extends CI_Model {
 
 	public function get_user_info($email){
 		$this->db->select('p.*, otp, otp_ref_code');
-		$this->db->from($this->profile . ' p');
-		$this->db->join($this->user . ' u', 'p.user_id = u.id');
+		$this->db->from($this->profiles . ' p');
+		$this->db->join($this->users . ' u', 'p.user_id = u.id');
 		$this->db->where('u.email', $email);
 		$query = $this->db->get();
 		return $query->result();
@@ -632,6 +632,22 @@ class Client_journal_model extends CI_Model {
 		$this->db->order_by('dl_datetime', 'DESC');
 		$query = $this->db->get();
 		return $query->result();
+	}
+
+	public function get_client_email($id){
+		$this->db->select('email');
+		$this->db->from($this->users);
+		$this->db->where('id', $id);
+		$data = $this->db->get()->row_array();
+		return $data['email'];
+	}
+
+	public function get_article_title_download_by_client($id){
+		$this->db->select('art_title');
+		$this->db->from($this->articles);
+		$this->db->where('art_id', $id);
+		$data = $this->db->get()->row_array();
+		return $data['art_title'];
 	}
 }
 

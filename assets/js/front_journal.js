@@ -240,6 +240,8 @@ $(document).ready(function()
           save_hits(art_id);
         }
       }, 5000); // Check after 5 seconds
+    }else if(secondToLastSegment == 'csf_arta'){
+      current_button_id = "#submit_csf_arta";
     }else{
       // clear only if timeout exists
       if(article_page_timeout){

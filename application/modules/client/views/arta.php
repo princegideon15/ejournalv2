@@ -1,3 +1,17 @@
+<script>
+     let recaptchaWidgetId_csf_arta;
+
+    // Initialize reCAPTCHA and store the widget ID
+    window.onload = function () {
+        recaptchaWidgetId_csf_arta = grecaptcha.render('captcha_csf', {
+            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+            'callback': onRecaptchaSuccess,
+            'expired-callback': onRecaptchaExpired
+        });
+
+    }
+</script>
+
 <div class="container-fluid mt-2 p-4">
 	<div class="row justify-content-center">
 	  <div class="col-8">
@@ -8,7 +22,7 @@
                 will help this office provide a better serive. Personal information shared will be kept confidential
                 and you always have the option to not answer this form.
             </p>
-            <?= form_open('client/ejournal/submit_arta', ['method' => 'post', 'id' => 'csfArtaForm']) ?>
+            <?= form_open('client/ejournal/submit_arta/'. $ref_code, ['method' => 'post', 'id' => 'csfArtaForm']) ?>
                 <div class="mb-3">
                     <label for="arta_ctype" class="fw-bold pe-2">Client type:</label>
 
@@ -174,8 +188,13 @@
                     <label for="arta_suggestion" class="fw-bold mb-2">Suggestions on how we can further improve our services (optional):</label>
                     <textarea class="form-control" name="arta_suggestion" id="arta_suggestion" rows="5" placeholder="Type your suggestions here..."></textarea>
                 </div>
-                
-                <div class="text-center"><button type="submit" class="btn main-btn w-50">Submit Feedback</button></div>
+               
+                <div class="mb-3 d-flex justify-content-center" id="google_recaptchav2_container" style="text-align:center">
+                                <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_csf"></div>
+                                <p class="text-danger" id="g-recaptcha"></p>
+                            </div>
+
+                <div class="text-center"><button type="submit" class="btn main-btn w-50" id="submit_csf_arta" disabled>Submit Feedback</button></div>
             </form>
         </div>
       </div>

@@ -58,6 +58,24 @@ class CSF_model extends CI_Model {
       $this->db->insert('tblcsf_uiux', $post);
       return $this->db->affected_rows();
     }
+
+    public function save_csf_arta($post){
+      $this->db->insert('tblcsf_arta', $post);
+      return $this->db->affected_rows();
+    }
+
+    public function update_csf_arta($post, $where){
+      $this->db->update('tblcsf_arta', $post, $where);
+      return $this->db->affected_rows();
+    }
+
+    public function get_csf_arta_ref_code($ref_code){
+      $this->db->select('arta_ref_code');
+      $this->db->from('tblcsf_arta');
+      $this->db->where('arta_ref_code', $ref_code);
+      $query = $this->db->get();
+      return $query->num_rows();
+    }
 }
 
 /* End of file Library_model.php */

@@ -182,11 +182,11 @@ class Ejournal extends EJ_Controller {
 	 * @param string $file
 	 * @return void
 	 */
-	public function download_file($id, $file) {
+	public function download_file($dl_id, $file) {
 
 		// get info of downloader
 		$data = [
-			'dl_art_id' => $id,
+			'dl_art_id' => $dl_id,
 			'dl_user_id' => $this->session->userdata('user_id'),
 			'dl_datetime' => date('Y-m-d H:i:s')
 		];
@@ -202,6 +202,22 @@ class Ejournal extends EJ_Controller {
 		//server manuscript
 		// $from = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/' . $file;
 		// $to = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
+
+
+		// save blank arta
+		$ref_code = random_string('alnum', 16);
+		$id = $this->session->userdata('user_id');
+		$email = $this->session->userdata('email');
+		$post['arta_user_id'] = $id;
+		$post['arta_email'] = $email;
+		$post['arta_ref_code'] = $ref_code;
+		$post['arta_created_at'] = date('Y-m-d H:i:s');
+
+		$this->CSF_model->save_csf_arta($post);
+
+		// send email
+		$this->notify_client($id, $dl_id, $ref_code);
+
 
         $data = file_get_contents($file_path);
         // $name = basename($file_path);
@@ -1185,94 +1201,116 @@ class Ejournal extends EJ_Controller {
 	/**
 	 * Display CSF-ARTA page
 	 */
-	public function csf_arta(){
+	public function csf_arta($ref_code = null){
 		
-		//$data['main_content'] = "client/maintenance";
-		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
-		$data['client_types'] = $this->Library_model->get_csf_client_types();
-		$data['cc1'] = $this->Library_model->get_csf_cc1();
-		$data['cc2'] = $this->Library_model->get_csf_cc2();
-		$data['cc3'] = $this->Library_model->get_csf_cc3();
-		$data['sqd'] = $this->Library_model->get_csf_sqd();
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/arta";
-		$this->_LoadPage('common/body', $data);
+		if($ref_code){
+
+			$is_ref_code_exist = $this->CSF_model->get_csf_arta_ref_code($ref_code);
+
+			if($is_ref_code_exist > 0){
+				$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
+				$data['client_types'] = $this->Library_model->get_csf_client_types();
+				$data['cc1'] = $this->Library_model->get_csf_cc1();
+				$data['cc2'] = $this->Library_model->get_csf_cc2();
+				$data['cc3'] = $this->Library_model->get_csf_cc3();
+				$data['sqd'] = $this->Library_model->get_csf_sqd();
+				$data['ref_code'] = $ref_code;
+				$data['main_title'] = "eJournal";
+				$data['main_content'] = "client/arta";
+				$this->_LoadPage('common/body', $data);
+			}else{
+				redirect('/');
+			}
+;
+		}else{
+		}
 
 	}
 
-	public function submit_arta(){
+	public function submit_arta($ref_code){
 
-		
-		$this->form_validation->set_rules('arta_ctype', 'Client type', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sex', 'Sex', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_age', 'Age', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_region', 'Region of residence', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_service', 'Service availed', 'required|trim');
-		$this->form_validation->set_rules('arta_cc1', 'CC1', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_cc2', 'CC2', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_cc3', 'CC3', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sqd1', 'SQD1', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sqd2', 'SQD2', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sqd3', 'SQD3', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sqd4', 'SQD4', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sqd5', 'SQD5', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sqd6', 'SQD6', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sqd7', 'SQD7', 'required|integer|trim');
-		$this->form_validation->set_rules('arta_sqd8', 'SQD8', 'required|integer|trim');
+		$is_ref_code_exist = $this->CSF_model->get_csf_arta_ref_code($ref_code);
 
-		
-		$validations = [
-						'arta_ctype', 
-						'arta_sex', 
-						'arta_age', 
-						'arta_region', 
-						'arta_service', 
-						'arta_cc1', 
-						'arta_cc2', 
-						'arta_cc3', 
-						'arta_sqd1', 
-						'arta_sqd2', 
-						'arta_sqd3', 
-						'arta_sqd4', 
-						'arta_sqd5', 
-						'arta_sqd6', 
-						'arta_sqd7',
-						'arta_sqd8'
-					];
+		if($is_ref_code_exist > 0){
 
-		if($this->form_validation->run() == FALSE){
-			$errors = [];
-			foreach($validations as $value){
-				//store entered value to display on redirect
-				$this->session->set_flashdata($value, $this->input->post($value));
-				
-				//store errors to display on redirect
-				if (form_error($value)) {
-					$errors[$value] = strip_tags(form_error($value));
-
+			$this->form_validation->set_rules('arta_ctype', 'Client type', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sex', 'Sex', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_age', 'Age', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_region', 'Region of residence', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_service', 'Service availed', 'required|trim');
+			$this->form_validation->set_rules('arta_cc1', 'CC1', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_cc2', 'CC2', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_cc3', 'CC3', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sqd1', 'SQD1', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sqd2', 'SQD2', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sqd3', 'SQD3', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sqd4', 'SQD4', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sqd5', 'SQD5', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sqd6', 'SQD6', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sqd7', 'SQD7', 'required|integer|trim');
+			$this->form_validation->set_rules('arta_sqd8', 'SQD8', 'required|integer|trim');
+	
+			
+			$validations = [
+							'arta_ctype', 
+							'arta_sex', 
+							'arta_age', 
+							'arta_region', 
+							'arta_service', 
+							'arta_cc1', 
+							'arta_cc2', 
+							'arta_cc3', 
+							'arta_sqd1', 
+							'arta_sqd2', 
+							'arta_sqd3', 
+							'arta_sqd4', 
+							'arta_sqd5', 
+							'arta_sqd6', 
+							'arta_sqd7',
+							'arta_sqd8'
+						];
+	
+			if($this->form_validation->run() == FALSE){
+				$errors = [];
+				foreach($validations as $value){
+					//store entered value to display on redirect
+					$this->session->set_flashdata($value, $this->input->post($value));
+					
+					//store errors to display on redirect
+					if (form_error($value)) {
+						$errors[$value] = strip_tags(form_error($value));
+	
+					}
 				}
+	
+				// Set flashdata to pass validation errors and form data to the view
+				$this->session->set_flashdata('csf_arta_validation_errors', $errors);
+				redirect('client/ejournal/csf_arta/' . $ref_code);
+	
+			}else{
+				$tableName = 'tblcsf_arta';
+				$result = $this->db->list_fields($tableName);
+				$post = array();
+		
+				foreach ($result as $i => $field) {
+					$post[$field] = $this->input->post($field, TRUE);
+				}
+		
+				$post['arta_agency'] = 'NRCP';
+				$post['arta_updated_at'] = date('Y-m-d H:i:s');
+				$post['arta_ref_code'] = '-'; // remove ref code to prevent link reacces
+				$where['arta_user_id'] = $this->session->userdata('user_id');
+				$where['arta_ref_code'] = $ref_code;
+	
+				$this->CSF_model->update_csf_arta(array_filter($post), $where);
+	
+				$data['main_title'] = "eJournal";
+				$data['main_content'] = "client/success";
+				$this->_LoadPage('common/body', $data);
+	
 			}
-
-            // Set flashdata to pass validation errors and form data to the view
-            $this->session->set_flashdata('csf_arta_validation_errors', $errors);
-			redirect('client/ejournal/csf_arta');
-
 		}else{
-			$tableName = 'tblcsf_arta';
-			$result = $this->db->list_fields($tableName);
-			$post = array();
-	
-			foreach ($result as $i => $field) {
-				$post[$field] = $this->input->post($field, TRUE);
-			}
-	
-			$post['arta_user_id'] = $this->session->userdata('user_id');
-			$post['arta_agency'] = 'NRCP';
-			$post['arta_email'] = $this->session->userdata('email');
-			$post['arta_created_at'] = date('Y-m-d H:i:s');
-
-			print_r($post);
-			//TODO:save to databsae and show success page
+			redirect('/');
 		}
 
 	}
@@ -1352,6 +1390,193 @@ class Ejournal extends EJ_Controller {
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/article_page";
 		$this->_LoadPage('common/body', $data);
+	}
+
+	
+	/**
+	 * Send email to client after downloading article for csf arta
+	 *
+	 * @param [int] $id	client user id
+	 * @param [int] $download_id downloaded article's id
+	 * @param [string] $ref_cde csf arta ref code
+	 * @return void
+	 */
+	public function notify_client($id, $download_id, $ref_code){
+
+		$client_email = $this->Client_journal_model->get_client_email($id);
+
+		$link = "<a href='https://researchjournal.nrcp.dost.gov.ph/client/ejournal/csf_arta/". $ref_code ."' target='_blank'>CSF-ARTA</a>";
+		$sender = 'eJournal Admin';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+
+		// setup email config
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+		$mail->AddAddress($client_email);
+
+		// if($flag == 1){ // full text pdf downloaded
+			
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(5);
+
+			// add cc/bcc
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+			}
+
+			// add exisiting email as cc
+			if(count($email_user_group) > 0){
+				$user_group_emails = array();
+				foreach($email_user_group as $grp){
+					$username = $this->Email_model->get_user_group_emails($grp);
+					array_push($user_group_emails, $username);
+				}
+			}
+
+			$title = $this->Client_journal_model->get_article_title_download_by_client($download_id);
+			$emailBody = str_replace('[TITLE]', $title, $email_contents);
+			$emailBody = str_replace('[LINK]', $link, $emailBody);
+			
+	
+		// }else{ // articles cited
+		// 	$client_info = $this->Client_journal_model->get_client_info_citation($id);
+
+		// 	foreach ($client_info as $key => $row) {
+				
+		// 		$author = $row->art_author;
+		// 		$name = $row->cite_name;
+		// 		$client_email = $row->cite_email;
+		// 		$affiliation = $row->cite_affiliation;
+		// 		$country = $row->cite_country;
+		// 		$date = $row->cite_date;
+		// 		$member = ($row->cite_member == 1) ? '(NRCP member)' : '';
+		// 		$article = $row->art_title;
+		// 	}
+
+		// 	// get email notification content
+		// 	$email_contents = $this->Email_model->get_email_content(1);
+
+		// 	// add cc/bcc
+		// 	foreach($email_contents as $row){
+		// 		$email_subject = $row->enc_subject;
+		// 		$email_contents = $row->enc_content;
+
+		// 		if( strpos($row->enc_cc, ',') !== false ) {
+		// 			$email_cc = explode(',', $row->enc_cc);
+		// 		}else{
+		// 			$email_cc = array();
+		// 			array_push($email_cc, $row->enc_cc);
+		// 		}
+
+		// 		if( strpos($row->enc_bcc, ',') !== false ) {
+		// 			$email_bcc = explode(',', $row->enc_bcc);
+		// 		}else{
+		// 			$email_bcc = array();
+		// 			array_push($email_bcc, $row->enc_bcc);
+		// 		}
+
+		// 		if( strpos($row->enc_user_group, ',') !== false ) {
+		// 			$email_user_group = explode(',', $row->enc_user_group);
+		// 		}else{
+		// 			$email_user_group = array();
+		// 			array_push($email_user_group, $row->enc_user_group);
+		// 		}
+		// 	}
+
+		// 	// add exisiting email as cc
+		// 	if(count($email_user_group) > 0){
+		// 		$user_group_emails = array();
+		// 		foreach($email_user_group as $grp){
+		// 			$username = $this->Email_model->get_user_group_emails($grp);
+		// 			array_push($user_group_emails, $username);
+		// 		}
+		// 	}
+
+		// 	$link = "<a href='https://researchjournal.nrcp.dost.gov.ph/' target='_blank'>https://researchjournal.nrcp.dost.gov.ph/</a>";
+		// 	$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
+		// 	$emailBody = str_replace('[ARTICLE]', $article, $emailBody);
+		// 	$emailBody = str_replace('[NAME]', $name, $emailBody);
+		// 	$emailBody = str_replace('[MEMBER]', $member, $emailBody);
+		// 	$emailBody = str_replace('[EMAIL]', $client_email, $emailBody);
+		// 	$emailBody = str_replace('[LINK]', $link, $emailBody);
+		// 	$emailBody = str_replace('[AFFILIATION]', $affiliation, $emailBody);
+		// 	$emailBody = str_replace('[COUNTRY]', $country, $emailBody);
+		
+		// }
+
+		// replace reserved words
+		// add cc if any
+		if(count($email_cc) > 0){
+			foreach($email_cc as $cc){
+				$mail->AddCC($cc);
+			}
+		}
+		// add bcc if any
+		if(count($email_bcc) > 0){
+			foreach($email_bcc as $bcc){
+				$mail->AddBCC($bcc);
+			}
+		}
+		// add existing as cc
+		if(count($user_group_emails) > 0){
+			foreach($user_group_emails as $grp){
+				$mail->AddCC($grp);
+			}
+		}
+
+		// send email
+		$mail->Subject = $email_subject;
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
 	}
 
 }
