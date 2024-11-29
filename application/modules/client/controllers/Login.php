@@ -27,6 +27,7 @@ class Login extends EJ_Controller {
 		$this->load->model('Login_model');
 		$this->load->model('Client_journal_model');
 		$this->load->model('Library_model');
+		$this->load->model('CSF_model');
 		$this->load->library("My_phpmailer");
 		$objMail = $this->my_phpmailer->load();
 		$this->load->helper('string');
@@ -493,7 +494,7 @@ class Login extends EJ_Controller {
 						$this->Login_model->delete_otp($id);
 						
 						//save log
-						save_log_ej($verifyOTP[0]->id, 'Login successful');
+						save_log_ej($id, 'Login successful');
 
 						//create access token
 						$token = uniqid();
@@ -504,16 +505,34 @@ class Login extends EJ_Controller {
 						$expired_at = date('Y-m-d H:i:s', $expiration_time);
 
 						
-						$this->Login_model->delete_access_token($verifyOTP[0]->id);
+						$this->Login_model->delete_access_token($id);
 
 						$tokenData = [
-							'tkn_user_id' => $verifyOTP[0]->id,
+							'tkn_user_id' => $id,
 							'tkn_value' => $token,
 							'tkn_created_at' => date('Y-m-d H:i:s'),
 							'tkn_expired_at' => $expired_at
 						];
 						
 						$this->Login_model->create_user_access_token($tokenData);
+						
+						// check if there is an unaccomplished csf arta
+						$arta_ref_code = $this->CSF_model->get_latest_incomplete_csf_arta($id);
+
+						if($arta_ref_code){
+							$csf_arta = '<div class="alert alert-warning" role="alert">
+								<h4 class="alert-heading h6 fw-bold"><span class="fa fa-exclamation-triangle text-warning"></span> CSF-ARTA</h4>
+								<hr>
+								<p class="mb-3">The system has detected that you have an unaccomplished CSF-ARTA from your most recent article download.</p>
+								
+								<div>
+									<a href="' . base_url() . 'client/ejournal/csf_arta/' . $arta_ref_code . '" class="btn btn-sm btn-warning" target="_blank">View</a>
+								</div>
+							</div>';
+	
+							$this->session->set_userdata('csf_arta', $csf_arta);
+						}
+
 
 						redirect('client/ejournal/');
 					} else {

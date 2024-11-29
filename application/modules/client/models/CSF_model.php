@@ -76,6 +76,17 @@ class CSF_model extends CI_Model {
       $query = $this->db->get();
       return $query->num_rows();
     }
+
+    public function get_latest_incomplete_csf_arta($id){
+      $this->db->select('arta_ref_code');
+      $this->db->from('tblcsf_arta');
+      $this->db->where('arta_user_id', $id);
+      $this->db->where('arta_service', '');
+      $this->db->order_by('arta_created_at', 'desc');
+      $this->db->limit(1);
+      $data = $this->db->get()->row_array();
+      return $data['arta_ref_code'];
+    }
 }
 
 /* End of file Library_model.php */

@@ -1303,7 +1303,8 @@ class Ejournal extends EJ_Controller {
 				$where['arta_ref_code'] = $ref_code;
 	
 				$this->CSF_model->update_csf_arta(array_filter($post), $where);
-	
+				$this->session->unset_userdata('csf_arta');
+				
 				$data['main_title'] = "eJournal";
 				$data['main_content'] = "client/success";
 				$this->_LoadPage('common/body', $data);
@@ -1406,7 +1407,7 @@ class Ejournal extends EJ_Controller {
 		$client_email = $this->Client_journal_model->get_client_email($id);
 
 		$link = "<a href='https://researchjournal.nrcp.dost.gov.ph/client/ejournal/csf_arta/". $ref_code ."' target='_blank'>CSF-ARTA</a>";
-		$sender = 'eJournal Admin';
+		$sender = 'eJournal';
 		$sender_email = 'nrcp.ejournal@gmail.com';
 		$password = 'fpzskheyxltsbvtg';
 
