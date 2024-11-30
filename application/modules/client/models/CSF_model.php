@@ -77,6 +77,14 @@ class CSF_model extends CI_Model {
       return $query->num_rows();
     }
 
+    public function get_csf_arta_user_id($ref_code){
+      $this->db->select('arta_user_id');
+      $this->db->from('tblcsf_arta');
+      $this->db->where('arta_ref_code', $ref_code);
+      $data = $this->db->get()->row_array();
+      return $data['arta_user_id'];
+    }
+
     public function get_latest_incomplete_csf_arta($id){
       $this->db->select('arta_ref_code');
       $this->db->from('tblcsf_arta');
@@ -86,6 +94,28 @@ class CSF_model extends CI_Model {
       $this->db->limit(1);
       $data = $this->db->get()->row_array();
       return $data['arta_ref_code'];
+    }
+
+    public function get_ubsubmitted_csf_arta(){
+      $this->db->distinct();
+      $this->db->select('arta_user_id');
+      $this->db->from('tblcsf_arta');
+      $this->db->where('arta_service', '');
+      $query = $this->db->get();
+      return $query->result();
+    }
+
+    public function get_latest_download_info($user_id){
+  
+      $this->db->select('dl_art_id, arta_ref_code');
+      $this->db->from('tblcsf_arta');
+      $this->db->join('tbldownloads', 'arta_user_id = dl_user_id');
+      $this->db->where('arta_user_id', $user_id);
+      $this->db->where('arta_service', '');
+      $this->db->order_by('arta_created_at', 'desc');
+      $this->db->limit(1);
+      $data = $this->db->get()->row_array();
+      return $data;
     }
 }
 

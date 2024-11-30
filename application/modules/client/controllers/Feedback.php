@@ -22,41 +22,10 @@ class Feedback extends EJ_Controller {
 
 	public function __construct() {
 		parent::__construct();
-
-		$this->load->model('Client_journal_model');
-		$this->load->model('Library_model');
-		$this->load->model('Login_model');
-		$this->load->model('Search_model');
-		$this->load->model('CSF_model');
-		$this->load->model('Oprs/User_model');
-		$this->load->model('Admin/Journal_model');
-		$this->load->model('Admin/Email_model');
-		$this->load->library("My_phpmailer");
-		$objMail = $this->my_phpmailer->load();
-		$this->load->helper('visitors_helper');
-		$this->load->helper('string');
-        $this->load->helper('form');
-        $this->load->library('session'); 
-		$this->load->helper('security');
-		$this->load->library('form_validation');
-
-		error_reporting(0);
-
-		//security headers
-		$this->output->set_header("Content-Security-Policy: 
-			default-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com; 
-			script-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
-			style-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
-			font-src 'self' https://*.gstatic.com;
-			img-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com data:; 
-			frame-src 'self' https://*.google.com;"
-		);
-
-		$this->output->set_header('X-Frame-Options: SAMEORIGIN');
-		$this->output->set_header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
-		$this->output->set_header('X-XSS-Protection: 1; mode=block');
-		$this->output->set_header('X-Content-Type-Options: nosniff');
-
+		
+		/**
+		 * Helpers, Models, Library, Security headers are all in EJ_controller.php
+		 */
 	}
 
     public function submit_csf_ui_ux(){

@@ -23,35 +23,10 @@ class Login extends EJ_Controller {
 	public function __construct() {
 
 		parent::__construct();
-
-		$this->load->model('Login_model');
-		$this->load->model('Client_journal_model');
-		$this->load->model('Library_model');
-		$this->load->model('CSF_model');
-		$this->load->library("My_phpmailer");
-		$objMail = $this->my_phpmailer->load();
-		$this->load->helper('string');
-        $this->load->helper('form');
-        $this->load->helper('security');
-        $this->load->library('session'); 
-		$this->load->library('form_validation');
-		error_reporting(0);
-
-		//security headers
-		$this->output->set_header("Content-Security-Policy: 
-			default-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com; 
-			script-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
-			style-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
-			font-src 'self' https://*.gstatic.com;
-			img-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com data:; 
-			frame-src 'self' https://*.google.com;"
-		);
-
-		$this->output->set_header('X-Frame-Options: SAMEORIGIN');
-		$this->output->set_header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
-		$this->output->set_header('X-XSS-Protection: 1; mode=block');
-		$this->output->set_header('X-Content-Type-Options: nosniff');
 		
+		/**
+		 * Helpers, Models, Library, Security headers are all in EJ_controller.php
+		 */
 	}
     
 
@@ -523,7 +498,7 @@ class Login extends EJ_Controller {
 							$csf_arta = '<div class="alert alert-warning" role="alert">
 								<h4 class="alert-heading h6 fw-bold"><span class="fa fa-exclamation-triangle text-warning"></span> CSF-ARTA</h4>
 								<hr>
-								<p class="mb-3">The system has detected that you have an unaccomplished CSF-ARTA from your most recent article download.</p>
+								<p class="mb-3">The system has detected that you have an unsubmitted CSF-ARTA from your most recent article download.</p>
 								
 								<div>
 									<a href="' . base_url() . 'client/ejournal/csf_arta/' . $arta_ref_code . '" class="btn btn-sm btn-warning" target="_blank">View</a>
