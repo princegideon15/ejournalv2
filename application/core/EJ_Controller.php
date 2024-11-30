@@ -31,15 +31,6 @@ class EJ_Controller extends MX_Controller {
 		$this->load->library("excel");
 		$this->load->library("My_phpmailer");
 
-		$this->load->model('Client_journal_model');
-		$this->load->model('Library_model');
-		$this->load->model('Login_model');
-		$this->load->model('Search_model');
-		$this->load->model('CSF_model');
-		$this->load->model('Oprs/User_model');
-		$this->load->model('Admin/Journal_model');
-		$this->load->model('Admin/Email_model');
-
 		$objMail = $this->my_phpmailer->load();
 
 		//security headers

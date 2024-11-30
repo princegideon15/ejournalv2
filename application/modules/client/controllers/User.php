@@ -24,8 +24,17 @@ class User extends EJ_Controller {
 		parent::__construct();
 		
 		/**
-		 * Helpers, Models, Library, Security headers are all in EJ_controller.php
+		 * Helpers, Library, Security headers are all in EJ_controller.php
 		 */
+		
+		 $this->load->model('Client_journal_model');
+		 $this->load->model('Library_model');
+		 $this->load->model('Login_model');
+		 $this->load->model('Search_model');
+		 $this->load->model('CSF_model');
+		 $this->load->model('Oprs/User_model');
+		 $this->load->model('Admin/Journal_model');
+		 $this->load->model('Admin/Email_model');
 
 	}
 
