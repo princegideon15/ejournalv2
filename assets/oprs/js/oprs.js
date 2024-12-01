@@ -23,6 +23,7 @@ var mail_content;
 var mail_title = '';
 var editor_mail_content;
 
+var prv_exp = 0;
 
 $(document).ready(function() {
 
@@ -2388,6 +2389,7 @@ $(document).ready(function() {
                 dataType: "json",
                 crossDomain: true,
                 success: function(data) {
+                    console.log(data);
                     $('#user_option').empty();
                     if (data.length > 1) {
                         $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
@@ -5320,3 +5322,15 @@ function send_cert(rev, man){
         }
     });
 }
+
+function togglePassword(elementID, iconID){
+    var passwordInput = $(elementID);
+    var passwordIcon = $(iconID);
+    if (passwordInput.attr('type') === 'password') {
+      passwordInput.attr('type', 'text');
+      passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+    } else {
+      passwordInput.attr('type', 'password');
+      passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+    }
+  }

@@ -64,18 +64,18 @@
                         
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm', 'class' => 'w-50'])?>
                             <div class="mb-3">
-                                <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="Email">
+                                <input type="email" class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="Email">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['email'] ?></span>
                             </div>
                             <div class="input-group mb-3 has-validation">
-                                <input type="password" class="form-control <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
+                                <input type="password" class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
                                 <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#password', '#password_icon')"><i class="fa fa-eye-slash" id="password_icon"></i></a></span>
                                 <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['password'] ?></span>
                             </div>
                             <div class="mb-3 d-flex justify-content-end">
                                 <a class="main-link" href="<?php echo base_url('/client/login/forgot_password');?>">Forgot Password?</a>
                             </div>
-                            <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#loginForm', 'login')">Login </button>
+                            <button type="submit" class="btn btn-lg main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#loginForm', 'login')">Login </button>
                         <?=form_close()?>
                     </div>
                     <!-- Create Account -->

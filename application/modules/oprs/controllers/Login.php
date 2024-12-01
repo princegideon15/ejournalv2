@@ -816,6 +816,12 @@ class Login extends OPRS_Controller {
 			exit;
 		}
 	}
+
+	public function forgot_password(){//TODO: create forgot password page
+		$data['main_title'] = "OPRS";
+		$data['main_content'] = "oprs/forgot_password";
+		$this->_LoadPage('common/body', $data);
+	}
 }
 
 /* End of file Login.php */
