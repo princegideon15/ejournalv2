@@ -22,19 +22,29 @@
           </div>
           <div class="col-6 d-flex justify-content-center align-items-center">
             <div class="row p-3">
-              <h4 class="fw-bold">Forgot your password?</h4>
-              <p>Enter your email address and we will send you instructions on how to reset your password.</p>
 
-              <!-- <?php echo form_open('support/forgot/send_password'); ?> -->
-              <form class="mb-5" id="form_forgot">
-                <div class="mb-3">
-                  <input type="email" id="get_email" name="get_email" class="form-control form-control-lg" placeholder="Enter email address" autofocus="autofocus">
-                </div>
-                <div class="form-group" id="user_option">
-                </div>
-                <button class="btn btn-lg btn-primary w-100" type="submit">Reset Password</button>
-              </form>
-              <!-- <?php echo form_close(); ?> -->
+              <?php if ($this->session->flashdata('reset_password_success')) { ?>
+                    <div class="alert alert-success" role="alert">
+                      <h4 class="alert-heading"><span class="fa fa-check me-1"></span>Success!</h4>
+                      <hr>
+                      <?php echo $this->session->flashdata('reset_password_success'); ?>
+                    </div>
+              <?php } else { ?>
+
+                <h4 class="fw-bold">Forgot your password?</h4>
+                <p>Enter your email address and we will send you instructions on how to reset your password.</p>
+
+                <?php echo form_open('support/forgot/send_password', ['method' => 'post', 'id' => 'form_forgot']); ?>
+                  <div class="mb-3">
+                    <input type="email" id="get_email" name="get_email" class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" placeholder="Enter email address" autofocus="autofocus">
+                    <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['email'] ?></span>
+                  </div>
+                  <div class="form-group" id="user_option">
+                  </div>
+                  <button class="btn btn-lg btn-primary w-100" type="submit">Reset Password</button>
+                <?php echo form_close(); ?>
+
+              <?php } ?>
               <div class="pt-5 text-center"><a class="text-secondary text-decoration-none fw-bold text-sm" href="../oprs/login">Back to Login</a></div>
             </div>
           </div>

@@ -85,6 +85,7 @@ class Login extends OPRS_Controller {
 		$login = $this->input->post('admin_login', true);
 		$remember = $this->input->post('oprs_remember', true);
 		$x = 0;
+		
 		if (isset($login)) {
 			$usr_name = $this->input->post('usr_username', true);
 			$usr_password = $this->input->post('usr_password', true);

@@ -1809,52 +1809,52 @@ $(document).ready(function() {
     });
 
     // forgot password email verification
-    $("#form_forgot").validate({
-        debug: true,
-        errorClass: 'text-danger',
-        rules: {
-            get_email: {
-                required: true,
-                email: true,
-                remote: {
-                    url: base_url + "support/forgot/check_email/",
-                    type: "post"
-                }
-            },
-            usr_role: {
-                required: true,
-            }
-        },
-        messages: {
-            get_email: {
-                remote: "Email not found"
-            },
-            usr_role: {
-                required: "Please select one",
-            }
-        },
-        submitHandler: function() {
-            $.ajax({
-                type: "POST",
-                url: base_url + "support/forgot/send_password/",
-                data: $('#form_forgot').serializeArray(),
-                cache: false,
-                crossDomain: true,
-                success: function(data) {
-                    $.notify({
-                        icon: 'fa fa-check-circle',
-                        message: 'Email sent! Please check your inbox.'
-                    }, {
-                        type: 'success',
-                        timer: 3000,
-                    });
+    // $("#form_forgot").validate({
+    //     debug: true,
+    //     errorClass: 'text-danger',
+    //     rules: {
+    //         get_email: {
+    //             required: true,
+    //             email: true,
+    //             remote: {
+    //                 url: base_url + "support/forgot/check_email/",
+    //                 type: "post"
+    //             }
+    //         },
+    //         usr_role: {
+    //             required: true,
+    //         }
+    //     },
+    //     messages: {
+    //         get_email: {
+    //             remote: "Email not found"
+    //         },
+    //         usr_role: {
+    //             required: "Please select one",
+    //         }
+    //     },
+    //     submitHandler: function() {
+    //         $.ajax({
+    //             type: "POST",
+    //             url: base_url + "support/forgot/send_password/",
+    //             data: $('#form_forgot').serializeArray(),
+    //             cache: false,
+    //             crossDomain: true,
+    //             success: function(data) {
+    //                 $.notify({
+    //                     icon: 'fa fa-check-circle',
+    //                     message: 'Email sent! Please check your inbox.'
+    //                 }, {
+    //                     type: 'success',
+    //                     timer: 3000,
+    //                 });
 
-                    $('#form_forgot')[0].reset();
-                    $('#user_option').empty();
-                }
-            });
-        }
-    });
+    //                 $('#form_forgot')[0].reset();
+    //                 $('#user_option').empty();
+    //             }
+    //         });
+    //     }
+    // });
 
     // dynamic adding of co-author
     var inpIncr = 0;
