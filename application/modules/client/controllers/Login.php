@@ -651,7 +651,7 @@ class Login extends EJ_Controller {
 
 		$emailBody = 'Dear <strong>'.$name.'</strong>,
 		<br><br>
-		You have requested a new temporary password for your eJournal account.
+		You have requested a temporary password for your eJournal account.
 		<br><br>
 		Your new temporary password is: 
 		<br><br>

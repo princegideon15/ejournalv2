@@ -2381,74 +2381,77 @@ $(document).ready(function() {
     // });
 
     // check if multiple email in one manuscript
-    $('#get_email').change(function() {
-        if ($(this).val() != '')
-            $.ajax({
-                type: "GET",
-                url: base_url + "support/forgot/check_multiple_account/" + $(this).val(),
-                dataType: "json",
-                crossDomain: true,
-                success: function(data) {
-                    console.log(data);
-                    $('#user_option').empty();
-                    if (data.length > 1) {
-                        $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
+    // $('#get_email').change(function() {
+    //     if ($(this).val() != '')
+    //         $.ajax({
+    //             type: "GET",
+    //             url: base_url + "support/forgot/check_multiple_account/" + $(this).val(),
+    //             dataType: "json",
+    //             crossDomain: true,
+    //             success: function(data) {
+    //                 console.log(data);
+    //                 $('#user_option').empty();
+    //                 if (data.length > 1) {
+    //                     $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
 
-                        $.each(data, function(key, val) {
-                            var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
+    //                     $.each(data, function(key, val) {
+    //                         var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
 
-                            $('#user_option').append('<div class="custom-control custom-radio">' +
-                                '<input type="radio" value="' + val.usr_id + '" id="' + role + '' + val.usr_role + '" name="usr_id" class="custom-control-input">' +
-                                '<label class="custom-control-label pt-1" for="' + role + '' + val.usr_role + '"> ' + val.usr_username + ' (' + role + ')</label>' +
-                                '</div>');
-                        });
-                    } else {
+    //                         $('#user_option').append('<div class="custom-control custom-radio">' +
+    //                             '<input type="radio" value="' + val.usr_id + '" id="' + role + '' + val.usr_role + '" name="usr_id" class="custom-control-input">' +
+    //                             '<label class="custom-control-label pt-1" for="' + role + '' + val.usr_role + '"> ' + val.usr_username + ' (' + role + ')</label>' +
+    //                             '</div>');
+    //                     });
+    //                 } else {
 
-                        $('#user_option').append('<p class="font-weight-bold small">Current account:</p>');
+    //                     $('#user_option').append('<p class="font-weight-bold small">Current account:</p>');
 
-                        $.each(data, function(key, val) {
-                            var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
+    //                     $.each(data, function(key, val) {
+    //                         var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
 
-                            $('#user_option').append('<div class="custom-control custom-radio">' +
-                                '<input type="radio" checked value="' + val.usr_id + '" id="' + role + '' + val.usr_role + '" name="usr_id" class="custom-control-input">' +
-                                '<label class="custom-control-label pt-1" for="' + role + '' + val.usr_role + '"> ' + val.usr_username + ' (' + role + ')</label>' +
-                                '</div>');
-                        });
-                    }
-                }
-            });
-    });
+    //                         $('#user_option').append('<div class="custom-control custom-radio">' +
+    //                             '<input type="radio" checked value="' + val.usr_id + '" id="' + role + '' + val.usr_role + '" name="usr_id" class="custom-control-input">' +
+    //                             '<label class="custom-control-label pt-1" for="' + role + '' + val.usr_role + '"> ' + val.usr_username + ' (' + role + ')</label>' +
+    //                             '</div>');
+    //                     });
+    //                 }
+    //             }
+    //         });
+    // });
 
+    $('input[name="user_id"]').on('change', function(){
+        $('#reset_password_btn').prop('disabled', false);
+    })
     // for author/reviewer multiple account validation (unused)
-    $('.login #usr_username').change(function() {
-        if ($(this).val() != '')
-            $.ajax({
-                type: "GET",
-                url: base_url + "oprs/login/check_multiple_account/" + $(this).val(),
-                dataType: "json",
-                crossDomain: true,
-                success: function(data) {
-                    // console.log(data);
-                    $('#user_option').empty();
-                    if (data.length > 1) {
-                        $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
+    // $('.login #usr_username').change(function() {
+    //     if ($(this).val() != '')
+    //         $.ajax({
+    //             type: "GET",
+    //             url: base_url + "oprs/login/check_multiple_account/" + $(this).val(),
+    //             dataType: "json",
+    //             crossDomain: true,
+    //             success: function(data) {
+    //                 // console.log(data);
+    //                 $('#user_option').empty();
+    //                 if (data.length > 1) {
+    //                     $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
 
-                        $.each(data, function(key, val) {
-                            // var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
-                            var usr_id = (val.usr_grp_id > 0) ? val.usr_id : val.usr_id;
-                            var role = (val.usr_grp_id > 0) ? 'Author' : (val.usr_role == 1) ? 'Author' : 'Reviewer';
-                            var usr_role = (val.usr_grp_id > 0) ? '1' : (val.usr_role == 1) ? '1' : '5';
-                            var usr_username = (val.usr_grp_id > 0) ? val.usr_name : val.usr_username;
+    //                     $.each(data, function(key, val) {
+    //                         // var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
+    //                         var usr_id = (val.usr_grp_id > 0) ? val.usr_id : val.usr_id;
+    //                         var role = (val.usr_grp_id > 0) ? 'Author' : (val.usr_role == 1) ? 'Author' : 'Reviewer';
+    //                         var usr_role = (val.usr_grp_id > 0) ? '1' : (val.usr_role == 1) ? '1' : '5';
+    //                         var usr_username = (val.usr_grp_id > 0) ? val.usr_name : val.usr_username;
 
-                            $('#user_option').append('<div class="custom-control custom-radio">' +
-                                '<input type="radio" value="' + usr_role + '" id="' + role + '' + usr_id + '" name="usr_role" class="custom-control-input">' +
-                                '<label class="custom-control-label pt-1" for="' + role + '' + usr_id + '"> ' + usr_username + ' (' + role + ')</label>' +
-                                '</div>');
-                        });
-                    }
-                }
-            });
-    });
+    //                         $('#user_option').append('<div class="custom-control custom-radio">' +
+    //                             '<input type="radio" value="' + usr_role + '" id="' + role + '' + usr_id + '" name="usr_role" class="custom-control-input">' +
+    //                             '<label class="custom-control-label pt-1" for="' + role + '' + usr_id + '"> ' + usr_username + ' (' + role + ')</label>' +
+    //                             '</div>');
+    //                     });
+    //                 }
+    //             }
+    //         });
+    // });
 
     // unused
     $('#revise_review').click(function() {

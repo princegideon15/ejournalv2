@@ -149,6 +149,15 @@ class User_model extends CI_Model {
 		$query = $oprs->get();
 		return $query->result();
 	}
+	
+	public function get_user_info_by_id($id) {
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->oprs_users);
+		$oprs->where('usr_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
 
 	public function validate_otp_ref($ref){
 		$oprs = $this->load->database('dboprs', TRUE);
@@ -496,6 +505,37 @@ class User_model extends CI_Model {
 		$members->where('usr_name', $email);
 		$query = $members->get();
 		return $query->row_array();
+	}
+
+	public function get_nrcp_member_info_by_id($id){
+		$members = $this->load->database('members', true);
+		$members->select('usr_id, usr_name, pp_contact, title_name, pp_first_name, pp_last_name');
+		$members->from($this->skms_users);
+		$members->join($this->personal, 'usr_id = pp_usr_id');
+		$members->join($this->titles, 'pp_title = title_id');
+		$members->where('usr_id', $id);
+		$query = $members->get();
+		return $query->result();
+	}
+
+	public function get_reviewer_info_by_id($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('r.*');
+		$oprs->from($this->oprs_users);
+		$oprs->join($this->reviewers . ' r', 'usr_id = rev_id');
+		$oprs->where('usr_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function get_reviewer_info_by_email($email){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('r.*');
+		$oprs->from($this->oprs_users);
+		$oprs->join($this->reviewers . ' r', 'usr_id = rev_id');
+		$oprs->where('usr_username', $email);
+		$query = $oprs->get();
+		return $query->result();
 	}
 
 	public function create_author_account($data){

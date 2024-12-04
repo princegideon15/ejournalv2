@@ -577,6 +577,15 @@ class Client_journal_model extends CI_Model {
 		return $query->result();
 	}
 
+	public function get_client_info_id($id){
+		$this->db->select('p.*, otp, otp_ref_code');
+		$this->db->from($this->profiles . ' p');
+		$this->db->join($this->users . ' u', 'p.user_id = u.id');
+		$this->db->where('u.id', $id);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	public function getTitles(){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
