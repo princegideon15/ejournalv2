@@ -1,11 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 class Login_model extends CI_Model {
-	private $accounts = 'tblusers';
+	// oprs
+	private $users = 'tblusers';
 	private $reviewers = 'tblreviewers';
 	private $editors = 'tbleditorials';
 	private $nonmembers = 'tblnonmembers';
-	//skms
+	private $attempts = 'tbllogin_attempts';
+	// skms
 	private $memberships = 'tblmembership_profiles';
 	private $profiles = 'tblpersonal_profiles';
 	private $members = 'tblusers';
@@ -13,11 +15,12 @@ class Login_model extends CI_Model {
 		parent::__construct();
 		$this->load->database(ENVIRONMENT);
 	}
+
 	/** authenticate user login */
 	public function authenticate_user($user, $role = null) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
-		$oprs->from($this->accounts);
+		$oprs->from($this->users);
 		$oprs->where('usr_username', $user);
 		if (isset($role)) {
 			$oprs->where('usr_role', $role);
@@ -27,11 +30,12 @@ class Login_model extends CI_Model {
 		return $data;
 		// return $oprs->last_query();
 	}
+
 	/** retreive online users */
 	public function online_users($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
-		$oprs->from($this->accounts);
+		$oprs->from($this->users);
 		$oprs->where_not_in('row_id', $id);
 		$oprs->where_not_in('acc_type', '0');
 		$oprs->order_by('acc_type', 'asc');
@@ -44,7 +48,7 @@ class Login_model extends CI_Model {
 	public function get_username($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('acc_username');
-		$oprs->from($this->accounts);
+		$oprs->from($this->users);
 		$oprs->where_not_in('row_id', $id);
 		$query = $oprs->get();
 		$result = $query->result_array();
@@ -54,7 +58,7 @@ class Login_model extends CI_Model {
 	public function get_username_for_logs($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('acc_username');
-		$oprs->from($this->accounts);
+		$oprs->from($this->users);
 		$oprs->where('row_id', $id);
 		$query = $oprs->get();
 		$result = $query->result_array();
@@ -105,11 +109,12 @@ class Login_model extends CI_Model {
 		$data = $query->result();
 		return $data;
 	}
+
 	public function check_multiple_account($email) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$acc_ctr = 0;
 		$oprs->select('*');
-		$oprs->from($this->accounts);
+		$oprs->from($this->users);
 		$oprs->where('usr_username', $email);
 		$query = $oprs->get();
 		$row = $query->num_rows();
@@ -134,4 +139,47 @@ class Login_model extends CI_Model {
 			}
 		}
 	}
+	
+	public function validate_user($email){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->users);
+		$oprs->where('usr_username', $email);
+		$oprs->where('usr_role !=', 5);
+		$query = $oprs->get();
+		// If a matching user is found, return the user object
+		if ($query->num_rows() == 1) {
+			return $query->result();
+			// return $this->db->last_query();
+		} else {
+			// Return false if no user found
+			return false;
+		}
+	}
+
+	public function clear_login_attempts($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->delete($this->attempts, ['user_id' => $id]);
+	}
+
+	public function save_otp($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+	  	$oprs->update($this->users, $data, $where);
+	}
+
+	public function validate_otp_ref($ref){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->users);
+		$oprs->where('otp_ref_code', $ref);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function delete_otp_oprs($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->oprs_users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['usr_id' => $id]);
+	}
+  
+
 }
