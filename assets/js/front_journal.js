@@ -215,6 +215,7 @@ $(document).ready(function()
 
   $('#my-downloads-table').DataTable();
 
+  // 5 minutes timer for otp
   var url = window.location.pathname; // Get the current path
   var segments = url.split('/'); // Split the path by '/'
   // Make sure there are enough segments
@@ -1796,7 +1797,7 @@ function startTimer() {
 }
 
 function getCurrentOTP(refCode, otpType){
-  console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
+  // console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
   var currentDate = new Date();
   var otpDate;
   var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : base_url + "client/signup/get_current_otp_oprs/" + refCode;

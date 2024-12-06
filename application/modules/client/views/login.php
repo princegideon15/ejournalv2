@@ -75,7 +75,7 @@
                             <div class="mb-3 d-flex justify-content-end">
                                 <a class="main-link" href="<?php echo base_url('/client/login/forgot_password');?>">Forgot Password?</a>
                             </div>
-                            <button type="submit" class="btn btn-lg main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#loginForm', 'login')">Login </button>
+                            <button type="submit" class="btn btn-lg main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#loginForm', 'login')">Login</button>
                         <?=form_close()?>
                     </div>
                     <!-- Create Account -->

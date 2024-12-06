@@ -49,7 +49,7 @@
                   <?php } ?>
                 </div>
 
-              <form action="<?php echo base_url('oprs/login/authenticate'); ?>" method="post">
+              <form action="<?php echo base_url('oprs/login/authenticate'); ?>" method="post" id="loginForm">
                 <div class="mb-3 login">
                   <input class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="usr_username" name="usr_username" type="email" placeholder="Email" value="<?php if (isset($_COOKIE['oprs_cookie_user'])) {echo $_COOKIE['oprs_cookie_user'];}?>">
                   <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['email'] ?></span>
@@ -69,8 +69,8 @@
                     Remember me
                   </label>
                 </div>
-                <div class="form-group" id="user_option"></div>
-                <div><button type="submit" name="admin_login" value="admin_login" class="btn btn-primary btn-lg w-100 font-weight-bold">Log In</button></div>
+                <div><button type="submit" name="admin_login" id="admin_login" value="admin_login" class="btn btn-primary btn-lg w-100 font-weight-bold" onclick="disableOnSubmit(this, '#loginForm', 'login')">Login</button></div>
+       
               </form>
               <div class="pt-5 text-center"><a class="text-secondary text-decoration-none fw-bold text-xs" href="../support/forgot">Forgot Password?</a></div>
             </div>

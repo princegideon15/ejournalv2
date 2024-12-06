@@ -25,7 +25,55 @@ var editor_mail_content;
 
 var prv_exp = 0;
 
+var minutes = 5,          // otp timer
+seconds = 0,          // otp timer
+intervalId,           // otp timer
+isStartTimer = false, // otp timer
+refCode,              // reference code for otp
+accessToken,          // user access token generated on logged in   
+current_button_id = "#admin_login";    // button to enable/disable for catpcha  
+
 $(document).ready(function() {
+
+    // get user access token
+    accessToken = $.ajax({
+        type: "GET",
+        url: base_url + "oprs/login/get_access_token/",
+        async:false,
+        crossDomain: true,
+        success: function(data) {
+        if(data != 0){
+            return data;
+        }
+        },
+        error: function(xhr, status, error) {
+        reject(error);
+        }
+    }); 
+
+    accessToken = (accessToken.responseText).trim();
+
+    // 5 mins timer for otp
+    var url = window.location.pathname; // Get the current path
+    var segments = url.split('/'); // Split the path by '/'
+    // Make sure there are enough segments
+    if (segments.length > 2) {
+      var secondToLastSegment = segments[segments.length - 2];
+      refCode = url.split('/').pop();
+      
+      if(secondToLastSegment == 'verify_otp'){ // login otp, create client account otp
+        getCurrentOTP(refCode);
+      }else if(secondToLastSegment == 'csf_arta'){
+        current_button_id = "#submit_csf_arta";
+      }else{
+        // clear only if timeout exists
+        if(article_page_timeout){
+          clearTimeout(article_page_timeout);
+        }
+      }
+    } else {
+        // console.log("Not enough segments in the URL.");
+    }
 
     // get members info
     $.ajax({
@@ -5336,4 +5384,105 @@ function togglePassword(elementID, iconID){
       passwordInput.attr('type', 'password');
       passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
     }
+}
+
+function disableOnSubmit(element, form, action){
+    let newButtonText = (action == 'reset') ? 'Submitting' : (action == 'verify' ? 'Verifying' : 'Loading');
+
+    $(element).prop('disabled' ,true);
+    $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>' + newButtonText);
+    $(form).submit();
+}
+
+function getCurrentOTP(refCode){
+    // console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
+    var currentDate = new Date();
+    var otpDate;
+    // var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : base_url + "client/signup/get_current_otp_oprs/" + refCode;
+    
+    
+    $.ajax({
+      type: "GET",
+      url: base_url + "oprs/login/get_current_otp/" + refCode,
+      dataType: "json",
+      crossDomain: true,
+      success: function(data) {
+        // console.log("🚀 ~ getCurrentOTP ~ data:", data)
+        try{
+          otpDate = new Date(data[0]['otp_date']);
+           
+          var diff = currentDate.getTime() - otpDate.getTime();
+          var diffHours = Math.floor(diff / (1000 * 60 * 60));
+          var diffMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          var diffSeconds = Math.floor((diff % (1000 * 60)) / 1000);   
+    
+          if(diffHours == 0){
+            if(diffMinutes < 5 && diffSeconds <= 60){
+              minutes = 4 - diffMinutes;
+              seconds = 60 - diffSeconds;
+              startTimer();
+              $('#resend_code').addClass('disabled');
+              $('#verify_code').removeClass('disabled');
+            }else{
+              clearInterval(intervalId);
+              minutes = 5;
+              seconds = 0;
+              
+              var url = window.location.pathname; // Get the current path
+              var segments = url.split('/'); // Split the path by '/'
+              var secondToLastSegment = segments[segments.length - 2];
+      
+              refCode = url.split('/').pop();
+              if(secondToLastSegment == 'verify_otp'){ // login otp
+                $('#resend_code').attr('href', base_url + 'oprs/login/resend_login_code/' + refCode);
+              }
+              
+              $('#resend_code').removeClass('disabled');
+              $('#verify_code').addClass('disabled');
+            }
+          }else{
+            clearInterval(intervalId);
+            minutes = 5;
+            seconds = 0;
+            $('#resend_code').removeClass('disabled');
+            $('#verify_code').addClass('disabled');
+          }
+        }catch(err){
+          // console.log('No Login Request, No code exist.');
+          $('#resend_code').addClass('d-none');
+        }
+      }
+    });
+  }
+
+  function startTimer() {
+    intervalId = setInterval(function() {
+        if (seconds === 0) {
+            minutes--;
+            seconds = 59;
+        } else {
+            seconds--;
+        }
+  
+        var minutesStr = minutes < 10 ? '0' + minutes : minutes;
+        var secondsStr = seconds < 10 ? '0' + seconds : seconds;
+
+        $('#resend_code').text('Resend Code (' + minutesStr + ':' + secondsStr + ')');
+        if (minutes === 0 && seconds === 0) {
+          clearInterval(intervalId);
+          // Perform action when countdown is finished
+          $('#resend_code').removeClass('disabled');
+          $('#verify_code').addClass('disabled');
+          $('#resend_code').text('Resend Code');
+  
+          var url = window.location.pathname; // Get the current path
+          var segments = url.split('/'); // Split the path by '/'
+          var secondToLastSegment = segments[segments.length - 2];
+  
+          refCode = url.split('/').pop();
+          if(secondToLastSegment == 'verify_otp'){ // login otp
+            $('#resend_code').attr('href', base_url + 'oprs/login/resend_login_code/' + refCode);
+          }
+        }
+    }, 1000);
   }

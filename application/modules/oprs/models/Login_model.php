@@ -7,6 +7,7 @@ class Login_model extends CI_Model {
 	private $editors = 'tbleditorials';
 	private $nonmembers = 'tblnonmembers';
 	private $attempts = 'tbllogin_attempts';
+	private $access_tokens = 'tbluser_access_tokens';
 	// skms
 	private $memberships = 'tblmembership_profiles';
 	private $profiles = 'tblpersonal_profiles';
@@ -180,6 +181,23 @@ class Login_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->update($this->oprs_users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['usr_id' => $id]);
 	}
-  
+
+	public function get_access_token($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('tkn_value');
+		$oprs->from($this->access_tokens);
+		$oprs->where('tkn_user_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function get_current_otp($refCode){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('otp_date, usr_id, usr_username');
+		$oprs->from($this->users);
+		$oprs->where('otp_ref_code', $refCode);
+		$query = $oprs->get();
+		return $query->result();
+	}
 
 }

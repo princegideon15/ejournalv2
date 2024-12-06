@@ -1219,6 +1219,46 @@ class Login extends OPRS_Controller {
 		
 		return $minutes;
 	}
+
+	function get_access_token(){
+		$id = $this->session->userdata('user_id');
+		if ($id) {
+			$accessToken = $this->Login_model->get_access_token($id);
+			$token =  $accessToken[0]->tkn_value;
+			echo trim($token);
+		}else{
+			echo 0;
+		}
+	}
+
+	
+	/**
+	 * Get existing reference code for resending otp code
+	 *
+	 * @param string $refCode
+	 * @return void
+	 */
+	public function get_current_otp($refCode){
+		$refCode = $this->security->xss_clean($refCode);
+		$output = $this->Login_model->get_current_otp($refCode);
+		echo json_encode($output);
+	}
+
+	/**
+	 * Resend login otp
+	 *
+	 * @param string $refCode
+	 * @return void
+	 */
+	public function resend_login_code($refCode){
+		$refCode = $this->security->xss_clean($refCode);
+		$output = $this->Login_model->get_current_otp($refCode);
+		$email = $output[0]->usr_username;
+		save_log_ej($output[0]->usr_id, 'Resend login otp code');
+		$this->send_login_otp($email);
+	}
+
+	
 }
 
 /* End of file Login.php */

@@ -404,6 +404,7 @@ class Login extends EJ_Controller {
 		
 		$otp_date = $isOtpRefExist[0]->otp_date;
 		$current_date = date('Y-m-d H:i:s');
+		
 		if($this->compareDates($otp_date, $current_date) > 30){
 			// remove otp info if more than 30mins no action
 			$this->Login_model->delete_otp($isOtpRefExist[0]->id);
