@@ -31,7 +31,10 @@
         <link rel="stylesheet" href="<?php echo base_url("assets/oprs/css/buttons.dataTables.min.css"); ?>">
         <!-- Feedback emoji style -->
         <link rel="stylesheet" href="<?php echo base_url("assets/oprs/css/feedback.css"); ?>">
-        <link rel="icon" href="<?php echo base_url("assets/images/ejicon-07.png"); ?>">       
+        <link rel="icon" href="<?php echo base_url("assets/images/ejicon-07.png"); ?>"> 
+        
+        <link rel="stylesheet" href="<?php echo base_url("assets/font/css/open-iconic-bootstrap.css");?>">
+        <link rel="stylesheet" href="<?php echo base_url("assets/admin/vendor/font-awesome/css/font-awesome.css");?>">      
     
     </head>
     <body id="page-top">

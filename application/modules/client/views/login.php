@@ -51,10 +51,10 @@
                     <!-- Login -->
                     <div class="tab-pane fade p-3 <?= $this->session->flashdata('active_tab1') ?? 'show active'?>" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                         tabindex="0">
-
+                  
                         <?php if ($this->session->flashdata('error_login')) { ?>
-                            <div class="alert alert-danger d-flex align-items-center w-50">
-                                <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('error_login'); ?>
+                            <div class="alert alert-danger d-flex w-50">
+                                <i class="oi oi-circle-x me-1 pt-1"></i><?php echo $this->session->flashdata('error_login'); ?>
                             </div>
                         <?php } ?>
 

@@ -134,7 +134,7 @@ class Login extends EJ_Controller {
 								save_log_ej($validateUser[0]->id, 'Account locked for 30 minutes');
 							}
 							else{
-								$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+								$this->session->set_flashdata('error_login', 'Account temporarily locked for '. (30 - $time_remaining).' minutes.');
 							}
 	
 							redirect('client/login');
@@ -183,11 +183,10 @@ class Login extends EJ_Controller {
 						];
 
 						$this->Login_model->store_login_attempts($data); 
-						
 						save_log_ej(0, 'Unregistered account locked for 30 minutes');
 					}
 					else{
-						$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+						$this->session->set_flashdata('error_login', 'Account temporarily locked for '.(30 - $time_remaining).' minutes.');
 					}
 
 					redirect('client/login');

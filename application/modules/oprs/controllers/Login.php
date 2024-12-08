@@ -137,75 +137,75 @@ class Login extends OPRS_Controller {
 	
 				$user_account = $this->Login_model->check_multiple_account($email);
 
-				if(count($user_account) > 1){
-						$this->session->set_flashdata('email', $email);
-						$this->session->set_flashdata('accounts', $user_account);
-						$this->session->set_flashdata('disable_login', 'disabled');
-						redirect('oprs/login');
-				}else{
-					//check if account activated
-					if($validateUser[0]->usr_status == 1){
-						if (password_verify($password, $validateUser[0]->usr_password)) {
+				//check if account activated
+				if($validateUser[0]->usr_status == 1){
+					if (password_verify($password, $validateUser[0]->usr_password)) {
+						if(count($user_account) > 1){
+							$this->session->set_flashdata('email', $email);
+							$this->session->set_flashdata('accounts', $user_account);
+							$this->session->set_flashdata('disable_login', 'disabled');
+							redirect('oprs/login');
+						}else{
 							$this->Login_model->clear_login_attempts($validateUser[0]->usr_username);
 							//send otp to email
 							$this->send_login_otp($email);
-						}else{
-							$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->email));
-		
-							if($count_attempt == 3){
-		
-								$last_attempt_time = $this->Login_model->get_login_attempts($validateUser[0]->email);
-								$last_attempt_time = $last_attempt_time[0]->attempt_time;
-								$current_date = date('Y-m-d H:i:s');
-								$time_remaining = $this->compareDates($last_attempt_time, $current_date);
-		
-								$this->send_email_alert($email);
-								
-								if ($time_remaining  > 30) {
-									$this->Login_model->clear_login_attempts($validateUser[0]->email);
-									$this->session->set_flashdata('error_login', 'Invalid email or password.');
-					
-									//store login attempt
-									$data = [
-										'user_id' => $validateUser[0]->id,
-										'user_email' => $validateUser[0]->email,
-										'attempt_time' => date('Y-m-d H:i:s')
-									];
-		
-									$this->Login_model->store_login_attempts($data); 
-									save_log_ej($validateUser[0]->id, 'Account locked for 30 minutes');
-								}
-								else{
-									$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
-								}
-		
-								redirect('client/login');
-							}else{
-								//store login attempt
-								$data = [
-									'user_id' => $validateUser[0]->id,
-									'user_email' => $validateUser[0]->email,
-									'attempt_time' => date('Y-m-d H:i:s')
-								];
-		
-								$this->Login_model->store_login_attempts($data);  
-							}
-		
-							$this->session->set_flashdata('error_login', 'Invalid email or password.');
-							redirect('client/login'); 
-						
-		
 						}
 					}else{
-						$this->session->set_flashdata('error_login', 'Account not activated. Please check your email for a create account verification code.');
-						redirect('client/login');
+						$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->usr_username));
+	
+						if($count_attempt == 3){
+	
+							$last_attempt_time = $this->Login_model->get_login_attempts($validateUser[0]->usr_username);
+							$last_attempt_time = $last_attempt_time[0]->attempt_time;
+							$current_date = date('Y-m-d H:i:s');
+							$time_remaining = $this->compareDates($last_attempt_time, $current_date);
+	
+							$this->send_email_alert($email);
+							
+							if ($time_remaining  > 30) {
+								$this->Login_model->clear_login_attempts($validateUser[0]->usr_username);
+								$this->session->set_flashdata('_oprs_login_msg', 'Invalid email or password.');
+				
+								//store login attempt
+								$data = [
+									'user_id' => $validateUser[0]->usr_id,
+									'user_email' => $validateUser[0]->usr_username,
+									'attempt_time' => date('Y-m-d H:i:s')
+								];
+	
+								$this->Login_model->store_login_attempts($data);
+								// save_log_ej($validateUser[0]->usr_id, 'Account locked for 30 minutes'); 
+							
+							}
+							else{
+								$this->session->set_flashdata('_oprs_login_msg', 'Account temporarily locked for '.(30 - $time_remaining).' minutes.');
+							}
+	
+							redirect('orps/login');
+						}else{
+							//store login attempt
+							$data = [
+								'user_id' => $validateUser[0]->usr_id,
+								'user_email' => $validateUser[0]->usr_username,
+								'attempt_time' => date('Y-m-d H:i:s')
+							];
+	
+							$this->Login_model->store_login_attempts($data);  
+						}
+	
+						$this->session->set_flashdata('_oprs_login_msg', 'Invalid email or password.');
+						redirect('oprs/login'); 
+					
+	
 					}
+				}else{
+					$this->session->set_flashdata('_oprs_login_msg', 'Account not activated. Please check your email for a create account verification code.');
+					redirect('oprs/login');
 				}
-
 			} else {
 	
 				$count_attempt = count($this->Login_model->get_login_attempts($email));
-	
+				
 				if($count_attempt == 3){
 	
 					$last_attempt_time = $this->Login_model->get_login_attempts($email);
@@ -218,7 +218,7 @@ class Login extends OPRS_Controller {
 					
 					if ($time_remaining  > 30) {
 						$this->Login_model->clear_login_attempts($email);
-						$this->session->set_flashdata('error_login', 'Invalid email or password.');
+						$this->session->set_flashdata('_oprs_login_msg', 'Invalid email or password.');
 						
 						// store login attempt
 						$data = [
@@ -227,14 +227,13 @@ class Login extends OPRS_Controller {
 						];
 	
 						$this->Login_model->store_login_attempts($data); 
-						
-						save_log_ej(0, 'Unregistered account locked for 30 minutes');
+						// save_log_ej(0, 'Unregistered account locked for 30 minutes');
 					}
 					else{
-						$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+						$this->session->set_flashdata('_oprs_login_msg', 'Account temporarily locked for '.(30 - $time_remaining).' minutes.');
 					}
 	
-					redirect('client/login');
+					redirect('oprs/login');
 				}else{
 					// store login attempt
 					$data = [
@@ -246,8 +245,8 @@ class Login extends OPRS_Controller {
 				}
 	
 			
-				$this->session->set_flashdata('error_login', 'Invalid email or password.');
-				redirect('client/login');
+				$this->session->set_flashdata('_oprs_login_msg', 'Invalid email or password.');
+				redirect('oprs/login');
 			}
 
 			
@@ -1255,6 +1254,107 @@ echo 'login';
 		save_log_ej($output[0]->usr_id, 'Resend login otp code');
 		$this->send_login_otp($email);
 	}
+
+	/**
+	 * Send email alert notif to admin on login attempt
+	 *
+	 * @param string $email
+	 * @return void
+	 */
+	public function send_email_alert($email) {
+		
+		// Check user credentials using your authentication logic
+		$is_user_exist = $this->Login_model->validate_user($email);
+
+		if($is_user_exist){
+			$user_info = $this->User_model->get_user_info_by_email($email);
+
+			if($user_info[0]->usr_category == 1){ // nrcp member
+				$name = $nrcp_member_info['title_name'] . ' ' . $nrcp_member_info['pp_first_name'] . ' ' .  $nrcp_member_info['pp_last_name'];
+			}else if($user_info[0]->usr_category == 2){ // ejournal client and oprs non member author 
+				$name = $ejournal_client_info[0]->title . ' ' . $ejournal_client_info[0]->first_name . ' ' . $ejournal_client_info[0]->last_name;
+			}else{ // oprs user
+				if( $user_info[0]->usr_role == 5 ){
+					// reviewer
+					$name = $reviewer_info[0]->rev_title . ' ' . $reviewer_info[0]->rev_name;
+				}else{
+					// oprs orejournal admin/supderamin
+					$name = 'Admin Account';
+				}
+			}
+		}else{
+			$attempts = $this->Login_model->get_login_attempts($email);
+			$name = '(Unregistered/Invalid Account)';
+		}
+
+		$attempts = $this->Login_model->get_login_attempts($email);
+		$last_attempt_time = $attempts[0]->attempt_time;
+
+		$sender = 'eJournal';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+		
+		// setup email config	
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+	
+		// $mail->AddAddress('nrcp.ejournal@gmail.com');
+		$mail->AddAddress('gerard_balde@yahoo.com');
+
+
+		$date = date("F j, Y") . '<br/><br/>';
+
+		$emailBody = 'Dear Admin,
+		<br><br>
+		There have been multiple unsuccessful login attempts.
+		<br><br>
+		Name: <strong>'.$name.'</strong>
+		<br>
+		Email: <strong>'.$email.'</strong>
+		<br>
+		Attempts: <strong>3</strong>
+		<br>
+		Timestamp: <strong>'.$last_attempt_time.'</strong>
+		<br><br>
+		Please investigate this activity to ensure the security of your system.
+		<br><br>
+
+		Sincerely,
+		<br>
+		eJournal System';
+		
+		// send email
+		$mail->Subject = 'Login Attempt Alert';
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
+	}
+
 
 	
 }

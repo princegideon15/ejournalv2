@@ -159,11 +159,6 @@ class Login_model extends CI_Model {
 		}
 	}
 
-	public function clear_login_attempts($id){
-		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->delete($this->attempts, ['user_id' => $id]);
-	}
-
 	public function save_otp($data, $where){
 		$oprs = $this->load->database('dboprs', TRUE);
 	  	$oprs->update($this->users, $data, $where);
@@ -208,6 +203,27 @@ class Login_model extends CI_Model {
 		$oprs->where('usr_username', $email);
 		$query = $oprs->get();
 		return $query->result();
+	}
+
+	
+	public function store_login_attempts($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->attempts, $data);
+	}
+
+	public function get_login_attempts($email){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->attempts);
+		$oprs->where('user_email', $email);
+		$oprs->order_by('attempt_time', 'desc');
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function clear_login_attempts($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->delete($this->attempts, ['user_id' => $id]);
 	}
 
 }
