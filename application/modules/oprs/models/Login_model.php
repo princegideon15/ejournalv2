@@ -111,7 +111,7 @@ class Login_model extends CI_Model {
 		return $data;
 	}
 
-	public function check_multiple_account($email) {
+	public function check_multiple_accountx($email) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$acc_ctr = 0;
 		$oprs->select('*');
@@ -140,6 +140,7 @@ class Login_model extends CI_Model {
 			}
 		}
 	}
+	
 	
 	public function validate_user($email){
 		$oprs = $this->load->database('dboprs', TRUE);
@@ -179,7 +180,7 @@ class Login_model extends CI_Model {
 
 	public function delete_otp_oprs($id){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->oprs_users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['usr_id' => $id]);
+		$oprs->update($this->users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['usr_id' => $id]);
 	}
 
 	public function get_access_token($id){
@@ -196,6 +197,15 @@ class Login_model extends CI_Model {
 		$oprs->select('otp_date, usr_id, usr_username');
 		$oprs->from($this->users);
 		$oprs->where('otp_ref_code', $refCode);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function check_multiple_account($email) {
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->users);
+		$oprs->where('usr_username', $email);
 		$query = $oprs->get();
 		return $query->result();
 	}

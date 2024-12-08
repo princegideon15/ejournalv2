@@ -44,7 +44,7 @@
                     <div class="mb-3">
                         <div class="form-check">
                             <!-- author_type -->
-                                <?php $author_type = $this->session->flashdata('author_type'); ?>
+                            <?php $author_type = $this->session->flashdata('author_type'); ?>
 
                             <input class="form-check-input" type="radio" name="author_type" value="1" id="author_nrcp_member" <?= ($author_type == 1) ? 'checked' : '' ?> >
                             <label class="form-check-label" for="author_nrcp_member">
@@ -57,6 +57,7 @@
                             Non-Member
                             </label>
                         </div>
+                        <span class="text-danger mt-1"><?= $this->session->flashdata('signup_validation_errors')['author_type'] ?></span>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="new_email"><span
@@ -260,7 +261,7 @@
                         <p class="text-danger" id="g-recaptcha"></p>
                     </div>
                     
-                    <button type="submit" class="btn main-btn w-100 <?= ($this->session->flashdata('author_type') > 0) ? '' : 'disabled' ?>" id="create_account">Create Account</button>
+                    <button type="submit" class="btn main-btn w-100" id="create_account" onclick="disableOnSubmit(this, '#authorSignUpForm', 'create')" disabled>Create Account</button>
                 <?=form_close()?>
             </div>
         </div>

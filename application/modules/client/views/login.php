@@ -292,7 +292,7 @@
                                 <p class="text-danger" id="g-recaptcha"></p>
                             </div>
 
-                            <button type="submit" class="btn main-btn w-100" id="create_account" disabled>Create Account</button>
+                            <button type="submit" class="btn main-btn w-100" id="create_account" onclick="disableOnSubmit(this, '#signUpForm', 'create')" disabled>Create Account</button>
                         <?=form_close()?>
                     </div>
             </div>

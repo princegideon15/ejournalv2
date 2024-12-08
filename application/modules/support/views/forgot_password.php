@@ -44,10 +44,10 @@
 
                       <?php foreach($accounts as $row){ 
                         $role = ($row->usr_role == 1) ? 'Author' : 'Reviewer';
-                        echo '<div class="form-check form-check-inline">
-                                      <input type="radio" value="'. $row->usr_id . '" name="user_id" class="form-check-input">
-                                      <label class="form-check-label pt-1" for="' . $role . '' . $row->usr_role . '"> ' . $role . '</label>
-                                      </div>';
+                        echo '<div class="form-check form-check-inline pe-2">
+                                <input type="radio" value="'. $row->usr_id . '" name="user_id" class="form-check-input" id="' . $role . '' . $row->usr_role . '">
+                                <label class="form-check-label pt-1 ms-1" for="' . $role . '' . $row->usr_role . '"> ' . $role . '</label>
+                              </div>';
                         
                         
                       } ?>
@@ -64,7 +64,7 @@
 
                   <?php } ?>
 
-                  <button class="btn btn-lg btn-primary w-100" type="submit" <?= $this->session->flashdata('disable_register') ?? ''?> id="reset_password_btn">Reset Password</button>
+                  <button class="btn btn-lg btn-primary w-100" type="submit" id="reset_password_btn" onclick="disableOnSubmit(this, '#form_forgot', 'reset')">Submit</button>
                 <?php echo form_close(); ?>
 
                 

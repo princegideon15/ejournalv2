@@ -520,6 +520,13 @@ class Signup extends EJ_Controller {
 	public function create_author_account(){
 		
 		$member = $this->input->post('author_type', TRUE);
+		if(empty($member)){
+			 // Set flashdata to pass validation errors and form data to the view
+			 $errors['author_type'] = 'Select Author Type.';
+			 $this->session->set_flashdata('signup_validation_errors', $errors);
+			 $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
+			 redirect('client/ejournal/submission/create_account');
+		}
 
 		if($member == 2){
 			$this->form_validation->set_rules('title', 'Title', 'required|trim');

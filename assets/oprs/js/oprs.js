@@ -65,11 +65,6 @@ $(document).ready(function() {
         getCurrentOTP(refCode);
       }else if(secondToLastSegment == 'csf_arta'){
         current_button_id = "#submit_csf_arta";
-      }else{
-        // clear only if timeout exists
-        if(article_page_timeout){
-          clearTimeout(article_page_timeout);
-        }
       }
     } else {
         // console.log("Not enough segments in the URL.");
@@ -2467,9 +2462,16 @@ $(document).ready(function() {
     //         });
     // });
 
-    $('input[name="user_id"]').on('change', function(){
+    $('#form_forgot input[name="user_id"]').on('change', function(){
         $('#reset_password_btn').prop('disabled', false);
     })
+
+    $('#loginForm input[name="user_id"]').on('change', function(){
+        $('#admin_login').prop('disabled', false);
+    })
+
+    
+
     // for author/reviewer multiple account validation (unused)
     // $('.login #usr_username').change(function() {
     //     if ($(this).val() != '')
@@ -5387,7 +5389,7 @@ function togglePassword(elementID, iconID){
 }
 
 function disableOnSubmit(element, form, action){
-    let newButtonText = (action == 'reset') ? 'Submitting' : (action == 'verify' ? 'Verifying' : 'Loading');
+    let newButtonText = (action == 'verify') ? 'Verifying' : 'Loading';
 
     $(element).prop('disabled' ,true);
     $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>' + newButtonText);

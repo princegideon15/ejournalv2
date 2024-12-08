@@ -1717,7 +1717,7 @@ function save_cite(apa_id){
 
 
 function disableOnSubmit(element, form, action){
-  let newButtonText = (action == 'reset') ? 'Submitting' : (action == 'verify' ? 'Verifying' : 'Loading');
+  let newButtonText = (action == 'verify') ? 'Verifying' : 'Loading';
 
   $(element).prop('disabled' ,true);
   $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>' + newButtonText);

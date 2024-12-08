@@ -32,6 +32,7 @@ class Forgot extends OPRS_Controller {
 	public function send_password() {
 		$this->form_validation->set_rules('get_email', 'Email', 'required|trim');
 		
+		// send temp password if there is selected account in multiple account
 		if($this->input->post('user_id')){
 			$id = $this->input->post('user_id');
 			$user_category = $this->User_model->get_user_info_by_id($id);
@@ -148,6 +149,7 @@ class Forgot extends OPRS_Controller {
 			redirect('support/forgot');
 		}
 
+		// validation and other functions for single account
 		if($this->form_validation->run() == FALSE){
 			$errors = [];
 
@@ -178,7 +180,7 @@ class Forgot extends OPRS_Controller {
 					if(count($user_account) > 1){
 							$this->session->set_flashdata('get_email', $email);
 							$this->session->set_flashdata('accounts', $user_account);
-							$this->session->set_flashdata('disable_register', 'disabled');
+							$this->session->set_flashdata('disable_reset', 'disabled');
 							redirect('support/forgot');
 					}else{
 						$forgot_pass = 'nrcp' . rand(100, 1000);
