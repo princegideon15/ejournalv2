@@ -8,7 +8,7 @@
         <meta name="author" content="">
         <title>OPRS</title>
         <!-- Bootstrap core CSS-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
         <!-- <link href="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/bootstrap/css/bootstrap.min.css"  rel="stylesheet"> -->
         <!-- Custom fonts for this template-->
         <link href="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -34,7 +34,8 @@
         <link rel="icon" href="<?php echo base_url("assets/images/ejicon-07.png"); ?>"> 
         
         <link rel="stylesheet" href="<?php echo base_url("assets/font/css/open-iconic-bootstrap.css");?>">
-        <link rel="stylesheet" href="<?php echo base_url("assets/admin/vendor/font-awesome/css/font-awesome.css");?>">      
+        <link rel="stylesheet" href="<?php echo base_url("assets/admin/vendor/font-awesome/css/font-awesome.css");?>">   
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>   
     
     </head>
     <body id="page-top">

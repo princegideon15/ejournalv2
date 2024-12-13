@@ -44,6 +44,7 @@ class Feedback extends EJ_Controller {
             'csf_ui_suggestions' => $this->input->post('ui_sug', TRUE),
             'csf_rate_ux' => $this->input->post('ux', TRUE),
             'csf_ux_suggestions' => $this->input->post('ux_sug', TRUE),
+            'csf_system' => $this->input->post('csf_system', TRUE),
             'csf_created_at' => date('Y-m-d H:i:s')
         ];
         

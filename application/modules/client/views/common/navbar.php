@@ -132,33 +132,7 @@
             </div>
             <textarea class="form-control" id="fb_suggest_ui" rows="3" placeholder="Type your suggestions here..." maxlength="300"></textarea>
             <div id="char_count_ui" class="character-counter text-muted">0 / 300 characters</div>
-            
-            <!-- <div class="feedback-container ui-container">
-                <div class="feedback-item">
-                    <label for="ui-1" data-toggle="tooltip" data-placement="bottom" title="Sad">
-                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-1" value="1" >
-                        <span >🙁</span>
-                    </label>
-                </div>
-
-                <div class="feedback-item">
-                    <label for="ui-2" data-toggle="tooltip" data-placement="bottom" title="Neutral">
-                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-2" value="2">
-                        <span>😶</span>
-                    </label>
-                </div>
-
-                <div class="feedback-item">
-                    <label for="ui-3" data-toggle="tooltip" data-placement="bottom" title="Happy">
-                        <input class="radio" type="radio" name="fb_rate_ui" id="ui-3" value="3">
-                        <span>🙂</span>
-                    </label>
-                </div>
-            </div> -->
-
-            <!-- <div class="form-group mt-0">
-                <label for="fb_suggest_ui"></label>
-            </div> -->
+            <div class="rate-ui-validation text-danger mt-2"></div>
 
             <hr/>
 
@@ -173,34 +147,7 @@
 
             <textarea class="form-control" name="fb_suggest_ux" id="fb_suggest_ux" rows="3" placeholder="Type your suggestions here..." maxlength="300"></textarea>
             <div id="char_count_ux" class="character-counter text-muted">0 / 300 characters</div>
-            <!-- <div id="charCount" class="character-counter">0 / 200 characters</div> -->
-            <!-- <p class="font-weight-bold h4 text-center">User Experience</p>
-            <div class="feedback-container ux-container">
-                <div class="feedback-item">
-                    <label for="ux-1" data-toggle="tooltip" data-placement="bottom" title="Sad">
-                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-1" value="1">
-                        <span>🙁</span>
-                    </label>
-                </div>
-
-                <div class="feedback-item">
-                    <label for="ux-2" data-toggle="tooltip" data-placement="bottom" title="Nuetral">
-                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-2" value="2">
-                        <span>😶</span>
-                    </label>
-                </div>
-
-                <div class="feedback-item">
-                    <label for="ux-3" data-toggle="tooltip" data-placement="bottom" title="Happy">
-                        <input class="radio" type="radio" name="fb_rate_ux" id="ux-3" value="3">
-                        <span>🙂</span>
-                    </label>
-                </div>
-            </div> -->
-            
-            <!-- <div class="form-group mt-0">
-                <label for="fb_suggest_ux"></label>
-            </div> -->
+            <div class="rate-ux-validation text-danger mt-2"></div>
 
             <div class="mt-3 mb-0 w-100" id="google_recaptchav2_container">
                 <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_logout"></div>

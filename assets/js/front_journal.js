@@ -87,10 +87,15 @@ $(document).ready(function()
 
   $('.rate-ui').on('click', function () {
       selectedRatingUI = $(this).data('value');
-      // $('#rating-message').text(`You rated ${selectedRating} out of 5.`);
-      // if(selectedRatingUI > 0 && selectedRatingUX > 0){
-      //   $('#submit_feedback').prop('disabled', false);
-      // }
+        
+      // Remove 'selected' class from all stars and add it to the clicked star and previous stars
+      $(".rate-ui").removeClass("selected");
+      $(".rate-ui").each(function () {
+        if ($(this).data("value") <= selectedRatingui) {
+          $(this).addClass("selected");
+          $('.rate-ux-validation').text('');
+        }
+      });
   });
   
   $('.rate-ux').on('mouseover', function () {
@@ -108,11 +113,15 @@ $(document).ready(function()
 
   $('.rate-ux').on('click', function () {
       selectedRatingUX = $(this).data('value');
-      // $('#rating-message').text(`You rated ${selectedRating} out of 5.`)
-      
-      // if(selectedRatingUI > 0 && selectedRatingUX > 0){
-      //   $('#submit_feedback').prop('disabled', false);
-      // }
+        
+      // Remove 'selected' class from all stars and add it to the clicked star and previous stars
+      $(".rate-ux").removeClass("selected");
+      $(".rate-ux").each(function () {
+        if ($(this).data("value") <= selectedRatingUX) {
+          $(this).addClass("selected");
+          $('.rate-ux-validation').text('');
+        }
+      });
   });
 
   $('#submit_feedback').on('click', function(){
@@ -124,7 +133,8 @@ $(document).ready(function()
       'ui' : selectedRatingUI,
       'ux' : selectedRatingUX,
       'ui_sug' : uiSuggestion,
-      'ux_sug' : uxSuggestion
+      'ux_sug' : uxSuggestion,
+      'csf_system' : 'eJournal Client',
     };
 
     const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);

@@ -459,7 +459,6 @@ class Login extends EJ_Controller {
 					// Check user credentials using your authentication logic
 					$verifyOTP = $this->Login_model->validate_otp($ref_code);
 					
-					// if ($verifyOTP) {
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
 
 						$id = $verifyOTP[0]->id;

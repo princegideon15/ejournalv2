@@ -178,15 +178,6 @@ class Login_model extends CI_Model {
 		$oprs->update($this->users, ['otp' => null, 'otp_date' => null, 'otp_ref_code' => null], ['usr_id' => $id]);
 	}
 
-	public function get_access_token($id){
-		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('tkn_value');
-		$oprs->from($this->access_tokens);
-		$oprs->where('tkn_user_id', $id);
-		$query = $oprs->get();
-		return $query->result();
-	}
-
 	public function get_current_otp($refCode){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('otp_date, usr_id, usr_username');
@@ -224,6 +215,25 @@ class Login_model extends CI_Model {
 	public function clear_login_attempts($id){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->delete($this->attempts, ['user_id' => $id]);
+	}
+
+	public function create_user_access_token($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->access_tokens, $data);
+	}
+	  
+	public function delete_access_token($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->delete($this->access_tokens, ['tkn_user_id' => $id]);
+	}
+
+	public function get_access_token($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('tkn_value');
+		$oprs->from($this->access_tokens);
+		$oprs->where('tkn_user_id', $id);
+		$query = $oprs->get();
+		return $query->result();
 	}
 
 }

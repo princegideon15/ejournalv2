@@ -29,6 +29,7 @@ class Feedbacks extends OPRS_Controller {
 		$this->load->model('Log_model');
 		$this->load->model('User_model');
 		$this->load->model('Manuscript_model');
+		$this->load->model('Client/CSF_model');
 		$this->load->helper('is_online_helper');
 		$this->load->model('client/Library_model');
     }
@@ -101,6 +102,22 @@ class Feedbacks extends OPRS_Controller {
 		$output = $this->Feedback_model->csf_graph($id);
 		echo json_encode($output);
 	}
+
+	public function submit_csf_ui_ux(){
+        $post = [
+            'csf_user_id' => $this->session->userdata('_oprs_user_id'),
+            'csf_rate_ui' => $this->input->post('ui', TRUE),
+            'csf_ui_suggestions' => $this->input->post('ui_sug', TRUE),
+            'csf_rate_ux' => $this->input->post('ux', TRUE),
+            'csf_ux_suggestions' => $this->input->post('ux_sug', TRUE),
+            'csf_system' => $this->input->post('csf_system', TRUE),
+            'csf_created_at' => date('Y-m-d H:i:s')
+        ];
+        
+        $output = $this->CSF_model->save_csf_ui_ux($post);
+
+        echo $output;
+    }
 }
 
 

@@ -23,7 +23,7 @@ var mail_content;
 var mail_title = '';
 var editor_mail_content;
 
-var prv_exp = 0;
+// var prv_exp = 0;
 
 var minutes = 5,          // otp timer
 seconds = 0,          // otp timer
@@ -31,9 +31,13 @@ intervalId,           // otp timer
 isStartTimer = false, // otp timer
 refCode,              // reference code for otp
 accessToken,          // user access token generated on logged in   
-current_button_id = "#admin_login";    // button to enable/disable for catpcha  
+current_button_id;    // button to enable/disable for catpcha  
+
+var recaptchaWidgetId_logout; // recaptcha widget 
 
 $(document).ready(function() {
+
+
 
     // get user access token
     accessToken = $.ajax({
@@ -42,9 +46,9 @@ $(document).ready(function() {
         async:false,
         crossDomain: true,
         success: function(data) {
-        if(data != 0){
-            return data;
-        }
+            if(data != 0){
+                return data;
+            }
         },
         error: function(xhr, status, error) {
         reject(error);
@@ -52,6 +56,243 @@ $(document).ready(function() {
     }); 
 
     accessToken = (accessToken.responseText).trim();
+
+    // feedback suggestion box character limit
+    let $textArea = $("#fb_suggest_ui");
+    let $charCount = $("#char_count_ui");
+    let maxLength = $textArea.attr("maxlength");
+
+    $textArea.on("input", function () {
+        let currentLength = $(this).val().length;
+        $charCount.text(`${currentLength} / ${maxLength} characters`);
+
+        if (currentLength > maxLength) {
+            $charCount.addClass("exceeded");
+        } else {
+            $charCount.removeClass("exceeded");
+        }
+    });
+
+    let $textArea2 = $("#fb_suggest_ux");
+    let $charCount2 = $("#char_count_ux");
+    let maxLength2 = $textArea2.attr("maxlength");
+
+    $textArea2.on("input", function () {
+        let currentLength = $(this).val().length;
+        $charCount2.text(`${currentLength} / ${maxLength2} characters`);
+
+        if (currentLength > maxLength2) {
+            $charCount2.addClass("exceeded");
+        } else {
+            $charCount2.removeClass("exceeded");
+        }
+    });
+
+    // csf ui ux star rating
+    let selectedRatingUI = 0;
+    let selectedRatingUX = 0;
+
+    $('.rate-ui').on('mouseover', function () {
+        const value = $(this).data('value');
+        $('.rate-ui').each(function () {
+            $(this).toggleClass('selected', $(this).data('value') <= value);
+        });
+    });
+
+    $('.rate-ui').on('mouseleave', function () {
+        $('.rate-ui').each(function () {
+            $(this).toggleClass('selected', $(this).data('value') <= selectedRatingUI);
+        });
+    });
+
+    $('.rate-ui').on('click', function () {
+        selectedRatingUI = $(this).data('value');
+        
+        // Remove 'selected' class from all stars and add it to the clicked star and previous stars
+        $(".rate-ui").removeClass("selected");
+        $(".rate-ui").each(function () {
+          if ($(this).data("value") <= selectedRatingUI) {
+            $(this).addClass("selected");
+            $('.rate-ui-validation').text('');
+          }
+        });
+    });
+    
+    $('.rate-ux').on('mouseover', function () {
+        const value = $(this).data('value');
+        $('.rate-ux').each(function () {
+            $(this).toggleClass('selected', $(this).data('value') <= value);
+        });
+    });
+
+    $('.rate-ux').on('mouseleave', function () {
+        $('.rate-ux').each(function () {
+            $(this).toggleClass('selected', $(this).data('value') <= selectedRatingUX);
+        });
+    });
+
+    $('.rate-ux').on('click', function () {
+        selectedRatingUX = $(this).data('value');
+        
+        // Remove 'selected' class from all stars and add it to the clicked star and previous stars
+        $(".rate-ux").removeClass("selected");
+        $(".rate-ux").each(function () {
+          if ($(this).data("value") <= selectedRatingUX) {
+            $(this).addClass("selected");
+            $('.rate-ux-validation').text('');
+          }
+        });
+    });
+
+    $("#feedback_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            non_title: {
+                required: true,
+                minlength: 2
+            },
+     
+        },
+        messages: {
+            usr_captcha: {
+                equalTo: "Incorrect verification code"
+            },
+            non_email: {
+                remote: "Email already in use"
+            }
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/signup/sign_up/",
+                data: $('#form_sign_up').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $.notify({
+                        icon: 'fa fa-check-circle',
+                        message: 'Thank you for signing up. You can now log in.'
+                    }, {
+                        type: 'success',
+                        timer: 3000,
+                    });
+
+                    $('#form_sign_up')[0].reset();
+                    $('#refresh_captcha').click();
+                }
+            });
+        }
+    });
+
+    $('#submit_feedback').on('click', function(){
+
+
+        
+        if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
+
+            let uiSuggestion = $('#fb_suggest_ui').val();
+            let uxSuggestion = $('#fb_suggest_ux').val();
+            
+            let data = {
+            'ui' : selectedRatingUI,
+            'ux' : selectedRatingUX,
+            'ui_sug' : uiSuggestion,
+            'ux_sug' : uxSuggestion,
+            'csf_system' : 'eReview'
+            };
+    
+            const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
+    
+            if (captcha) {
+            $(this).prop('disabled', true);
+                // alert("reCAPTCHA is checked and valid!");
+                $.ajax({
+                type: "POST",
+                url: base_url + 'oprs/feedbacks/submit_csf_ui_ux',
+                data:  data,
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#feedbackModal').modal('toggle');
+                    if(data == 1){
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Thank you for your feedback.",
+                        html: "Logging out...",
+                        icon: "success",
+                        allowOutsideClick: false, // Prevent closing by clicking outside
+                        allowEscapeKey: false,   // Prevent closing with the Escape key
+                        allowEnterKey: false,    // Prevent closing with the Enter key
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                        Swal.showLoading();
+                        // const timer = Swal.getPopup().querySelector("b");
+                        // timerInterval = setInterval(() => {
+                        //   timer.textContent = `${Swal.getTimerLeft()}`;
+                        // }, 100);
+                        },
+                        willClose: () => {
+                        clearInterval(timerInterval);
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                        window.location.href = base_url + "client/login/logout/";
+                        }
+                    });
+                    }else{
+                    console.log('Something went wrong.');
+                    }
+                }
+                });
+            } else {
+                console.log("Please complete the reCAPTCHA!");
+            }
+    
+        } else {
+            if($(".rate-ui.selected").length == 0){
+                $('.rate-ui-validation').text('Please select at least one star.');
+            }
+
+            if($(".rate-ux.selected").length == 0){
+                $('.rate-ux-validation').text('Please select at least one star.');
+            }
+
+            return;
+        }
+    });
+  
+
+    let idleTime = 0;
+
+    if(accessToken != 0){
+      $(document).on('mousemove keydown scroll', function() {
+          idleTime = 0;
+      });
+  
+      let timerInterval = setInterval(function() {
+          idleTime += 1;
+          
+          if (idleTime >= 1200) { // 20 minutes in seconds
+              // Trigger logout or other actions
+              clearInterval(timerInterval); // Stop the timer
+  
+              destroyUserSession();
+  
+              Swal.fire({
+                title: "Session Expired",
+                text: "You have been idle for 20 minutes. Please log in again.",
+                icon: "info",
+                confirmButtonColor: "#0c6bcb",
+              
+              }).then(function () {
+                window.location = base_url + "oprs/login/";
+              });
+          }
+      }, 1000); // Check every 1 second
+    }
 
     // 5 mins timer for otp
     var url = window.location.pathname; // Get the current path
@@ -170,7 +411,7 @@ $(document).ready(function() {
             success: function(data) {  
                 // console.log(data);
                 var html = '<div class="list-group" style="font-size:14px"> \
-                <a class="list-group-item font-weight-bold pl-3 pb-1 pt-1 h4">Notifications</a>';
+                <a class="list-group-item fw-bold pl-3 pb-1 pt-1 h4">Notifications</a>';
                        $.each(data, function(key, val)
                        {
                             // var proc = get_member(val.trk_processor);
@@ -225,7 +466,7 @@ $(document).ready(function() {
         //                                                                                             ' + val.man_title + '</strong>\
         //                     <small class="d-flex mt-1">'+ moment(val.date_created).fromNow() + '</small></a>';
         //            }else if(key == 7){
-        //                html += '<a href="notifications" class="text-center p-1 text-primary"><small class="font-weight-bold">See All</small></a>';
+        //                html += '<a href="notifications" class="text-center p-1 text-primary"><small class="fw-bold">See All</small></a>';
         //            }
                    
              
@@ -293,19 +534,19 @@ $(document).ready(function() {
                 var abs = $('#man_abs')[0].files[0].size;
                 var word = $('#man_word')[0].files[0].size;
                 if(full < 20000000) {
-                    $('#badge_full').next('.badge-danger').hide();
+                    $('#badge_full').next('.bg-danger').hide();
                 }else if(abs < 20000000){
-                    $('#badge_abs').next('.badge-danger').hide();
+                    $('#badge_abs').next('.bg-danger').hide();
                 }else if(word < 20000000){
-                    $('#badge_word').next('.badge-danger').hide();
+                    $('#badge_word').next('.bg-danger').hide();
                 }
 
                 if (full >= 20000000) {
-                    $('#badge_full').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                    $('#badge_full').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
                 }else if(abs >= 20000000){
-                    $('#badge_abs').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                    $('#badge_abs').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
                 }else if(word >= 20000000){
-                    $('#badge_word').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                    $('#badge_word').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
                 }else {
                     $('#confirmUploadModal').modal('toggle');
                 }
@@ -428,10 +669,35 @@ $(document).ready(function() {
         } );
     } ).draw();
 
-    $('#collapse_new_table').DataTable();
-    $('#collapse_lapreq_table').DataTable();
-    $('#collapse_decreq_table').DataTable();
-    $('#collapse_laprev_table').DataTable();
+    
+    $('#collapse_new_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
+    $('#collapse_lapreq_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
+    $('#collapse_decreq_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
+    $('#collapse_laprev_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
     $('#controls_table').DataTable();
     // $('#uiux_table').DataTable();
     $('#cfs_table').DataTable();
@@ -576,9 +842,27 @@ $(document).ready(function() {
 
     $('#reviews_table').DataTable();
     $('#layout_table').DataTable();
-    $('#collapse_reviewed_table').DataTable();
-    $('#collapse_complete_table').DataTable();
-    $('#collapse_reviewers_table').DataTable();
+    $('#collapse_reviewed_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
+    $('#collapse_complete_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
+    $('#collapse_reviewers_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
     $('#email_contents_table').DataTable();
 
     // activity logs datatable
@@ -1906,7 +2190,7 @@ $(document).ready(function() {
         inpIncr++;
 
         html = '<div id="added_coa"><div class="form-group autocomplete w-100">' +
-            '<label class="font-weight-bold" for="coa_name">Co-author ' + inpIncr + '</label> <small><a href="javascript:void(0);" class="text-danger"> Remove</a></small>' +
+            '<label class="fw-bold" for="coa_name">Co-author ' + inpIncr + '</label> <small><a href="javascript:void(0);" class="text-danger"> Remove</a></small>' +
             '<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="Search/Type by Name/Specialization/Non-member/Non-account">' +
             '</div>' +
             '<div class="form-group">' +
@@ -1928,7 +2212,7 @@ $(document).ready(function() {
 
     // remove added co-author
     $('#report_reviewer_table').on('click', 'button', function() {
-        $(this).closest('button').replaceWith("<span class='badge badge-success'><span class='fas fa-check-circle'> eCertification</span<");
+        $(this).closest('button').replaceWith("<span class='badge bg-success'><span class='fas fa-check-circle'> eCertification</span<");
     });
 
     // change button on send ecretification
@@ -2435,7 +2719,7 @@ $(document).ready(function() {
     //                 console.log(data);
     //                 $('#user_option').empty();
     //                 if (data.length > 1) {
-    //                     $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
+    //                     $('#user_option').append('<p class="fw-bold small">You have multiple account. Select (1) account only.</p>');
 
     //                     $.each(data, function(key, val) {
     //                         var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
@@ -2447,7 +2731,7 @@ $(document).ready(function() {
     //                     });
     //                 } else {
 
-    //                     $('#user_option').append('<p class="font-weight-bold small">Current account:</p>');
+    //                     $('#user_option').append('<p class="fw-bold small">Current account:</p>');
 
     //                     $.each(data, function(key, val) {
     //                         var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
@@ -2484,7 +2768,7 @@ $(document).ready(function() {
     //                 // console.log(data);
     //                 $('#user_option').empty();
     //                 if (data.length > 1) {
-    //                     $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
+    //                     $('#user_option').append('<p class="fw-bold small">You have multiple account. Select (1) account only.</p>');
 
     //                     $.each(data, function(key, val) {
     //                         // var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
@@ -2905,10 +3189,10 @@ $(document).ready(function() {
         var val = $(this).val();
         $('.principal').find('span').empty();
         if(val == 1){
-            $('.principal').append(' <span class="badge badge-primary">Type Non-Member</span>');
+            $('.principal').append(' <span class="badge rounded-pill badge-primary">Type Non-Member</span>');
             $('#man_usr_id').val('');
         }else{
-            $('.principal').append(' <span class="badge badge-danger">Search Member</span>');
+            $('.principal').append(' <span class="badge rounded-pill bg-danger">Search Member</span>');
         }
 
         $('#man_author').val('');
@@ -2932,7 +3216,7 @@ $(document).ready(function() {
         }
     });
     
-    // submit ui/ux feedback form
+    // submit ui/ux feedback form (unused)
     $('#feedback_form').on('submit', function(e){
 
     e.preventDefault();
@@ -2971,7 +3255,7 @@ $(document).ready(function() {
                 $('#feedback_form').remove();
 
                 var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
-                                <p class="text-center btn-link font-weight-bold"><u><a href="'+ base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
+                                <p class="text-center btn-link fw-bold"><u><a href="'+ base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
                             
                 
                 $(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
@@ -3435,7 +3719,7 @@ function tracking(id, role, title, status) {
 
                     html = '<li class="list-group-item list-group-item-secondary flex-column align-items-start">' +
                         '<div class="d-flex w-100 justify-content-between">' +
-                        '<h6 class="mb-1 font-weight-bold">' + user + ' (' + user_role + ')</h6>' +
+                        '<h6 class="mb-1 fw-bold">' + user + ' (' + user_role + ')</h6>' +
                         '<small>' + moment(val.trk_process_datetime, 'YYYY-MM-DD HH:mm').format("MMMM D, h:mm a") + '</small>' +
                         '</div>' +
                         '<small class="mb-1">' + user_action + '</small><br/>' +
@@ -3457,7 +3741,7 @@ function tracking(id, role, title, status) {
 
                 html = '<li class="list-group-item list-group-item-secondary flex-column align-items-start">' +
                     '<div class="d-flex w-100 justify-content-between">' +
-                    '<h6 class="mb-1 font-weight-bold">Pending action from Managing Editor</h6>' +
+                    '<h6 class="mb-1 fw-bold">Pending action from Managing Editor</h6>' +
                     '</div>' +
                     '<small class="mb-1">You have just submitted manuscript.</small><br/>' +
                     '</li>';
@@ -3721,19 +4005,19 @@ function view_reviewers(id, time, title, status) {
 
                     revs.push(val.rev_email);
                     var date = (val.rev_date_respond != null) ? moment(val.rev_date_respond, 'YYYY-MM-DD HH:mm').format("MMMM D, YYYY h:mm a") : '-';
-                    var req_status = (val.rev_status == 1) ? '<span class="badge badge-pill badge-success">ACCEPTED</span>' :
-                        (val.rev_status == 9) ? '<span class="badge badge-pill badge-danger">DECLINED</span>' :
-                        (val.rev_status == 2) ? '<span class="badge badge-pill badge-secondary">PENDING REQUEST</span>' :
-                        '<span class="badge badge-pill badge-danger">LAPSED REQUEST</span>';
+                    var req_status = (val.rev_status == 1) ? '<span class="badge rounded-pill  bg-success">ACCEPTED</span>' :
+                        (val.rev_status == 9) ? '<span class="badge rounded-pill  bg-danger">DECLINED</span>' :
+                        (val.rev_status == 2) ? '<span class="badge rounded-pill  badge-secondary">PENDING REQUEST</span>' :
+                        '<span class="badge rounded-pill  bg-danger">LAPSED REQUEST</span>';
 
                     var stat = get_review_status(val.rev_id);
 
-                    var label = ((stat == 4) ? '<span class="badge badge-pill badge-success">Recommended as submitted</span>' :
-                        ((stat == 5) ? '<span class="badge badge-pill badge-warning">Recommended with minor revisions</span>' :
-                        ((stat == 6) ? '<span class="badge badge-pill badge-warning">Recommended with major revisions</span>' :
-                        ((stat == 7) ? '<span class="badge badge-pill badge-danger">Not recommended</span>' :
-                        ((stat == 3) ? '<span class="badge badge-pill badge-danger">LAPSED REVIEW</span>' :
-                        ((stat == 2) ? '<span class="badge badge-pill badge-secondary">PENDING REVIEW</span>' :
+                    var label = ((stat == 4) ? '<span class="badge rounded-pill  bg-success">Recommended as submitted</span>' :
+                        ((stat == 5) ? '<span class="badge rounded-pill  bg-warning">Recommended with minor revisions</span>' :
+                        ((stat == 6) ? '<span class="badge rounded-pill  bg-warning">Recommended with major revisions</span>' :
+                        ((stat == 7) ? '<span class="badge rounded-pill  bg-danger">Not recommended</span>' :
+                        ((stat == 3) ? '<span class="badge rounded-pill  bg-danger">LAPSED REVIEW</span>' :
+                        ((stat == 2) ? '<span class="badge rounded-pill  badge-secondary">PENDING REVIEW</span>' :
                         '-'))))));
 
                     if (val.rev_status == 3) {
@@ -3882,10 +4166,10 @@ function view_reviews(id, title) {
                 var rem = (val.scr_remarks == '' || val.scr_remarks == null) ? '-' : val.scr_remarks;
                 var file = (val.scr_file == null || val.scr_file == '') ? 'N/A' : '<a class="text-primary" href="' + base_url + "assets/oprs/uploads/reviewersdoc/" + val.scr_file + '" target="_blank" download>Downlod</a>';
 
-                var reco = ((status == 4) ? '<span class="badge badge-pill badge-success">Recommended as submitted</span>' :
-                    ((status == 5) ? '<span class="badge badge-pill badge-warning">Recommended with minor revisions</span>' :
-                    ((status == 6) ? '<span class="badge badge-pill badge-warning">Recommended with major revisions</span>' :
-                        '<span class="badge badge-pill badge-danger">Not recommended</span>')));
+                var reco = ((status == 4) ? '<span class="badge rounded-pill  bg-success">Recommended as submitted</span>' :
+                    ((status == 5) ? '<span class="badge rounded-pill  bg-warning">Recommended with minor revisions</span>' :
+                    ((status == 6) ? '<span class="badge rounded-pill  bg-warning">Recommended with major revisions</span>' :
+                        '<span class="badge rounded-pill  bg-danger">Not recommended</span>')));
                 
                 $('#reviews_table tbody').append('<tr><td>' + i +'</td> \
                                                 <td>' + name + '</td> \
@@ -3976,13 +4260,13 @@ function review(id, trk, rev_name) {
         success: function(data) {
 
             $.each(data, function(key, val) {
-                var status = ((val.scr_status == 4) ? '<span class="badge badge-success mr-1">Recommended as submitted</span>' :
-                    ((val.scr_status == 5) ? '<span class="badge badge-warning mr-1">Recommended with minor revisions</span>' :
-                    ((val.scr_status == 6) ? '<span class="badge badge-warning mr-1">Recommended with major revisions</span>' :
-                    ((val.scr_status == 7) ? '<span class="badge badge-danger mr-1">Not recommended</span>' : ''))));
+                var status = ((val.scr_status == 4) ? '<span class="badge rounded-pill bg-success mr-1">Recommended as submitted</span>' :
+                    ((val.scr_status == 5) ? '<span class="badge rounded-pill bg-warning mr-1">Recommended with minor revisions</span>' :
+                    ((val.scr_status == 6) ? '<span class="badge rounded-pill bg-warning mr-1">Recommended with major revisions</span>' :
+                    ((val.scr_status == 7) ? '<span class="badge rounded-pill bg-danger mr-1">Not recommended</span>' : ''))));
 
 
-                $('.usr' + trk).append('<a href="javascript:void(0);" onclick="view_score(\'' + id + '\',\'' + man_id + '\',\'' + rev_name + '\')" data-toggle="modal" data-target="#scoreModal"><span class="badge badge-info mr-1" >Score : ' + val.scr_total + '/100</span></a>' +
+                $('.usr' + trk).append('<a href="javascript:void(0);" onclick="view_score(\'' + id + '\',\'' + man_id + '\',\'' + rev_name + '\')" data-toggle="modal" data-target="#scoreModal"><span class="badge rounded-pill bg-info mr-1" >Score : ' + val.scr_total + '/100</span></a>' +
                     status);
 
                 if (val.scr_remarks != '' && val.scr_remarks != null)
@@ -4024,7 +4308,6 @@ function generate_email(rid, mid) {
                 var new_mail = '';
                 
                 var mail = moment().format('MMMM D, YYYY') + '<br/><br/>' + mail_content;
-console.log(mail);
                 $('#rev_header' + mid).text($('#trk_rev' + mid).val());
                 $('#rev_header_mail' + mid).text($('#trk_rev' + mid).val());
 
@@ -4571,11 +4854,11 @@ function publish_articles(c, id)
         $.each(publishables, function(key, val)
         {
             html += '<li class="list-group-item"> \
-                        <p class="font-weight-bold"> \
+                        <p class="fw-bold"> \
                         ' + val['title'] + ' \
                         </p> \
                         <div class="form-group"> \
-                        <label>Upload Final Manuscript</label> <span class="badge badge-danger">PDF</span></label>\
+                        <label>Upload Final Manuscript</label> <span class="badge rounded-pill bg-danger">PDF</span></label>\
                         <input type="hidden" name="man_id[]" value="' + val['id'] + '"> \
                         <input type="file" class="form-control upload_file" id="man_file'+val['id']+'" name="man_file['+val['id']+']" accept="application/pdf"> \
                         </div> \
@@ -4724,7 +5007,7 @@ function notifications(){
                 
                 if(notif_count > 0)
                 {
-                    $('.oprs_notif').append('<span class="badge badge-danger font-weight-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
+                    $('.oprs_notif').append('<span class="badge rounded-pill bg-danger fw-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
                 }
             }
             
@@ -4748,7 +5031,7 @@ function notifications(){
                 
                 if(notif_count > 0)
                 {
-                    $('.oprs_notif').append('<span class="badge badge-danger font-weight-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
+                    $('.oprs_notif').append('<span class="badge rounded-pill bg-danger fw-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
                 }
             }
         });
@@ -4791,7 +5074,7 @@ function notifications2()
            $('.notif_count').empty();
            if(notif_count > 0)
            {
-            $('.notif_count').append('<span class="badge badge-danger font-weight-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
+            $('.notif_count').append('<span class="badge rounded-pill bg-danger fw-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
            }
            
            
@@ -4830,10 +5113,10 @@ function com_review(id, trk){
         success: function(data) {console.log(data);
             $.each(data, function(key, val) {
 
-                var status = ((val.com_review == 1) ? '<span class="badge badge-success mr-1">No Revisions, Approve</span>' 
-                : ((val.com_review == 2 ? '<span class="badge badge-info mr-1">Recommended with Minor Revisions</span>' 
-                : ((val.com_review == 3) ? '<span class="badge badge-warning mr-1">Recommended with Major Revisions</span>' 
-                : '<span class="badge badge-danger mr-1">Disapprove</span>'))));
+                var status = ((val.com_review == 1) ? '<span class="badge rounded-pill bg-success mr-1">No Revisions, Approve</span>' 
+                : ((val.com_review == 2 ? '<span class="badge rounded-pill bg-info mr-1">Recommended with Minor Revisions</span>' 
+                : ((val.com_review == 3) ? '<span class="badge rounded-pill bg-warning mr-1">Recommended with Major Revisions</span>' 
+                : '<span class="badge rounded-pill bg-danger mr-1">Disapprove</span>'))));
         
         
                 $('.usr' + trk).append(status);
@@ -4847,23 +5130,30 @@ function com_review(id, trk){
     });
 }
 
-// verify if feedback is submited already
-function verify_feedback(){
-    $('#logoutModal').modal('toggle');
-  
-    var jqXHR = $.ajax({
-        type: "GET",
-        url: base_url + "admin/feedback/verify/999999",
-        async: false,
-        crossDomain: true,
+// verify if feedback is submited already (unused)
+function logout(){
+    current_button_id = '#submit_feedback';
+    $('#feedbackModal').modal('toggle');
+    recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
+        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+        'callback': onRecaptchaSuccess,
+        'expired-callback': onRecaptchaExpired
     });
+
+    
+    // var jqXHR = $.ajax({
+    //     type: "GET",
+    //     url: base_url + "admin/feedback/verify/999999",
+    //     async: false,
+    //     crossDomain: true,
+    // });
   
-    var stat = jqXHR.responseText.replace(/\"/g, '');
-    if(stat == 0){
-        $('#feedbackModal').modal('toggle');
-    }else{
-      window.location.href = base_url + 'oprs/login/logout';
-    }
+    // var stat = jqXHR.responseText.replace(/\"/g, '');
+    // if(stat == 0){
+    //     $('#feedbackModal').modal('toggle');
+    // }else{
+    //   window.location.href = base_url + 'oprs/login/logout';
+    // }
   }
 
 // view feedback
@@ -5487,4 +5777,27 @@ function getCurrentOTP(refCode){
           }
         }
     }, 1000);
+  }
+
+  function destroyUserSession(){
+  
+      $.ajax({
+        type: "POST",
+        url: base_url + "oprs/login/destroy_user_session/" ,
+        data: data,
+        success: function(data) {
+          // console.log(data);
+        }
+      });
+  }
+
+  function onRecaptchaSuccess(token) {
+    console.log("reCAPTCHA validated!");
+    $(current_button_id).prop('disabled', false); // Enable submit button
+  }
+  
+  // Callback when reCAPTCHA expires
+  function onRecaptchaExpired() {
+    console.log("reCAPTCHA expired.");
+    $(current_button_id).prop('disabled', true);
   }
