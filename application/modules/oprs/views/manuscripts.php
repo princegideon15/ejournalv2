@@ -2,22 +2,23 @@
 
 <div id="layoutSidenav_content">
     <main>
-		<div class="container-fluid pt-3 bg-light">
+		<div class="container-fluid pt-3">
+        <h3 class="fw-bold">Manuscripts</h3>
 			<!-- Breadcrumbs-->
-			<ol class="breadcrumb">
+			<!-- <ol class="breadcrumb">
 				<li class="breadcrumb-item">
 					<a href="javascript:void(0);">Manuscripts</a>
 				</li>
 				<li class="breadcrumb-item active"><?php echo $this->session->userdata('_oprs_type'); ?>
 					(<?php echo $this->session->userdata('_oprs_username'); ?>)</li>
-			</ol>
+			</ol> -->
 
 			<!-- Manuscript Table -->
-			<div class="card mb-3">
-				<div class="card-header font-weight-bold">
+			<div class="card mb-3 border border-dark">
+				<div class="card-header fw-bold">
 					<i class="fa fa-table"></i> List of Manuscripts
 				</div>
-				<div class="card-body">
+				<div class="card-body p-0">
 					<div class="table-responsive">
 						<!-- REVIEWER -->
 						<?php if (_UserRoleFromSession() == 5) {?>
@@ -36,11 +37,11 @@
 								<?php $c = 1;foreach ($manus as $m): ?>
 								<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
 								<?php $mantitle = rawurlencode($m->man_title); ?>
-								<?php $action = (($m->scr_status == '4') ? '<span class="badge badge-pill badge-success">Recommended as submitted</span>' 
-									: ((($m->scr_status == '5') ? '<span class="badge badge-pill badge-warning">Recommended with minor revisions</span>' 
-									: ((($m->scr_status == '6') ? '<span class="badge badge-pill badge-warning">Recommended with major revisions</span>'  
-									: ((($m->scr_status == '7') ? '<span class="badge badge-pill badge-danger">Not recommended</span>' 
-									: '<button type="button" class="btn btn-light text-success btn-sm"  data-toggle="modal" rel="tooltip" data-placement="top" title="View Tracking" data-target="#startReviewModal" onclick="start_review(\'' . $m->man_file . '\',\'' . $m->row_id . '\',\'' . $mantitle . '\',\'' . $m->man_author . '\',\'' . $m->rev_hide_auth . '\')"><span class="fa fa-chevron-circle-right" ></span> Start Review</button>'))))))
+								<?php $action = (($m->scr_status == '4') ? '<span class="badge rounded-pill badge-success">Recommended as submitted</span>' 
+									: ((($m->scr_status == '5') ? '<span class="badge rounded-pill badge-warning">Recommended with minor revisions</span>' 
+									: ((($m->scr_status == '6') ? '<span class="badge rounded-pill badge-warning">Recommended with major revisions</span>'  
+									: ((($m->scr_status == '7') ? '<span class="badge rounded-pill badge-danger">Not recommended</span>' 
+									: '<button type="button" class="btn btn-light text-success btn-sm"  data-bs-toggle="modal" rel="tooltip" data-bs-placement="top" title="View Tracking" data-bs-target="#startReviewModal" onclick="start_review(\'' . $m->man_file . '\',\'' . $m->row_id . '\',\'' . $mantitle . '\',\'' . $m->man_author . '\',\'' . $m->rev_hide_auth . '\')"><span class="fa fa-chevron-circle-right" ></span> Start Review</button>'))))))
 										);?>
 								<?php $i = $m->man_issue;
 										$issue = (($i == 5) ? 'Special Issue No. 1' 
@@ -55,7 +56,7 @@
 										<a href="javascript:void(0);"
 											onclick="view_manus(<?php echo $m->row_id; ?>,<?php echo $m->rev_hide_auth; ?>);"
 											class="text-dark "><i class="fa fa-plus-circle text-primary" rel="tooltip"
-												data-placement="top" title="Click for more details"></i></a>
+												data-bs-placement="top" title="Click for more details"></i></a>
 										<?php echo $m->man_title; ?>
 									</td>
 									<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
@@ -120,21 +121,21 @@
 								<tr>
 									<td></td>
 									<td width="60%"><?php echo $m->man_title; ?></br>
-										<span class="badge badge-secondary"><?php echo $issue;?></span>
-										<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-										<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
-									<td><span class="badge badge-<?php echo $class;?>"><?php echo $status;?></span></td>
+										<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+										<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+										<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
+									<td><span class="badge text-bg-<?php echo $class;?>"><?php echo $status;?></span></td>
 									<td>
 
 										<?php if($m->man_status == 4){ ?>
 										<button type="button" class="btn btn-light btn-sm"
 											onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-toggle="modal" data-target="#reviewsModal" rel="tooltip" data-placement="top"
+											data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
 											title="View Reviews"><span class="fa fa-eye"></span> View Reviews
 										</button>
 										<button type="button" class="btn btn-light btn-sm"
 											onclick="submit_editorial_review('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-toggle="modal" data-target="#editorialModal" rel="tooltip" data-placement="top"
+											data-bs-toggle="modal" data-bs-target="#editorialModal" rel="tooltip" data-bs-placement="top"
 											title="Submit Editorial Review"><span class="fa fa-chevron-circle-right"></span>
 											Submit Editorial Review
 										</button>
@@ -144,8 +145,8 @@
 											download><span class="fa fa-chevron-circle-right"></span> Download Final Manuscript
 										</a>
 										<button type="button" class="btn btn-light btn-sm"
-											onclick="for_publication('<?php echo $m->row_id; ?>')" data-toggle="modal"
-											data-target="#publicationModal" rel="tooltip" data-placement="top"
+											onclick="for_publication('<?php echo $m->row_id; ?>')" data-bs-toggle="modal"
+											data-bs-target="#publicationModal" rel="tooltip" data-bs-placement="top"
 											title="Submit to Layout Manager"><span class="fa fa-chevron-circle-right"></span>
 											Submit to Layout Manager
 										</button>
@@ -185,21 +186,21 @@
 								<tr>
 									<td></td>
 									<td width="60%"><?php echo $m->man_title; ?></br>
-										<span class="badge badge-secondary"><?php echo $issue;?></span>
-										<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-										<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
-									<td><span class="badge badge-<?php echo $class;?>"><?php echo $status;?></span></td>
+										<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+										<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+										<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
+									<td><span class="badge text-bg-<?php echo $class;?>"><?php echo $status;?></span></td>
 									<td>
 
 										<?php if($m->man_status == 4){ ?>
 										<button type="button" class="btn btn-light btn-sm"
 											onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-toggle="modal" data-target="#reviewsModal" rel="tooltip" data-placement="top"
+											data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
 											title="View Reviews"><span class="fa fa-eye"></span> View Reviews
 										</button>
 										<button type="button" class="btn btn-light btn-sm"
 											onclick="submit_editorial_review('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-toggle="modal" data-target="#editorialModal" rel="tooltip" data-placement="top"
+											data-bs-toggle="modal" data-bs-target="#editorialModal" rel="tooltip" data-bs-placement="top"
 											title="Submit Editorial Review"><span class="fa fa-chevron-circle-right"></span>
 											Submit Editorial Review
 										</button>
@@ -214,8 +215,8 @@
 										</a>
 										<button type="button" class="btn btn-light btn-sm"
 											onclick="submit_publishable('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-toggle="modal" data-target="#publishableModal" rel="tooltip"
-											data-placement="top" title="Submit Publishable Manuscript"><span
+											data-bs-toggle="modal" data-bs-target="#publishableModal" rel="tooltip"
+											data-bs-placement="top" title="Submit Publishable Manuscript"><span
 												class="fa fa-chevron-circle-right"></span> Submit as Publishable
 										</button>
 										<?php } ?>
@@ -233,57 +234,57 @@
 
 						<?php if(_UserRoleFromSession() == 3){ ?>
 							<div class="alert alert-warning " role="alert">
-								<p class="font-weight-bold">Instructions to Managing Editor</p>
+								<p class="fw-bold">Instructions to Managing Editor</p>
 								The manuscript/article to be submitted must not contain any traces of identity of author (i.e. Name
 								of author, co-authors, email address and affiliation). <br />
 								The information, however, should be inputted in the upload forms. <br />
-								<button type="button" class="btn btn-sm btn-warning mt-2" data-toggle="modal"
-									data-target="#uploadModal" onclick="show_hidden_manus()"><i class="fas fa-upload"></i> Upload
+								<button type="button" class="btn btn-sm btn-warning mt-2" data-bs-toggle="modal"
+									data-bs-target="#uploadModal" onclick="show_hidden_manus()"><i class="fas fa-upload"></i> Upload
 									Manuscript
 								</button>
 							</div>
 						<?php } ?>
 
 						<nav id="man_tab">
-							<div class="nav nav-tabs font-weight-bold" id="nav-tab" role="tablist">
-								<a class="nav-link  active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab"
+							<div class="nav nav-tabs bg-light" id="nav-tab" role="tablist">
+								<a class="nav-link active" id="nav-all-tab" data-bs-toggle="tab" href="#nav-all" role="tab"
 									aria-controls="nav-all" aria-selected="true">All
-									<span class="badge badge-dark"><?php echo count($man_count);?></span></a>
-								<a class="nav-link " id="nav-new-tab" data-toggle="tab" href="#nav-new" role="tab"
+									<span class="badge bg-dark"><?php echo count($man_count);?></span></a>
+								<a class="nav-link " id="nav-new-tab" data-bs-toggle="tab" href="#nav-new" role="tab"
 									aria-controls="nav-new" aria-selected="true">New
-									<span class="badge badge-dark"><?php echo count($man_new);?></span></a>
-								<a class="nav-link " id="nav-onreview-tab" data-toggle="tab" href="#nav-onreview" role="tab"
+									<span class="badge bg-dark"><?php echo count($man_new);?></span></a>
+								<a class="nav-link " id="nav-onreview-tab" data-bs-toggle="tab" href="#nav-onreview" role="tab"
 									aria-controls="nav-onreview" aria-selected="false">On-review
-									<span class="badge badge-dark"><?php echo count($man_onreview);?></span></a>
-								<a class="nav-link " id="nav-reviewed-tab" data-toggle="tab" href="#nav-reviewed" role="tab"
+									<span class="badge bg-dark"><?php echo count($man_onreview);?></span></a>
+								<a class="nav-link " id="nav-reviewed-tab" data-bs-toggle="tab" href="#nav-reviewed" role="tab"
 									aria-controls="nav-reviewed" aria-selected="false">Reviewed
-									<span class="badge badge-dark"><?php echo count($man_reviewed);?></span></a>
-								<a class="nav-link " id="nav-complete-review-tab" data-toggle="tab" href="#nav-complete-review"
+									<span class="badge bg-dark"><?php echo count($man_reviewed);?></span></a>
+								<a class="nav-link " id="nav-complete-review-tab" data-bs-toggle="tab" href="#nav-complete-review"
 									role="tab" aria-controls="nav-complete-review" aria-selected="false">Completed reviews
-									<span class="badge badge-dark"><?php echo count($completed);?></span></a>
-								<a class="nav-link " id="nav-editorial-review-tab" data-toggle="tab"
+									<span class="badge bg-dark"><?php echo count($completed);?></span></a>
+								<a class="nav-link " id="nav-editorial-review-tab" data-bs-toggle="tab"
 									href="#nav-editorial-review" role="tab" aria-controls="nav-editorial-review"
 									aria-selected="false">Editorial reviews
-									<span class="badge badge-dark"><?php echo count($editorial);?></span></a>
-								<a class="nav-link " id="nav-final-tab" data-toggle="tab" href="#nav-final" role="tab"
+									<span class="badge bg-dark"><?php echo count($editorial);?></span></a>
+								<a class="nav-link " id="nav-final-tab" data-bs-toggle="tab" href="#nav-final" role="tab"
 									aria-controls="nav-final" aria-selected="false">Author's revision
-									<span class="badge badge-dark"><?php echo count($man_final);?></span></a>
-								<a class="nav-link " id="nav-publication-tab" data-toggle="tab" href="#nav-publication"
+									<span class="badge bg-dark"><?php echo count($man_final);?></span></a>
+								<a class="nav-link " id="nav-publication-tab" data-bs-toggle="tab" href="#nav-publication"
 									role="tab" aria-controls="nav-publication" aria-selected="false">For
 									publication
-									<span class="badge badge-dark"><?php echo count($man_for_p);?></span></a>
-								<a class="nav-link" id="nav-layout-tab" data-toggle="tab" href="#nav-layout" role="tab"
+									<span class="badge bg-dark"><?php echo count($man_for_p);?></span></a>
+								<a class="nav-link" id="nav-layout-tab" data-bs-toggle="tab" href="#nav-layout" role="tab"
 									aria-controls="nav-layout" aria-selected="false">For Layout
-									<span class="badge badge-dark"><?php echo count($man_lay);?></span></a>
-								<a class="nav-link" id="nav-publishables-tab" data-toggle="tab" href="#nav-publishables"
+									<span class="badge bg-dark"><?php echo count($man_lay);?></span></a>
+								<a class="nav-link" id="nav-publishables-tab" data-bs-toggle="tab" href="#nav-publishables"
 									role="tab" aria-controls="nav-publishables" aria-selected="false">Publishables
-									<span class="badge badge-dark"><?php echo count($publishables);?></span></a>
-								<a class="nav-link" id="nav-published-tab" data-toggle="tab" href="#nav-published" role="tab"
+									<span class="badge bg-dark"><?php echo count($publishables);?></span></a>
+								<a class="nav-link" id="nav-published-tab" data-bs-toggle="tab" href="#nav-published" role="tab"
 									aria-controls="nav-published" aria-selected="false">Published
-									<span class="badge badge-dark"><?php echo count($published);?></span></a>
-								<a class="nav-link" id="nav-existing-tab" data-toggle="tab" href="#nav-existing" role="tab"
+									<span class="badge bg-dark"><?php echo count($published);?></span></a>
+								<a class="nav-link" id="nav-existing-tab" data-bs-toggle="tab" href="#nav-existing" role="tab"
 									aria-controls="nav-existing" aria-selected="false">Published to other journal platforms
-									<span class="badge badge-dark"><?php echo count($existing);?></span></a>
+									<span class="badge bg-dark"><?php echo count($existing);?></span></a>
 							</div>
 						</nav>
 						<div class="tab-content" id="nav-tabContent">
@@ -296,8 +297,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 											<th>Remarks</th>
 										</tr>
@@ -311,7 +311,7 @@
 										<?php $scr = count($this->Review_model->get_review(_UserRoleFromSession(), $m->row_id));?>
 										<?php $mem_type = count($this->Manuscript_model->check_member($m->man_user_id)); ?>
 
-										<?php $mem_type = ($mem_type > 0) ? '<span class="badge badge-secondary">Non-member</span>' : ''; ?>
+										<?php $mem_type = ($mem_type > 0) ? '<span class="badge rounded-pill text-bg-secondary">Non-member</span>' : ''; ?>
 										<!-- get total reveiewers with scores -->
 										<?php $status = (($m->man_status == '1') ? 'New' 
 										: ((($m->man_status == '2') ? 'On-review (0/' . $rev_cnt . ')' 
@@ -347,21 +347,21 @@
 										<?php $title = $m->man_title . ', ' . $m->man_author . $acoa; ?>
 										<tr>
 											<td></td>
-											<td><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+											<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a>
 												<?php if($stat > 1 && $stat != 99){ ?>
 												</br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
 												<?php } ?>
 												<?php echo $mem_type;?>
 											</td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td class="text-center"><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo rawurlencode($title) ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -372,50 +372,50 @@
 													<!-- process manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-success"
 														onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-														data-toggle="modal" data-target="#processModal" rel="tooltip"
-														data-placement="top" title="Add Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
+														data-bs-placement="top" title="Add Reviewers"><span
 															class="fas fa-user-plus"></span></button>
 													<!-- add remarks -->
 													<button type="button" class="btn border border-1 btn-light text-primary"
-														onclick="add_remarks('<?php echo $m->row_id; ?>')" data-toggle="modal"
-														data-target="#remarksModal" rel="tooltip" data-placement="top"
+														onclick="add_remarks('<?php echo $m->row_id; ?>')" data-bs-toggle="modal"
+														data-bs-target="#remarksModal" rel="tooltip" data-bs-placement="top"
 														title="Add Remarks"><span class="far fa-edit"></span></button>
 
 													<?php }else if($m->man_status <= 3){ ?>
 													<!-- process manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-success"
 														onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-														data-toggle="modal" data-target="#processModal" rel="tooltip"
-														data-placement="top" title="Add Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
+														data-bs-placement="top" title="Add Reviewers"><span
 															class="fas fa-user-plus"></span></button>
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1 btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<?php }else if($m->man_status == 8){ ?>
 													<!-- publish to ejournal -->
 													<button type="button" class="btn border border-1 btn-light text-success"
 														onclick="publish_to_ejournal('<?php echo $m->row_id; ?>')"
-														data-toggle="modal" data-target="#publishModal" rel="tooltip"
-														data-placement="top" title="Publish to eJournal"><span
+														data-bs-toggle="modal" data-bs-target="#publishModal" rel="tooltip"
+														data-bs-placement="top" title="Publish to eJournal"><span
 															class="fas fa-paper-plane"></span></button>
 													<?php } ?>
 													<!-- view abstract, full text manuscript, word -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-														class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+														class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-														class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+														class="far fa-file-pdf"></span> </button>
 													<a type="button" class="btn border border-1 btn-light text-dark"
 														href="<?php echo base_url('/assets/oprs/uploads/\initial_manuscripts_word/'.$m->man_word); ?>" rel="tooltip"
-														data-placement="top" title="Download Full Text Word" download><span
+														data-bs-placement="top" title="Download Full Text Word" download><span
 														class="far fa-file-alt"></span> WORD</a>
 
 											
@@ -425,23 +425,23 @@
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1  btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<!-- delete manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-danger"
-														rel="tooltip" data-placement="top" title="Delete"
+														rel="tooltip" data-bs-placement="top" title="Delete"
 														onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
 															class="fa fa-trash"></span></button>
 													<?php } ?>
@@ -449,7 +449,7 @@
 													<!-- approve manuscript -->
 													<?php if (_UserRoleFromSession() == 9 && $rev_act >= 3 ) { ?>
 													<!-- <button type="button" class="btn btn-light text-success btn" rel="tooltip"
-														data-placement="top" title="Final Review"
+														data-bs-placement="top" title="Final Review"
 														onclick="final_review('<?php echo $m->row_id; ?>')"><span
 															class="	fa fa-gavel"></span> Final Review</button> -->
 													<?php } ?>
@@ -469,8 +469,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 											<th>Remarks</th>
 										</tr>
@@ -488,10 +487,10 @@
 													onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -502,29 +501,29 @@
 													<!-- process manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-success"
 														onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-														data-toggle="modal" data-target="#processModal" rel="tooltip"
-														data-placement="top" title="Add Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
+														data-bs-placement="top" title="Add Reviewers"><span
 															class="fas fa-user-plus"></span></button>
 													<!-- add remarks -->
 													<button type="button" class="btn border border-1 btn-light text-primary"
-														onclick="add_remarks('<?php echo $m->row_id; ?>')" data-toggle="modal"
-														data-target="#remarksModal" rel="tooltip" data-placement="top"
+														onclick="add_remarks('<?php echo $m->row_id; ?>')" data-bs-toggle="modal"
+														data-bs-target="#remarksModal" rel="tooltip" data-bs-placement="top"
 														title="Add Remarks"><span class="far fa-edit"></span></button>
 													<?php } ?>
 													<!-- view abstract, full text manuscript, word -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<a type="button" class="btn border border-1 btn-light text-dark"
 														href="<?php echo base_url('/assets/oprs/uploads/\initial_manuscripts_word/'.$m->man_word); ?>" rel="tooltip"
-														data-placement="top" title="Download Full Text Word" download><span
+														data-bs-placement="top" title="Download Full Text Word" download><span
 														class="far fa-file-alt"></span> WORD</a>
 													<?php } ?>
 													<!-- SUPERADMIN -->
@@ -532,23 +531,23 @@
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1  btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<!-- delete manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-danger"
-														rel="tooltip" data-placement="top" title="Delete"
+														rel="tooltip" data-bs-placement="top" title="Delete"
 														onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
 															class="fa fa-trash"></span></button>
 													<?php } ?>
@@ -568,8 +567,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -598,15 +596,15 @@
 													onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a>
 												</br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
 											</td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -617,50 +615,50 @@
 													<!-- process manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-success"
 														onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-														data-toggle="modal" data-target="#processModal" rel="tooltip"
-														data-placement="top" title="Add Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
+														data-bs-placement="top" title="Add Reviewers"><span
 															class="fas fa-user-plus"></span></button>
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1 btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<?php } ?>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<?php } ?>
 													<!-- SUPERADMIN -->
 													<?php if (_UserRoleFromSession() == 8 ) { ?>
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1  btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<!-- delete manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-danger"
-														rel="tooltip" data-placement="top" title="Delete"
+														rel="tooltip" data-bs-placement="top" title="Delete"
 														onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
 															class="fa fa-trash"></span></button>
 													<?php } ?>
@@ -679,8 +677,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -709,14 +706,14 @@
 													onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a>
 												</br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -727,50 +724,50 @@
 													<!-- process manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-success"
 														onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-														data-toggle="modal" data-target="#processModal" rel="tooltip"
-														data-placement="top" title="Add Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
+														data-bs-placement="top" title="Add Reviewers"><span
 															class="fas fa-user-plus"></span></button>
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1 btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<?php } ?>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<?php } ?>
 													<!-- SUPERADMIN -->
 													<?php if (_UserRoleFromSession() == 8 ) { ?>
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1  btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<!-- delete manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-danger"
-														rel="tooltip" data-placement="top" title="Delete"
+														rel="tooltip" data-bs-placement="top" title="Delete"
 														onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
 															class="fa fa-trash"></span></button>
 													<?php } ?>
@@ -790,8 +787,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -818,15 +814,15 @@
 											<td width="50%"><a href="javascript:void(0);"
 													onclick="view_manus(<?php echo $row->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a> </br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
 											<td><?php echo date_format(new DateTime($row->date_created), 'F j, Y, g:i a'); ?>
 											</td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $rowlass; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill badge-<?php echo $rowlass; ?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $row->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $row->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -837,50 +833,50 @@
 													<!-- send to editor in chief -->
 													<button type="button" class="btn border border-1 btn-light text-warning"
 														onclick="edit_man(<?php echo $row->row_id; ?>,<?php echo $row->man_status; ?>)"
-														data-toggle="modal" data-target="#editorModal" rel="tooltip"
-														data-placement="top" title="Add Editor-in-chief"><span
+														data-bs-toggle="modal" data-bs-target="#editorModal" rel="tooltip"
+														data-bs-placement="top" title="Add Editor-in-chief"><span
 															class="fas fa-book-reader"></span></button>
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1 btn-light text-info"
 														onclick="view_reviewers('<?php echo $row->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $row->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<?php } ?>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $row->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $row->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<?php } ?>
 													<!-- SUPERADMIN -->
 													<?php if (_UserRoleFromSession() == 8 ) { ?>
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1  btn-light text-info"
 														onclick="view_reviewers('<?php echo $row->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $row->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $row->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $row->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<!-- delete manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-danger"
-														rel="tooltip" data-placement="top" title="Delete"
+														rel="tooltip" data-bs-placement="top" title="Delete"
 														onclick="remove_manus('<?php echo $row->row_id; ?>')"><span
 															class="fa fa-trash"></span></button>
 													<?php } ?>
@@ -900,8 +896,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -924,14 +919,14 @@
 											<td width="50%"><a href="javascript:void(0);"
 													onclick="view_manus(<?php echo $e->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a></br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
 											<td><?php echo date_format(new DateTime($e->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $e->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $e->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -939,31 +934,31 @@
 													<!-- view editors -->
 													<button type="button" class="btn border border-1 btn-light text-warning"
 														onclick="view_editors('<?php echo $e->row_id; ?>','<?php echo rawurlencode($title); ?>')"
-														data-toggle="modal" data-target="#editorialReviewModal" rel="tooltip"
-														data-placement="top" title="View Editors"><span
+														data-bs-toggle="modal" data-bs-target="#editorialReviewModal" rel="tooltip"
+														data-bs-placement="top" title="View Editors"><span
 															class="fas fa-book-reader"></span>
 													</button>
 
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1 btn-light text-info"
 														onclick="view_reviewers('<?php echo $e->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $e->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span>
 													</button>
 
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $e->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> 
 													</button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $e->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-alt"></span> 
 													</button>
 												</div>
 											</td>
@@ -980,8 +975,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -1004,14 +998,14 @@
 											<td width="50%"><a href="javascript:void(0);"
 													onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a></br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -1019,23 +1013,23 @@
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1 btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span>
 													</button>
 
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> 
 													</button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-alt"></span> 
 													</button>
 												</div>
 											</td>
@@ -1053,8 +1047,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -1077,14 +1070,14 @@
 											<td width="50%"><a href="javascript:void(0);"
 													onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a></br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -1092,22 +1085,22 @@
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1 btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span>
 													</button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> 
 													</button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-alt"></span> 
 													</button>
 												</div>
 											</td>
@@ -1124,8 +1117,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -1148,14 +1140,14 @@
 											<td width="50%"><a href="javascript:void(0);"
 													onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a></br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -1163,22 +1155,22 @@
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1 btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span>
 													</button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> 
 													</button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-alt"></span> 
 													</button>
 												</div>
 											</td>
@@ -1196,8 +1188,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -1220,14 +1211,14 @@
 											<td width="50%"><a href="javascript:void(0);"
 													onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a></br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -1235,21 +1226,21 @@
 													<!-- publish to ejournal -->
 													<button type="button" class="btn border border-1 btn-light text-success"
 														onclick="publish_to_ejournal('<?php echo $m->row_id; ?>')"
-														data-toggle="modal" data-target="#publishModal" rel="tooltip"
-														data-placement="top" title="Publish to eJournal"><span
+														data-bs-toggle="modal" data-bs-target="#publishModal" rel="tooltip"
+														data-bs-placement="top" title="Publish to eJournal"><span
 															class="fas fa-paper-plane"></span></button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'final_abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> 
 													</button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'final_full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-alt"></span> 
 													</button>
 												</div>
 											</td>
@@ -1267,8 +1258,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -1290,29 +1280,29 @@
 											<td></td>
 											<td><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a></br>
-												<span class="badge badge-secondary"><?php echo $issue;?></span>
-												<span class="badge badge-secondary">Volume <?php echo $m->man_volume;?></span>
-												<span class="badge badge-secondary"><?php echo $m->man_year;?></span></td>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+												<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
 												<!-- view abstract and full text manuscript -->
 												<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'final_abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> 
 													</button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'final_full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-alt"></span> 
 												</button>
 											</td>
 										</tr>
@@ -1328,8 +1318,7 @@
 											<th>#</th>
 											<th>Title</th>
 											<th>Date Submitted</th>
-											<th>Status <i class="fa fa-exclamation-circle text-primary" rel="tooltip"
-													data-placement="top" title="Click the status to view tracking"></i></th>
+											<th>Status</th>
 											<th>Actions</th>
 											<th>Remarks</th>
 										</tr>
@@ -1347,10 +1336,10 @@
 													onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark "><?php echo $title; ?></a></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td><span style="cursor:pointer"
-													class="badge badge-pill badge-<?php echo $class; ?>" data-toggle="modal"
-													rel="tooltip" data-placement="top" title="View Tracking"
-													data-target="#trackingModal"
+											<td><span 
+													class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+													rel="tooltip" data-bs-placement="top" title="View Tracking"
+													data-bs-target="#trackingModal"
 													onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo $title ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
 											</td>
 											<td>
@@ -1361,49 +1350,49 @@
 													<!-- process manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-success"
 														onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-														data-toggle="modal" data-target="#processModal" rel="tooltip"
-														data-placement="top" title="Add Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
+														data-bs-placement="top" title="Add Reviewers"><span
 															class="fas fa-user-plus"></span></button>
 													<!-- add remarks -->
 													<button type="button" class="btn border border-1 btn-light text-primary"
-														onclick="add_remarks('<?php echo $m->row_id; ?>')" data-toggle="modal"
-														data-target="#remarksModal" rel="tooltip" data-placement="top"
+														onclick="add_remarks('<?php echo $m->row_id; ?>')" data-bs-toggle="modal"
+														data-bs-target="#remarksModal" rel="tooltip" data-bs-placement="top"
 														title="Add Remarks"><span class="far fa-edit"></span></button>
 													<?php } ?>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<?php } ?>
 													<!-- SUPERADMIN -->
 													<?php if (_UserRoleFromSession() == 8 ) { ?>
 													<!-- view reviewers -->
 													<button type="button" class="btn border border-1  btn-light text-info"
 														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-														data-toggle="modal" data-target="#reviewerModal" rel="tooltip"
-														data-placement="top" title="View Reviewers"><span
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
 															class="fas fa-users"></span></button>
 													<!-- view abstract and full text manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> ABS</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
 													<button type="button" class="btn border border-1 btn-light text-dark"
 														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-														data-toggle="modal" data-target="#manusModal" rel="tooltip"
-														data-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-alt"></span> PDF</button>
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
 													<!-- delete manuscript -->
 													<button type="button" class="btn border border-1 btn-light text-danger"
-														rel="tooltip" data-placement="top" title="Delete"
+														rel="tooltip" data-bs-placement="top" title="Delete"
 														onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
 															class="fa fa-trash"></span></button>
 													<?php } ?>
@@ -1421,7 +1410,7 @@
 				</div>
 				<!-- <div class="card-footer small text-muted">
 					<?php if (_UserRoleFromSession() == 3) { ?>
-					<button type="button" data-toggle="collapse" data-target="#publishables"
+					<button type="button" data-bs-toggle="collapse" data-bs-target="#publishables"
 						class="btn btn-outline-primary">View Publishables <span
 							class="badge badge-primary"><?php echo count($publish);?></span></button>
 					<?php } ?>
@@ -1458,7 +1447,7 @@
 							<td><?php echo $issue;?></td>
 							<td><?php echo $row->man_year;?></td>
 							<td><?php echo $row->articles;?></td>
-							<td><button type="button" class="btn btn-sm btn-outline-success" rel="tooltip" data-placement="top"
+							<td><button type="button" class="btn btn-sm btn-outline-success" rel="tooltip" data-bs-placement="top"
 									title="Publish selected items" onclick="publish_articles(<?php echo $c++;?>)"><span
 										class="fa fa-globe"></span> Publish to eJournal</button></td>
 						</tr>

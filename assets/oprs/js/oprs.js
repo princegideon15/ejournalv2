@@ -660,7 +660,9 @@ $(document).ready(function() {
     // all manuscripts;
     var amt = $('#dataTable').DataTable({
         "order": [[ 2, "desc" ]],
-        "columnDefs" : [{"targets":2, "type":"date"}]
+        "columnDefs" : [
+            {"targets":2, "type":"date"},
+        ]
     });
  
     amt.on( 'order.dt search.dt', function () {
@@ -672,18 +674,20 @@ $(document).ready(function() {
     
     $('#collapse_new_table').DataTable({
         columnDefs: [
-          { width: "10px", targets: 0 } // Set the width of the first column
+            { width: "10px", targets: 0 } // Set the width of the first column
         ],
         // Optional: to ensure the table layout is applied correctly
         autoWidth: false 
-      });
+    });
+
     $('#collapse_lapreq_table').DataTable({
         columnDefs: [
           { width: "10px", targets: 0 } // Set the width of the first column
         ],
         // Optional: to ensure the table layout is applied correctly
         autoWidth: false 
-      });
+    });
+
     $('#collapse_decreq_table').DataTable({
         columnDefs: [
           { width: "10px", targets: 0 } // Set the width of the first column
@@ -915,9 +919,20 @@ $(document).ready(function() {
 
     // manuscript datatable in reports
     if (prv_exp == 0) {
-        $('#report_manuscript_table').DataTable();
+        $('#report_manuscript_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_manuscript_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -956,9 +971,20 @@ $(document).ready(function() {
 
     // reviewers datatable in reports
     if (prv_exp == 0) {
-        $('#report_reviewer_table').DataTable();
+        $('#report_reviewer_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_reviewer_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -1001,9 +1027,20 @@ $(document).ready(function() {
 
     // lapsed request datatable in reports
     if (prv_exp == 0) {
-        $('#report_lapreq_table').DataTable();
+        $('#report_lapreq_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_lapreq_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -1046,9 +1083,20 @@ $(document).ready(function() {
 
     // declined request datatable in reports
     if (prv_exp == 0) {
-        $('#report_decreq_table').DataTable();
+        $('#report_decreq_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_decreq_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -1091,9 +1139,20 @@ $(document).ready(function() {
 
     // lapsed review datatable in reports
     if (prv_exp == 0) {
-        $('#report_laprev_table').DataTable();
+        $('#report_laprev_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_laprev_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -1136,9 +1195,20 @@ $(document).ready(function() {
 
     // reviewed manuscripts datatable 
     if (prv_exp == 0) {
-        $('#report_revman_table').DataTable();
+        $('#report_revman_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_revman_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -1181,9 +1251,20 @@ $(document).ready(function() {
 
     // completed reviews datatable in reports
     if (prv_exp == 0) {
-        $('#report_comrev_table').DataTable();
+        $('#report_comrev_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_comrev_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -1226,9 +1307,20 @@ $(document).ready(function() {
 
     // ui/ux datatable in reports
     if (prv_exp == 0) {
-        $('#uiux_table').DataTable();
+        $('#uiux_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#uiux_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -1271,9 +1363,20 @@ $(document).ready(function() {
 
     // NDA in reports
     if (prv_exp == 0) {
-        $('#report_nda_table').DataTable();
+        $('#report_nda_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_nda_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -2971,6 +3074,14 @@ $(document).ready(function() {
                     $('#controls_table').DataTable().clear().destroy();
                 }
 
+                var table = $('#controls_table').DataTable({
+                    columnDefs: [
+                        { width: "10px", targets: 0 } // Set the width of the first column
+                    ],
+                    // Optional: to ensure the table layout is applied correctly
+                    autoWidth: false 
+                });
+
                 if(data.length > 0){
                     $.each(data, function(key, val) {
                             var c = 1;
@@ -2983,28 +3094,29 @@ $(document).ready(function() {
                                 var check_export = (val.prv_export == 1) ? 'checked' : '';
                                 var access = (val.usr_sys_acc == 1) ? 'eJournal' : (val.usr_sys_acc == 2) ? 'eReview' : 'eJournal-eReview';
 
-                                var html = "<div class='form-check form-check-inline'> \
+                                var html = "<div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_add[]' value='" + val.usr_id + "' " + check_add + "> \
-                                            <label class='form-check-label'>Add</label> \
+                                            <label class='form-check-label mt-2'>Add</label> \
                                         </div> \
-                                        <div class='form-check form-check-inline'> \
+                                        <div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_edit[]' value='" + val.usr_id + "' " + check_edit + "> \
-                                            <label class='form-check-label'>Edit</label> \
+                                            <label class='form-check-label mt-2'>Edit</label> \
                                         </div> \
-                                        <div class='form-check form-check-inline'> \
+                                        <div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_delete[]' value='" + val.usr_id + "' " + check_delete + "> \
-                                            <label class='form-check-label'>Delete</label> \
+                                            <label class='form-check-label mt-2'>Delete</label> \
                                         </div> \
-                                        <div class='form-check form-check-inline'> \
+                                        <div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_view[]' value='" + val.usr_id + "' " + check_view + " disabled> \
-                                            <label class='form-check-label'>View</label> \
+                                            <label class='form-check-label mt-2'>View</label> \
                                         </div> \
-                                        <div class='form-check form-check-inline'> \
+                                        <div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_export[]' value='" + val.usr_id + "' " + check_export + "> \
-                                            <label class='form-check-label'>Export</label> \
+                                            <label class='form-check-label mt-2'>Export</label> \
                                         </div>";
 
-                                $('#controls_table').dataTable().fnAddData([
+
+                                table.row.add([
                                     c++,
                                     val.usr_username,
                                     access,
@@ -3015,9 +3127,9 @@ $(document).ready(function() {
 
 
 
-                            var t = $('#controls_table').DataTable();
-                            t.on('order.dt search.dt', function() {
-                                t.column(0, {
+                            
+                            table.on('order.dt search.dt', function() {
+                                table.column(0, {
                                     search: 'applied',
                                     order: 'applied'
                                 }).nodes().each(function(cell, i) {
@@ -3026,15 +3138,14 @@ $(document).ready(function() {
                             }).draw();
                     });
                 }else{
-                    var t = $('#controls_table').DataTable();
-                            t.on('order.dt search.dt', function() {
-                                t.column(0, {
-                                    search: 'applied',
-                                    order: 'applied'
-                                }).nodes().each(function(cell, i) {
-                                    cell.innerHTML = i + 1;
-                                });
-                            }).draw();
+                    table.on('order.dt search.dt', function() {
+                        table.column(0, {
+                            search: 'applied',
+                            order: 'applied'
+                        }).nodes().each(function(cell, i) {
+                            cell.innerHTML = i + 1;
+                        });
+                    }).draw();
                 }
             }
         });
@@ -3996,6 +4107,14 @@ function view_reviewers(id, time, title, status) {
             }
 
             if (data.length > 0) {
+
+                var table = $('#table-reviewers').DataTable({
+                    columnDefs: [
+                        { width: "10px", targets: 0 } // Set the width of the first column
+                    ],
+                    // Optional: to ensure the table layout is applied correctly
+                    autoWidth: false 
+                });
               
                 revs = [];
                 var c = 0;
@@ -4046,7 +4165,7 @@ function view_reviewers(id, time, title, status) {
                         var name = val.rev_name;
                     }
 
-                    $('#table-reviewers').dataTable().fnAddData([
+                    table.row.add([
                         c++,
                         name,
                         val.rev_email,
@@ -4061,9 +4180,8 @@ function view_reviewers(id, time, title, status) {
 
 
 
-                var t = $('#table-reviewers').DataTable();
-                t.on('order.dt search.dt', function() {
-                    t.column(0, {
+                table.on('order.dt search.dt', function() {
+                    table.column(0, {
                         search: 'applied',
                         order: 'applied'
                     }).nodes().each(function(cell, i) {
@@ -4099,6 +4217,15 @@ function view_editors(id, title) {
             }
 
             if (data.length > 0) {
+
+                
+                var table = $('#table-editors').DataTable({
+                    columnDefs: [
+                        { width: "10px", targets: 0 } // Set the width of the first column
+                    ],
+                    // Optional: to ensure the table layout is applied correctly
+                    autoWidth: false 
+                });
               
                 revs = [];
                 var c = 0;
@@ -4108,7 +4235,7 @@ function view_editors(id, title) {
                     var date = moment(val.date_created, 'YYYY-MM-DD HH:mm').format("MMMM D, YYYY h:mm a");
                     
 
-                    $('#table-editors').dataTable().fnAddData([
+                    table.row.add([
                         c++,
                         val.edit_name,
                         val.edit_specialization,
@@ -4120,9 +4247,8 @@ function view_editors(id, title) {
 
 
 
-                var t = $('#table-editors').DataTable();
-                t.on('order.dt search.dt', function() {
-                    t.column(0, {
+                table.on('order.dt search.dt', function() {
+                    table.column(0, {
                         search: 'applied',
                         order: 'applied'
                     }).nodes().each(function(cell, i) {
@@ -5784,7 +5910,7 @@ function getCurrentOTP(refCode){
       $.ajax({
         type: "POST",
         url: base_url + "oprs/login/destroy_user_session/" ,
-        data: data,
+        data: { user_access_token : access },
         success: function(data) {
           // console.log(data);
         }

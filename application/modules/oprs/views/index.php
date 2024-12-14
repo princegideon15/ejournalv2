@@ -1,8 +1,8 @@
 
   <div id="layoutSidenav_content">
     <main>
-      <div class="container-fluid pt-3 bg-light">
-        <h1>Dashboard</h1>
+      <div class="container-fluid pt-3">
+        <h3 class="fw-bold">Dashboard</h3>
 
         
         <!-- <ol class="breadcrumb mb-4">
@@ -70,7 +70,7 @@
             <div class="card border-warning mb-3">
               <div class="card-header text-warning fw-bold fs-6 bg-white">New Manuscripts</div>
               <div class="card-body">
-                <table class="table table-bordered table-striped table-hover" id="collapse_new_table">
+                <table class="table table-hover" id="collapse_new_table">
                   <thead class="thead-warning">
                     <tr>
                       <th scope="col">#</th>
@@ -99,7 +99,7 @@
             <div class="card border-danger mb-3">
               <div class="card-header text-danger fw-bold fs-6">Lapsed Requests</div>
               <div class="card-body">
-                <table class="table table-bordered table-striped table-hover" id="collapse_lapreq_table">
+                <table class="table table-hover" id="collapse_lapreq_table">
                   <thead class="thead-danger">
                     <tr>
                       <th scope="col">#</th>
@@ -128,7 +128,7 @@
             <div class="card border-danger mb-3">
               <div class="card-header text-danger fw-bold fs-6">Declined Requests</div>
               <div class="card-body">
-                <table class="table table-bordered table-striped table-hover" id="collapse_decreq_table">
+                <table class="table table-hover" id="collapse_decreq_table">
                   <thead class="thead-danger">
                     <tr>
                       <th scope="col">#</th>
@@ -157,7 +157,7 @@
             <div class="card border-danger mb-3">
               <div class="card-header text-danger fw-bold fs-6">Lapsed Reviews</div>
               <div class="card-body">
-                <table class="table table-bordered table-striped table-hover" id="collapse_laprev_table">
+                <table class="table table-hover" id="collapse_laprev_table">
                   <thead class="thead-danger">
                     <tr>
                       <th scope="col">#</th>
@@ -244,7 +244,7 @@
                 Reviewed Manuscripts
               </div>
               <div class="card-body">
-                <table class="table table-bordered table-striped table-hover" id="collapse_reviewed_table">
+                <table class="table table-hover" id="collapse_reviewed_table">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -273,7 +273,7 @@
                 Completed Reviews
               </div>
               <div class="card-body">
-                <table class="table table-bordered table-striped table-hover" id="collapse_complete_table">
+                <table class="table table-hover" id="collapse_complete_table">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -302,7 +302,7 @@
                 List of Reviewers
               </div>
               <div class="card-body">
-                <table class="table table-bordered table-striped table-hover" id="collapse_reviewers_table">
+                <table class="table table-hover" id="collapse_reviewers_table">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -323,7 +323,7 @@
                       <td class="text-center align-middle"><?php echo $c++; ?></td></td>
                       <td class="align-middle"><?php echo $this->Manuscript_model->get_reviewer_name($row->scr_man_rev_id); ?></td>
                       <td class="align-middle"><?php echo $title; ?></td>
-                      <td class="text-center align-middle"><?php echo $row->scr_total; ?></td>
+                      <td class="align-middle"><?php echo $row->scr_total; ?></td>
                       <td class="align-middle"><?php echo $rev_status; ?></td>
                     </tr>
                     <?php endforeach;?>
