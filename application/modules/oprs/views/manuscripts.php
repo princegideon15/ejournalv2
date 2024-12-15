@@ -322,7 +322,7 @@
 										: ((($m->man_status == '7') ? 'For Layout' 
 										: ((($m->man_status == '8') ? 'Publishable' 
 										: ((($m->man_status == '9') ? 'Published' 
-										:	'Published to to other journal platform')))))))))))))))));?>
+										:	'Published to other journal platform')))))))))))))))));?>
 
 										<?php $stat = $m->man_status;
 											if($stat > 1 && $stat != 99){

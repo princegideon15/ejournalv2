@@ -42,7 +42,7 @@ class Dashboard extends OPRS_Controller {
 					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
 					$data['man_final'] = $this->Manuscript_model->get_manuscripts(4);
 					$data['man_for_p'] = $this->Manuscript_model->get_manuscripts(5);
-					$data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
+					$data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);
 					$data['usr_count'] = $this->User_model->count_user();
 					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
 					$this->_LoadPage('common/body', $data);

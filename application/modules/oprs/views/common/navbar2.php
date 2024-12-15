@@ -1,0 +1,249 @@
+
+
+<style>
+    .rating-star {
+        font-size: 3rem;
+        cursor: pointer;
+        color: gray;
+        padding-top: 0;
+        margin-top: 0;
+    }
+    .rating-star.selected {
+        color: gold;
+    }
+    .character-counter {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+    }
+    .character-counter.exceeded {
+        color: red;
+    }
+</style>
+
+
+<?php $role = $this->session->userdata('_oprs_type_num');?>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark fixed-top">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="javascript:void(0);">
+        <img src="<?php echo base_url("assets/oprs/img/nrcp.png"); ?>" height="40" width="40">
+        <img src="<?php echo base_url("assets/images/skms.png"); ?>" height="40" width="80">
+        <img src="<?php echo base_url("assets/oprs/img/ejicon-07.png"); ?>" height="40" width="40">
+    </a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#!">eReview</a>
+        </li>
+    </ul>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown no-arrow mx-1">
+            <?php if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8) { ?>
+            <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="alertsDropdown" role="button" data-bs-toggle="dropdown">
+                <i class="fas fa-bell fa-fw oprs_notif">
+                <!-- <?php  if(count($logs) > 0){ ?>
+                    <span class="badge badge-danger font-weight-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">          
+                    <?php echo count($logs); ?>
+                    </span>
+                <?php }?> -->
+                </i>
+            </a>
+            <?php } ?>
+            <div class="dropdown-menu dropdown-menu-end p-0 oprs_notif_list shadow-lg bg-white rounded" style="width:400px; max-width:400px; max-height:600px; overflow:auto">
+            
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user fa-fw me-1"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><h6 class="dropdown-header"><?php echo $this->session->userdata('_oprs_username'); ?></h6></li>
+                <li><h6 class="dropdown-header"><?php echo $this->session->userdata('_oprs_type'); ?></h6></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#changePassModal">Change Password</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0);" id="logout_oprs" onclick="logout()">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePassModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="user_modal"><span class="oi oi-shield"></span> Change Password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="form_change_pass">
+                <div class="mb-3">
+                    <label class="form-label" for="old_password">Old Password</label>
+                    <input type="password" class="form-control form-control-lg" id="old_password" name="old_password" placeholder="Enter old password" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="usr_password">New Password</label>
+                    <input type="password" class="form-control form-control-lg" id="usr_password" name="usr_password" placeholder="Enter new password" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="repeat_password">Repeat Password</label>
+                    <input type="password" class="form-control form-control-lg" name="repeat_password" id="repeat_password" placeholder="Repeat password" >
+                    <p id="match" class="mt-2"></p>
+                </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- /.Change Password Modal -->
+
+<!-- FEEDBACK MODAL -->
+<div class="modal fade" id="feedbackModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body p-4">
+        <h5 class="fw-bold main-link">Thank you for visiting the eJournal/eReview system!</h5>
+        <p>To improve the performance of the system, kindly provide us your feedback.</p>
+        <hr>
+        <form id="feedback_form">
+            <h6 class="fw-bold mb-0">User Interface</h6>
+            <div class="d-flex gap-3 mb-0">
+              <span class="rating-star rate-ui" data-value="1">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="2">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="3">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="4">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="5">&#9733;</span>
+            </div>
+            <textarea class="form-control" id="fb_suggest_ui" rows="3" placeholder="Type your suggestions here..." maxlength="300"></textarea>
+            <div id="char_count_ui" class="character-counter text-muted">0 / 300 characters</div>
+            <div class="rate-ui-validation text-danger mt-2"></div>
+      
+            <hr/>
+
+            <h6 class="fw-bold mb-0">User Experience</h6>
+            <div class="d-flex gap-3 mb-0">
+              <span class="rating-star rate-ux" data-value="1">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="2">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="3">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="4">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="5">&#9733;</span>
+            </div>
+
+            <textarea class="form-control" name="fb_suggest_ux" id="fb_suggest_ux" rows="3" placeholder="Type your suggestions here..." maxlength="300"></textarea>
+            <div id="char_count_ux" class="character-counter text-muted">0 / 300 characters</div>
+            <div class="rate-ux-validation text-danger mt-2"></div>
+
+                  
+            <div class="mt-3 mb-0 w-100" id="google_recaptchav2_container">
+                <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_logout"></div>
+                <p class="text-danger" id="g-recaptcha"></p>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-light" type="button" data-bs-dismiss="modal">Later</button>
+          <button type="button" id="submit_feedback" class="btn btn-primary" disabled>Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /FEEDBACK MODAL -->
+
+
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark pt-5" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav pt-3">
+                    <?php if ($role == 7 || $role == 8 || $role == 3) {?>
+                    
+                        <a class="nav-link" href="dashboard">
+                        <i class="fas fa-fw fa-tachometer-alt pe-1"></i>
+                        <span>Dashboard</span>
+                        </a>
+                    
+                    <?php }?>
+                    
+                        <a class="nav-link" href="manuscripts">
+                        <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
+                        Manuscripts
+                        <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
+                        </a> 
+                    
+                    <?php if ($role == 7 || $role == 8) {?>
+                    
+                        <a class="nav-link" href="user">
+                        <i class="fas fa-fw fa-user me-1"></i>
+                        Users<span class="ms-2 badge text bg-danger"><?php echo $usr_count; ?></span>
+                        </a>
+                    
+                    <?php }?>
+                    <?php if ($role == 8 || $role == 3) {?>
+                    
+                        <a class="nav-link" href="reports">
+                        <i class="fas fa-fw fa-chart-bar me-1"></i>
+                        <span>Reports</span>
+                        </a>
+                    
+                    <?php }?>
+                    <?php if ($role == 8) {?>
+                    
+                        <a class="nav-link" href="logs">
+                        <i class="fas fa-fw fa-clipboard-list me-1"></i>
+                        <span>Activity Logs</span>
+                        </a>
+                    
+                    
+                        <a class="nav-link" href="controls">
+                        <i class="fas fa-fw fa-cogs me-1"></i>
+                        <span>Control Panel</span>
+                        </a>
+                    
+                    
+                        <a class="nav-link" href="feedbacks">
+                        <i class="fas fa-edit me-1"></i>
+                        Feedbacks<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
+                        </a>
+                    
+                    
+                        <a class="nav-link" href="emails">
+                        <i class="fas fa-envelope-open me-1"></i>
+                        Email Notifcatiions
+                        </a>
+                    
+                    <?php }?>
+                    <?php if ($role == 8) {?>
+                    
+                        <a class="nav-link" href="backup">
+                        <i class="fas fa-database me-1"></i>
+                        <span>Database</span>
+                        </a>
+                    
+                    <?php }?>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <?php if ($role == 8 || $role == 3) {?>
+                    <a class="btn btn-info w-100" href="<?php echo base_url('../../admin/dashboard'); ?>"><i class="fa fa-sync me-2"></i>eJournal Admin</a>
+                    <hr class="text-light h-10 fw-bold">
+                <?php }?>
+                <div class="small">Logged in as:</div>
+                <?php echo $this->session->userdata('_oprs_type'); ?>
+            </div>
+        </nav>
+    </div>
+

@@ -936,16 +936,20 @@ $('#citationModal .close').click(function(){
       // disabled some fields
       $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
         let inputType = $(this).attr('type');
+        let inputID = $(this).attr('id');
+        var label = $('label[for="' + inputID + '"]');
         if(inputType != 'radio' && inputType != 'password' && inputType != 'email'){
-          $(this).attr('disabled', true);
+          // $(this).attr('disabled', true);
+          label.closest('div.mb-3').addClass('d-none');
         }
       });
     }else{
       // enabled some fields
       $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
         let inputID = $(this).attr('id');
+        var label = $('label[for="' + inputID + '"]');
         // if(inputID != 'region' && inputID != 'province' && inputID != 'city'){
-          $(this).attr('disabled', false);
+          label.closest('div.mb-3').removeClass('d-none');
         // }
       });
 
