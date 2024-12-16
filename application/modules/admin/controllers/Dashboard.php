@@ -42,7 +42,6 @@ class Dashboard extends EJ_Controller {
 
 	
 	public function index() {
-//TODO:replace by timer in jquery
 		if ($this->session->userdata('_oprs_logged_in')) {
 
 			//session expiration and timeout
@@ -110,7 +109,7 @@ class Dashboard extends EJ_Controller {
 				$acoa_arr = explode(",& ", $this->Coauthor_model->get_author_coauthors_list());
 				sort($acoa_arr, SORT_STRING);
 				$data['authors'] = array_unique($acoa_arr);
-				$data['main_title'] = "eJournal Administrator";
+				$data['main_title'] = "eJournal Admin";
 				$data['main_content'] = "admin/index";
 
 				$this->_LoadPage('common/body', $data);

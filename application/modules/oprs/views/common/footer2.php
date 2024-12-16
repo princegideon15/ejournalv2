@@ -3,6 +3,9 @@
       <div class="container-fluid px-4">
           <div class="d-flex align-items-center justify-content-between small">
               <div class="text-muted">Copyright &copy; 2018 NRCP Online Research Journal (eJournal), Online Peer Review System (eReview) All Rights Reserved</div>
+			  <div class="text-muted">
+				Currently v2.1.85
+			  </div>
               <!-- <div>
                   <a href="javascript:void(0);">Privacy Policy</a>
                   &middot;
@@ -2046,6 +2049,15 @@ var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this-
 <!-- Loading Screen -->
 <script type="text/javascript" src="<?php echo base_url("assets/oprs/js/jquery.loading.admin.js"); ?>"></script>
 
+<!-- Datatable buttons -->
+<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/dataTables.buttons.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.flash.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/jszip.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/pdfmake.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/vfs_fonts.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.html5.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.print.min.js"); ?>"></script>
+
 
 <!-- Core plugin JavaScript-->
 <!-- <script src="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script> -->
@@ -2054,15 +2066,8 @@ var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this-
 <!-- <script src="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/datatables/dataTables.bootstrap4.js"></script> -->
 <!-- Custom scripts for all pages-->
 <!-- <script src="<?php echo base_url(); ?>assets/oprs/sbadmin/js/sb-admin.min.js"></script> -->
-<!-- Datatable buttons -->
-<!-- <script type="text/javascript" src="<?php echo base_url("assets/oprs/js/dataTables.buttons.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.flash.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/jszip.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/pdfmake.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/vfs_fonts.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.html5.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.print.min.js"); ?>"></script> -->
 <!-- <script src="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/jquery/jquery.min.js"></script> -->
+ 
 <script>
     window.addEventListener('DOMContentLoaded', event => {
 

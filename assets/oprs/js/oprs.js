@@ -239,7 +239,7 @@ $(document).ready(function() {
                     }).then((result) => {
                         /* Read more about handling dismissals below */
                         if (result.dismiss === Swal.DismissReason.timer) {
-                        window.location.href = base_url + "client/login/logout/";
+                        window.location.href = base_url + "oprs/login/logout/";
                         }
                     });
                     }else{
@@ -918,6 +918,7 @@ $(document).ready(function() {
     }
 
     // manuscript datatable in reports
+    console.log(prv_exp);
     if (prv_exp == 0) {
         $('#report_manuscript_table').DataTable({
             columnDefs: [
