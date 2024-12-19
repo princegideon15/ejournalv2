@@ -1,5 +1,5 @@
 
-<footer class="py-4 bg-light mt-auto">
+	<footer class="py-4 bg-light mt-auto">
       <div class="container-fluid px-4">
           <div class="d-flex align-items-center justify-content-between small">
               <div class="text-muted">Copyright &copy; 2018 NRCP Online Research Journal (eJournal), Online Peer Review System (eReview) All Rights Reserved</div>
@@ -957,13 +957,23 @@ var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this-
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-<script type="text/javascript" src="<?php echo base_url("assets/js/sweetalert2@11.js");?>"></script>
+<script src="<?php echo base_url("assets/js/sweetalert2@11.js");?>"></script>
 <script src="<?php echo base_url("assets/oprs/js/chart.js");?>"></script>
 <script src="<?php echo base_url("assets/oprs/js/jquery.min.js");?>"></script>
-<script src="<?php echo base_url("assets/oprs/js/bootstrap.bundle.min.js");?>"></script>
-<script src="<?php echo base_url("assets/oprs/js/datatables.js");?>"></script>
+
+
+<!-- Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- <script src="<?php echo base_url("assets/oprs/js/datatables.js");?>"></script> -->
+<script src="<?php echo base_url("assets/oprs/js/dataTables.buttons.min.js"); ?>"></script>
+<!-- <script src="<?php echo base_url("assets/oprs/js/bootstrap.bundle.min.js");?>"></script> -->
 <!-- Main jquery-->
-<script src="<?php echo base_url("assets/oprs/js/oprs.js");?>"></script>
+<script src="<?php echo base_url("assets/js/journal.js"); ?>"></script>
 <!-- Jquery Validate-->
 <script src="<?php echo base_url("assets/oprs/js/jquery.validate.min.js");?>"></script>
 <!-- Jquery Validate Additional-->
@@ -984,16 +994,15 @@ var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.2/tinymce.min.js"></script>
 <!-- <script src="<?php echo base_url("assets/oprs/js/tinymce.min.js");?>"></script> -->
 <!-- Loading Screen -->
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/jquery.loading.admin.js"); ?>"></script>
+<script src="<?php echo base_url("assets/oprs/js/jquery.loading.admin.js"); ?>"></script>
 
 <!-- Datatable buttons -->
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/dataTables.buttons.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.flash.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/jszip.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/pdfmake.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/vfs_fonts.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.html5.min.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.print.min.js"); ?>"></script>
+<script src="<?php echo base_url("assets/oprs/js/buttons.flash.min.js"); ?>"></script>
+<script src="<?php echo base_url("assets/oprs/js/jszip.min.js"); ?>"></script>
+<script src="<?php echo base_url("assets/oprs/js/pdfmake.min.js"); ?>"></script>
+<script src="<?php echo base_url("assets/oprs/js/vfs_fonts.js"); ?>"></script>
+<script src="<?php echo base_url("assets/oprs/js/buttons.html5.min.js"); ?>"></script>
+<script src="<?php echo base_url("assets/oprs/js/buttons.print.min.js"); ?>"></script>
 
 <script>
     window.addEventListener('DOMContentLoaded', event => {

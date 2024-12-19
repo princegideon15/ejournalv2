@@ -429,7 +429,7 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#table-popular').DataTable({
+		var tpop = $('#table-popular').DataTable({
 			"order": [
 				[3, "desc"]
 			],
@@ -440,7 +440,7 @@ $(document).ready(function () {
 			}]
 		});
 	} else {
-		$('#table-popular').DataTable({
+		var tpop = $('#table-popular').DataTable({
 			"order": [
 				[3, "desc"]
 			],
@@ -449,7 +449,10 @@ $(document).ready(function () {
 				"targets": 0,
 				"orderable": false
 			}],
-			dom: 'lBfrtip',
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
@@ -495,10 +498,14 @@ $(document).ready(function () {
 				}
 			]
 		});
+
+		
+		// Append buttons to the top
+		// tpop.buttons().container().prependTo('#example_wrapper'); // Adds to the wrapper, at the top
 	}
 
 	// initiate and disable sorting on clicking first column first row
-	var tpop = $('#table-popular').DataTable();
+	// var tpop = $('#table-popular').DataTable();
 
 	// tpop.on( 'order.dt search.dt', function () {
 	//     tpop.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -2103,27 +2110,27 @@ $(document).ready(function () {
 	});
 
 	// store id of clicked item in side navigation
-	$('#list-tab ').on('click', '.list-group-item', function () {
-		$('.list-group-item').css('border-left', 'none');
-		$(this).css('border-left', '10px solid #5bc0de');
+	// $('#list-tab ').on('click', '.list-group-item', function () {
+	// 	$('.list-group-item').css('border-left', 'none');
+	// 	$(this).css('border-left', '10px solid #5bc0de');
 
-		href = $(this).attr('href');
-		localStorage.setItem('activeTab', href);
-		$('#table-clients').DataTable().search('').draw();
-		$('#table-viewers').DataTable().search('').draw();
+	// 	href = $(this).attr('href');
+	// 	localStorage.setItem('activeTab', href);
+	// 	$('#table-clients').DataTable().search('').draw();
+	// 	$('#table-viewers').DataTable().search('').draw();
 
-	});
+	// });
 
-	var activeTab = localStorage.getItem('activeTab'); // store side navigation item id
+	// var activeTab = localStorage.getItem('activeTab'); // store side navigation item id
 
 	// auto click stored side navigation id after reload event
-	if (activeTab) {
-		if (activeTab == '#add-editorial-tab' || activeTab == '#editorials') {
-			$('a[href="#manage-editorials"]').trigger('click');
-		}
+	// if (activeTab) {
+	// 	if (activeTab == '#add-editorial-tab' || activeTab == '#editorials') {
+	// 		$('a[href="#manage-editorials"]').trigger('click');
+	// 	}
 
-		$('#list-tab a[href="' + activeTab + '"]').trigger('click');
-	}
+	// 	$('#list-tab a[href="' + activeTab + '"]').trigger('click');
+	// }
 
 	// delete co-authors
 	$('#table-coauthor').on('click', '#delete-coauthor', function (e) {

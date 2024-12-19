@@ -919,7 +919,6 @@ class Ejournal extends EJ_Controller {
 		echo json_encode($output);
 	}
 
-	//TODO:save citation on copy to clipboard button ???
 	/**
 	 * Save info of client after citing article 
 	 *

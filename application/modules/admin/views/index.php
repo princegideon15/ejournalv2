@@ -1,171 +1,83 @@
 
 <div id="layoutSidenav_content">
     <main>
-		<div class="container-fluid pt-3">
-			<div class="row ">
-				<div class="col">
-					<div class="tab-content" id="nav-tabContent">
+		<div class="container-fluid pt-3 bg-light">
+			<!-- <div class="row ">
+				<div class="col"> -->
 
-						<!-- HOME -->
-						<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home">
-							<div class="jumbotron text-white">
-								<div class="row">
-									<?php if ($this->session->userdata('_prv_edt') == 1) {?>
-									<div class="col-6">
-										<p class="h3">Manage Home</p>
-										<p class="lead"></p>
-										<form id="form_home">
-											<div class="form-group">
-												<label for="upload_guidelines">Description</label>
-												<textarea rows="20" class="form-control" id="home_description" name="home_description"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></textarea>
-											</div>
-											<p>Upload Call for Papers <small class="text-danger">(Select one option only)</small></p>
-											<p class="pt-2 text-danger">
-												<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
-												<br/><span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> IMAGE - 2 MB file size limit
-											</p>
-											<div class="form-group">
-												<div class="row">
-													<div class="col">
-														<div class="card border-secondary" >
-															<div class="card-body">
-																<label class="rd_container float-right"><input type="radio" name="upload_only" id="upload_only"  value="1"><span class="checkmark"></span></label>
-																<h5 class="card-title">PDF </h5>
-																<input type="file" class="form-control-file" id="upload_cfp" name="upload_cfp" accept="application/pdf">
-															</div>
-														</div>
-													</div>
-													<div class="col">
-														<div class="card border-secondary" >
-															<div class="card-body">
-																<label class="rd_container float-right"><input type="radio" class="float-right" name="upload_only" id="upload_only" value="2" ><span class="checkmark"></span></label>
-																<h5 class="card-title">IMAGE <span class="badge badge-success">JPG</span></h5>
-																<input type="file" class="form-control-file" id="upload_cfpi" name="upload_cfpi" accept="image/jpeg">
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-											<button type="submit" class="btn btn-primary" id="btn_save_home" name="btn_save_home"><span class="oi oi-check"></span> Save</button>
-										</form>
-									</div>
-									<?php }?>
-									<div class="col-6" style="height:600px">
-										<p class="lead">Uploaded File</p>
-										<?php
-										$filename = 'assets/uploads/';
-										if (file_exists($filename . 'DO_NOT_DELETE_callforpapers.pdf')) {?>
-										<embed WMODE="transparent" class="border border-secondary" id="embed_cfp" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_callforpapers.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>"  style="overflow: hidden; height: 100%;
-										width: 100%; position: absolute;" type="application/pdf">
-										<?php } else {?>
-										<img class="border border-secondary" id="embed_cfp" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_callforpapers.jpg'); ?>" width="100%" height="auto" >
-										<?php }?>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /.HOME -->
-
-						<!-- GUIDELINES -->
-						<div class="tab-pane fade" id="guidelines" role="tabpanel" aria-labelledby="guidelines">
-							<div class="jumbotron text-whtie">
-								<div class="row">
-									<?php if ($this->session->userdata('_prv_edt') == 1) {?>
-									<div class="col-6">
-										<p class="h3">Manage Guidelines</p>
-										<p class="pt-2 text-danger">
-											<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
-										</p>
-										<p class="lead"></p>
-										<div class="form-group">
-											<form id="form_guidelines">
-												<label for="upload_guidelines">Upload <span class="badge badge-danger">PDF</span> file only</label>
-												<input type="file" class="form-control-file" id="upload_guidelines" name="upload_guidelines" accept="application/pdf">
-												<br/><button type="submit" class="btn btn-primary" id="btn_upload_guidelines" name="btn_upload_guidelines"><span class="oi oi-check"></span> Upload</button>
-											</form>
-										</div>
-									</div>
-									<?php }?>
-									<div class="col-6">
-										<embed class="border border-secondary" WMODE="transparent" id="embed_guidelines" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_guidelines.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" width="100%" height="700px" type="application/pdf">
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /.GUIDELINES -->
-
-						<!-- DASHBOARD -->
-						<div class="tab-pane fade show active" id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard">
+				
+					<div class="tab-content" id="v-pills-tabContent">
+						<div class="tab-pane fade show active" id="v-pills-dashboard" role="tabpanel" aria-labelledby="v-pills-dashboard-tab" tabindex="0">	
 							<div class="row">
 								<div class="col-3">
-									<div class="card text-white">
-										<div class="card-body bg-primary">
+									<div class="card border-dark">
+										<div class="card-body text-dark">
 											<h3 class="card-title lead text-center">Journals</h3>
 											<div class="row">
 												<div class="col text-center">
-													<h5 class="card-title" style="font-size:60px">
-													<span class="oi oi-book text-danger" style="font-size:60px"></span>
+													<h5 class="card-title fw-bold d-flex gap-1 justify-content-center align-items-center" style="font-size:65px">
+													<span class="oi oi-book text-danger" style="font-size:50px"></span>
 													<?php if ($jor_count > 0) {echo $jor_count;} else {echo 0;}?></h5>
 													<p class="text-muted"><?php echo $art_count; ?> Articles</p>
 												</div>
 											</div>
 										</div>
-										<div class="card-footer bg-primary">
-											<a href="javascript:void(0);" id="view_journals" class="text-white">View details <span class="oi oi-caret-right float-right"></span></a>
+										<div class="card-footer text-end">
+											<a href="javascript:void(0);" id="view_journals" class="text-dark text-decoration-none">View details<span class="fa fa-angle-right ms-1"></span></a>
 										</div>
 									</div>
 								</div>
 								<div class="col-3">
-									<div class="card text-white">
-										<div class="card-body bg-primary">
+									<div class="card border-dark">
+										<div class="card-body text-dark" >
 											<h3 class="card-title lead text-center">Editorial Boards</h3>
 											<div class="row">
 												<div class="col text-center">
-													<h5 class="card-title" style="font-size:60px">
-													<span class="oi oi-pencil text-success" style="font-size:60px"></span>
+													<h5 class="card-title fw-bold d-flex gap-1 justify-content-center align-items-center" style="font-size:65px">
+													<span class="oi oi-pencil text-success" style="font-size:50px"></span>
 													<?php if ($edt_count > 0) {echo $edt_count;} else {echo 0;}?></h5>
 													<p class="text-muted">Review submitted manuscripts</p>
 												</div>
 											</div>
 										</div>
-										<div class="card-footer bg-primary">
-											<a href="javascript:void(0);" id="view_editorials" class="text-white">View details <span class="oi oi-caret-right float-right"></span></a>
+										<div class="card-footer text-end">
+											<a href="javascript:void(0);" id="view_editorials" class="text-dark text-decoration-none">View details <span class="fa fa-angle-right ms-1"></span></a>
 										</div>
 									</div>
 								</div>
 								<div class="col-3">
-									<div class="card text-white">
-										<div class="card-body bg-primary">
+									<div class="card border-dark">
+										<div class="card-body text-dark">
 											<h3 class="card-title lead text-center">Client Information</h3>
 											<div class="row">
 												<div class="col text-center">
-													<h5 class="card-title" style="font-size:60px">
-													<span class="oi oi-people text-warning" style="font-size:60px"></span>
+													<h5 class="card-title fw-bold d-flex gap-1 justify-content-center align-items-center" style="font-size:65px">
+													<span class="oi oi-people text-warning" style="font-size:50px"></span>
 													<?php if ($client_count > 0) {echo $client_count;} else {echo 0;}?></h5>
 													<p class="text-muted">Full text pdf requests</p>
 												</div>
 											</div>
 										</div>
-										<div class="card-footer bg-primary">
-											<a href="javascript:void(0);" id="view_clients" class="text-white">View details <span class="oi oi-caret-right float-right"></span></a>
+										<div class="card-footer text-end">
+											<a href="javascript:void(0);" id="view_clients" class="text-dark text-decoration-none">View details <span class="fa fa-angle-right ms-1"></span></a>
 										</div>
 									</div>
 								</div>
 								<div class="col-3">
-									<div class="card text-white">
-										<div class="card-body bg-primary">
+									<div class="card border-dark">
+										<div class="card-body text-dark">
 											<h3 class="card-title lead text-center">Visitors Today</h3>
 											<div class="row">
 												<div class="col text-center">
-													<h5 class="card-title" style="font-size:60px">
-													<span class="oi oi-eye text-info" style="font-size:60px"></span>
+													<h5 class="card-title fw-bold d-flex gap-1 justify-content-center align-items-center" style="font-size:65px">
+													<span class="oi oi-eye text-info" style="font-size:50px"></span>
 													<?php if ($vis_count > 0) {echo $vis_count;} else {echo 0;}?></h5>
 													<p class="text-muted"><?php echo $vis_all; ?> Visited</p>
 												</div>
 											</div>
 										</div>
-										<div class="card-footer bg-primary">
-											<a href="javascript:void(0);" class="text-white" onclick="get_visitors()">View details <span class="oi oi-caret-right float-right"></span></a>
+										<div class="card-footer text-end">
+											<a href="javascript:void(0);" class="text-dark text-decoration-none" onclick="get_visitors()">View details <span class="fa fa-angle-right ms-1"></span></a>
 										</div>
 									</div>
 								</div>
@@ -173,14 +85,14 @@
 							<div class="row mt-4">
 								<div class="col-8">
 									<!-- POPULAR ARTICLE -->
-									<div class="card">
-										<div class="card-header text-light">
+									<div class="card border-dark">
+										<div class="card-header text-dark">
 											<span class="oi oi-star"></span> Popular articles
 										</div>
-										<div class="mt-3 mb-3">
+										<div class="card-body mt-3 mb-3">
 											<?php if ($popular != null) {?>
-											<table class="table table-dark table-hover" id="table-popular">
-												<thead class="thead-dark">
+											<table class="table table-hover" id="table-popular">
+												<thead>
 													<tr>
 														<th scope="col">#</th>
 														<th scope="col">Title</th>
@@ -202,15 +114,15 @@
 													
 													<?php endforeach;?>
 													<?php $c = 1;foreach ($pop as $row): ?>
-													<?php $abs_class = ($row['abs'] > 0 ) ? 'text-info' : 'text-muted';?>
-													<?php $pdf_class = ($row['count'] > 0 ) ? 'text-info' : 'text-muted';?>
-													<?php $cite_class = ($row['cite'] > 0 ) ? 'text-info' : 'text-muted';?>
+													<?php $abs_class = ($row['abs'] > 0 ) ? 'text-primary' : 'text-muted';?>
+													<?php $pdf_class = ($row['count'] > 0 ) ? 'text-primary' : 'text-muted';?>
+													<?php $cite_class = ($row['cite'] > 0 ) ? 'text-primary' : 'text-muted';?>
 													<tr>
 														<td></td>
-														<td><a href="javascript:void(0);"  onclick="edit_article(<?php echo $row['id']; ?>)"><?php echo '<strong>' . $row['title'] . '</strong>, ' . $row['coa']; ?></a></td>
-														<td><a href="javascript:void(0);"  class="<?php echo $abs_class;?> fw-bold" onclick="get_hits_info(<?php echo $row['id']; ?>)"><?php echo $row['abs']; ?></a></td>
-														<td><a href="javascript:void(0);"  class="<?php echo $pdf_class;?> fw-bold" onclick="get_client_info(<?php echo $row['id']; ?>)"><?php echo $row['count']; ?></a></td>
-														<td><a href="javascript:void(0);"  class="<?php echo $cite_class;?> fw-bold" onclick="get_citees(<?php echo $row['id']; ?>)"><?php echo $row['cite']; ?></a></td>
+														<td><a href="javascript:void(0);"  class="text-dark text-decoration-none" onclick="edit_article(<?php echo $row['id']; ?>)"><?php echo '<strong>' . $row['title'] . '</strong>, ' . $row['coa']; ?></a></td>
+														<td><a href="javascript:void(0);"  class="<?php echo $abs_class;?> fw-bold text-decoration-none" onclick="get_hits_info(<?php echo $row['id']; ?>)"><?php echo $row['abs']; ?></a></td>
+														<td><a href="javascript:void(0);"  class="<?php echo $pdf_class;?> fw-bold text-decoration-none" onclick="get_client_info(<?php echo $row['id']; ?>)"><?php echo $row['count']; ?></a></td>
+														<td><a href="javascript:void(0);"  class="<?php echo $cite_class;?> fw-bold text-decoration-none" onclick="get_citees(<?php echo $row['id']; ?>)"><?php echo $row['cite']; ?></a></td>
 													</tr>
 													<?php endforeach;?>
 												</tbody>
@@ -223,24 +135,24 @@
 										</div>
 										<div class="card-footer text-muted">
 											Updated as of <?php echo date("Y-m-d H:i:s"); ?>
-											<div class="dropdown float-right" data-bs-toggle="tooltip" data-placement="top" title="Generate Report">
+											<!-- <div class="dropdown float-right" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate Report">
 												<a href=javascript:void(0); class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown"><span class="oi oi-data-transfer-download"></span></a>
 												<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 													<a class="dropdown-item" href="<?php echo base_url('admin/export_excel/export_popular_excel'); ?>"><oi class="fa fa-file-excel-o"></oi> Excel File</a>
 													<a class="dropdown-item" href="<?php echo base_url('admin/export_excel/export_popular_pdf'); ?>"><oi class="fa fa-file-pdf-o"></oi> PDF File</a>
 												</div>
-											</div>
+											</div> -->
 										</div>
 									</div>
 									<!-- SEARCH AUTHOR -->
-									<div class="card mt-4">
-										<div class="card-header text-light">
-											<span class="oi oi-bookmark"></span> Authors Registry  <span class="float-right">Press <span class="badge badge-warning">ENTER</span> to search</span>
+									<div class="card border-dark mt-4">
+										<div class="card-header text-dark">
+											<span class="oi oi-bookmark"></span> Authors Registry  <span class="float-right">Press <span class="badge bg-warning">ENTER</span> to search</span>
 										</div>
-										<input type="text" class="form-control" id="authors_reg" placeholder="Type here to search Author/Coauthor">
-										<div class="mt-3 mb-3">
+										<div class="card-body mt-3 mb-3">
+											<input type="text" class="form-control border-dark mb-3" id="authors_reg" placeholder="Type here to search Author/Coauthor">
 											<table class="table" id="table-registry">
-												<thead class="thead-dark">
+												<thead>
 													<tr>
 														<th scope="col" width="2%">#</th>
 														<th scope="col">Name</th>
@@ -258,8 +170,8 @@
 								</div>
 								<div class="col-4">
 									<div class="sticky-right-panel">
-										<div class="card">
-											<div class="card-header text-light">
+										<div class="card border-dark">
+											<div class="card-header text-dark">
 												<span class="oi oi-bell"></span> Activity
 											</div>
 											<div class="">
@@ -287,37 +199,33 @@
 													<?php }?>
 												</ul>
 											</div>
-											<div class="card-footer text-muted">
-												<small><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#activities_modal"><span class="oi oi-eye"></span> View all activity</a></small>
+											<div class="card-footer">
+												<small><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#activities_modal" class="text-decoration-none text-dark"><span class="oi oi-eye"></span> View all activity</a></small>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<!-- /.DASHBOARD -->
-
-						<!-- CREATE JOURNAL	 -->
-						<div class="tab-pane fade " id="create-journal-tab" role="tabpanel" aria-labelledby="create-journal-tab">
-							<div class="jumbotron  text-white">
+						<div class="tab-pane fade" id="v-pills-create-journal" role="tabpanel" aria-labelledby="v-pills-create-journal-tab" tabindex="0">
+							<div class="card border border-dark">
+								<div class="card-body">
 								<form id="form_create_journal">
 									<h1 class="h3">Create Journal</h1>
-									<!-- <hr class="my-4" style="border:.5px solid white"> -->
-									<p class="pt-2 text-danger"><span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> Upload Cover - 2 MB file size limit</p>
-									<p class="lead">Journal Information</p>
-									<div class="form-row">
-										<div class="form-group col-md-2">
-											<label for="jor_volume">Volume No.</label>
-											<select class="form-control text-uppercase" id="jor_volume" name="jor_volume" placeholder="ex. X">
+									<!-- <p class="pt-2 text-danger">Upload Cover - 2 MB file size limit</p> -->
+									<!-- <p class="lead">Journal Information</p> -->
+									<div class="row">
+										<div class="col">
+											<label for="jor_volume" class="form-label">Volume No.</label>
+											<select class="form-select text-uppercase mb-3" id="jor_volume" name="jor_volume" placeholder="ex. X">
 												<option class="text-dark" disabled>Volume</option>
 												<?php foreach ($u_journal as $j): ?>
 												<?php echo '<option value=' . $j->jor_volume . ' class="text-dark">' . $j->jor_volume . '</option>'; ?>
 												<?php endforeach;?>
 											</select>
-										</div>
-										<div class="form-group col-md-2">
-											<label for="jor_issue">Issue No.</label>
-											<select class="form-control" id="jor_issue" name="jor_issue">
+											
+											<label for="jor_issue" class="form-label">Issue No.</label>
+											<select class="form-select mb-3" id="jor_issue" name="jor_issue">
 												<option value="">Select Issue</option>
 												<option value="1">1</option>
 												<option value="2">2</option>
@@ -328,53 +236,61 @@
 												<option value="7">Special Issue No. 3</option>
 												<option value="8">Special Issue No. 4</option>
 											</select>
+											
+											<label for="jor_month" class="form-label">Month  <span class=" badge rounded-pill bg-secondary">Optional</span></label>
+											<input type="text" class="form-control mb-3" id="jor_month" name="jor_month" placeholder="ex. Jan-Dec">
+
+											<label for="jor_year" class="form-label">Year</label>
+											<input type="text" class="form-control mb-3" id="jor_year" name="jor_year" placeholder="ex. 2018" maxlength="4">
+											
+											<label for="jor_issn" class="form-label">ISSN</label>
+											<input type="text" class="form-control mb-3" id="jor_issn" name="jor_issn" value="0117-3294" readonly>
+
+											
+											<label for="jor_cover" class="form-label">Upload Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning">20MB Limit</span></label>
+											<input type="file" class="form-control mb-3" id="jor_cover" name="jor_cover" accept="image/jpeg" />
+											
+											
+											<label for="jor_description" class="form-label">Description <span class="badge rounded-pill bg-secondary">Optional</span></label>
+											<textarea rows="6" class="form-control mb-3" id="jor_description" name="jor_description" placeholder="Type description here" maxlength="500"></textarea>
 										</div>
+										<div class="col">
+											<label for="cover_photo">Preview </label><br/>
+											<img class="mr-3 img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" style="width:150px; height:210px;">
+										</div>
+									</div>
+									<div class="form-row">
 										<div class="form-group col-md-4">
-											<label for="jor_month">Month <small class="text-warning">(optional)</small></label>
-											<input type="text" class="form-control" id="jor_month" name="jor_month" placeholder="ex. Jan-Dec">
 										</div>
 										<div class="form-group col-md-2">
-											<label for="jor_year">Year</label>
-											<input type="text" class="form-control" id="jor_year" name="jor_year" placeholder="ex. 2018" maxlength="4">
 										</div>
 										<div class="form-group col-md-2">
-											<label for="jor_issn">ISSN</label>
-											<input type="text" class="form-control" id="jor_issn" name="jor_issn" value="0117-3294" readonly>
 										</div>
 									</div>
 									<div class="form-row">
 										<div class="form-group col-md-2">
-											<label for="cover_photo">Preview </label><br/>
-											<img class="mr-3 img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" style="width:150px; height:210px;">
 										</div>
 										<div class="form-group col-md-4">
-											<label for="jor_cover">Upload Photo <small class="text-warning">(optional)</small> <small class="text-success">(JPG only)</small></label>
-											<input type="file" class="form-control" id="jor_cover" name="jor_cover" accept="image/jpeg" >
-											<small class="text-warning">(MAX: 20MB)</small>
 										</div>
 										<div class="form-group col-md-6">
-											<label for="jor_description">Description <small class="text-warning">(optional)</small></label>
-											<textarea rows="6" class="form-control" id="jor_description" name="jor_description" placeholder="Type description here" maxlength="500"></textarea>
 										</div>
 									</div>
 									<button type="submit" class="btn btn-primary" name="submit_journal" id="submit_journal"><span class="oi oi-check"></span> Save</button>
 								</form>
+								</div>
 							</div>
 						</div>
-						<!-- /.CREATE JOURNAL -->
-
-						<!-- ADD ARTICLE -->
-						<div class="tab-pane fade " id="add-article-tab" role="tabpanel" aria-labelledby="add-article-tab">
-							<div class="jumbotron text-white">
+						<div class="tab-pane fade" id="v-pills-add-article" role="tabpanel" aria-labelledby="v-add-article-tab" tabindex="0">
+							<div class="text-dark border-dark">
 								<h1 class="h3">Add Article</h1>
 								<!-- <hr class="my-4"> -->
 								<form id="form_add_article">
 									<p class="pt-2 text-danger">
-										<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
+										<span class="badge bg-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
 										<br/>
-										<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> File Naming Format - Volume_issue_yyyy_PrimaryAuthorLastNameFirstName_concatenatedArticleTitle
+										<span class="badge bg-primary"><span class="oi oi-info text-danger"></span></span> File Naming Format - Volume_issue_yyyy_PrimaryAuthorLastNameFirstName_concatenatedArticleTitle
 										<br/>
-										<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> Please do not include special characters in file name except underscore (_)
+										<span class="badge bg-primary"><span class="oi oi-info text-danger"></span></span> Please do not include special characters in file name except underscore (_)
 									</p>
 									<p class="lead">Article Information</p>
 									<div class="form-row">
@@ -418,13 +334,13 @@
 										</div>
 										<div class="form-group col-md-5">
 											<label for="art_abstract_file">Abstract</label>
-											<span class="badge badge-warning" id="badge_pdf">PDF only</span>
+											<span class="badge bg-warning" id="badge_pdf">PDF only</span>
 											<input type="file" class="form-control" id="art_abstract_file" name="art_abstract_file" accept="application/pdf" >
 											<small class="text-warning">(MAX: 20MB)</small>
 										</div>
 										<div class="form-group col-md-5">
 											<label for="art_full_text_pdf">Full Text PDF</label>
-											<span class="badge badge-warning" id="badge_text">PDF only</span>
+											<span class="badge bg-warning" id="badge_text">PDF only</span>
 											<input type="file" class="form-control" id="art_full_text_pdf" name="art_full_text_pdf" accept="application/pdf" >
 											<small class="text-warning">(MAX: 20MB)</small>
 										</div>
@@ -449,11 +365,280 @@
 								</form>
 							</div>
 						</div>
-						<!-- /.ADD ARTICLE -->
+						<div class="tab-pane fade" id="v-pills-article-list" role="tabpanel" aria-labelledby="v-pills-article-list-tab" tabindex="0">
+							<div class=" text-white">
+								<h1 class="h3">All Articles</h1>
+								<div class='no-margin table-responsive'>
+									<table id="table-all-articles" class="table table-dark table-hover w-100" style="font-size:14px;">
+										<thead>
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">Title</th>
+												<th scope="col">Volume</th>
+												<th scope="col">Issue</th>
+												<th scope="col">Year</th>
+												<th scope="col">Author</th>
+												<th scope="col">File</th>
+												<th scope="col">Abstract hits</th>
+												<th scope="col">PDF requests</th>
+												<th scope="col">Cited</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php $c = 1;foreach ($articles as $a): ?>
+											
+											<?php $issue = (($a->jor_issue == 5) ? 'Special Issue No. 1' 
+												: (($a->jor_issue == 6) ? 'Special Issue No. 2' 
+												: (($a->jor_issue == 7) ? 'Special Issue No. 3' 
+												: (($a->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $a->jor_issue))));
+												$pdf = $this->Article_model->count_pdf($a->art_id);
+												$abs = $this->Article_model->count_abstract($a->art_id);
+												$cite = $this->Article_model->count_citation($a->art_id);
+												$abs_class = ($abs > 0 ) ? 'text-info' : 'text-muted';
+												$pdf_class = ($pdf > 0 ) ? 'text-info' : 'text-muted';
+												$cite_class = ($cite > 0 ) ? 'text-info' : 'text-muted';?>
+									
+											<tr>
+												<td><?php echo $c++; ?></td>
+												<td><a href="javascript:void(0);" onclick="edit_article(<?php echo $a->art_id; ?>);"><?php echo $a->art_title; ?></a></td>
+												<td><?php echo $a->jor_volume; ?></td>
+												<td><?php echo $issue; ?></td>
+												<td><?php echo $a->jor_year; ?></td>
+												<td><?php echo $a->art_author; ?></td>
+												<td>
+													<?php 
+														$href = base_url('assets/uploads/pdf/');
+														$server_dir = '/var/www/html/ejournal/assets/uploads/pdf/';
+														$get_file = filesize($server_dir . $a->art_full_text_pdf);
+														$size = ($get_file >= 1048576) ? round($get_file / 1024 / 1024, 1) . ' MB'
+																: (($get_file >= 1024) ? round($get_file / 1024, 1) . ' KB'
+																: (round($get_file, 1) . ' bytes'));
+														$color = (round($get_file / 1024 / 1024, 1) > 20) ? 'text-danger' : '';
 
-						<!-- ADD EDITORIAL -->
-						<div class="tab-pane fade" id="add-editorial-tab" role="tabpanel" aria-labelledby="add-editorial-tab">
-							<div class="jumbotron text-white">
+														echo '<a href="' . $href . $a->art_full_text_pdf . '" class="' . $color . '" target="_blank">' . $size .'</a>';?> 
+												</td>
+												<td><a href="javascript:void(0);" class="<?php echo $abs_class;?> fw-bold" onclick="get_hits_info(<?php echo $a->art_id; ?>)"><?php echo $abs; ?></a></td>
+												<td><a href="javascript:void(0);" class="<?php echo $pdf_class;?> fw-bold" onclick="get_client_info(<?php echo $a->art_id; ?>)"><?php echo $pdf; ?></a></td>
+												<td><a href="javascript:void(0);" class="<?php echo $cite_class;?> fw-bold" onclick="get_citees(<?php echo $a->art_id; ?>)"><?php echo $cite; ?></a></td>
+														
+											</tr>
+											<?php endforeach;?>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-journal-list" role="tabpanel" aria-labelledby="v-pills-journal-list-tab" tabindex="0">
+							<div class=" text-white">
+								<h1 class="h3">All Journals</h1>
+								<div class='no-margin table-responsive'>
+									<table id="table-journals" class="table table-dark table-hover w-100" style="font-size:14px;">
+										<thead>
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">Volume</th>
+												<th scope="col">Issue</th>
+												<th scope="col">Month</th>
+												<th scope="col">Year</th>
+												<th scope="col">ISSN</th>
+												<th scope="col">Articles</th>
+												<th scope="col">Date Created</th>
+												<th scope="col">Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php $c = 1;foreach ($journal as $j): ?>
+											<?php $issue = (
+												($j->jor_issue == 5) ? 'Special Issue No. 1' :
+												(($j->jor_issue == 6) ? 'Special Issue No. 2' :
+													(($j->jor_issue == 7) ? 'Special Issue No. 3' :
+														(($j->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $j->jor_issue)))
+											);?>
+											<tr >
+												<td></td>
+												<td><?php echo $j->jor_volume; ?></td>
+												<td><?php echo $issue; ?></td>
+												<td><?php echo $j->jor_month; ?></td>
+												<td><?php echo $j->jor_year; ?></td>
+												<td><?php echo $j->jor_issn; ?></td>
+												<td>
+													<?php if ($this->Article_model->count_article_by_journal($j->jor_id) > 0) {
+								echo '<a href="javascript:void(0);"  class="fw-bold text-info" role="button" onclick="view_articles(\'' . $j->jor_id . '\',\'' . $j->jor_volume . '\',\'' . $j->jor_issue . '\',\'' . $j->jor_month . '\',\'' . $j->jor_year . '\')">' . $this->Article_model->count_article_by_journal($j->jor_id) . ' Article(s)</a>';
+							} else {echo '0';}
+							?>
+												</td>
+												<td><?php echo $j->date_created; ?></td>
+												<td class='w-25'>
+													<?php if ($this->session->userdata('_prv_edt') == 1) {?>
+													<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Journal" class="btn btn-info btn-sm" onclick="edit_journal('<?php echo $j->jor_id; ?>','<?php echo $this->Article_model->count_article_by_journal($j->jor_id); ?>')"><span class="oi oi-pencil"></span></button>
+													<?php }?>
+													<?php if ($this->session->userdata('_prv_add') == 1) {?>
+													<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Add Article" class="btn btn-primary btn-sm" onclick="add_article('<?php echo $j->jor_year; ?>','<?php echo $j->jor_id; ?>')" ><span class="oi oi-plus"></span></button>
+													<?php }?>
+												</td>
+											</tr>
+											<?php endforeach;?>
+										</tbody>
+									</table>
+								</div>
+								<div class="collapse" id="articles">
+									<hr class="my-4">
+									<p class="h3">Articles</p>
+									<div class="no-margin table-responsive">
+										<table class="table table-hover table-dark" id="table-articles"  style="table-layout: auto">
+											<thead>
+												<tr>
+													<th scope="col">Title</th>
+													<th scope="col" width="2%">Abstract Hits</th>
+													<th scope="col" width="2%">Full Text Requests</th>
+													<th scope="col">Date Added</th>
+													<th scope="col" >Action</th>
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-client-list" role="tabpanel" aria-labelledby="v-pills-client-list-tab" tabindex="0">
+							<div class=" text-white">
+								<h1 class="h3">Client Information</h1>
+								<ul class="nav nav-tabs" id="myTab" role="tablist">
+									<li class="nav-item" role="presentation">
+										<a class="nav-link active" id="client-tab" data-bs-toggle="tab" href="#client_info" role="tab" aria-controls="home" aria-selected="true">Details</a>
+									</li>
+									<li class="nav-item" role="presentation">
+										<a class="nav-link" onclick="generate_sex_chart()" id="client-grraph-tab" data-bs-toggle="tab" href="#client_graph" role="tab" aria-controls="profile" aria-selected="false">Graph</a>
+									</li>
+								</ul>
+								<div class="tab-content" id="clientTabContent">
+								<div class="tab-pane fade show active" id="client_info" role="tabpanel">
+								<div class="no-margin table-responsive">
+															<table id="table-clients" class="table table-hover" style="font-size:14px;table-layout: auto">
+																<thead>
+																	<tr>
+																		<th scope="col">#</th>
+																		<th scope="col">Full Text PDF</th>
+																		<th scope="col">Downloader</th>
+																		<th scope="col">Sex</th>
+																		<th scope="col">Affiliation</th>
+																		<th scope="col">Country</th>
+																		<th scope="col">Email</th>
+																		<th scope="col">Purpose</th>
+																		<th scope="col">Ip Address</th>
+																		<th scope="col">Date&Time Visited</th>
+																		<th scope="col">Article Reference ID</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<?php $i = 1;foreach ($clients as $c): ?>
+																	<tr>
+																		<td></td>
+																		<td><?php echo $c->art_title; ?></td>
+																		<td><?php echo $c->clt_title . ' ' . $c->clt_name; ?></td>
+																		<td><?php echo ($c->clt_sex == 1) ? 'Male' : 'Female'; ?></td>
+																		<td><?php echo $c->clt_affiliation; ?></td>
+																		<td><?php echo $c->clt_country; ?></td>
+																		<td><?php echo $c->clt_email; ?></td>
+																		<td><?php echo $c->clt_purpose; ?></td>
+																		<td><?php echo $c->clt_ip_address; ?></td>
+																		<td><?php echo $c->clt_download_date_time; ?></td>
+																		<td>ID:<?php echo $c->clt_journal_downloaded_id; ?></td>
+																	</tr>
+																	<?php endforeach;?>
+																</tbody>
+															</table>
+														</div></div>
+								<div class="tab-pane fade" id="client_graph" role="tabpanel">
+								<div class="row">
+									<div class="col-md-6">
+										<div id="client_bar">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div id="client_pie">
+										</div>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col">
+										<div id="client_monthly_line">
+										</div>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col">
+										<div id="client_line">
+										</div>
+									</div>
+								</div>
+								</div>
+								</div>
+								
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-viewers-list" role="tabpanel" aria-labelledby="v-pills-viewers-list-tab" tabindex="0">
+							<div class=" text-white">
+								<h1 class="h3">Abstract Hits</h1>
+								<div class="no-margin table-responsive">
+									<table id="table-viewers" class="table table-hover" style="font-size:14px;table-layout: auto">
+										<thead>
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">Title of Article Viewed</th>
+												<th scope="col">IP Address</th>
+												<th scope="col">Date&Time Viewed</th>
+												<th scope="col">Article Reference ID</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php $i = 1;foreach ($viewers as $v): ?>
+											<tr>
+												<td></td>
+												<td><?php echo $v->art_title; ?></td>
+												<td><?php echo $v->hts_ip_address; ?></td>
+												<td><?php echo $v->date_viewed; ?></td>
+												<td>ID:<?php echo $v->hts_art_id; ?></td>
+											</tr>
+											<?php endforeach;?>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-citees-list" role="tabpanel" aria-labelledby="v-pills-citees-list-tab" tabindex="0">
+							<div class=" text-white">
+								<h1 class="h3">All Citees</h1>
+								<div class="no-margin table-responsive">
+									<table id="table-citees" class="table table-hover" style="font-size:14px;table-layout: auto">
+										<thead>
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">Name</th>
+												<th scope="col">Email</th>
+												<th scope="col">Article cited</th>
+												<th scope="col">Article Reference ID</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php $i = 1;foreach ($citees as $c): ?>
+											<tr>
+												<td><?php echo $i++;?></td>
+												<td><?php echo $c->cite_name; ?></td>
+												<td><?php echo $c->cite_email; ?></td>
+												<td><?php echo $c->art_title;?></td>
+												<td>ID:<?php echo $c->art_id; ?></td>
+											</tr>
+											<?php endforeach;?>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-add-editorial" role="tabpanel" aria-labelledby="v-pills-add-editorial-tab" tabindex="0">
+							<div class=" text-white">
 								<h1 class="h3">Add Editorial Boards and Staff</h1>
 								<hr class="my-4">
 								<form id="add_editorial_form">
@@ -558,7 +743,7 @@
 											<div class="form-row">
 												<div class="form-group col-md">
 													<label for="edt_affiliation">Specialization</label>
-													<span class="badge badge-secondary">Separate in comma</span>
+													<span class="badge bg-secondary">Separate in comma</span>
 													<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
 												</div>
 											</div>
@@ -573,302 +758,12 @@
 								</form>
 							</div>
 						</div>
-						<!-- /.ADD EDITORIAL -->
-
-						<!-- CLIENTS -->
-						<div class="tab-pane fade " id="clients" role="tabpanel" aria-labelledby="clients" >
-							<div class="jumbotron text-white">
-								<h1 class="h3">Client Information</h1>
-								<ul class="nav nav-tabs" id="myTab" role="tablist">
-									<li class="nav-item" role="presentation">
-										<a class="nav-link active" id="client-tab" data-bs-toggle="tab" href="#client_info" role="tab" aria-controls="home" aria-selected="true">Details</a>
-									</li>
-									<li class="nav-item" role="presentation">
-										<a class="nav-link" onclick="generate_sex_chart()" id="client-grraph-tab" data-bs-toggle="tab" href="#client_graph" role="tab" aria-controls="profile" aria-selected="false">Graph</a>
-									</li>
-								</ul>
-								<div class="tab-content" id="clientTabContent">
-								<div class="tab-pane fade show active" id="client_info" role="tabpanel"">
-								<div class="no-margin table-responsive">
-															<table id="table-clients" class="table table-hover" style="font-size:14px;table-layout: auto">
-																<thead class="thead-dark">
-																	<tr>
-																		<th scope="col">#</th>
-																		<th scope="col">Full Text PDF</th>
-																		<th scope="col">Downloader</th>
-																		<th scope="col">Sex</th>
-																		<th scope="col">Affiliation</th>
-																		<th scope="col">Country</th>
-																		<th scope="col">Email</th>
-																		<th scope="col">Purpose</th>
-																		<th scope="col">Ip Address</th>
-																		<th scope="col">Date&Time Visited</th>
-																		<th scope="col">Article Reference ID</th>
-																	</tr>
-																</thead>
-																<tbody>
-																	<?php $i = 1;foreach ($clients as $c): ?>
-																	<tr>
-																		<td></td>
-																		<td><?php echo $c->art_title; ?></td>
-																		<td><?php echo $c->clt_title . ' ' . $c->clt_name; ?></td>
-																		<td><?php echo ($c->clt_sex == 1) ? 'Male' : 'Female'; ?></td>
-																		<td><?php echo $c->clt_affiliation; ?></td>
-																		<td><?php echo $c->clt_country; ?></td>
-																		<td><?php echo $c->clt_email; ?></td>
-																		<td><?php echo $c->clt_purpose; ?></td>
-																		<td><?php echo $c->clt_ip_address; ?></td>
-																		<td><?php echo $c->clt_download_date_time; ?></td>
-																		<td>ID:<?php echo $c->clt_journal_downloaded_id; ?></td>
-																	</tr>
-																	<?php endforeach;?>
-																</tbody>
-															</table>
-														</div></div>
-								<div class="tab-pane fade" id="client_graph" role="tabpanel">
-								<div class="row">
-									<div class="col-md-6">
-										<div id="client_bar">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div id="client_pie">
-										</div>
-									</div>
-								</div>
-								<div class="row mt-4">
-									<div class="col">
-										<div id="client_monthly_line">
-										</div>
-									</div>
-								</div>
-								<div class="row mt-4">
-									<div class="col">
-										<div id="client_line">
-										</div>
-									</div>
-								</div>
-								</div>
-								</div>
-								
-							</div>
-						</div>
-						<!-- /.CLIENTS -->
-
-						<!-- ABSTRACT HITS -->
-						<div class="tab-pane fade " id="viewers" role="tabpanel" aria-labelledby="viewers" >
-							<div class="jumbotron text-white">
-								<h1 class="h3">Abstract Hits</h1>
-								<div class="no-margin table-responsive">
-									<table id="table-viewers" class="table table-hover" style="font-size:14px;table-layout: auto">
-										<thead class="thead-dark">
-											<tr>
-												<th scope="col">#</th>
-												<th scope="col">Title of Article Viewed</th>
-												<th scope="col">IP Address</th>
-												<th scope="col">Date&Time Viewed</th>
-												<th scope="col">Article Reference ID</th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php $i = 1;foreach ($viewers as $v): ?>
-											<tr>
-												<td></td>
-												<td><?php echo $v->art_title; ?></td>
-												<td><?php echo $v->hts_ip_address; ?></td>
-												<td><?php echo $v->date_viewed; ?></td>
-												<td>ID:<?php echo $v->hts_art_id; ?></td>
-											</tr>
-											<?php endforeach;?>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-						<!-- /.ABSTRACT HITS -->
-
-						<!-- CITEES -->
-						<div class="tab-pane fade " id="citees" role="tabpanel">
-							<div class="jumbotron text-white">
-								<h1 class="h3">All Citees</h1>
-								<div class="no-margin table-responsive">
-									<table id="table-citees" class="table table-hover" style="font-size:14px;table-layout: auto">
-										<thead class="thead-dark">
-											<tr>
-												<th scope="col">#</th>
-												<th scope="col">Name</th>
-												<th scope="col">Email</th>
-												<th scope="col">Article cited</th>
-												<th scope="col">Article Reference ID</th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php $i = 1;foreach ($citees as $c): ?>
-											<tr>
-												<td><?php echo $i++;?></td>
-												<td><?php echo $c->cite_name; ?></td>
-												<td><?php echo $c->cite_email; ?></td>
-												<td><?php echo $c->art_title;?></td>
-												<td>ID:<?php echo $c->art_id; ?></td>
-											</tr>
-											<?php endforeach;?>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-						<!-- /.CITEES -->
-
-						<!-- ARTICLES -->
-						<div class="tab-pane fade" id="all_articles" role="tabpanel" aria-labelledby="articles">
-							<div class="jumbotron text-white">
-								<h1 class="h3">All Articles</h1>
-								<div class='no-margin table-responsive'>
-									<table id="table-all-articles" class="table table-dark table-hover w-100" style="font-size:14px;">
-										<thead>
-											<tr>
-												<th scope="col">#</th>
-												<th scope="col">Title</th>
-												<th scope="col">Volume</th>
-												<th scope="col">Issue</th>
-												<th scope="col">Year</th>
-												<th scope="col">Author</th>
-												<th scope="col">File</th>
-												<th scope="col">Abstract hits</th>
-												<th scope="col">PDF requests</th>
-												<th scope="col">Cited</th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php $c = 1;foreach ($articles as $a): ?>
-											
-											<?php $issue = (($a->jor_issue == 5) ? 'Special Issue No. 1' 
-												: (($a->jor_issue == 6) ? 'Special Issue No. 2' 
-												: (($a->jor_issue == 7) ? 'Special Issue No. 3' 
-												: (($a->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $a->jor_issue))));
-												$pdf = $this->Article_model->count_pdf($a->art_id);
-												$abs = $this->Article_model->count_abstract($a->art_id);
-												$cite = $this->Article_model->count_citation($a->art_id);
-												$abs_class = ($abs > 0 ) ? 'text-info' : 'text-muted';
-												$pdf_class = ($pdf > 0 ) ? 'text-info' : 'text-muted';
-												$cite_class = ($cite > 0 ) ? 'text-info' : 'text-muted';?>
-									
-											<tr>
-												<td><?php echo $c++; ?></td>
-												<td><a href="javascript:void(0);" onclick="edit_article(<?php echo $a->art_id; ?>);"><?php echo $a->art_title; ?></a></td>
-												<td><?php echo $a->jor_volume; ?></td>
-												<td><?php echo $issue; ?></td>
-												<td><?php echo $a->jor_year; ?></td>
-												<td><?php echo $a->art_author; ?></td>
-												<td>
-													<?php 
-														$href = base_url('assets/uploads/pdf/');
-														$server_dir = '/var/www/html/ejournal/assets/uploads/pdf/';
-														$get_file = filesize($server_dir . $a->art_full_text_pdf);
-														$size = ($get_file >= 1048576) ? round($get_file / 1024 / 1024, 1) . ' MB'
-																: (($get_file >= 1024) ? round($get_file / 1024, 1) . ' KB'
-																: (round($get_file, 1) . ' bytes'));
-														$color = (round($get_file / 1024 / 1024, 1) > 20) ? 'text-danger' : '';
-
-														echo '<a href="' . $href . $a->art_full_text_pdf . '" class="' . $color . '" target="_blank">' . $size .'</a>';?> 
-												</td>
-												<td><a href="javascript:void(0);" class="<?php echo $abs_class;?> fw-bold" onclick="get_hits_info(<?php echo $a->art_id; ?>)"><?php echo $abs; ?></a></td>
-												<td><a href="javascript:void(0);" class="<?php echo $pdf_class;?> fw-bold" onclick="get_client_info(<?php echo $a->art_id; ?>)"><?php echo $pdf; ?></a></td>
-												<td><a href="javascript:void(0);" class="<?php echo $cite_class;?> fw-bold" onclick="get_citees(<?php echo $a->art_id; ?>)"><?php echo $cite; ?></a></td>
-														
-											</tr>
-											<?php endforeach;?>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-						<!-- /.ARTICLES -->
-
-						<!-- JOURNALS -->
-						<div class="tab-pane fade" id="journals" role="tabpanel" aria-labelledby="journals">
-							<div class="jumbotron text-white">
-								<h1 class="h3">All Journals</h1>
-								<div class='no-margin table-responsive'>
-									<table id="table-journals" class="table table-dark table-hover w-100" style="font-size:14px;">
-										<thead>
-											<tr>
-												<th scope="col">#</th>
-												<th scope="col">Volume</th>
-												<th scope="col">Issue</th>
-												<th scope="col">Month</th>
-												<th scope="col">Year</th>
-												<th scope="col">ISSN</th>
-												<th scope="col">Articles</th>
-												<th scope="col">Date Created</th>
-												<th scope="col">Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php $c = 1;foreach ($journal as $j): ?>
-											<?php $issue = (
-												($j->jor_issue == 5) ? 'Special Issue No. 1' :
-												(($j->jor_issue == 6) ? 'Special Issue No. 2' :
-													(($j->jor_issue == 7) ? 'Special Issue No. 3' :
-														(($j->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $j->jor_issue)))
-											);?>
-											<tr >
-												<td></td>
-												<td><?php echo $j->jor_volume; ?></td>
-												<td><?php echo $issue; ?></td>
-												<td><?php echo $j->jor_month; ?></td>
-												<td><?php echo $j->jor_year; ?></td>
-												<td><?php echo $j->jor_issn; ?></td>
-												<td>
-													<?php if ($this->Article_model->count_article_by_journal($j->jor_id) > 0) {
-								echo '<a href="javascript:void(0);"  class="fw-bold text-info" role="button" onclick="view_articles(\'' . $j->jor_id . '\',\'' . $j->jor_volume . '\',\'' . $j->jor_issue . '\',\'' . $j->jor_month . '\',\'' . $j->jor_year . '\')">' . $this->Article_model->count_article_by_journal($j->jor_id) . ' Article(s)</a>';
-							} else {echo '0';}
-							?>
-												</td>
-												<td><?php echo $j->date_created; ?></td>
-												<td class='w-25'>
-													<?php if ($this->session->userdata('_prv_edt') == 1) {?>
-													<button type="button" data-bs-toggle="tooltip" data-placement="top" title="Edit Journal" class="btn btn-info btn-sm" onclick="edit_journal('<?php echo $j->jor_id; ?>','<?php echo $this->Article_model->count_article_by_journal($j->jor_id); ?>')"><span class="oi oi-pencil"></span></button>
-													<?php }?>
-													<?php if ($this->session->userdata('_prv_add') == 1) {?>
-													<button type="button" data-bs-toggle="tooltip" data-placement="top" title="Add Article" class="btn btn-primary btn-sm" onclick="add_article('<?php echo $j->jor_year; ?>','<?php echo $j->jor_id; ?>')" ><span class="oi oi-plus"></span></button>
-													<?php }?>
-												</td>
-											</tr>
-											<?php endforeach;?>
-										</tbody>
-									</table>
-								</div>
-								<div class="collapse" id="articles">
-									<hr class="my-4">
-									<p class="h3">Articles</p>
-									<div class="no-margin table-responsive">
-										<table class="table table-hover table-dark" id="table-articles"  style="table-layout: auto">
-											<thead class="thead-dark">
-												<tr>
-													<th scope="col">Title</th>
-													<th scope="col" width="2%">Abstract Hits</th>
-													<th scope="col" width="2%">Full Text Requests</th>
-													<th scope="col">Date Added</th>
-													<th scope="col" >Action</th>
-												</tr>
-											</thead>
-											<tbody>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /.JOURNALS -->
-
-						<!-- EDITORIALS -->
-						<div class="tab-pane fade" id="editorials" role="tabpanel" aria-labelledby="editorials">
-							<div class="jumbotron text-white">
+						<div class="tab-pane fade" id="v-pills-editorial-list" role="tabpanel" aria-labelledby="v-pills-editorial-list-tab" tabindex="0">
+							<div class=" text-white">
 								<h1 class="h3">Editorial Boards</h1>
 								<div class='no-margin table-responsive'>
 									<table id="table-editorials" class="table table-hover" style="font-size:14px">
-										<thead class="thead-dark">
+										<thead>
 											<tr>
 												<th scope="col"></th>
 												<th scope="col">Journal</th>
@@ -916,8 +811,8 @@
 												<td><?php echo $e->edt_email; ?></td>
 												<td><?php echo $e->date_created; ?></td>
 												<td>
-													<button type="button" data-bs-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-success btn-sm w-100" onclick="edit_editorial('<?php echo $e->edt_id; ?>')"><span class="oi oi-pencil" ></span> Edit</button>
-													<!-- <button type="button" data-bs-toggle="tooltip" data-placement="top" title="Delete" class="btn btn-danger btn-sm" onclick="_remove('delete-editorial-out')"><span class="oi oi-trash"></span></button> -->
+													<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="btn btn-success btn-sm w-100" onclick="edit_editorial('<?php echo $e->edt_id; ?>')"><span class="oi oi-pencil" ></span> Edit</button>
+													<!-- <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="btn btn-danger btn-sm" onclick="_remove('delete-editorial-out')"><span class="oi oi-trash"></span></button> -->
 												</td>
 											</tr>
 											<?php endforeach;?>
@@ -926,11 +821,91 @@
 								</div>
 							</div>
 						</div>
-						<!-- /.EDITORIALS -->
-
-						<!-- EMAIL -->
-						<div class="tab-pane fade" id="mail" role="tabpanel" aria-labelledby="articles">
-							<div class="jumbotron text-white">
+						<div class="tab-pane fade" id="v-pills-guidelines" role="tabpanel" aria-labelledby="v-pills-guidelines-tab" tabindex="0">
+							<div class=" text-whtie">
+								<div class="row">
+									<?php if ($this->session->userdata('_prv_edt') == 1) {?>
+									<div class="col-6">
+										<p class="h3">Manage Guidelines</p>
+										<p class="pt-2 text-danger">
+											<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
+										</p>
+										<p class="lead"></p>
+										<div class="form-group">
+											<form id="form_guidelines">
+												<label for="upload_guidelines">Upload <span class="badge badge-danger">PDF</span> file only</label>
+												<input type="file" class="form-control-file" id="upload_guidelines" name="upload_guidelines" accept="application/pdf">
+												<br/><button type="submit" class="btn btn-primary" id="btn_upload_guidelines" name="btn_upload_guidelines"><span class="oi oi-check"></span> Upload</button>
+											</form>
+										</div>
+									</div>
+									<?php }?>
+									<div class="col-6">
+										<embed class="border border-secondary" WMODE="transparent" id="embed_guidelines" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_guidelines.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" width="100%" height="700px" type="application/pdf">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+							<div class="text-white">
+								<div class="row">
+									<?php if ($this->session->userdata('_prv_edt') == 1) {?>
+									<div class="col-6">
+										<p class="h3">Manage Home</p>
+										<p class="lead"></p>
+										<form id="form_home">
+											<div class="form-group">
+												<label for="upload_guidelines">Description</label>
+												<textarea rows="20" class="form-control" id="home_description" name="home_description"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></textarea>
+											</div>
+											<p>Upload Call for Papers <small class="text-danger">(Select one option only)</small></p>
+											<p class="pt-2 text-danger">
+												<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
+												<br/><span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> IMAGE - 2 MB file size limit
+											</p>
+											<div class="form-group">
+												<div class="row">
+													<div class="col">
+														<div class="card border-secondary" >
+															<div class="card-body">
+																<label class="rd_container float-right"><input type="radio" name="upload_only" id="upload_only"  value="1"><span class="checkmark"></span></label>
+																<h5 class="card-title">PDF </h5>
+																<input type="file" class="form-control-file" id="upload_cfp" name="upload_cfp" accept="application/pdf">
+															</div>
+														</div>
+													</div>
+													<div class="col">
+														<div class="card border-secondary" >
+															<div class="card-body">
+																<label class="rd_container float-right"><input type="radio" class="float-right" name="upload_only" id="upload_only" value="2" ><span class="checkmark"></span></label>
+																<h5 class="card-title">IMAGE <span class="badge badge-success">JPG</span></h5>
+																<input type="file" class="form-control-file" id="upload_cfpi" name="upload_cfpi" accept="image/jpeg">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<button type="submit" class="btn btn-primary" id="btn_save_home" name="btn_save_home"><span class="oi oi-check"></span> Save</button>
+										</form>
+									</div>
+									<?php }?>
+									<div class="col-6" style="height:600px">
+										<p class="lead">Uploaded File</p>
+										<?php
+										$filename = 'assets/uploads/';
+										if (file_exists($filename . 'DO_NOT_DELETE_callforpapers.pdf')) {?>
+										<embed WMODE="transparent" class="border border-secondary" id="embed_cfp" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_callforpapers.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>"  style="overflow: hidden; height: 100%;
+										width: 100%; position: absolute;" type="application/pdf">
+										<?php } else {?>
+										<img class="border border-secondary" id="embed_cfp" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_callforpapers.jpg'); ?>" width="100%" height="auto" >
+										<?php }?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-mail" role="tabpanel" aria-labelledby="v-pills-mail-tab" tabindex="0">
+							
+						<div class=" text-white">
 								<h1 class="h3">Email Notifications</h1>
 								<div class='no-margin table-responsive'>
 									<table id="table-all-articles" class="table table-dark table-hover w-100" style="font-size:14px;">
@@ -961,7 +936,6 @@
 												echo $email . '</br>';
 												} ?>
 											</td>
-											<!-- <td><?php echo $e->enc_user_group; ?></td> -->
 											<td><?php echo $e->last_updated; ?></td>
 											<td>
 											<button type="button" class="btn btn-light text-primary btn-sm w-100"
@@ -974,11 +948,8 @@
 								</div>
 							</div>
 						</div>
-						<!-- /.EMAIL -->
-
-						<!-- LOGS -->
-						<div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="articles">
-							<div class="jumbotron text-white">
+						<div class="tab-pane fade" id="v-pills-logs" role="tabpanel" aria-labelledby="v-pills-logs-tab" tabindex="0">
+							<div class=" text-white">
 								<h1 class="h3">Activity Logs</h1>
 								<div class="mt-4 mb-3">
 									<label for="dateFrom">Date From:</label>
@@ -988,7 +959,7 @@
 								</div>
 								<div class='no-margin table-responsive'>
 									<table id="activityLogsTable" class="table table-hover" style="font-size:14px">
-										<thead class="thead-dark">
+										<thead>
 											<tr>
 												<th scope="col">User name</th>
 												<th scope="col">Activity</th>
@@ -1022,10 +993,8 @@
 								<?php } ?>
 							</div>
 						</div>
-						<!-- /.LOGD  -->
 					</div>
-				</div>
-				
-			</div>
 		</div>
 	</main>
+	
+											<!-- <td><?php echo $e->enc_user_group; ?></td> -->
