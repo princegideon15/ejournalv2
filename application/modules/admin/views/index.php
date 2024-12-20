@@ -210,10 +210,10 @@
 						<div class="tab-pane fade" id="v-pills-create-journal" role="tabpanel" aria-labelledby="v-pills-create-journal-tab" tabindex="0">
 							<div class="card border border-dark">
 								<div class="card-body">
+								<h1 class="h3">Create Journal</h1>
+								<p class="pt-2 text-primary"><span class="fa fa-info-circle text-primary me-1"></span>Upload Cover - 20 MB file size limit</p>
+								<p class="lead">Journal Information</p>
 								<form id="form_create_journal">
-									<h1 class="h3">Create Journal</h1>
-									<!-- <p class="pt-2 text-danger">Upload Cover - 2 MB file size limit</p> -->
-									<!-- <p class="lead">Journal Information</p> -->
 									<div class="row">
 										<div class="col">
 											<label for="jor_volume" class="form-label">Volume No.</label>
@@ -237,7 +237,7 @@
 												<option value="8">Special Issue No. 4</option>
 											</select>
 											
-											<label for="jor_month" class="form-label">Month  <span class=" badge rounded-pill bg-secondary">Optional</span></label>
+											<label for="jor_month" class="form-label">Month  <span class="badge rounded-pill bg-secondary">Optional</span></label>
 											<input type="text" class="form-control mb-3" id="jor_month" name="jor_month" placeholder="ex. Jan-Dec">
 
 											<label for="jor_year" class="form-label">Year</label>
@@ -247,7 +247,7 @@
 											<input type="text" class="form-control mb-3" id="jor_issn" name="jor_issn" value="0117-3294" readonly>
 
 											
-											<label for="jor_cover" class="form-label">Upload Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning">20MB Limit</span></label>
+											<label for="jor_cover" class="form-label">Upload Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
 											<input type="file" class="form-control mb-3" id="jor_cover" name="jor_cover" accept="image/jpeg" />
 											
 											
@@ -255,8 +255,8 @@
 											<textarea rows="6" class="form-control mb-3" id="jor_description" name="jor_description" placeholder="Type description here" maxlength="500"></textarea>
 										</div>
 										<div class="col">
-											<label for="cover_photo">Preview </label><br/>
-											<img class="mr-3 img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" style="width:150px; height:210px;">
+											<label for="cover_photo" class="form-label">Preview </label><br/>
+											<img class="mr-3 img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" width="50%" height="50%">
 										</div>
 									</div>
 									<div class="form-row">
@@ -281,95 +281,102 @@
 							</div>
 						</div>
 						<div class="tab-pane fade" id="v-pills-add-article" role="tabpanel" aria-labelledby="v-add-article-tab" tabindex="0">
-							<div class="text-dark border-dark">
-								<h1 class="h3">Add Article</h1>
-								<!-- <hr class="my-4"> -->
-								<form id="form_add_article">
-									<p class="pt-2 text-danger">
-										<span class="badge bg-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
-										<br/>
-										<span class="badge bg-primary"><span class="oi oi-info text-danger"></span></span> File Naming Format - Volume_issue_yyyy_PrimaryAuthorLastNameFirstName_concatenatedArticleTitle
-										<br/>
-										<span class="badge bg-primary"><span class="oi oi-info text-danger"></span></span> Please do not include special characters in file name except underscore (_)
-									</p>
-									<p class="lead">Article Information</p>
-									<div class="form-row">
-										<div class="form-group col-md-3">
-											<label for="art_year">Year</label>
-											<select class="form-control" id="art_year" name="art_year">
-												<option value="">Select year</option>
-												<?php foreach ($u_year as $j): ?>
-												<?php echo '<option value=' . $j->jor_year . '>' . $j->jor_year . '</option>'; ?>
-												<?php endforeach;?>
-											</select>
+							<div class="card border-dark">
+								<div class="card-body">
+									<h1 class="h3">Add Article</h1>
+									<p class="pt-2 text-primary mb-1"><span class="fa fa-info-circle text-primary me-1 "></span>PDF - 21 MB file size limit</span></p>
+									<p class="text-primary mb-1"><span class="fa fa-info-circle text-primary me-1 "></span>File Naming Format - Volume_issue_yyyy_PrimaryAuthorLastNameFirstName_concatenatedArticleTitle</p>
+									<p class="text-primary mb-3"><span class="fa fa-info-circle text-primary me-1 "></span>Please do not include special characters in file name except underscore (_)</p>
+									<p class="fs-6">Article Information</p>
+									<form id="form_add_article">
+										<div class="row">
+											<div class="col-6">
+												<div class="mb-3">
+													<label for="art_year" class="form-label">Year</label>
+													<select class="form-control" id="art_year" name="art_year">
+														<option value="">Select year</option>
+														<?php foreach ($u_year as $j): ?>
+														<?php echo '<option value=' . $j->jor_year . '>' . $j->jor_year . '</option>'; ?>
+														<?php endforeach;?>
+													</select>
+												</div>
+												<div class="mb-3">
+													<label for="art_jor_id" class="form-label">Volume, Issue </label>
+													<select class="form-control" id="art_jor_id" name="art_jor_id">
+														<option value="">Select Volume, Issue </option>
+														<?php foreach ($journal_max as $j): ?>
+														<?php $issue = (($j->jor_issue == 5) ? 'Special Issue No. 1' 
+														: (($j->jor_issue == 6) ? 'Special Issue No. 2' 
+														: (($j->jor_issue == 7) ? 'Special Issue No. 3' 
+														: (($j->jor_issue == 8) ? 'Special Issue No. 4' 
+														: 'Issue ' . $j->jor_issue))));?>
+														<?php echo '<option value=' . $j->jor_id . '>' . 'Vol. ' . $j->jor_volume . ', ' . $issue . '</option>'; ?>
+														<?php endforeach;?>
+													</select>
+												</div>
+												<div class="mb-3">
+													<label for="art_title"  class="form-label">Title of Article</label>
+													<div class="bg-white">
+													<textarea class="form-control" id="art_title" name="art_title"></textarea></div>
+												</div>
+												<div class="mb-3">
+													<label for="art_keywords"  class="form-label">Keywords</label>
+													<input type="text" class="form-control" id="art_keywords" placeholder="ex. Keyword 1,Keyword 2,Keyword 3" name="art_keywords">
+												</div>
+												<div class="mb-3">
+													<label for="art_page"  class="form-label">Page Nos</label>
+													<input type="text" class="form-control" id="art_page" placeholder="ex. 100-200" name="art_page">
+												</div>
+												<div class="mb-3">
+													<label for="art_abstract_file"  class="form-label">Abstract <span class="badge rounded-pill bg-success" id="badge_pdf">PDF only</span> <span class="badge bg-warning text-dark">20MB Limit</span></label>
+													
+													<input type="file" class="form-control" id="art_abstract_file" name="art_abstract_file" accept="application/pdf">
+												</div>
+												<div class="mb-3">
+													<label for="art_full_text_pdf" class="form-label">Full Text PDF <span class="badge rounded-pill bg-success" id="badge_text">PDF only</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+													<input type="file" class="form-control" id="art_full_text_pdf" name="art_full_text_pdf" accept="application/pdf" >
+												</div>
+											
+											</div>
 										</div>
-										<div class="form-group col-md-3">
-											<label for="art_jor_id">Volume, Issue </label>
-											<select class="form-control" id="art_jor_id" name="art_jor_id">
-												<option value="">Select Volume, Issue </option>
-												<?php foreach ($journal_max as $j): ?>
-												<?php $issue = (($j->jor_issue == 5) ? 'Special Issue No. 1' 
-												: (($j->jor_issue == 6) ? 'Special Issue No. 2' 
-												: (($j->jor_issue == 7) ? 'Special Issue No. 3' 
-												: (($j->jor_issue == 8) ? 'Special Issue No. 4' 
-												: 'Issue ' . $j->jor_issue))));?>
-												<?php echo '<option value=' . $j->jor_id . '>' . 'Vol. ' . $j->jor_volume . ', ' . $issue . '</option>'; ?>
-												<?php endforeach;?>
-											</select>
+										<div class="row">
+											<div class="col-10">
+												<div class="mb-3" >
+													<div class="row">
+														<div class="col-3">
+															<label for="art_author" class="form-label">Author</label>
+															<input type="text" class="form-control" id="art_author_p" name="art_author"  placeholder="Search by name or specialization">
+														</div>
+														<div class="col-3">
+															<label for="art_affiliation" class="form-label">Affiliation</label>
+															<input type="text" class="form-control" id="art_affiliation_p" name="art_affiliation">
+														</div>
+														<div class="col-3">
+															<label for="art_email" class="form-label">Email Address <span class="badge rounded-pill bg-secondary">Optional</span></label>
+															<input type="text" class="form-control" id="art_email_p" name="art_email" placeholder="Enter a valid email">
+														</div>
+													</div>
+												</div>
+												<span id="coauthors"></span>
+											</div>
 										</div>
-									</div>
-									<div class="form-group">
-										<label for="art_title">Title of Article</label>
-										<div class="bg-white">
-										<textarea class="form-control" id="art_title" name="art_title"></textarea></div>
-									</div>
-									<div class="form-group">
-										<label for="art_keywords">Keywords</label>
-										<input type="text" class="form-control" id="art_keywords" placeholder="ex. Keyword 1,Keyword 2,Keyword 3" name="art_keywords">
-									</div>
-									<div class="form-row">
-										<div class="form-group col-md-2">
-											<label for="art_page">Page Nos</label>
-											<input type="text" class="form-control" id="art_page" placeholder="ex. 100-200" name="art_page">
+										<div class="row">
+											<div class="col">
+												<button type="button" id="btn-add-coauthor" class="btn btn-secondary"><span class="oi oi-people"></span> Add Co-Author</button>
+												<button type="submit" class="btn btn-primary" name="submit_article" id="submit_article"><span class="oi oi-check"></span> Save</button>
+											</div>
 										</div>
-										<div class="form-group col-md-5">
-											<label for="art_abstract_file">Abstract</label>
-											<span class="badge bg-warning" id="badge_pdf">PDF only</span>
-											<input type="file" class="form-control" id="art_abstract_file" name="art_abstract_file" accept="application/pdf" >
-											<small class="text-warning">(MAX: 20MB)</small>
-										</div>
-										<div class="form-group col-md-5">
-											<label for="art_full_text_pdf">Full Text PDF</label>
-											<span class="badge bg-warning" id="badge_text">PDF only</span>
-											<input type="file" class="form-control" id="art_full_text_pdf" name="art_full_text_pdf" accept="application/pdf" >
-											<small class="text-warning">(MAX: 20MB)</small>
-										</div>
-									</div>
-									<div class="form-row">
-										<div class="form-group autocomplete col-md-4" >
-											<label for="art_author">Author</label>
-											<input type="text" class="form-control" id="art_author_p" name="art_author"  placeholder="Search by name or specialization">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="art_affiliation">Affiliation</label>
-											<input type="text" class="form-control" id="art_affiliation_p" name="art_affiliation">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="art_email">Email Address <small class="text-warning">(optional)</small></label>
-											<input type="text" class="form-control" id="art_email_p" name="art_email" placeholder="Enter a valid email">
-										</div>
-									</div>
-									<span id="coauthors"></span>
-									<button type="button" id="btn-add-coauthor" class="btn btn-secondary"><span class="oi oi-people"></span> Add Co-Author</button>
-									<button type="submit" class="btn btn-primary" name="submit_article" id="submit_article"><span class="oi oi-check"></span> Save</button>
-								</form>
+										
+									</form>
+								</div>
 							</div>
 						</div>
 						<div class="tab-pane fade" id="v-pills-article-list" role="tabpanel" aria-labelledby="v-pills-article-list-tab" tabindex="0">
-							<div class=" text-white">
+							<div class="card border-dark">
+								<div class="card-body">
 								<h1 class="h3">All Articles</h1>
-								<div class='no-margin table-responsive'>
-									<table id="table-all-articles" class="table table-dark table-hover w-100" style="font-size:14px;">
+								<div class='table-responsive'>
+									<table id="table-all-articles" class="table table-hover">
 										<thead>
 											<tr>
 												<th scope="col">#</th>
@@ -394,9 +401,9 @@
 												$pdf = $this->Article_model->count_pdf($a->art_id);
 												$abs = $this->Article_model->count_abstract($a->art_id);
 												$cite = $this->Article_model->count_citation($a->art_id);
-												$abs_class = ($abs > 0 ) ? 'text-info' : 'text-muted';
-												$pdf_class = ($pdf > 0 ) ? 'text-info' : 'text-muted';
-												$cite_class = ($cite > 0 ) ? 'text-info' : 'text-muted';?>
+												$abs_class = ($abs > 0 ) ? 'text-primary' : 'text-muted';
+												$pdf_class = ($pdf > 0 ) ? 'text-primary' : 'text-muted';
+												$cite_class = ($cite > 0 ) ? 'text-primary' : 'text-muted';?>
 									
 											<tr>
 												<td><?php echo $c++; ?></td>
@@ -415,16 +422,17 @@
 																: (round($get_file, 1) . ' bytes'));
 														$color = (round($get_file / 1024 / 1024, 1) > 20) ? 'text-danger' : '';
 
-														echo '<a href="' . $href . $a->art_full_text_pdf . '" class="' . $color . '" target="_blank">' . $size .'</a>';?> 
+														echo '<a href="' . $href . $a->art_full_text_pdf . '" class="' . $color . ' text-decoration-none" target="_blank">' . $size .'</a>';?> 
 												</td>
-												<td><a href="javascript:void(0);" class="<?php echo $abs_class;?> fw-bold" onclick="get_hits_info(<?php echo $a->art_id; ?>)"><?php echo $abs; ?></a></td>
-												<td><a href="javascript:void(0);" class="<?php echo $pdf_class;?> fw-bold" onclick="get_client_info(<?php echo $a->art_id; ?>)"><?php echo $pdf; ?></a></td>
-												<td><a href="javascript:void(0);" class="<?php echo $cite_class;?> fw-bold" onclick="get_citees(<?php echo $a->art_id; ?>)"><?php echo $cite; ?></a></td>
+												<td><a href="javascript:void(0);" class="<?php echo $abs_class;?> fw-bold text-decoration-none" onclick="get_hits_info(<?php echo $a->art_id; ?>)"><?php echo $abs; ?></a></td>
+												<td><a href="javascript:void(0);" class="<?php echo $pdf_class;?> fw-bold text-decoration-none" onclick="get_client_info(<?php echo $a->art_id; ?>)"><?php echo $pdf; ?></a></td>
+												<td><a href="javascript:void(0);" class="<?php echo $cite_class;?> fw-bold text-decoration-none" onclick="get_citees(<?php echo $a->art_id; ?>)"><?php echo $cite; ?></a></td>
 														
 											</tr>
 											<?php endforeach;?>
 										</tbody>
 									</table>
+								</div>
 								</div>
 							</div>
 						</div>
@@ -642,10 +650,10 @@
 								<h1 class="h3">Add Editorial Boards and Staff</h1>
 								<hr class="my-4">
 								<form id="add_editorial_form">
-									<div class="form-row">
+									<div class="mb-3">
 										<div class="form-group col-md-4">
-											<label for="editorial_photo">Preview </label><br/>
-											<img class="mr-3 img-thumbnail" id="editorial_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" style="width:300px; height:300px;">
+											<label for="editorial_photo" class="form-label">Preview </label><br/>
+											<img class="mr-3 img-thumbnail" id="editorial_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" >
 										</div>
 										<div class="form-group col-md-8">
 											<div class="form-row">
@@ -828,7 +836,7 @@
 									<div class="col-6">
 										<p class="h3">Manage Guidelines</p>
 										<p class="pt-2 text-danger">
-											<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
+											<span class="badge badge-primary"><span class="fa fa-info-circle text-danger"></span></span> PDF - 20 MB file size limit
 										</p>
 										<p class="lead"></p>
 										<div class="form-group">
@@ -860,8 +868,8 @@
 											</div>
 											<p>Upload Call for Papers <small class="text-danger">(Select one option only)</small></p>
 											<p class="pt-2 text-danger">
-												<span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> PDF - 20 MB file size limit
-												<br/><span class="badge badge-primary"><span class="oi oi-info text-danger"></span></span> IMAGE - 2 MB file size limit
+												<span class="badge badge-primary"><span class="fa fa-info-circle text-danger"></span></span> PDF - 20 MB file size limit
+												<br/><span class="badge badge-primary"><span class="fa fa-info-circle text-danger"></span></span> IMAGE - 2 MB file size limit
 											</p>
 											<div class="form-group">
 												<div class="row">

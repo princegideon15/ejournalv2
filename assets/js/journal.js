@@ -264,7 +264,10 @@ $(document).ready(function () {
 				"targets": 0,
 				"orderable": false
 			}],
-			dom: 'lBfrtip',
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
@@ -934,27 +937,27 @@ $(document).ready(function () {
 
 	// trigger click on side navigation to create journal
 	$('#btn-create-journal').click(function () {
-		$('#create-journal').trigger('click');
+		$('#v-pills-create-journal-tab').trigger('click');
 	});
 
 	// trigger click on side navigation to add editorial board
 	$('#btn-add-editorial').click(function () {
-		$('#add-editorial').trigger('click');
+		$('#v-pills-add-editorial-tab').trigger('click');
 	});
 
 	// trigger click on side navigation to view list of journals
 	$('#view_journals').click(function () {
-		$('#journal-list').trigger('click');
+		$('#v-pills-journal-list-tab').trigger('click');
 	});
 
 	// trigger click on side navigation to view list of editorail boards
 	$('#view_editorials').click(function () {
-		$('#editorial-list').trigger('click');
+		$('#v-pills-editorial-list-tab').trigger('click');
 	});
 
 	// trigger click on side navigation to view list of clients downloaded journals
 	$('#view_clients').click(function () {
-		$('#client-list').trigger('click');
+		$('#v-pills-client-list-tab').trigger('click');
 	});
 
 	// remove class 
@@ -1279,21 +1282,21 @@ $(document).ready(function () {
 
 			// if file size of pdf is less than 20mb hide warning
 			if (file_size_pdf < '20000000') {
-				$('#upload_cfp').next('.badge-danger').hide();
+				$('#upload_cfp').next('.bg-danger').hide();
 			}
 			// if file size of image is less than 20mb hide warning
 			if (file_size_img < 2000000) {
-				$('#upload_cfpi').next('.badge-danger').hide();
+				$('#upload_cfpi').next('.bg-danger').hide();
 			}
 
 			// if file size of pdf is more than 20mb show warning
 			if (file_size_pdf >= '20000000') {
-				$('#upload_cfp').next('.badge-danger').hide();
-				$('#upload_cfp').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+				$('#upload_cfp').next('.bg-danger').hide();
+				$('#upload_cfp').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
 			} else if (file_size_img >= 2000000) // if file size of image is more than 20mb show warning
 			{
-				$('#upload_cfpi').next('.badge-danger').hide();
-				$('#upload_cfpi').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
+				$('#upload_cfpi').next('.bg-danger').hide();
+				$('#upload_cfpi').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
 			} else {
 				$.ajax({
 					url: base_url + "admin/dashboard/update_home/",
@@ -1347,13 +1350,13 @@ $(document).ready(function () {
 
 			// if file size of pdf is less than 20mb hide warning
 			if (file_size < '20000000') {
-				$('#upload_guidelines').next('.badge-danger').hide();
+				$('#upload_guidelines').next('.bg-danger').hide();
 			}
 
 			// if file size of pdf is more than 20mb hide warning
 			if (file_size >= '20000000') {
-				$('#upload_guidelines').next('.badge-danger').hide();
-				$('#upload_guidelines').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+				$('#upload_guidelines').next('.bg-danger').hide();
+				$('#upload_guidelines').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
 			} else {
 				$.ajax({
 					url: base_url + "admin/dashboard/update_guidelines/",
@@ -1417,7 +1420,7 @@ $(document).ready(function () {
 				
 				// if file size of pdf is less than 20mb hide warning
 				if (file_size < '20000000') {
-					$('#jor_cover').next('.badge-danger').hide();
+					$('#jor_cover').next('.bg-danger').hide();
 					$('#submit_journal').prop('disabled', false);
 
 					$.ajax({
@@ -1463,7 +1466,7 @@ $(document).ready(function () {
 				}
 				// if file size of pdf is less than 20mb show warning
 				else if (file_size >= '20000000') {
-					$('#jor_cover').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
+					$('#jor_cover').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
 					$('#submit_journal').prop('disabled', false);
 				}
 			} else {
@@ -1598,22 +1601,22 @@ $(document).ready(function () {
 			} else {
 				// if file size of pdf is less than 20mb hide warning
 				if (file_size_abs < '20000000') {
-					$('#badge_pdf').next('.badge-danger').hide();
+					$('#badge_pdf').next('.bg-danger').hide();
 					$('#submit_article').prop('disabled', false);
 				}
 				// if file size of pdf is less than 20mb hide warning
 				else if (file_size_txt < '20000000') {
-					$('#badge_text').next('.badge-danger').hide();
+					$('#badge_text').next('.bg-danger').hide();
 					$('#submit_article').prop('disabled', false);
 				}
 				// if file size of pdf is more than 20mb show warning
 				else if (file_size_abs >= '20000000') {
-					$('#badge_pdf').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+					$('#badge_pdf').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
 					$('#submit_article').prop('disabled', false);
 				}
 				// if file size of pdf is less than 20mb show warning
 				else if(file_size_txt >= '20000000') {
-					$('#badge_text').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+					$('#badge_text').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
 					$('#submit_article').prop('disabled', false);
 				}
 			}
@@ -1777,64 +1780,48 @@ $(document).ready(function () {
 							$('#table-registry').DataTable().clear().destroy();
 						}
 
+						var table = $('#table-registry').DataTable({
+							"order": [
+								[1, "desc"]
+							],
+							retrieve: true,
+							"columnDefs": [{
+								"targets": 0,
+								"orderable": false
+							}]
+						});
+
 						$.each(data.authors, function (key, val) {
 
-							$('#table-registry').dataTable({
-								"order": [
-									[1, "desc"]
-								],
-								retrieve: true,
-								"columnDefs": [{
-									"targets": 0,
-									"orderable": false
-								}]
-							}).fnAddData([
+						   table.row.add([
 								'',
 								val.art_author + ' (Author)',
 								val.art_affiliation,
 								val.art_email,
-								'<a class="text-info" onclick="reg_list(\'' + val.art_author + '\',\'aut\')"><span class="oi oi-list"></span> View</a>'
+								'<a href="javascript:void(0);" class="text-primary text-decoration-none" onclick="reg_list(\'' + val.art_author + '\',\'aut\')"><span class="oi oi-list"></span> View</a>'
 							]);
-
-							var t = $('#table-registry').DataTable();
-							t.on('order.dt search.dt', function () {
-								t.column(0, {
-									search: 'applied',
-									order: 'applied'
-								}).nodes().each(function (cell, i) {
-									cell.innerHTML = i + 1;
-								});
-							}).draw();
 						});
 
 						$.each(data.coas, function (key, val) {
-							$('#table-registry').dataTable({
-								"order": [
-									[1, "desc"]
-								],
-								retrieve: true,
-								"columnDefs": [{
-									"targets": 0,
-									"orderable": false
-								}]
-							}).fnAddData([
+							table.row.add([
 								'',
 								val.coa_name + ' (Co-author)',
 								val.coa_affiliation,
 								val.coa_email,
-								'<a class="text-info" onclick="reg_list(\'' + val.coa_name + '\',\'coa\')"><span class="oi oi-list"></span> View</a>'
+								'<a href="javascript:void(0);" class="text-primary text-decoration-none" onclick="reg_list(\'' + val.coa_name + '\',\'coa\')"><span class="oi oi-list"></span> View</a>'
 							]);
 
-							var t = $('#table-registry').DataTable();
-							t.on('order.dt search.dt', function () {
-								t.column(0, {
-									search: 'applied',
-									order: 'applied'
-								}).nodes().each(function (cell, i) {
-									cell.innerHTML = i + 1;
-								});
-							}).draw();
 						});
+
+						
+						table.on('order.dt search.dt', function () {
+							table.column(0, {
+								search: 'applied',
+								order: 'applied'
+							}).nodes().each(function (cell, i) {
+								cell.innerHTML = i + 1;
+							});
+						}).draw();
 					}
 				});
 			}
@@ -2031,25 +2018,23 @@ $(document).ready(function () {
 		//     option += '<option value="'+val+'">'+val+'</option>';
 		//   });
 
-		html = '<div class="form-row"><div class="form-group col-md-4">' +
-			'<label for="jor_coauthors">Co-Author</label>' +
-			// '<select class="form-control" id="coa_name'+inpIncr+'" name="coa_name[]" placeholder="First name, Middle name, Last name" style="background-color:white">'+
-			//  option +
-			// '</select>'+
-			'<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="Search by name or specialization">' +
-			'</div>' +
-			'<div class="form-group col-md-4">' +
-			'<label for="jor_affiliation">Affiliation <small class="text-warning">(optional)</small></label>' +
-			'<input type="text" class="form-control" id="coa_affiliation' + inpIncr + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
-			'</div>' +
-			'<div class="form-group col-md-3">' +
-			'<label for="jor_email">Email Address <small class="text-warning">(optional)</small></label>' +
-			'<input type="text" class="form-control" id="coa_email' + inpIncr + '" name="coa_email[]" placeholder="Enter a valid email">' +
-			'</div>' +
-			'<div class="form-group col-md-1 text-center">' +
-			'<label>Cancel</label>' +
-			'<button type="button" class="btn btn-outline-danger"><span class="oi oi-x"></span></button>' +
-			'</div><div>';
+		html = '<div class="row mb-3">' +
+					'<div class="col-3">' +
+						'<label for="jor_coauthors" class="form-label">Co-Author</label>' +
+						'<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="Search by name or specialization">' +
+					'</div>' +
+					'<div class="col-3">' +
+						'<label for="jor_affiliation" class="form-label">Affiliation</label>' +
+						'<input type="text" class="form-control" id="coa_affiliation' + inpIncr + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
+					'</div>' +
+					'<div class="col-3">' +
+						'<label for="jor_email" class="form-label">Email Address <span class="badge rounded-pill bg-secondary">Optional</span></label>' +
+						'<input type="text" class="form-control" id="coa_email' + inpIncr + '" name="coa_email[]" placeholder="Enter a valid email">' +
+					'</div>' +
+					'<div class="col-3">' +
+						'<button type="button" class="btn btn-outline-danger mt-4"><span class="oi oi-x"></span></button>' +
+					'</div>' +
+				'<div>';
 
 		$('#coauthors').append(html);
 		// $('#coa_name'+inpIncr).editableSelect({ effects: 'slide' });
@@ -2070,22 +2055,24 @@ $(document).ready(function () {
 		//   option += '<option value="'+val+'">'+val+'</option>';
 		// });
 
-		html = '<div class="form-row"><div class="form-group col-md-4">' +
-			'<label for="jor_coauthors">Co-Author</label>' +
-			'<input class="form-control" id="coa_name' + global_coauthor_total + '" name="coa_name[]" placeholder="Search by name or specialization">' +
-			'</div>' +
-			'<div class="form-group col-md-4">' +
-			'<label for="jor_affiliation">Affiliation <small class="text-warning">(optional)</small></label>' +
-			'<input type="text" class="form-control" id="coa_affiliation' + global_coauthor_total + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
-			'</div>' +
-			'<div class="form-group col-md-3">' +
-			'<label for="jor_email">Email Address <small class="text-warning">(optional)</small></label>' +
-			'<input type="text" class="form-control" id="coa_email' + global_coauthor_total + '" name="coa_email[]" placeholder="Enter a valid email">' +
-			'</div>' +
-			'<div class="form-group col-md-1 text-center">' +
-			'<label>Cancel</label>' +
-			'<button type="button" class="btn btn-outline-danger"><span class="oi oi-x"></span></button>' +
-			'</div><div>';
+		html = '<div class="row">' +
+					'<div class="col">' +
+						'<label for="jor_coauthors" class="form-label">Co-Author</label>' +
+						'<input class="form-control" id="coa_name' + global_coauthor_total + '" name="coa_name[]" placeholder="Search by name or specialization">' +
+					'</div>' +
+					'<div class="col">' +
+						'<label for="jor_affiliation" class="form-label">Affiliation <span class="badge rounded-pill bg-secondary">Optional</span></label>' +
+						'<input type="text" class="form-control" id="coa_affiliation' + global_coauthor_total + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
+					'</div>' +
+					'<div class="col">' +
+						'<label for="jor_email" class="form-label">Email Address <span class="badge rounded-pill bg-secondary">Optional</span></label>' +
+						'<input type="text" class="form-control" id="coa_email' + global_coauthor_total + '" name="coa_email[]" placeholder="Enter a valid email">' +
+					'</div>' +
+					'<div class="col">' +
+						'<label class="form-label">Cancel</label>' +
+						'<button type="button" class="btn btn-outline-danger"><span class="oi oi-x"></span></button>' +
+					'</div>' +
+				'<div>';
 
 		$('#coa_list').append(html);
 		// $('#article_modal #coa_name'+inpIncr2).editableSelect({ effects: 'slide' });
@@ -2101,12 +2088,12 @@ $(document).ready(function () {
 
 	// remove data row after deleting co-author
 	$('#coauthors').on('click', '.btn-outline-danger', function () {
-		$(this).closest('.form-row').remove();
+		$(this).closest('.row').remove();
 	});
 
 	// remove data row after deleting co-author from modal
 	$('#article_modal #coa_list').on('click', '.btn-outline-danger', function () {
-		$(this).closest('.form-row').remove();
+		$(this).closest('.row').remove();
 	});
 
 	// store id of clicked item in side navigation
@@ -2268,7 +2255,7 @@ $(document).ready(function () {
 					$('#feedback_form').remove();
 
 					var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
-                              <p class="text-center btn-link font-weight-bold"><u><a href="' + base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
+                              <p class="text-center btn-link fw-bold"><u><a href="' + base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
 
 
 					$(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
@@ -2631,13 +2618,13 @@ function view_articles(id, vol, iss, mos, year) {
 					var absc = count_abstract(val.art_id);
 
 					if (pdfc > '0') {
-						var pdf = "<a href='javascript:void(0);''  class='text-success font-weight-bold' onclick='get_client_info(" + val.art_id + ")'  >" + pdfc + "</a>";
+						var pdf = "<a href='javascript:void(0);''  class='text-success fw-bold' onclick='get_client_info(" + val.art_id + ")'  >" + pdfc + "</a>";
 					} else {
 						var pdf = '0';
 					}
 
 					if (absc > '0') {
-						var abs = "<a href='javascript:void(0);'  class='text-default font-weight-bold' onclick='get_hits_info(" + val.art_id + ")'  >" + absc + "</a>";
+						var abs = "<a href='javascript:void(0);'  class='text-default fw-bold' onclick='get_hits_info(" + val.art_id + ")'  >" + absc + "</a>";
 					} else {
 						var abs = '0';
 					}
@@ -2687,7 +2674,7 @@ function get_citees(data) {
  * @return  {void}        
  */
 function get_client_info(data) {
-	$('#client-list').trigger('click');
+	$('#v-pills-client-list-tab').trigger('click');
 	$('#table-clients').DataTable().search('ID:' + data).draw();
 }
 
@@ -2822,26 +2809,35 @@ function edit_article(id) {
 				$.each(data, function (key, val) {
 					c++;
 
-					html = '<div class="form-row " id="form_row' + val.coa_id + '"><div class="form-group autocomplete col-md-4">' +
-						'<label for="jor_coauthors">Co-Author</label>' +
-						'<input type="text" class="form-control" id="coa_name' + c + '" name="coa_affiliation[]" placeholder="Enter affiliation" value="' + val.coa_name + '">' +
-						'</div>' +
-						'<div class="form-group col-md-4">' +
-						'<label for="jor_affiliation">Affiliation <small class="text-warning">(optional)</small></label>' +
-						'<input type="text" class="form-control" id="coa_affiliation' + c + '" name="coa_affiliation[]" placeholder="Enter affiliation" value="' + val.coa_affiliation + '">' +
-						'</div>' +
-						'<div class="form-group col-md-3">' +
-						'<label for="jor_email">Email Address <small class="text-warning">(optional)</small></label>' +
-						'<input type="text" class="form-control" id="coa_email' + c + '" name="coa_email[]" placeholder="Enter a valid email" value="' + val.coa_email + '">' +
-						'</div>' +
-						'<div class="form-group col-md-1 text-center">' +
-						'<label>Remove</label>';
-
+					
 					if (prv_del == 1) {
 						html += '<button type="button" class="btn btn-outline-danger" onclick="_remove(\'delete-coauthor\',\'' + val.coa_id + '\')"><span class="oi oi-trash"></span></button>';
 					} else {
 						html += 'N/a';
 					}
+
+					
+					html = `<div class="row" id="form_row${val.coa_id}">
+								<div class="col" >
+									<div class="form-group autocomplete col-md-4">
+										<label for="jor_coauthors">Co-Author</label>
+										<input type="text" class="form-control" id="coa_name${c}" name="coa_affiliation[]" placeholder="Enter affiliation" value="${val.coa_name}">
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="form-group autocomplete col-md-4">
+										<label for="jor_affiliation">Affiliation <span class="badge ropunded-pill bg-secondary">Optional</span></label>
+										<input type="text" class="form-control" id="coa_affiliation${c}" name="coa_affiliation[]" placeholder="Enter affiliation" value="${val.coa_affiliation}">
+									</div>
+								</div>
+								<div class="col">
+									<label for="jor_email">Email Address <span class="badge rounded-pill bg-secondary">Optional</span></label>
+									<input type="text" class="form-control" id="coa_email${c}" name="coa_email[]" placeholder="Enter a valid email" value="${val.coa_email}">
+								</div>
+								<div class="col-2"></div>
+						'<div class="form-group col-md-1 text-center">' +
+						'<label>Remove</label>`;
 
 
 					html += '</div><div>';

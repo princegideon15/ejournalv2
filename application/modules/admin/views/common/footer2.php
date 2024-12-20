@@ -22,9 +22,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Clear Activity Logs</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>Are you sure you want to clear all activity logs? This action is irreversible. A backup file (Excel) will be downloaded before clearing the logs.</p>
@@ -44,9 +42,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-pencil"></span> Edit Article</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<p class="lead">Article Information</p>
@@ -55,7 +51,7 @@
 					<div class="form-row">
 						<div class="form-group col-md-3">
 							<label for="art_year">Year</label>
-							<select class="form-control" id="art_year" name="art_year" >
+							<select class="form-select" id="art_year" name="art_year" >
 								<option value="">Select year</option>
 								<?php foreach ($u_year as $j): ?>
 								<?php echo '<option value=' . $j->jor_year . '>' . $j->jor_year . '</option>'; ?>
@@ -167,9 +163,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel">Remove</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 			</div>
@@ -188,9 +182,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-pencil"></span> Edit Journal</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<!-- <?php echo form_open_multipart('admin/journal/journal/update', array('id' => 'journal_modal_form')); ?> -->
@@ -203,7 +195,7 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="jor_issue">Issue No.</label>
-							<select class="form-control" id="jor_issue" name="jor_issue" disabled>
+							<select class="form-select" id="jor_issue" name="jor_issue" disabled>
 								<option value="">Select Issue</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -262,9 +254,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-pencil"></span> Edit Editorial Board and Staff</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<form id="editorial_modal_form">
@@ -286,7 +276,7 @@
 									<div class="form-row">
 										<div class="form-group col-md-4">
 											<label for="edt_year">Year</label>
-											<select class="form-control" id="edt_year" name="edt_year">
+											<select class="form-select" id="edt_year" name="edt_year">
 												<option value="">Select Year</option>
 												<?php for($i=date('Y'); $i>='1993';$i--){ ?>
 												<?php echo '<option value=' . $i . '>' . $i . '</option>'; ?>
@@ -295,7 +285,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_volume">Volume</label>
-											<select class="form-control" id="edt_volume" name="edt_volume" placeholder="ex. X">
+											<select class="form-select" id="edt_volume" name="edt_volume" placeholder="ex. X">
 												<option value='' class="text-dark">Select Volume</option>
 												<?php foreach ($u_journal as $j): ?>
 												<?php echo '<option value=' . $j->jor_volume . ' class="text-dark text-uppercase">' . $j->jor_volume . '</option>'; ?>
@@ -304,7 +294,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_issue">Issue</label>
-											<select class="form-control" id="edt_issue" name="edt_issue">
+											<select class="form-select" id="edt_issue" name="edt_issue">
 												<option value="">Select Issue</option>
 												<option value="1">1</option>
 												<option value="2">2</option>
@@ -328,7 +318,7 @@
 										</div>
 										<div class="form-group col-md-2">
 											<label for="edt_sex">Sex</label>
-											<select class="form-control" id="edt_sex" name="edt_sex">
+											<select class="form-select" id="edt_sex" name="edt_sex">
 												<option value="">Sex</option>
 												<?php foreach ($sex as $s): ?>
 												<?php echo '<option value=' . $s->sex_id . '>' . $s->sex_name . '</option>'; ?>
@@ -359,7 +349,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_country">Country</label>
-											<select class="form-control" id="edt_country" name="edt_country">
+											<select class="form-select" id="edt_country" name="edt_country">
 												<option value="">Select Country</option>
 												<?php foreach ($country as $c): ?>
 												<?php echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
@@ -394,9 +384,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title"><span class="oi oi-eye"></span> Visitor Information</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<div class='no-margin table-responsive'>
@@ -429,9 +417,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="user_modal"><span class="oi oi-person"></span> Add User Account</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<form id="form_add_user">
@@ -450,7 +436,7 @@
 					</div>
 					<div class="form-group">
 						<label for="acc_type">User Type</label>
-						<select class="form-control" id="acc_type" name="acc_type" >
+						<select class="form-select" id="acc_type" name="acc_type" >
 							<option value="">Select User Type</option>
 							<option value='0'>Super Admin</option>
 							<option value='1'>Administrator</option>
@@ -474,9 +460,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title"><span class="oi oi-cog"></span> Manage User Account</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<div id="manage_user_content">
@@ -518,9 +502,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="user_modal"><span class="oi oi-camera-slr"></span> Set Display Picture</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body text-center">
 				<?php echo form_open_multipart('admin/dashboard/upload_display_picture', array('id' => 'form_set_dp')); ?>
@@ -547,9 +529,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="user_modal"><span class="oi oi-shield"></span> Change Password</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<form id="form_change_pass">
@@ -582,9 +562,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title"><span class="oi oi-bell"></span> Activity</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<div class='no-margin table-responsive'>
@@ -624,9 +602,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title"><span class="oi oi-list"></span> Related Articles</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<ul class="list-group list-group-flush registry">
