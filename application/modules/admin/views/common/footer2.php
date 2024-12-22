@@ -934,7 +934,7 @@ var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this-
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 <script src="<?php echo base_url("assets/js/sweetalert2@11.js");?>"></script>
-<script src="<?php echo base_url("assets/oprs/js/chart.js");?>"></script>
+<!-- <script src="<?php echo base_url("assets/oprs/js/chart.js");?>"></script> -->
 <script src="<?php echo base_url("assets/oprs/js/jquery.min.js");?>"></script>
 
 
@@ -970,7 +970,7 @@ var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.2/tinymce.min.js"></script>
 <!-- <script src="<?php echo base_url("assets/oprs/js/tinymce.min.js");?>"></script> -->
 <!-- Loading Screen -->
-<script src="<?php echo base_url("assets/oprs/js/jquery.loading.admin.js"); ?>"></script>
+<script src="<?php echo base_url("assets/js/jquery.loading.admin.js"); ?>"></script>
 
 <!-- Datatable buttons -->
 <script src="<?php echo base_url("assets/oprs/js/buttons.flash.min.js"); ?>"></script>

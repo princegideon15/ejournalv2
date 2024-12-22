@@ -87,7 +87,7 @@ $(document).ready(function () {
 
 	// enable use of tooltip
 	$('body').tooltip({
-		selector: '[data-toggle=tooltip]'
+		selector: '[data-bs-toggle=tooltip]'
 	});
 
 	// hide upload file element for user display picture
@@ -115,9 +115,9 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled 
 	if (prv_exp == 0) {
-		$('#table-citees').DataTable({
+		var tct = $('#table-citees').DataTable({
 			"order": [
-				[0, "asc"]
+				[1, "asc"]
 			],
 			retrieve: true,
 			"columnDefs": [{
@@ -126,16 +126,24 @@ $(document).ready(function () {
 			}]
 		});
 	} else {
-		$('#table-citees').DataTable({
+		var tct = $('#table-citees').DataTable({
 			"order": [
-				[0, "asc"]
+				[1, "asc"]
 			],
 			retrieve: true,
-			"columnDefs": [{
+			columnDefs: [
+				{
 				"targets": 0,
 				"orderable": false
-			}],
-			dom: 'lBfrtip',
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
@@ -182,6 +190,26 @@ $(document).ready(function () {
 			]
 		});
 	}
+
+	// initiate and disable sorting on clicking first column first row
+	tct.on('draw', function () {
+		tct.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
+	tct.on('order.dt search.dt', function () {
+		tct.column(0, {
+			search: 'applied',
+			order: 'applied'
+		}).nodes().each(function (cell, i) {
+			cell.innerHTML = i + 1;
+		});
+	}).draw(false);
 
 	// check and display export button if privilege to export is enabled 
 	// if(prv_exp == 0){
@@ -244,26 +272,37 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#table-all-articles').DataTable({
+		var tallart = $('#table-all-articles').DataTable({
 			"order": [
 				[1, "asc"]
 			],
 			retrieve: true,
-			"columnDefs": [{
+			columnDefs: [
+				{
 				"targets": 0,
 				"orderable": false
-			}]
+				},
+				{ width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: false,
 		});
+
 	} else {
-		$('#table-all-articles').DataTable({
+		var tallart = $('#table-all-articles').DataTable({
 			"order": [
 				[1, "asc"]
 			],
 			retrieve: true,
-			"columnDefs": [{
+			columnDefs: [
+				{
 				"targets": 0,
 				"orderable": false
-			}],
+				},
+				{ width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
 			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
 				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
 				 "<'row'<'col-sm-12'tr>>" +   // Table itself
@@ -316,15 +355,24 @@ $(document).ready(function () {
 	}
 
 	// initiate and disable sorting on clicking first column first row
-	var tpop = $('#table-all-articles').DataTable();
-	tpop.on('order.dt search.dt', function () {
-		tpop.column(0, {
+	tallart.on('draw', function () {
+		tallart.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
+	tallart.on('order.dt search.dt', function () {
+		tallart.column(0, {
 			search: 'applied',
 			order: 'applied'
 		}).nodes().each(function (cell, i) {
 			cell.innerHTML = i + 1;
 		});
-	}).draw();
+	}).draw(false);
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
@@ -348,7 +396,10 @@ $(document).ready(function () {
 				"targets": 0,
 				"orderable": false
 			}],
-			dom: 'lBfrtip',
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
@@ -447,7 +498,7 @@ $(document).ready(function () {
 			"order": [
 				[3, "desc"]
 			],
-			retrieve: true,
+			retreive: true,
 			"columnDefs": [{
 				"targets": 0,
 				"orderable": false
@@ -501,20 +552,7 @@ $(document).ready(function () {
 				}
 			]
 		});
-
-		
-		// Append buttons to the top
-		// tpop.buttons().container().prependTo('#example_wrapper'); // Adds to the wrapper, at the top
 	}
-
-	// initiate and disable sorting on clicking first column first row
-	// var tpop = $('#table-popular').DataTable();
-
-	// tpop.on( 'order.dt search.dt', function () {
-	//     tpop.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-	//         cell.innerHTML = i+1;
-	//     } );
-	// } ).draw();
 
 	tpop.on('draw', function () {
 		tpop.rows({
@@ -557,7 +595,10 @@ $(document).ready(function () {
 				"targets": 0,
 				"orderable": false
 			}],
-			dom: 'lBfrtip',
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
@@ -636,9 +677,9 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#table-viewers').DataTable({
+		var tvwrs = $('#table-viewers').DataTable({
 			"order": [
-				[3, "desc"]
+				[1, "asc"]
 			],
 			retrieve: true,
 			"columnDefs": [{
@@ -647,16 +688,24 @@ $(document).ready(function () {
 			}]
 		});
 	} else {
-		$('#table-viewers').DataTable({
+		var tvwrs = $('#table-viewers').DataTable({
 			"order": [
-				[3, "desc"]
+				[1, "asc"]
 			],
 			retrieve: true,
-			"columnDefs": [{
+			columnDefs: [
+				{
 				"targets": 0,
 				"orderable": false
-			}],
-			dom: 'lBfrtip',
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
@@ -705,22 +754,62 @@ $(document).ready(function () {
 	}
 
 	// initiate and disable sorting on clicking first column first row 
-	var tcli = $('#table-viewers').DataTable();
-	tcli.on('order.dt search.dt', function () {
-		tcli.column(0, {
+	tvwrs.on('draw', function () {
+		tvwrs.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
+	tvwrs.on('order.dt search.dt', function () {
+		tvwrs.column(0, {
 			search: 'applied',
 			order: 'applied'
 		}).nodes().each(function (cell, i) {
 			cell.innerHTML = i + 1;
 		});
-	}).draw();
+	}).draw(false);
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#table-editorials').DataTable();
+		var tedt = $('#table-editorials').DataTable({
+			
+			"order": [
+				[1, "asc"]
+			],
+			retrieve: true,
+			columnDefs: [
+				{
+				"targets": 0,
+				"orderable": false
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+		});
 	} else {
-		$('#table-editorials').DataTable({
-			dom: 'lBfrtip',
+		var tedt = $('#table-editorials').DataTable({
+			"order": [
+				[1, "asc"]
+			],
+			retrieve: true,
+			columnDefs: [
+				{
+				"targets": 0,
+				"orderable": false
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
@@ -769,7 +858,16 @@ $(document).ready(function () {
 	}
 
 	// initiate and disable sorting on clicking first column first row 
-	var tedt = $('#table-editorials').DataTable();
+	tedt.on('draw', function () {
+		tedt.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
 	tedt.on('order.dt search.dt', function () {
 		tedt.column(0, {
 			search: 'applied',
@@ -777,7 +875,29 @@ $(document).ready(function () {
 		}).nodes().each(function (cell, i) {
 			cell.innerHTML = i + 1;
 		});
-	}).draw();
+	}).draw(false);
+
+	var temnot = $('#table-email-notifications').DataTable();
+	// initiate and disable sorting on clicking first column first row 
+	temnot.on('draw', function () {
+		temnot.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
+	temnot.on('order.dt search.dt', function () {
+		temnot.column(0, {
+			search: 'applied',
+			order: 'applied'
+		}).nodes().each(function (cell, i) {
+			cell.innerHTML = i + 1;
+		});
+	}).draw(false);
+
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
 		$('#table-activities').DataTable();
@@ -833,13 +953,40 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#activityLogsTable').DataTable();
+		$('#activityLogsTable').DataTable({
+			"order": [
+				[1, "asc"]
+			],
+			retrieve: true,
+			columnDefs: [
+				{
+				"targets": 0,
+				"orderable": false
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+		});
 	} else {
 		$('#activityLogsTable').DataTable({
 			"order": [
-				[3, "desc"]
+				[1, "asc"]
 			],
-			dom: 'lBfrtip',
+			retrieve: true,
+			columnDefs: [
+				{
+				"targets": 0,
+				"orderable": false
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
@@ -2418,9 +2565,9 @@ function online_users() {
 					var icon = (val.acc_status == 1) ? "text-success" : "text-muted";
 					var notif = (val.acc_login_time != null) ? ' <small class="text-muted ml-2">Active ' + login_t + '</small>' : '';
 					var cog = (data.current_user == 0 && val.acc_type != 0) ?
-						'<a href="javascript:void(0);" data-toggle="modal" data-target="#manage_user_modal" onclick="manage_user(' + val.row_id + ',\'' + val.acc_username + '\',' + val.acc_status + ')"><span class="oi oi-cog text-muted float-right mt-1" data-toggle="tooltip" data-placement="top" title="Settings"></span></a>' : '';
+						'<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#manage_user_modal" onclick="manage_user(' + val.row_id + ',\'' + val.acc_username + '\',' + val.acc_status + ')"><span class="oi oi-cog text-muted float-right mt-1" data-bs-toggle="tooltip" data-placement="top" title="Settings"></span></a>' : '';
 					var msg = '<div class="icon-wrapper  float-right">' +
-						'<a href="javascript:void(0);" onclick="message(' + val.row_id + ',\'' + val.acc_username + '\')"><span class="oi oi-envelope-closed mt-1 ml-2 text-muted" data-toggle="tooltip" data-placement="top" title="Message"></span>' +
+						'<a href="javascript:void(0);" onclick="message(' + val.row_id + ',\'' + val.acc_username + '\')"><span class="oi oi-envelope-closed mt-1 ml-2 text-muted" data-bs-toggle="tooltip" data-placement="top" title="Message"></span>' +
 						'</a></div>';
 
 					html += '<li class="list-group-item">' +
@@ -2606,10 +2753,20 @@ function view_articles(id, vol, iss, mos, year) {
 			if ($.fn.DataTable.isDataTable("#table-articles")) {
 				$('#table-articles').DataTable().clear().destroy();
 			}
+
+			var table = $('#table-articles').DataTable({
+				columnDefs: [
+					{ width: "200px", targets: 3 }, // Set the width of the first column
+					{ width: "100px", targets: 4 } // Set the width of the first column
+				],
+				// Optional: to ensure the table layout is applied correctly
+				autoWidth: false 
+			});
+
 			if (data.length > '0') {
 				$.each(data, function (key, val) {
 					if (prv_edt == 1) {
-						var btn = "<button type='button' class='btn btn-sm btn-success' onclick='edit_article(" + val.art_id + ")'><span class='oi oi-pencil'></span> Edit Article</button>";
+						var btn = "<button type='button' class='btn btn-sm btn-light text-primary' onclick='edit_article(" + val.art_id + ")'><span class='oi oi-pencil'></span> Edit Article</button>";
 					} else {
 						btn = '';
 					}
@@ -2633,7 +2790,7 @@ function view_articles(id, vol, iss, mos, year) {
 					get_coauthors(val.art_id);
 					coasss = (coas == '') ? val.art_author : val.art_author + ', ' + coas;
 
-					$('#table-articles').dataTable().fnAddData([
+					table.row.add([
 						// c++,
 						'<strong>' + val.art_title + '</strong>, ' + coasss,
 						abs,
@@ -2642,8 +2799,11 @@ function view_articles(id, vol, iss, mos, year) {
 						btn
 					]);
 				});
+
+				table.on('order.dt search.dt').draw();
 			}
 
+			
 			$('#articles .h3').text('Vol. ' + vol + ', Issue ' + iss + ', ' + year);
 			$('#articles').collapse('show');
 			$('html,body').animate({
@@ -3276,7 +3436,7 @@ function generate_sex_chart() {
 	});
 
 
-	ejChart = new Highcharts.chart('client_bar', {
+	ejChart = new Highcharts.Chart('client_bar', {
 		chart: {
 			type: 'bar',
 			backgroundColor: '#FFFFFF',
@@ -3340,7 +3500,7 @@ function generate_sex_chart() {
 		}]
 	});
 
-	ejChart = new Highcharts.chart('client_pie', {
+	ejChart = new Highcharts.Chart('client_pie', {
 		chart: {
 			plotBackgroundColor: null,
 			plotBorderWidth: null,
@@ -3428,7 +3588,7 @@ function generate_sex_chart() {
 		}
 	});
 
-	ejChart = new Highcharts.chart('client_monthly_line', {
+	ejChart = new Highcharts.Chart('client_monthly_line', {
 
 		title: {
 			text: 'Clients By Sex, Monthly ' + year_today,
@@ -3529,7 +3689,7 @@ function generate_sex_chart() {
 		}
 	});
 
-	ejChart = new Highcharts.chart('client_line', {
+	ejChart = new Highcharts.Chart('client_line', {
 
 		title: {
 			text: 'Clients By Sex, ' + sex_years[0] + '-' + sex_years[sex_years.length - 1],
