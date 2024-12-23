@@ -212,63 +212,55 @@
 						<form id="form_create_journal">
 							<div class="row">
 								<div class="col">
-									<label for="jor_volume" class="form-label">Volume No.</label>
-									<select class="form-select text-uppercase mb-3" id="jor_volume" name="jor_volume" placeholder="ex. X">
-										<option class="text-dark" disabled>Volume</option>
-										<?php foreach ($u_journal as $j): ?>
-										<?php echo '<option value=' . $j->jor_volume . ' class="text-dark">' . $j->jor_volume . '</option>'; ?>
-										<?php endforeach;?>
-									</select>
-									
-									<label for="jor_issue" class="form-label">Issue No.</label>
-									<select class="form-select mb-3" id="jor_issue" name="jor_issue">
-										<option value="">Select Issue</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">Special Issue No. 1</option>
-										<option value="6">Special Issue No. 2</option>
-										<option value="7">Special Issue No. 3</option>
-										<option value="8">Special Issue No. 4</option>
-									</select>
-									
-									<label for="jor_month" class="form-label">Month  <span class="badge rounded-pill bg-secondary">Optional</span></label>
-									<input type="text" class="form-control mb-3" id="jor_month" name="jor_month" placeholder="ex. Jan-Dec">
-
-									<label for="jor_year" class="form-label">Year</label>
-									<input type="text" class="form-control mb-3" id="jor_year" name="jor_year" placeholder="ex. 2018" maxlength="4">
-									
-									<label for="jor_issn" class="form-label">ISSN</label>
-									<input type="text" class="form-control mb-3" id="jor_issn" name="jor_issn" value="0117-3294" readonly>
-
-									
-									<label for="jor_cover" class="form-label">Upload Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
-									<input type="file" class="form-control mb-3" id="jor_cover" name="jor_cover" accept="image/jpeg" />
-									
-									
-									<label for="jor_description" class="form-label">Description <span class="badge rounded-pill bg-secondary">Optional</span></label>
-									<textarea rows="6" class="form-control mb-3" id="jor_description" name="jor_description" placeholder="Type description here" maxlength="500"></textarea>
+									<div class="mb-3">
+										<label for="jor_volume" class="form-label">Volume No.</label>
+										<select class="form-select text-uppercase mb-3" id="jor_volume" name="jor_volume" placeholder="ex. X">
+											<option class="text-dark" disabled>Volume</option>
+											<?php foreach ($u_journal as $j): ?>
+											<?php echo '<option value=' . $j->jor_volume . ' class="text-dark">' . $j->jor_volume . '</option>'; ?>
+											<?php endforeach;?>
+										</select>
+									</div>
+									<div class="mb-3">
+										<label for="jor_issue" class="form-label">Issue No.</label>
+										<select class="form-select mb-3" id="jor_issue" name="jor_issue">
+											<option value="">Select Issue</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">Special Issue No. 1</option>
+											<option value="6">Special Issue No. 2</option>
+											<option value="7">Special Issue No. 3</option>
+											<option value="8">Special Issue No. 4</option>
+										</select>
+									</div>
+									<div class="mb-3">
+										<label for="jor_month" class="form-label">Month  <span class="badge rounded-pill bg-secondary">Optional</span></label>
+										<input type="text" class="form-control mb-3" id="jor_month" name="jor_month" placeholder="ex. Jan-Dec">
+									</div>
+									<div class="mb-3">
+										<label for="jor_year" class="form-label">Year</label>
+										<input type="text" class="form-control mb-3" id="jor_year" name="jor_year" placeholder="ex. 2018" maxlength="4">
+									</div>
+									<div class="mb-3">
+										<label for="jor_issn" class="form-label">ISSN</label>
+										<input type="text" class="form-control mb-3" id="jor_issn" name="jor_issn" value="0117-3294" readonly>
+									</div>
+									<div class="mb-3">
+										<label for="jor_description" class="form-label">Description <span class="badge rounded-pill bg-secondary">Optional</span></label>
+										<textarea rows="6" class="form-control mb-3" id="jor_description" name="jor_description" placeholder="Type description here" maxlength="500"></textarea>
+									</div>
 								</div>
 								<div class="col">
-									<label for="cover_photo" class="form-label">Preview </label><br/>
-									<img class="mr-3 img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" width="50%" height="50%">
-								</div>
-							</div>
-							<div class="form-row">
-								<div class="form-group col-md-4">
-								</div>
-								<div class="form-group col-md-2">
-								</div>
-								<div class="form-group col-md-2">
-								</div>
-							</div>
-							<div class="form-row">
-								<div class="form-group col-md-2">
-								</div>
-								<div class="form-group col-md-4">
-								</div>
-								<div class="form-group col-md-6">
+									<div class="mb-3">
+										<label for="jor_cover" class="form-label">Upload Cover Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+										<input type="file" class="form-control mb-3" id="jor_cover" name="jor_cover" accept="image/jpeg" />
+									</div>
+									<div class="mb-3">
+										<label for="cover_photo" class="form-label">Preview </label><br/>
+										<img class="img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" width="50%" height="50%">
+									</div>
 								</div>
 							</div>
 							<button type="submit" class="btn btn-primary" name="submit_journal" id="submit_journal"><span class="oi oi-check"></span> Save</button>
@@ -348,7 +340,7 @@
 													<input type="text" class="form-control" id="art_affiliation_p" name="art_affiliation">
 												</div>
 												<div class="col-3">
-													<label for="art_email" class="form-label">Email Address <span class="badge rounded-pill bg-secondary">Optional</span></label>
+													<label for="art_email" class="form-label">Email Address</label>
 													<input type="text" class="form-control" id="art_email_p" name="art_email" placeholder="Enter a valid email">
 												</div>
 											</div>
@@ -516,12 +508,12 @@
 					<div class="card border-dark">
 						<div class="card-body">
 						<h3>Client Information</h3>
-						<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+						<ul class="nav nav-tabs mt-3" id="myTabx" role="tablist">
 							<li class="nav-item" role="presentation">
-								<a class="nav-link active" id="client-tab" data-bs-toggle="tab" data-bs-target="#client_info" role="tab" aria-controls="home" aria-selected="true">Details</a>
+								<a class="nav-link active" id="client-tab" data-bs-toggle="tab" data-bs-target="#client_info" role="tab" aria-controls="home" aria-selected="true" href="#">Details</a>
 							</li>
 							<li class="nav-item" role="presentation">
-								<a class="nav-link" onclick="generate_sex_chart()" id="client-grraph-tab" data-bs-toggle="tab" data-bs-target="#client_graph" role="tab" aria-controls="profile" aria-selected="false">Graph</a>
+								<a class="nav-link" onclick="generate_sex_chart()" id="client-grraph-tab" data-bs-toggle="tab" data-bs-target="#client_graph" role="tab" aria-controls="profile" aria-selected="false" href="#">Graph</a>
 							</li>
 						</ul>
 						<div class="tab-content mt-3" id="clientTabContent">
@@ -656,9 +648,9 @@
 				<div class="tab-pane fade" id="v-pills-add-editorial" role="tabpanel" aria-labelledby="v-pills-add-editorial-tab" tabindex="0">
 					<div class="card border-dark">
 						<div class="card-body">
-						<h3>Add Editorial Board and Staff</h3>
-							<form id="add_editorial_form mt-3">
-								<div class="row">
+							<h3>Add Editorial Board and Staff</h3>
+							<form id="add_editorial_form">
+								<div class="row mt-3">
 									<div class="col">
 										<div class="mb-3 row">
 											<div class="form-group col">
@@ -743,17 +735,18 @@
 											<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
 										</div>
 										<div class="mb-3">
-											<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG only</span> <span class="badge rounded-pill bg-warning text-dark">2x2 Picture Size (600 x 600 pixels)</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
-											<input type="file" class="form-control" id="edt_photo" name="edt_photo" accept="image/jpeg" >
-											
-										</div>
-										<div class="mb-3">
 											<button type="submit" class="btn btn-primary me-1" name="submit_editorial"><span class="oi oi-check"></span> Save</button>	
 										</div>
 									</div>
 									<div class="col">
-										<label for="editorial_photo" class="form-label">Preview </label><br/>
-										<img class="me-3 img-thumbnail" id="editorial_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" width="50%" height="50%">
+										<div class="mb-3">
+											<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG only</span> <span class="badge rounded-pill bg-warning text-dark">2x2 Picture Size (600 x 600 pixels)</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+											<input type="file" class="form-control" id="edt_photo" name="edt_photo" accept="image/jpeg" >
+										</div>
+										<div class="mb-3">
+											<label for="editorial_photo" class="form-label">Preview </label><br/>
+											<img class="me-3 img-thumbnail" id="editorial_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" width="50%" height="50%">
+										</div>
 									</div>
 								</div>
 							</form>
@@ -865,24 +858,23 @@
 										<textarea rows="20" class="form-control" id="home_description" name="home_description"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></textarea>
 									</div>
 									<div class="mb-3">
-										<label for="" class="form-label">Upload Call for Papers</label>
-										<select name="" id="" class="form-select">
+										<label for="upload_call_papers" class="form-label">Upload Call for Papers</label>
+										<select name="upload_call_papers" id="upload_call_papers" class="form-select">
 											<option value="">Select Type</option>
-											<option value="1">PDF</option>
-											<option value="2">Image</option>
+											<option value="1">Image</option>
+											<option value="2">PDF</option>
 										</select>
 									</div>
 									<div class="mb-3">
-										<!-- TODO::modify selection -->
 										<!-- <label class="rd_container float-right"><input type="radio" name="upload_only" id="upload_only"  value="1"><span class="checkmark"></span></label> -->
-										<div class="upload_cfp d-none">
-											<label for="upload_cfp" class="form-label">Upload File </label>
-											<input type="file" class="form-control" id="upload_cfp" name="upload_cfp" accept="application/pdf">
+										<div class="upload_cfpi d-none">
+											<label for="upload_cfpi" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF Only</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+											<input type="file" class="form-control" id="upload_cfpi" name="upload_cfpi" accept="application/pdf">
 										</div>
 
-										<div class="upload_cfpi d-none">
-											<label for="upload_cfpi" class="form-label">Upload File <span class="badge rounded-pill bg-success">JPG Only</span></label>
-											<input type="file" class="form-control" id="upload_cfpi" name="upload_cfpi" accept="image/jpeg">
+										<div class="upload_cfp d-none">
+											<label for="upload_cfp" class="form-label">Upload File <span class="badge rounded-pill bg-success">JPG Only</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
+											<input type="file" class="form-control" id="upload_cfp" name="upload_cfp" accept="image/jpeg">
 										</div>			
 										<!-- <label class="rd_container float-right"><input type="radio" class="float-right" name="upload_only" id="upload_only" value="2" ><span class="checkmark"></span></label> -->
 

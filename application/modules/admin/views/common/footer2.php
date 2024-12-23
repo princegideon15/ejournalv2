@@ -22,7 +22,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Clear Activity Logs</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>Are you sure you want to clear all activity logs? This action is irreversible. A backup file (Excel) will be downloaded before clearing the logs.</p>
@@ -48,9 +48,9 @@
 				<p class="lead">Article Information</p>
 				<form id="article_modal_form">
 					<input type="hidden" id="art_id" name="art_id">
-					<div class="form-row">
-						<div class="form-group col-md-3">
-							<label for="art_year">Year</label>
+					<div class="row mb-3">
+						<div class="col">
+							<label for="art_year" class="form-label">Year</label>
 							<select class="form-select" id="art_year" name="art_year" >
 								<option value="">Select year</option>
 								<?php foreach ($u_year as $j): ?>
@@ -58,8 +58,8 @@
 								<?php endforeach;?>
 							</select>
 						</div>
-						<div class="form-group col-md-3">
-							<label for="art_jor_id">Volume, Issue</label>
+						<div class="col">
+							<label for="art_jor_id" class="form-label">Volume, Issue</label>
 							<select class="form-control " id="art_jor_id" name="art_jor_id">
 								<option value="">Select Volume, Issue</option>
 								<?php foreach ($journal as $j): ?>
@@ -74,68 +74,61 @@
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="art_title">Title of Article</label>
+					<div class="mb-3">
+						<label for="art_title" class="form-label">Title of Article</label>
 						<textarea class="form-control  bg-white" id="art_title" name="art_title"></textarea>
 					</div>
-					<div class="form-row">
-						<div class="form-group col-md-9">
-							<label for="art_keywords">Keywords</label>
-							<span class="badge badge-secondary">Separate in comma</span>
+					<div class="row mb-3">
+						<div class="col">
+							<label for="art_keywords" class="form-label">Keywords</label>
+							<span class="badge rounded-pill bg-secondary">Separate in comma</span>
 							<input type="text" class="form-control" id="art_keywords" placeholder="ex. Keyword 1,Keyword 2,Keyword 3" name="art_keywords">
 						</div>
-						<div class="form-group col-md-3">
-							<label for="art_page">Page Nos</label>
+						<div class="col">
+							<label for="art_page" class="form-label">Page Nos</label>
 							<input type="text" class="form-control" id="art_page" placeholder="ex. 100-200" name="art_page">
 						</div>
 					</div>
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label for="art_abstract_file">Abstract</label>
-							<div class="input-group">
-								<input type="text" class="form-control" id="art_abstract_file" name="art_abstract_file" readonly>
-								<div class="input-group-append">
-									<a class="btn btn-outline-secondary" target="_blank" id="view_abstract"><span class="oi oi-eye"></span> View</a>
-								</div>
+					<div class="mb-3">
+						<label for="art_abstract_file" class="form-label">Abstract</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="art_abstract_file" name="art_abstract_file" readonly>
+							<div class="input-group-append">
+								<a class="btn btn-outline-secondary" target="_blank" id="view_abstract"><span class="oi oi-eye"></span> View</a>
 							</div>
 						</div>
-						<div class="form-group col-md-6">
-							<label for="art_abstract_file">Upload New Abstract</label>
-							<span class="badge badge-warning">PDF only</span>
-							<input type="file" class="form-control" name="art_abstract_file_new" accept="application/pdf" >
-							<small class="text-warning">(MAX: 20MB)</small>
-						</div>
 					</div>
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label for="art_full_text_pdf">Full Text PDF</label>
-							<div class="input-group">
-								<input type="text" class="form-control" id="art_full_text_pdf" name="art_full_text_pdf" readonly>
-								<div class="input-group-append">
-									<a class="btn btn-outline-secondary" target="_blank" id="view_pdf"><span class="oi oi-eye"></span> View</a>
-								</div>
+					<div class="mb-3">
+						<label for="art_abstract_file" class="form-label">Upload New Abstract <span class="badge rounded-pill bg-success">PDF Only</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+						<input type="file" class="form-control" name="art_abstract_file_new" accept="application/pdf" >
+					</div>
+					<div class="mb-3">
+						<label for="art_full_text_pdf" class="form-label">Full Text PDF</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="art_full_text_pdf" name="art_full_text_pdf" readonly>
+							<div class="input-group-append">
+								<a class="btn btn-outline-secondary" target="_blank" id="view_pdf"><span class="oi oi-eye"></span> View</a>
 							</div>
 						</div>
-						<div class="form-group col-md-6">
-							<label for="art_full_text_pdf">Upload New Full Text PDF</label>
-							<span class="badge badge-warning">PDF only</span>
-							<input type="file" class="form-control" name="art_full_text_pdf_new" accept="application/pdf" >
-							<small class="text-warning">(MAX: 20MB)</small>
-						</div>
 					</div>
-					<div class="form-row">
-						<div class="form-group col-md-4">
-							<label for="art_author">Author</label>
+					<div class="mb-3">
+						<label for="art_full_text_pdf" class="form-label">Upload New Full Text PDF <span class="badge rounded-pill bg-success">PDF Only</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+						<input type="file" class="form-control" name="art_full_text_pdf_new" accept="application/pdf" >
+					</div>
+					<div class="row mb-3"> 
+						<div class="col">
+							<label for="art_author" class="form-label">Author</label>
 							<input class="form-control" id="art_author" name="art_author" placeholder="Search by name or specialization" required>	
 						</div>
-						<div class="form-group col-md-4">
-							<label for="art_affiliation">Affiliation</label>
+						<div class="col">
+							<label for="art_affiliation" class="form-label">Affiliation</label>
 							<input type="text" class="form-control" id="art_affiliation" name="art_affiliation">
 						</div>
-						<div class="form-group col-md-4">
-							<label for="art_email">Email Address</label>
+						<div class="col">
+							<label for="art_email" class="form-label">Email Address</label>
 							<input type="text" class="form-control" id="art_email" name="art_email" placeholder="Enter a valid email">
 						</div>
+						<div class="col-1"></div>
 					</div>
 					<span id="coa_list"></span>
 				</div>
@@ -144,7 +137,7 @@
 					<button type="button" id="btn-add-coauthor" class="btn btn-secondary"><span class="oi oi-people"></span> Add Co-Author</button>
 					<?php }?>
 					<?php if ($this->session->userdata('_prv_del') == 1) {?>
-					<button type="button" class="btn btn-danger mr-auto" onclick="_remove('delete-article')">Remove Article</button>
+					<button type="button" class="btn btn-danger me-auto" onclick="_remove('delete-article')">Remove Article</button>
 					<?php }?>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 					<?php if ($this->session->userdata('_prv_edt') == 1) {?>
@@ -178,71 +171,71 @@
 
 <!-- JOURNAL MODAL -->
 <div class="modal fade" id="journal_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-pencil"></span> Edit Journal</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<!-- <?php echo form_open_multipart('admin/journal/journal/update', array('id' => 'journal_modal_form')); ?> -->
-				<form id="journal_modal_form">
-					<input type="hidden" id="jor_id" name="jor_id">
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label for="jor_volume">Volume No.</label>
-							<input type="text" class="form-control" id="jor_volume" name="jor_volume">
+			<form id="journal_modal_form">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-pencil"></span> Edit Journal</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+						<input type="hidden" id="jor_id" name="jor_id">
+						<div class="row">
+							<div class="col">
+								<div class="mb-3">
+									<label for="jor_volume" class="form-label">Volume No.</label>
+									<input type="text" class="form-control" id="jor_volume" name="jor_volume">
+								</div>
+								<div class="mb-3">
+									<label for="jor_issue" class="form-label">Issue No.</label>
+									<select class="form-select" id="jor_issue" name="jor_issue" disabled>
+										<option value="">Select Issue</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">Special Issue No. 1</option>
+										<option value="6">Special Issue No. 2</option>
+										<option value="7">Special Issue No. 3</option>
+										<option value="8">Special Issue No. 4</option>
+									</select>
+								</div>
+								<div class="row mb-3">
+									<div class="col">
+										<label for="jor_month" class="form-label">Month <span class="badge rounded-pill badge-secondary">Optional</span></label>
+										<input type="text" class="form-control" id="jor_month" name="jor_month" placeholder="ex. Jan-Dec">
+									</div>
+									<div class="col">
+										<label for="jor_year" class="form-label">Year</label>
+										<input type="text" class="form-control" id="jor_year" name="jor_year" placeholder="ex. 2018" maxlength="4">
+										<small class="text-danger"><?php echo form_error('jor_year'); ?></small>
+									</div>
+									<div class="col">
+										<label for="jor_issn" class="form-label">ISSN</label>
+										<input type="text" class="form-control" id="jor_issn" name="jor_issn" value="0117-3294" readonly>
+									</div>
+								</div>
+								<div class="mb-3">
+									<label for="jor_cover" class="form-label">Upload Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+									<input type="file" class="form-control" id="jor_cover" name="jor_cover" accept="image/*">
+								</div>
+								<div class="mb-3">
+									<label for="jor_description" class="form-label">Description</label>
+									<textarea rows="6" class="form-control" id="jor_description" name="jor_description" placeholder="Type description here" maxlength="500"></textarea>
+								</div>
+							</div>
+							<div class="col">
+								<label for="cover_photo" class="form-label">Preview</label><br>
+								<img class="img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>"  width="50%" height="50%">
+							</div>
 						</div>
-						<div class="form-group col-md-6">
-							<label for="jor_issue">Issue No.</label>
-							<select class="form-select" id="jor_issue" name="jor_issue" disabled>
-								<option value="">Select Issue</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">Special Issue No. 1</option>
-								<option value="6">Special Issue No. 2</option>
-								<option value="7">Special Issue No. 3</option>
-								<option value="8">Special Issue No. 4</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="form-group col-md-4">
-							<label for="jor_month">Month <small class="text-warning">(optional)</small></label>
-							<input type="text" class="form-control" id="jor_month" name="jor_month" placeholder="ex. Jan-Dec">
-						</div>
-						<div class="form-group col-md-4">
-							<label for="jor_year">Year</label>
-							<input type="text" class="form-control" id="jor_year" name="jor_year" placeholder="ex. 2018" maxlength="4">
-							<small class="text-danger"><?php echo form_error('jor_year'); ?></small>
-						</div>
-						<div class="form-group col-md-4">
-							<label for="jor_issn">ISSN</label>
-							<input type="text" class="form-control" id="jor_issn" name="jor_issn" value="0117-3294" readonly>
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="form-group col-md-4">
-							<label for="">Preview</label>
-							<img class="mr-3 img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" style="width: auto; max-width:150px; height: auto;" alt="Generic placeholder image">
-						</div>
-						<div class="form-group col-md-8">
-							<label for="">Upload Photo <small class="text-warning">(optional)</small></label>
-							<input type="file" class="form-control" id="jor_cover" name="jor_cover" accept="image/*">
-							<small class="text-warning">(MAX: 20MB)</small>
-							<label for="jor_description">Description</label>
-							<textarea rows="6" class="form-control" id="jor_description" name="jor_description" placeholder="Type description here" maxlength="500"></textarea>
-						</div>
-					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger mr-auto" onclick="_remove('delete-journal')">Remove Journal</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 					<button type="submit" class="btn btn-primary">Save changes</button>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -252,127 +245,120 @@
 <div class="modal fade" id="editorial_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
+
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-pencil"></span> Edit Editorial Board and Staff</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<form id="editorial_modal_form">
-							<input type="hidden" id="edt_id" name="edt_id">
-							<input type="hidden" id="edt_photo_exist" name="edt_photo_exist">
-							<div class="form-row">
-								<div class="form-group col-md-3">
-									<label for="editorial_photo">Preview </label><br/>
-									<img class="mr-3 img-thumbnail" id="editorial_photo"  style="width:200px; height:200px;">
-									<!-- src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" -->
-								</div>
-								<div class="form-group col-md-9">
-									<div class="form-row">
-										<div class="form-group col-md">
-											<label for="edt_photo">Upload Photo <small class="text-success">(JPG only)</small></label>
-											<input type="file" class="form-control" id="edt_photo" name="edt_photo" accept="image/jpeg" >
-										</div>
+			
+			<form id="editorial_modal_form">
+				<div class="modal-body">
+					<input type="hidden" id="edt_id" name="edt_id">
+					<input type="hidden" id="edt_photo_exist" name="edt_photo_exist">
+					<div class="row">
+						<div class="col">
+							<div class="mb-3">
+								<div class="row">
+									<div class="col">
+										<label for="edt_year" class="form-label">Year</label>
+										<select class="form-select" id="edt_year" name="edt_year">
+											<option value="">Select Year</option>
+											<?php for($i=date('Y'); $i>='1993';$i--){ ?>
+											<?php echo '<option value=' . $i . '>' . $i . '</option>'; ?>
+											<?php }?>
+										</select>
 									</div>
-									<div class="form-row">
-										<div class="form-group col-md-4">
-											<label for="edt_year">Year</label>
-											<select class="form-select" id="edt_year" name="edt_year">
-												<option value="">Select Year</option>
-												<?php for($i=date('Y'); $i>='1993';$i--){ ?>
-												<?php echo '<option value=' . $i . '>' . $i . '</option>'; ?>
-												<?php }?>
-											</select>
-										</div>
-										<div class="form-group col-md-4">
-											<label for="edt_volume">Volume</label>
-											<select class="form-select" id="edt_volume" name="edt_volume" placeholder="ex. X">
-												<option value='' class="text-dark">Select Volume</option>
-												<?php foreach ($u_journal as $j): ?>
-												<?php echo '<option value=' . $j->jor_volume . ' class="text-dark text-uppercase">' . $j->jor_volume . '</option>'; ?>
-												<?php endforeach;?>
-											</select>
-										</div>
-										<div class="form-group col-md-4">
-											<label for="edt_issue">Issue</label>
-											<select class="form-select" id="edt_issue" name="edt_issue">
-												<option value="">Select Issue</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
-												<option value="5">Special Issue No. 1</option>
-												<option value="6">Special Issue No. 2</option>
-												<option value="7">Special Issue No. 3</option>
-												<option value="8">Special Issue No. 4</option>
-											</select>
-										</div>
+									<div class="col">
+										<label for="edt_volume" class="form-label">Volume</label>
+										<select class="form-select" id="edt_volume" name="edt_volume" placeholder="ex. X">
+											<option value='' class="text-dark">Select Volume</option>
+											<?php foreach ($u_journal as $j): ?>
+											<?php echo '<option value=' . $j->jor_volume . ' class="text-dark text-uppercase">' . $j->jor_volume . '</option>'; ?>
+											<?php endforeach;?>
+										</select>
 									</div>
-									<div class="form-row">
-										<div class="form-group col-md-6">
-											<label for="edt_name">Name</label>
-											<input type="text" class="form-control" id="edt_name" name="edt_name" placeholder="First name, Middle name, Last name">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="edt_email">Email Address</label>
-											<input type="text" class="form-control" id="edt_email" name="edt_email" placeholder="Enter a valid email">
-										</div>
-										<div class="form-group col-md-2">
-											<label for="edt_sex">Sex</label>
-											<select class="form-select" id="edt_sex" name="edt_sex">
-												<option value="">Sex</option>
-												<?php foreach ($sex as $s): ?>
-												<?php echo '<option value=' . $s->sex_id . '>' . $s->sex_name . '</option>'; ?>
-												<?php endforeach;?>
-											</select>
-										</div>
-									</div>
-									<div class="form-row">
-										<div class="form-group col-md-6">
-											<label for="edt_position">Editorial Position</label>
-											<input type="text" class="form-control" id="edt_position" name="edt_position" placeholder="ex. Editor-in-Chief">
-										</div>	
-										<div class="form-group col-md-6">
-											<label for="edt_position_affiliation">Employment Position</label>
-											<input type="text" class="form-control" id="edt_position_affiliation" name="edt_position_affiliation" placeholder="ex. Professor">
-										</div>	
-									</div>
-									<div class="form-row">
-										<div class="form-group col-md">
-											<label for="edt_affiliation">Affiliation</label>
-											<input type="text" class="form-control" id="edt_affiliation" name="edt_affiliation" placeholder="ex. UP Manila">
-										</div>
-									</div>
-									<div class="form-row">
-										<div class="form-group col-md-8">
-											<label for="edt_address">Address</label>
-											<input type="text" class="form-control" id="edt_address" name="edt_address" placeholder="ex. Juan Dela Cruz Street, Manila">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="edt_country">Country</label>
-											<select class="form-select" id="edt_country" name="edt_country">
-												<option value="">Select Country</option>
-												<?php foreach ($country as $c): ?>
-												<?php echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
-												<?php endforeach;?>
-											</select>
-										</div>
-									</div>
-									<div class="form-row">
-										<div class="form-group col-md">
-											<label for="edt_affiliation">Specialization</label>
-											<span class="badge badge-secondary">Separate in comma</span>
-											<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
-										</div>
+									<div class="col">
+										<label for="edt_issue" class="form-label">Issue</label>
+										<select class="form-select" id="edt_issue" name="edt_issue">
+											<option value="">Select Issue</option>
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">Special Issue No. 1</option>
+											<option value="6">Special Issue No. 2</option>
+											<option value="7">Special Issue No. 3</option>
+											<option value="8">Special Issue No. 4</option>
+										</select>
 									</div>
 								</div>
 							</div>
+							<div class="mb-3">
+								<label for="edt_name" class="form-label">Name</label>
+								<input type="text" class="form-control" id="edt_name" name="edt_name" placeholder="First name, Middle name, Last name">
+							</div>
+							<div class="mb-3">
+								<label for="edt_email" class="form-label">Email Address</label>
+								<input type="text" class="form-control" id="edt_email" name="edt_email" placeholder="Enter a valid email">
+							</div>
+							<div class="mb-3">
+								<label for="edt_sex" class="form-label">Sex</label>
+								<select class="form-select" id="edt_sex" name="edt_sex">
+									<option value="">Sex</option>
+									<?php foreach ($sex as $s): ?>
+									<?php echo '<option value=' . $s->sex_id . '>' . $s->sex_name . '</option>'; ?>
+									<?php endforeach;?>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="edt_position" class="form-label">Editorial Position</label>
+								<input type="text" class="form-control" id="edt_position" name="edt_position" placeholder="ex. Editor-in-Chief">
+							</div>	
+							<div class="mb-3">
+								<label for="edt_position_affiliation" class="form-label">Employment Position</label>
+								<input type="text" class="form-control" id="edt_position_affiliation" name="edt_position_affiliation" placeholder="ex. Professor">
+							</div>	
+							<div class="mb-3">
+								<label for="edt_affiliation" class="form-label">Affiliation</label>
+								<input type="text" class="form-control" id="edt_affiliation" name="edt_affiliation" placeholder="ex. UP Manila">
+							</div>
+							<div class="mb-3">
+								<label for="edt_address"  class="form-label">Address</label>
+								<input type="text" class="form-control" id="edt_address" name="edt_address" placeholder="ex. Juan Dela Cruz Street, Manila">
+							</div>
+							<div class="mb-3">
+								<label for="edt_country" class="form-label">Country</label>
+								<select class="form-select" id="edt_country" name="edt_country">
+									<option value="">Select Country</option>
+									<?php foreach ($country as $c): ?>
+									<?php echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
+									<?php endforeach;?>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="edt_affiliation" class="form-label">Specialization</label>
+								<span class="badge badge-secondary">Separate in comma</span>
+								<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
+							</div>
+						</div>
+						<div class="col">
+							<div class="mb-3">
+								<label for="editorial_photo" class="form-label">Preview </label><br/>
+								<img class="img-thumbnail" id="editorial_photo" width="50%" height="50%">
+							</div>
+							<div class="mb-3">
+								<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG only</span> <span class="badge rounded-pill bg-warning text-dark">2x2 Picture Size (600 x 600 pixels)</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+								<input type="file" class="form-control" id="edt_photo" name="edt_photo" accept="image/jpeg" >
+							</div>
+						</div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger mr-auto" onclick="_remove('delete-editorial')">Delete</button>
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Save changes</button>
-					</form>
 				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger me-auto" onclick="_remove('delete-editorial')">Delete</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Save changes</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -533,12 +519,12 @@
 			</div>
 			<div class="modal-body">
 				<form id="form_change_pass">
-				<div class="form-group">
-					<label for="acc_password">New Password</label>
+				<div class="mb-3">
+					<label for="acc_password" class="form-label">New Password</label>
 					<input type="password" class="form-control" id="new_password" name="acc_password" placeholder="Enter new password" >
 				</div>
-				<div class="form-group">
-					<label for="repeat_password">Repeat Password</label>
+				<div class="mb-3">
+					<label for="repeat_password" class="form-label">Repeat Password</label>
 					<input type="password" class="form-control" name="repeat_password" id="repeat_password" placeholder="Repeat password" >
 					<p id="match" class="mt-2"></p>
 				</div>
@@ -644,9 +630,7 @@
       <div class="modal-header pb-0">
         <p><span class="modal-title fw-bold h3">Your feedback</span><br/>
         <small>We would like your feedback to improve our system.</small></p>
-        <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button> -->
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>
       <div class="modal-body p-4">
         <form id="feedback_form">
@@ -729,9 +713,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-hard-drive" style="width:20px"></span> Backup/Restore Database </h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="card">
@@ -745,13 +727,13 @@
                 <hr/>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="export_method" id="quick_export" value="1" checked>
-                    <label class="form-check-label" for="quick_export">
+                    <label class="form-check-label mt-2" for="quick_export">
                         Quick - Create backup of the database
                     </label>
                 </div>
                 <div class="form-check mt-1 mb-3">
                     <input class="form-check-input" type="radio" name="export_method" id="custom_export" value="2">
-                    <label class="form-check-label" for="custom_export">
+                    <label class="form-check-label mt-2" for="custom_export">
                         Custom - Select specific table to backup
                     </label>
                 </div>
@@ -846,47 +828,45 @@
 <!-- /.DATBASE MODAL -->
 
 <!-- EMAIL LIBRARY MODAL -->
-<div class="modal fade text-white" id="emailContentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="emailContentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title fw-bold"></h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="email_content_form" name="email_content_form">
         <input type="hidden" id="enc_process_id" name="enc_process_id">
           <div class="row">
             <div class="col-5">
-              <div class="form-group">
-                <label class="fw-bold"  for="enc_subject">Email subject</label>
+              <div class="mb-3">
+                <label class="fw-bold form-label"  for="enc_subject">Email subject</label>
                 <input type="text" class="form-control" id="enc_subject" name="enc_subject" required>
               </div>
-              <div class="form-group">
-                <label class="fw-bold"  for="enc_description">Notification trigger</label>
+              <div class="mb-3">
+                <label class="fw-bold form-label"  for="enc_description">Notification trigger</label>
                 <input type="text" class="form-control" id="enc_description" name="enc_description" required>
               </div>
-              <div class="form-group">
-                <label class="fw-bold" for="enc_cc">CC <small class="text-muted">(optional)</small></label>
+              <div class="mb-3">
+                <label class="fw-bold form-label" for="enc_cc">CC <span class="badge rounded-pill bg-secondary">Optional</span></label>
                 <input type="text" class="form-control" id="enc_cc" name="enc_cc" placeholder="juandelacruz@gmail.com,mariadelacruz@gmail.com">
                 <small class="text-muted pt-2">Please separate emails by comma (,)</small>
               </div>
-              <div class="form-group">
-                <label class="fw-bold" for="enc_bcc">BCC <small class="text-muted">(optional)</small></label>
+              <div class="mb-3">
+                <label class="fw-bold form-label" for="enc_bcc">BCC <span class="badge rounded-pill bg-secondary">Optional</span></label>
                 <input type="text" class="form-control" id="enc_bcc" name="enc_bcc" placeholder="juandelacruz@gmail.com,mariadelacruz@gmail.com">
                 <small class="text-muted pt-2">Please separate emails by comma (,)</small>
               </div>
-              <div class="form-group enc_user_group">
-                <label class="fw-bold" for="enc_user_group">User group
+              <div class="mb-3 enc_user_group">
+                <label class="fw-bold form-label" for="enc_user_group">User group
                 <br/><small class="text-muted">Following user roles will also receive this email notification.</small>
                 </label>
                
                 <?php foreach($user_roles as $row): ?>
                   <div class="form-check"> 
                     <input class="form-check-input" id="enc_user_group<?php echo $row->role_id;?>" name="enc_user_group[]" value="<?php echo $row->role_id;?>" type="checkbox" > 
-                    <label class="form-check-label" for="<?php echo $row->role_id;?>"> 
+                    <label class="form-check-label ms-1 mt-2" for="<?php echo $row->role_id;?>"> 
                      <?php echo $row->role_name;?> 
                     </label> 
                   </div>
@@ -895,8 +875,8 @@
             </div>
             <div class="col-7">
               <div class="form-group">
-              <label class="fw-bold" for="enc_content">Email content</label>
-                <div class="alert alert-warning" role="alert">
+              <label class="fw-bold form-label" for="enc_content">Email content</label>
+                <div class="alert alert-warning mb-0" role="alert">
                   <span class="oi oi-warning"></span> Do not change or remove words with square brackets. [EXAMPLE]
                 </div>
                 <textarea type="text" id="enc_content" class="form-control"></textarea>

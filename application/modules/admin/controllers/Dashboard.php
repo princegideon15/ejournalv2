@@ -452,7 +452,7 @@ class Dashboard extends EJ_Controller {
 	 */
 	public function update_home() {
 		$data = $this->input->post('home_description', TRUE);
-		$filetype = $this->input->post('upload_only', TRUE);
+		$filetype = $this->input->post('upload_call_papers', TRUE);
 
 		if (!write_file('./assets/uploads/DO_NOT_DELETE_description.txt', $data, 'wbr+')) {
 			echo 'Unable to write the file';

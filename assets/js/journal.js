@@ -1188,17 +1188,44 @@ $(document).ready(function () {
 				processData: false,
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'Editorial board added successfully. Page will reload after 3 seconds.'
-					}, {
-						type: 'success',
-						timer: 3000
+
+					let timerInterval;
+
+					Swal.fire({
+					title: "Editorial board added successfully!",
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
 
-					setTimeout(function () {
-						history.go(0);
-					}, 3000);
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Editorial board added successfully. Page will reload after 3 seconds.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
 
 				}
 			});
@@ -1255,18 +1282,45 @@ $(document).ready(function () {
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'Editorial board updated successfully. Page will reload after 3 seconds.'
-					}, {
-						type: 'success',
-						timer: 3000
+					
+					let timerInterval;
+
+					Swal.fire({
+					title: "Editorial board updated successfully!",
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
 
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Editorial board updated successfully. Page will reload after 3 seconds.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
 					$('#editorial_modal').modal('toggle');
-					setTimeout(function () {
-						history.go(0);
-					}, 3000);
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
 
 				}
 			});
@@ -1311,18 +1365,45 @@ $(document).ready(function () {
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'Journal updated successfully. Page will reload after 3 seconds.'
-					}, {
-						type: 'success',
-						timer: 3000
+
+					let timerInterval;
+
+					Swal.fire({
+					title: "Journal updated successfully!",
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
 
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Journal updated successfully. Page will reload after 3 seconds.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
 					$('#journal_modal').modal('toggle');
-					setTimeout(function () {
-						history.go(0);
-					}, 3000);
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
 
 				}
 			});
@@ -1381,21 +1462,58 @@ $(document).ready(function () {
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'Article updated successfully. Page will reload after 3 seconds.'
-					}, {
-						type: 'success',
-						timer: 3000
+					let timerInterval;
+
+					Swal.fire({
+					title: "Article updated successfully!",
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
 
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Article updated successfully. Page will reload after 3 seconds.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
 					$('#article_modal').modal('toggle');
-					setTimeout(function () {
-						history.go(0);
-					}, 3000);
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
 
 				}
 			});
+		}
+	});
+
+	$('#upload_call_papers').on('change', function(){
+		var selected = $(this).val();
+		if(selected == 1){
+			$('.upload_cfp').removeClass('d-none');
+			$('.upload_cfpi').addClass('d-none');
+		}else{
+			$('.upload_cfpi').removeClass('d-none');
+			$('.upload_cfp').addClass('d-none');
 		}
 	});
 
@@ -1408,10 +1526,14 @@ $(document).ready(function () {
 				required: true,
 			},
 			upload_cfp: {
-				required: '#upload_only[value="1"]:checked'
+				required: function () {
+					return $('#upload_call_papers').val() === '1'; // Check if the select value is '1'
+				}
 			},
 			upload_cfpi: {
-				required: '#upload_only[value="2"]:checked'
+				required: function () {
+					return $('#upload_call_papers').val() === '2'; // Check if the select value is '2'
+				}
 			}
 		},
 		submitHandler: function () {
@@ -1456,17 +1578,44 @@ $(document).ready(function () {
 
 						$('#form_home')[0].reset();
 
-						$.notify({
-							icon: 'oi oi-check',
-							message: 'Saved successfully. Page will reload in 3 seconds'
-						}, {
-							type: 'success',
-							timer: 3000
+						let timerInterval;
+
+						Swal.fire({
+						title: "Saved successfully!",
+						icon: 'success',
+						// html: "I will close in <b></b> milliseconds.",
+						timer: 2000,
+						timerProgressBar: true,
+						didOpen: () => {
+							Swal.showLoading();
+							const timer = Swal.getPopup().querySelector("b");
+							timerInterval = setInterval(() => {
+							timer.textContent = `${Swal.getTimerLeft()}`;
+							}, 100);
+						},
+						willClose: () => {
+							clearInterval(timerInterval);
+							location.reload();
+						}
+						}).then((result) => {
+						/* Read more about handling dismissals below */
+						if (result.dismiss === Swal.DismissReason.timer) {
+							console.log("I was closed by the timer");
+						}
 						});
 
-						setTimeout(function () {
-							history.go(0);
-						}, 3000);
+						
+						// $.notify({
+						// 	icon: 'oi oi-check',
+						// 	message: 'Saved successfully. Page will reload in 3 seconds'
+						// }, {
+						// 	type: 'success',
+						// 	timer: 3000
+						// });
+
+						// setTimeout(function () {
+						// 	history.go(0);
+						// }, 3000);
 
 					}
 				});
@@ -1516,17 +1665,43 @@ $(document).ready(function () {
 
 						$('#form_guidelines')[0].reset();
 
-						$.notify({
-							icon: 'oi oi-check',
-							message: 'File uploaded successfully. Page will reload in 3 seconds'
-						}, {
-							type: 'success',
-							timer: 3000
+						let timerInterval;
+
+						Swal.fire({
+						title: "File uploaded successfully!",
+						icon: 'success',
+						// html: "I will close in <b></b> milliseconds.",
+						timer: 2000,
+						timerProgressBar: true,
+						didOpen: () => {
+							Swal.showLoading();
+							const timer = Swal.getPopup().querySelector("b");
+							timerInterval = setInterval(() => {
+							timer.textContent = `${Swal.getTimerLeft()}`;
+							}, 100);
+						},
+						willClose: () => {
+							clearInterval(timerInterval);
+							location.reload();
+						}
+						}).then((result) => {
+						/* Read more about handling dismissals below */
+						if (result.dismiss === Swal.DismissReason.timer) {
+							console.log("I was closed by the timer");
+						}
 						});
 
-						setTimeout(function () {
-							history.go(0);
-						}, 3000);
+						// $.notify({
+						// 	icon: 'oi oi-check',
+						// 	message: 'File uploaded successfully. Page will reload in 3 seconds'
+						// }, {
+						// 	type: 'success',
+						// 	timer: 3000
+						// });
+
+						// setTimeout(function () {
+						// 	history.go(0);
+						// }, 3000);
 
 					}
 				});
@@ -1582,27 +1757,80 @@ $(document).ready(function () {
 							var res = jQuery.parseJSON(data);
 	
 							if (res.flag == 0) {
-								$.notify({
-									icon: res.icon,
-									message: res.msg
-								}, {
-									type: 'danger',
-									timer: 3000
+
+								let timerInterval;
+
+								Swal.fire({
+								title: res.msg,
+								icon: 'error',
+								// html: "I will close in <b></b> milliseconds.",
+								timer: 2000,
+								timerProgressBar: true,
+								didOpen: () => {
+									Swal.showLoading();
+									const timer = Swal.getPopup().querySelector("b");
+									timerInterval = setInterval(() => {
+									timer.textContent = `${Swal.getTimerLeft()}`;
+									}, 100);
+								},
+								willClose: () => {
+									clearInterval(timerInterval);
+									// location.reload();
+								}
+								}).then((result) => {
+								/* Read more about handling dismissals below */
+								if (result.dismiss === Swal.DismissReason.timer) {
+									console.log("I was closed by the timer");
+								}
 								});
+
+								// $.notify({
+								// 	icon: res.icon,
+								// 	message: res.msg
+								// }, {
+								// 	type: 'danger',
+								// 	timer: 3000
+								// });
 							} else {
 								$('#form_create_journal')[0].reset();
 	
-								$.notify({
-									icon: res.icon,
-									message: res.msg
-								}, {
-									type: 'success',
-									timer: 3000
+								let timerInterval;
+
+								Swal.fire({
+								title: res.msg,
+								icon: 'success',
+								// html: "I will close in <b></b> milliseconds.",
+								timer: 2000,
+								timerProgressBar: true,
+								didOpen: () => {
+									Swal.showLoading();
+									const timer = Swal.getPopup().querySelector("b");
+									timerInterval = setInterval(() => {
+									timer.textContent = `${Swal.getTimerLeft()}`;
+									}, 100);
+								},
+								willClose: () => {
+									clearInterval(timerInterval);
+									location.reload();
+								}
+								}).then((result) => {
+								/* Read more about handling dismissals below */
+								if (result.dismiss === Swal.DismissReason.timer) {
+									console.log("I was closed by the timer");
+								}
 								});
+
+								// $.notify({
+								// 	icon: res.icon,
+								// 	message: res.msg
+								// }, {
+								// 	type: 'success',
+								// 	timer: 3000
+								// });
 	
-								setTimeout(function () {
-									history.go(0);
-								}, 3000);
+								// setTimeout(function () {
+								// 	history.go(0);
+								// }, 3000);
 							}
 	
 							$('#form_create_journal')[0].reset();
@@ -1629,27 +1857,80 @@ $(document).ready(function () {
 						var res = jQuery.parseJSON(data);
 
 						if (res.flag == 0) {
-							$.notify({
-								icon: res.icon,
-								message: res.msg
-							}, {
-								type: 'danger',
-								timer: 3000
-							});
+
+							let timerInterval;
+
+								Swal.fire({
+								title: res.msg,
+								icon: 'error',
+								// html: "I will close in <b></b> milliseconds.",
+								timer: 2000,
+								timerProgressBar: true,
+								didOpen: () => {
+									Swal.showLoading();
+									const timer = Swal.getPopup().querySelector("b");
+									timerInterval = setInterval(() => {
+									timer.textContent = `${Swal.getTimerLeft()}`;
+									}, 100);
+								},
+								willClose: () => {
+									clearInterval(timerInterval);
+									// location.reload();
+								}
+								}).then((result) => {
+								/* Read more about handling dismissals below */
+								if (result.dismiss === Swal.DismissReason.timer) {
+									console.log("I was closed by the timer");
+								}
+								});
+
+							// $.notify({
+							// 	icon: res.icon,
+							// 	message: res.msg
+							// }, {
+							// 	type: 'danger',
+							// 	timer: 3000
+							// });
 						} else {
 							$('#form_create_journal')[0].reset();
 
-							$.notify({
-								icon: res.icon,
-								message: res.msg
-							}, {
-								type: 'success',
-								timer: 3000
+							let timerInterval;
+
+							Swal.fire({
+							title: res.msg,
+							icon: 'success',
+							// html: "I will close in <b></b> milliseconds.",
+							timer: 2000,
+							timerProgressBar: true,
+							didOpen: () => {
+								Swal.showLoading();
+								const timer = Swal.getPopup().querySelector("b");
+								timerInterval = setInterval(() => {
+								timer.textContent = `${Swal.getTimerLeft()}`;
+								}, 100);
+							},
+							willClose: () => {
+								clearInterval(timerInterval);
+								location.reload();
+							}
+							}).then((result) => {
+							/* Read more about handling dismissals below */
+							if (result.dismiss === Swal.DismissReason.timer) {
+								console.log("I was closed by the timer");
+							}
 							});
 
-							setTimeout(function () {
-								history.go(0);
-							}, 3000);
+							// $.notify({
+							// 	icon: res.icon,
+							// 	message: res.msg
+							// }, {
+							// 	type: 'success',
+							// 	timer: 3000
+							// });
+
+							// setTimeout(function () {
+							// 	history.go(0);
+							// }, 3000);
 						}
 
 						$('#form_create_journal')[0].reset();
@@ -1727,17 +2008,43 @@ $(document).ready(function () {
 
 						var res = jQuery.parseJSON(data);
 
-						$.notify({
-							icon: res.icon,
-							message: res.msg
-						}, {
-							type: 'success',
-							timer: 1000
+						let timerInterval;
+
+						Swal.fire({
+						title: res.msg,
+						icon: 'success',
+						// html: "I will close in <b></b> milliseconds.",
+						timer: 2000,
+						timerProgressBar: true,
+						didOpen: () => {
+							Swal.showLoading();
+							const timer = Swal.getPopup().querySelector("b");
+							timerInterval = setInterval(() => {
+							timer.textContent = `${Swal.getTimerLeft()}`;
+							}, 100);
+						},
+						willClose: () => {
+							clearInterval(timerInterval);
+							location.reload();
+						}
+						}).then((result) => {
+						/* Read more about handling dismissals below */
+						if (result.dismiss === Swal.DismissReason.timer) {
+							console.log("I was closed by the timer");
+						}
 						});
 
-						setTimeout(function () {
-							history.go(0);
-						}, 3000);
+						// $.notify({
+						// 	icon: res.icon,
+						// 	message: res.msg
+						// }, {
+						// 	type: 'success',
+						// 	timer: 1000
+						// });
+
+						// setTimeout(function () {
+						// 	history.go(0);
+						// }, 3000);
 
 					}
 				});
@@ -1860,13 +2167,39 @@ $(document).ready(function () {
 				crossDomain: true,
 				success: function (data) {
 
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'User added successfully.'
-					}, {
-						type: 'success',
-						timer: 3000
+					let timerInterval;
+
+					Swal.fire({
+					title: 'User added successfully!',
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						// location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
+
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'User added successfully.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
 
 					$('#form_add_user')[0].reset();
 					$('#user_modal').modal('toggle');
@@ -1998,18 +2331,45 @@ $(document).ready(function () {
 			crossDomain: true
 		});
 
-		$.notify({
-			icon: 'oi oi-check',
-			message: 'Editorial board deleted successfully. Page will reload in 3 seconds.'
-		}, {
-			type: 'success',
-			timer: 3000
+
+		let timerInterval;
+
+		Swal.fire({
+		title: 'Editorial board deleted successfully!',
+		icon: 'success',
+		// html: "I will close in <b></b> milliseconds.",
+		timer: 2000,
+		timerProgressBar: true,
+		didOpen: () => {
+			Swal.showLoading();
+			const timer = Swal.getPopup().querySelector("b");
+			timerInterval = setInterval(() => {
+			timer.textContent = `${Swal.getTimerLeft()}`;
+			}, 100);
+		},
+		willClose: () => {
+			clearInterval(timerInterval);
+			location.reload();
+		}
+		}).then((result) => {
+		/* Read more about handling dismissals below */
+		if (result.dismiss === Swal.DismissReason.timer) {
+			console.log("I was closed by the timer");
+		}
 		});
 
+		// $.notify({
+		// 	icon: 'oi oi-check',
+		// 	message: 'Editorial board deleted successfully. Page will reload in 3 seconds.'
+		// }, {
+		// 	type: 'success',
+		// 	timer: 3000
+		// });
+
 		$('#editorial_modal ,#remove_modal').modal('toggle');
-		setTimeout(function () {
-			history.go(0);
-		}, 3000);
+		// setTimeout(function () {
+		// 	history.go(0);
+		// }, 3000);
 
 	});
 
@@ -2029,18 +2389,44 @@ $(document).ready(function () {
 			crossDomain: true,
 		});
 
-		$.notify({
-			icon: 'oi oi-check',
-			message: 'Journal deleted successfully. Page will reload in 3 seconds.'
-		}, {
-			type: 'success',
-			timer: 3000
+		let timerInterval;
+
+		Swal.fire({
+		title: 'Journal deleted successfully!',
+		icon: 'success',
+		// html: "I will close in <b></b> milliseconds.",
+		timer: 2000,
+		timerProgressBar: true,
+		didOpen: () => {
+			Swal.showLoading();
+			const timer = Swal.getPopup().querySelector("b");
+			timerInterval = setInterval(() => {
+			timer.textContent = `${Swal.getTimerLeft()}`;
+			}, 100);
+		},
+		willClose: () => {
+			clearInterval(timerInterval);
+			location.reload();
+		}
+		}).then((result) => {
+		/* Read more about handling dismissals below */
+		if (result.dismiss === Swal.DismissReason.timer) {
+			console.log("I was closed by the timer");
+		}
 		});
 
+		// $.notify({
+		// 	icon: 'oi oi-check',
+		// 	message: 'Journal deleted successfully. Page will reload in 3 seconds.'
+		// }, {
+		// 	type: 'success',
+		// 	timer: 3000
+		// });
+
 		$('#journal_modal, #remove_modal').modal('toggle');
-		setTimeout(function () {
-			history.go(0);
-		}, 3000);
+		// setTimeout(function () {
+		// 	history.go(0);
+		// }, 3000);
 
 	});
 
@@ -2055,18 +2441,45 @@ $(document).ready(function () {
 			crossDomain: true,
 		});
 
-		$.notify({
-			icon: 'oi oi-check',
-			message: 'Article deleted successfully. Page will reload in 3 seconds.'
-		}, {
-			type: 'success',
-			timer: 3000
+		
+		let timerInterval;
+
+		Swal.fire({
+		title: 'Article deleted successfully!',
+		icon: 'success',
+		// html: "I will close in <b></b> milliseconds.",
+		timer: 2000,
+		timerProgressBar: true,
+		didOpen: () => {
+			Swal.showLoading();
+			const timer = Swal.getPopup().querySelector("b");
+			timerInterval = setInterval(() => {
+			timer.textContent = `${Swal.getTimerLeft()}`;
+			}, 100);
+		},
+		willClose: () => {
+			clearInterval(timerInterval);
+			location.reload();
+		}
+		}).then((result) => {
+		/* Read more about handling dismissals below */
+		if (result.dismiss === Swal.DismissReason.timer) {
+			console.log("I was closed by the timer");
+		}
 		});
 
+		// $.notify({
+		// 	icon: 'oi oi-check',
+		// 	message: 'Article deleted successfully. Page will reload in 3 seconds.'
+		// }, {
+		// 	type: 'success',
+		// 	timer: 3000
+		// });
+
 		$('#article_modal,#remove_modal').modal('toggle');
-		setTimeout(function () {
-			history.go(0);
-		}, 3000);
+		// setTimeout(function () {
+		// 	history.go(0);
+		// }, 3000);
 
 	});
 
@@ -2175,7 +2588,7 @@ $(document).ready(function () {
 						'<input type="text" class="form-control" id="coa_affiliation' + inpIncr + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
 					'</div>' +
 					'<div class="col-3">' +
-						'<label for="jor_email" class="form-label">Email Address <span class="badge rounded-pill bg-secondary">Optional</span></label>' +
+						'<label for="jor_email" class="form-label">Email Address</label>' +
 						'<input type="text" class="form-control" id="coa_email' + inpIncr + '" name="coa_email[]" placeholder="Enter a valid email">' +
 					'</div>' +
 					'<div class="col-3">' +
@@ -2202,24 +2615,24 @@ $(document).ready(function () {
 		//   option += '<option value="'+val+'">'+val+'</option>';
 		// });
 
-		html = '<div class="row">' +
+		html = '<div class="row mb-3">' +
 					'<div class="col">' +
 						'<label for="jor_coauthors" class="form-label">Co-Author</label>' +
 						'<input class="form-control" id="coa_name' + global_coauthor_total + '" name="coa_name[]" placeholder="Search by name or specialization">' +
 					'</div>' +
 					'<div class="col">' +
-						'<label for="jor_affiliation" class="form-label">Affiliation <span class="badge rounded-pill bg-secondary">Optional</span></label>' +
+						'<label for="jor_affiliation" class="form-label">Affiliation</label>' +
 						'<input type="text" class="form-control" id="coa_affiliation' + global_coauthor_total + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
 					'</div>' +
 					'<div class="col">' +
-						'<label for="jor_email" class="form-label">Email Address <span class="badge rounded-pill bg-secondary">Optional</span></label>' +
+						'<label for="jor_email" class="form-label">Email Address</label>' +
 						'<input type="text" class="form-control" id="coa_email' + global_coauthor_total + '" name="coa_email[]" placeholder="Enter a valid email">' +
 					'</div>' +
-					'<div class="col">' +
-						'<label class="form-label">Cancel</label>' +
-						'<button type="button" class="btn btn-outline-danger"><span class="oi oi-x"></span></button>' +
+					'<div class="col-1">' +
+						'<button type="button" class="btn btn-outline-danger mt-4"><span class="oi oi-x"></span></button>' +
 					'</div>' +
 				'<div>';
+
 
 		$('#coa_list').append(html);
 		// $('#article_modal #coa_name'+inpIncr2).editableSelect({ effects: 'slide' });
@@ -2601,13 +3014,13 @@ function notifications() {
 		crossDomain: true,
 		success: function (data) {
 			$.each(data, function (key, val) {
-				$.notify({
-					icon: 'oi oi-bell',
-					message: '<span class="text-uppercase"><strong>' + val.acc_username + '</strong></span> ' + val.log_action
-				}, {
-					type: 'secondary',
-					timer: 5000
-				});
+				// $.notify({
+				// 	icon: 'oi oi-bell',
+				// 	message: '<span class="text-uppercase"><strong>' + val.acc_username + '</strong></span> ' + val.log_action
+				// }, {
+				// 	type: 'secondary',
+				// 	timer: 5000
+				// });
 
 				$.ajax({
 					type: "POST",
@@ -2636,6 +3049,7 @@ function edit_editorial(id) {
 		dataType: "json",
 		crossDomain: true,
 		success: function (data) {
+			console.log("🚀 ~ edit_editorial ~ data:", data)
 			if (data.length > '0') {
 				$.each(data, function (key, val) {
 					$('#edt_photo_exist').val(val.edt_photo);
@@ -2822,7 +3236,7 @@ function view_articles(id, vol, iss, mos, year) {
  * @return  {void}        
  */
 function get_citees(data) {
-	$('#citees-list').trigger('click');
+	$('#v-pills-citees-list-tab').trigger('click');
 	$('#table-citees').DataTable().search('ID:' + data).draw();
 }
 
@@ -2846,7 +3260,7 @@ function get_client_info(data) {
  * @return  {void} 
  */
 function get_hits_info(data) {
-	$('#viewers-list').trigger('click');
+	$('#v-pills-viewers-list-tab').trigger('click');
 	$('#table-viewers').DataTable().search('ID:' + data).draw();
 }
 
@@ -2905,7 +3319,7 @@ function count_pdf(art_id) {
  * @return  {void}   
  */
 function add_article(year, jor_id) {
-	$('#add-article').trigger('click');
+	$('#v-pills-add-article-tab').trigger('click');
 	$('#art_year').val(year).change();
 	setTimeout("$('#art_jor_id').val(" + jor_id + ");", 500);
 }
@@ -2970,37 +3384,33 @@ function edit_article(id) {
 					c++;
 
 					
+					html = `<div class="row mb-3" id="form_row${val.coa_id}">
+								<div class="col" >
+									<div class="autocomplete">
+										<label for="jor_coauthors" class="form-label">Co-Author</label>
+										<input type="text" class="form-control" id="coa_name${c}" name="coa_affiliation[]" placeholder="Enter affiliation" value="${val.coa_name}">
+									</div>
+								</div>
+								<div class="col">
+										<label for="jor_affiliation" class="form-label">Affiliation</label>
+										<input type="text" class="form-control" id="coa_affiliation${c}" name="coa_affiliation[]" placeholder="Enter affiliation" value="${val.coa_affiliation}">
+								</div>
+								<div class="col">
+									<label for="jor_email" class="form-label">Email Address</label>
+									<input type="text" class="form-control" id="coa_email${c}" name="coa_email[]" placeholder="Enter a valid email" value="${val.coa_email}">
+								</div>`;
+
+								
+					
 					if (prv_del == 1) {
-						html += '<button type="button" class="btn btn-outline-danger" onclick="_remove(\'delete-coauthor\',\'' + val.coa_id + '\')"><span class="oi oi-trash"></span></button>';
+						html += '<div class="col-1"><button type="button" class="btn btn-outline-danger mt-4" onclick="_remove(\'delete-coauthor\',\'' + val.coa_id + '\')"><span class="oi oi-trash"></span></button></div>';
 					} else {
-						html += 'N/a';
+						html += '';
 					}
 
-					
-					html = `<div class="row" id="form_row${val.coa_id}">
-								<div class="col" >
-									<div class="form-group autocomplete col-md-4">
-										<label for="jor_coauthors">Co-Author</label>
-										<input type="text" class="form-control" id="coa_name${c}" name="coa_affiliation[]" placeholder="Enter affiliation" value="${val.coa_name}">
-										</div>
-									</div>
-								</div>
-								<div class="col">
-									<div class="form-group autocomplete col-md-4">
-										<label for="jor_affiliation">Affiliation <span class="badge ropunded-pill bg-secondary">Optional</span></label>
-										<input type="text" class="form-control" id="coa_affiliation${c}" name="coa_affiliation[]" placeholder="Enter affiliation" value="${val.coa_affiliation}">
-									</div>
-								</div>
-								<div class="col">
-									<label for="jor_email">Email Address <span class="badge rounded-pill bg-secondary">Optional</span></label>
-									<input type="text" class="form-control" id="coa_email${c}" name="coa_email[]" placeholder="Enter a valid email" value="${val.coa_email}">
-								</div>
-								<div class="col-2"></div>
-						'<div class="form-group col-md-1 text-center">' +
-						'<label>Remove</label>`;
 
 
-					html += '</div><div>';
+					html += '</div>';
 
 					$('#coa_list').append(html);
 					// $('#coa_name'+c).editableSelect({ effects: 'slide' });
