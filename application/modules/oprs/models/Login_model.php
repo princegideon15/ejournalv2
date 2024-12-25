@@ -180,7 +180,7 @@ class Login_model extends CI_Model {
 
 	public function get_current_otp($refCode){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('otp_date, usr_id, usr_username');
+		$oprs->select('otp_date, usr_id, usr_username, usr_role');
 		$oprs->from($this->users);
 		$oprs->where('otp_ref_code', $refCode);
 		$query = $oprs->get();

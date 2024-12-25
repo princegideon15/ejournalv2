@@ -37,7 +37,7 @@ function get_ip_address_browser(){
                             
 }
 
-function save_log_oprs($user, $action, $id = 0, $role) {
+function save_log_oprs($user, $action, $id = 0, $role = 0) {
 
 	$ip_info = get_ip_address_browser();
 

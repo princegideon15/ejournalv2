@@ -116,7 +116,7 @@
 						<input type="file" class="form-control" name="art_full_text_pdf_new" accept="application/pdf" >
 					</div>
 					<div class="row mb-3"> 
-						<div class="col">
+						<div class="col autocomplete">
 							<label for="art_author" class="form-label">Author</label>
 							<input class="form-control" id="art_author" name="art_author" placeholder="Search by name or specialization" required>	
 						</div>
@@ -226,7 +226,7 @@
 							</div>
 							<div class="col">
 								<label for="cover_photo" class="form-label">Preview</label><br>
-								<img class="img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>"  width="50%" height="50%">
+								<img class="img-thumbnail" id="cover_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>"  style="width: 600px; height: 600px; object-fit: cover;">
 							</div>
 						</div>
 				</div>
@@ -344,10 +344,10 @@
 						<div class="col">
 							<div class="mb-3">
 								<label for="editorial_photo" class="form-label">Preview </label><br/>
-								<img class="img-thumbnail" id="editorial_photo" width="50%" height="50%">
+								<img class="img-thumbnail" id="editorial_photo" style="width: 200px; height: 250px; object-fit: cover;">
 							</div>
 							<div class="mb-3">
-								<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG only</span> <span class="badge rounded-pill bg-warning text-dark">2x2 Picture Size (600 x 600 pixels)</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+								<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG only</span> <span class="badge rounded-pill bg-warning text-dark">200 x 250 pixels</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
 								<input type="file" class="form-control" id="edt_photo" name="edt_photo" accept="image/jpeg" >
 							</div>
 						</div>
@@ -624,83 +624,52 @@
 <!-- /.LOGOUT -->
 
 <!-- FEEDBACK MODAL -->
-<div class="modal fade" id="feedbackModal" data-backdrop="static">
+<div class="modal fade" id="feedbackModal">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header pb-0">
-        <p><span class="modal-title fw-bold h3">Your feedback</span><br/>
-        <small>We would like your feedback to improve our system.</small></p>
-        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-      </div>
       <div class="modal-body p-4">
+        <h5 class="fw-bold main-link">Thank you for visiting the eJournal/eReview system!</h5>
+        <p>To improve the performance of the system, kindly provide us your feedback.</p>
+        <hr>
         <form id="feedback_form">
-            <div class="feedback text-center">
-                <p class="fw-bold h4 text-center">User Interface</p>
-                <div class="feedback-container ui-container">
-                    <div class="feedback-item">
-                        <label for="ui-1" data-toggle="tooltip" data-placement="bottom" title="Sad">
-                            <input class="radio" type="radio" name="fb_rate_ui" id="ui-1" value="1" >
-                            <span >🙁</span>
-                        </label>
-                    </div>
-
-                    <div class="feedback-item">
-                        <label for="ui-2" data-toggle="tooltip" data-placement="bottom" title="Neutral">
-                            <input class="radio" type="radio" name="fb_rate_ui" id="ui-2" value="2">
-                            <span>😶</span>
-                        </label>
-                    </div>
-
-                    <div class="feedback-item">
-                        <label for="ui-3" data-toggle="tooltip" data-placement="bottom" title="Happy">
-                            <input class="radio" type="radio" name="fb_rate_ui" id="ui-3" value="3">
-                            <span>🙂</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="fb_suggest_ui"></label>
-                    <textarea class="form-control" name="fb_suggest_ui" id="fb_suggest_ui" rows="3" placeholder="Type your suggestions here"></textarea>
-                </div>
-
-                <hr/>
-
-                <p class="fw-bold h4 text-center">User Experience</p>
-                <div class="feedback-container ux-container">
-                    <div class="feedback-item">
-                        <label for="ux-1" data-toggle="tooltip" data-placement="bottom" title="Sad">
-                            <input class="radio" type="radio" name="fb_rate_ux" id="ux-1" value="1">
-                            <span>🙁</span>
-                        </label>
-                    </div>
-
-                    <div class="feedback-item">
-                        <label for="ux-2" data-toggle="tooltip" data-placement="bottom" title="Nuetral">
-                            <input class="radio" type="radio" name="fb_rate_ux" id="ux-2" value="2">
-                            <span>😶</span>
-                        </label>
-                    </div>
-
-                    <div class="feedback-item">
-                        <label for="ux-3" data-toggle="tooltip" data-placement="bottom" title="Happy">
-                            <input class="radio" type="radio" name="fb_rate_ux" id="ux-3" value="3">
-                            <span>🙂</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="fb_suggest_ux"></label>
-                    <textarea class="form-control" name="fb_suggest_ux" id="fb_suggest_ux" rows="3" placeholder="Type your suggestions here"></textarea>
-                </div>
-
-                <div class="btn-group pull-right" role="group">
-                    <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Later</button>
-                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
-                </div>
+            <h6 class="fw-bold mb-0">User Interface</h6>
+            <div class="d-flex gap-3 mb-0">
+              <span class="rating-star rate-ui" data-value="1">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="2">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="3">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="4">&#9733;</span>
+              <span class="rating-star rate-ui" data-value="5">&#9733;</span>
             </div>
+            <textarea class="form-control" id="fb_suggest_ui" rows="3" placeholder="Type your suggestions here..." maxlength="300"></textarea>
+            <div id="char_count_ui" class="character-counter text-muted">0 / 300 characters</div>
+            <div class="rate-ui-validation text-danger mt-2"></div>
+      
+            <hr/>
+
+            <h6 class="fw-bold mb-0">User Experience</h6>
+            <div class="d-flex gap-3 mb-0">
+              <span class="rating-star rate-ux" data-value="1">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="2">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="3">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="4">&#9733;</span>
+              <span class="rating-star rate-ux" data-value="5">&#9733;</span>
+            </div>
+
+            <textarea class="form-control" name="fb_suggest_ux" id="fb_suggest_ux" rows="3" placeholder="Type your suggestions here..." maxlength="300"></textarea>
+            <div id="char_count_ux" class="character-counter text-muted">0 / 300 characters</div>
+            <div class="rate-ux-validation text-danger mt-2"></div>
+
+                  
+            <div class="mt-3 mb-0 w-100" id="google_recaptchav2_container">
+                <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_logout"></div>
+                <p class="text-danger" id="g-recaptcha"></p>
+            </div>
+
         </form>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-light" type="button" data-bs-dismiss="modal">Later</button>
+          <button type="button" id="submit_feedback" class="btn btn-primary" disabled>Submit</button>
       </div>
     </div>
   </div>

@@ -349,6 +349,7 @@ class Login extends OPRS_Controller {
 		]);
 
 		if (!$mail->Send()) {
+			error_reporting(0);
 			echo '</br></br>Message could not be sent.</br>';
 			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
 			exit;
@@ -1276,7 +1277,8 @@ class Login extends OPRS_Controller {
 		$refCode = $this->security->xss_clean($refCode);
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->usr_username;
-		save_log_oprs($output[0]->usr_id, 'Resend login otp code');
+		$role  = $output[0]->usr_role;
+		save_log_oprs($output[0]->usr_id, 'Resend login otp code', 0, $role);
 		$this->send_login_otp($email);
 	}
 

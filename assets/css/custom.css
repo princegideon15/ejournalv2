@@ -127,3 +127,8 @@ font-size: 4rem;
     }
   }
   
+
+  .autocomplete-items {
+    max-height: 150px; /* Limit the height */
+    overflow-y: auto; /* Add vertical scroll if needed */
+}

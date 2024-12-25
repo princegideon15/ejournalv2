@@ -331,7 +331,7 @@
 									<div class="col-10">
 										<div class="mb-3" >
 											<div class="row">
-												<div class="col-3">
+												<div class="col-3 autocomplete">
 													<label for="art_author" class="form-label">Author</label>
 													<input type="text" class="form-control" id="art_author_p" name="art_author"  placeholder="Search by name or specialization">
 												</div>
@@ -740,12 +740,12 @@
 									</div>
 									<div class="col">
 										<div class="mb-3">
-											<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG only</span> <span class="badge rounded-pill bg-warning text-dark">2x2 Picture Size (600 x 600 pixels)</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+											<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG only</span> <span class="badge rounded-pill bg-warning text-dark">200 x 250 pixels</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
 											<input type="file" class="form-control" id="edt_photo" name="edt_photo" accept="image/jpeg" >
 										</div>
 										<div class="mb-3">
 											<label for="editorial_photo" class="form-label">Preview </label><br/>
-											<img class="me-3 img-thumbnail" id="editorial_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" width="50%" height="50%">
+											<img class="me-3 img-thumbnail" id="editorial_photo" src="<?php echo base_url('assets/images/unavailable.jpg'); ?>" style="width: 200px; height: 250px; object-fit: cover;">
 										</div>
 									</div>
 								</div>

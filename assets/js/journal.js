@@ -31,7 +31,269 @@ var ejChart;
 
 var global_coauthor_total = 0;
 
+var minutes = 5,          // otp timer
+seconds = 0,          // otp timer
+intervalId,           // otp timer
+isStartTimer = false, // otp timer
+refCode,              // reference code for otp
+accessToken,          // user access token generated on logged in   
+current_button_id;    // button to enable/disable for catpcha  
+
+var recaptchaWidgetId_logout; // recaptcha widget 
+
 $(document).ready(function () {
+
+
+	 // get user access token
+	 accessToken = $.ajax({
+        type: "GET",
+        url: base_url + "oprs/login/get_access_token/",
+        async:false,
+        crossDomain: true,
+        success: function(data) {
+            if(data != 0){
+                return data;
+            }
+        },
+        error: function(xhr, status, error) {
+        reject(error);
+        }
+    }); 
+
+    accessToken = (accessToken.responseText).trim();
+	
+	
+    let idleTime = 0;
+
+    if(accessToken != 0){
+      $(document).on('mousemove keydown scroll', function() {
+          idleTime = 0;
+      });
+  
+      let timerInterval = setInterval(function() {
+          idleTime += 1;
+          
+          if (idleTime >= 1200) { // 20 minutes in seconds
+              // Trigger logout or other actions
+              clearInterval(timerInterval); // Stop the timer
+  
+              destroyUserSession();
+  
+              Swal.fire({
+                title: "Session Expired",
+                text: "You have been idle for 20 minutes. Please log in again.",
+                icon: "info",
+                confirmButtonColor: "#0c6bcb",
+              
+              }).then(function () {
+                window.location = base_url + "oprs/login";
+              });
+          }
+      }, 1000); // Check every 1 second
+    }
+	// feedback suggestion box character limit
+	let $textArea = $("#fb_suggest_ui");
+	let $charCount = $("#char_count_ui");
+	let maxLength = $textArea.attr("maxlength");
+
+	$textArea.on("input", function () {
+		let currentLength = $(this).val().length;
+		$charCount.text(`${currentLength} / ${maxLength} characters`);
+
+		if (currentLength > maxLength) {
+			$charCount.addClass("exceeded");
+		} else {
+			$charCount.removeClass("exceeded");
+		}
+	});
+
+	let $textArea2 = $("#fb_suggest_ux");
+	let $charCount2 = $("#char_count_ux");
+	let maxLength2 = $textArea2.attr("maxlength");
+
+	$textArea2.on("input", function () {
+		let currentLength = $(this).val().length;
+		$charCount2.text(`${currentLength} / ${maxLength2} characters`);
+
+		if (currentLength > maxLength2) {
+			$charCount2.addClass("exceeded");
+		} else {
+			$charCount2.removeClass("exceeded");
+		}
+	});
+
+	// csf ui ux star rating
+	let selectedRatingUI = 0;
+	let selectedRatingUX = 0;
+
+	$('.rate-ui').on('mouseover', function () {
+		const value = $(this).data('value');
+		$('.rate-ui').each(function () {
+			$(this).toggleClass('selected', $(this).data('value') <= value);
+		});
+	});
+
+	$('.rate-ui').on('mouseleave', function () {
+		$('.rate-ui').each(function () {
+			$(this).toggleClass('selected', $(this).data('value') <= selectedRatingUI);
+		});
+	});
+
+	$('.rate-ui').on('click', function () {
+		selectedRatingUI = $(this).data('value');
+		
+		// Remove 'selected' class from all stars and add it to the clicked star and previous stars
+		$(".rate-ui").removeClass("selected");
+		$(".rate-ui").each(function () {
+			if ($(this).data("value") <= selectedRatingUI) {
+			$(this).addClass("selected");
+			$('.rate-ui-validation').text('');
+			}
+		});
+	});
+	
+	$('.rate-ux').on('mouseover', function () {
+		const value = $(this).data('value');
+		$('.rate-ux').each(function () {
+			$(this).toggleClass('selected', $(this).data('value') <= value);
+		});
+	});
+
+	$('.rate-ux').on('mouseleave', function () {
+		$('.rate-ux').each(function () {
+			$(this).toggleClass('selected', $(this).data('value') <= selectedRatingUX);
+		});
+	});
+
+	$('.rate-ux').on('click', function () {
+		selectedRatingUX = $(this).data('value');
+		
+		// Remove 'selected' class from all stars and add it to the clicked star and previous stars
+		$(".rate-ux").removeClass("selected");
+		$(".rate-ux").each(function () {
+			if ($(this).data("value") <= selectedRatingUX) {
+			$(this).addClass("selected");
+			$('.rate-ux-validation').text('');
+			}
+		});
+	});
+
+	$("#feedback_form").validate({
+		debug: true,
+		errorClass: 'text-danger',
+		rules: {
+			non_title: {
+				required: true,
+				minlength: 2
+			},
+		
+		},
+		messages: {
+			usr_captcha: {
+				equalTo: "Incorrect verification code"
+			},
+			non_email: {
+				remote: "Email already in use"
+			}
+		},
+		submitHandler: function() {
+			$.ajax({
+				type: "POST",
+				url: base_url + "oprs/signup/sign_up/",
+				data: $('#form_sign_up').serializeArray(),
+				cache: false,
+				crossDomain: true,
+				success: function(data) {
+					$.notify({
+						icon: 'fa fa-check-circle',
+						message: 'Thank you for signing up. You can now log in.'
+					}, {
+						type: 'success',
+						timer: 3000,
+					});
+
+					$('#form_sign_up')[0].reset();
+					$('#refresh_captcha').click();
+				}
+			});
+		}
+	});
+
+	$('#submit_feedback').on('click', function(){
+		if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
+
+			let uiSuggestion = $('#fb_suggest_ui').val();
+			let uxSuggestion = $('#fb_suggest_ux').val();
+			
+			let data = {
+			'ui' : selectedRatingUI,
+			'ux' : selectedRatingUX,
+			'ui_sug' : uiSuggestion,
+			'ux_sug' : uxSuggestion,
+			'csf_system' : 'eReview'
+			};
+	
+			const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
+	
+			if (captcha) {
+			$(this).prop('disabled', true);
+				// alert("reCAPTCHA is checked and valid!");
+				$.ajax({
+				type: "POST",
+				url: base_url + 'oprs/feedbacks/submit_csf_ui_ux',
+				data:  data,
+				cache: false,
+				crossDomain: true,
+				success: function(data) {
+					$('#feedbackModal').modal('toggle');
+					if(data == 1){
+					let timerInterval;
+					Swal.fire({
+						title: "Thank you for your feedback.",
+						html: "Logging out...",
+						icon: "success",
+						allowOutsideClick: false, // Prevent closing by clicking outside
+						allowEscapeKey: false,   // Prevent closing with the Escape key
+						allowEnterKey: false,    // Prevent closing with the Enter key
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: () => {
+						Swal.showLoading();
+						// const timer = Swal.getPopup().querySelector("b");
+						// timerInterval = setInterval(() => {
+						//   timer.textContent = `${Swal.getTimerLeft()}`;
+						// }, 100);
+						},
+						willClose: () => {
+						clearInterval(timerInterval);
+						}
+					}).then((result) => {
+						/* Read more about handling dismissals below */
+						if (result.dismiss === Swal.DismissReason.timer) {
+						window.location.href = base_url + "oprs/login/logout/";
+						}
+					});
+					}else{
+					console.log('Something went wrong.');
+					}
+				}
+				});
+			} else {
+				console.log("Please complete the reCAPTCHA!");
+			}
+	
+		} else {
+			if($(".rate-ui.selected").length == 0){
+				$('.rate-ui-validation').text('Please select at least one star.');
+			}
+
+			if($(".rate-ux.selected").length == 0){
+				$('.rate-ux-validation').text('Please select at least one star.');
+			}
+
+			return;
+		}
+	});
 
 	tinymce.init({
 		selector: '#enc_content',
@@ -2579,7 +2841,7 @@ $(document).ready(function () {
 		//   });
 
 		html = '<div class="row mb-3">' +
-					'<div class="col-3">' +
+					'<div class="col-3 autocomplete">' +
 						'<label for="jor_coauthors" class="form-label">Co-Author</label>' +
 						'<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="Search by name or specialization">' +
 					'</div>' +
@@ -2616,7 +2878,7 @@ $(document).ready(function () {
 		// });
 
 		html = '<div class="row mb-3">' +
-					'<div class="col">' +
+					'<div class="col autocomplete">' +
 						'<label for="jor_coauthors" class="form-label">Co-Author</label>' +
 						'<input class="form-control" id="coa_name' + global_coauthor_total + '" name="coa_name[]" placeholder="Search by name or specialization">' +
 					'</div>' +
@@ -3815,6 +4077,10 @@ function log_export(log) {
 }
 
 function generate_sex_chart() {
+
+	
+	$('body').loading('start');
+
 	var sex_labels = [];
 	var sex_values = [];
 	var sex_bgcolors = ['#5DADE2', '#F5B7B1'];
@@ -3842,6 +4108,8 @@ function generate_sex_chart() {
 				});
 				i++;
 			});
+			
+			$('body').loading('stop');
 		}
 	});
 
@@ -4255,4 +4523,37 @@ function confirmClearLogs(element){
 		}
     });
 
+}
+
+function logout(){
+    current_button_id = '#submit_feedback';
+    $('#feedbackModal').modal('toggle');
+    recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
+        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+        'callback': onRecaptchaSuccess,
+        'expired-callback': onRecaptchaExpired
+    });
+}
+
+function onRecaptchaSuccess(token) {
+    console.log("reCAPTCHA validated!");
+    $(current_button_id).prop('disabled', false); // Enable submit button
+  }
+  
+  // Callback when reCAPTCHA expires
+  function onRecaptchaExpired() {
+    console.log("reCAPTCHA expired.");
+    $(current_button_id).prop('disabled', true);
+  }
+
+  function destroyUserSession(){
+  
+	$.ajax({
+	  type: "POST",
+	  url: base_url + "oprs/login/destroy_user_session/" ,
+	  data: { user_access_token : accessToken },
+	  success: function(data) {
+		// console.log(data);
+	  }
+	});
 }

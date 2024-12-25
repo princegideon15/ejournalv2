@@ -59,7 +59,7 @@
                 <!-- <a class="dropdown-item " href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#set_dp"><span class="oi oi-camera-slr"></span> Set Display Picture</a> -->
                 <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#change_pass"><span class="oi oi-shield"></span> Change Password</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#database_modal"><span class="oi oi-hard-drive"></span> Backup/Restore Database</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#logoutModal"> <span class="oi oi-account-logout "></span> Logout</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0);" onclick="logout()"> <span class="oi oi-account-logout "></span> Logout</a></li>
             </ul>
         </li>
     </ul>

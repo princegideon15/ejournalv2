@@ -37,8 +37,6 @@ var recaptchaWidgetId_logout; // recaptcha widget
 
 $(document).ready(function() {
 
-
-
     // get user access token
     accessToken = $.ajax({
         type: "GET",
@@ -186,9 +184,6 @@ $(document).ready(function() {
     });
 
     $('#submit_feedback').on('click', function(){
-
-
-        
         if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
 
             let uiSuggestion = $('#fb_suggest_ui').val();
@@ -288,7 +283,7 @@ $(document).ready(function() {
                 confirmButtonColor: "#0c6bcb",
               
               }).then(function () {
-                window.location = base_url + "oprs/login/";
+                window.location = base_url + "oprs/login";
               });
           }
       }, 1000); // Check every 1 second
@@ -5911,7 +5906,7 @@ function getCurrentOTP(refCode){
       $.ajax({
         type: "POST",
         url: base_url + "oprs/login/destroy_user_session/" ,
-        data: { user_access_token : access },
+        data: { user_access_token : accessToken },
         success: function(data) {
           // console.log(data);
         }
