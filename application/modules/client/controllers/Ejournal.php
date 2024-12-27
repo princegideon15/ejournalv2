@@ -58,7 +58,7 @@ class Ejournal extends EJ_Controller {
 		$data['hits_count'] = $this->Client_journal_model->all_hits();
 		$data['latest'] = $this->Client_journal_model->latest_journal();
 		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
-		$data['divisions'] = $this->Client_journal_model->getDivisions();
+		// $data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['main_title'] = "eJournal";
@@ -1334,7 +1334,7 @@ class Ejournal extends EJ_Controller {
 		$data['hits_count'] = $this->Client_journal_model->all_hits();
 		$data['latest'] = $this->Client_journal_model->latest_journal();
 		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
-		$data['divisions'] = $this->Client_journal_model->getDivisions();
+		// $data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 
@@ -1363,7 +1363,7 @@ class Ejournal extends EJ_Controller {
 		$data['hits_count'] = $this->Client_journal_model->all_hits();
 		$data['latest'] = $this->Client_journal_model->latest_journal();
 		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
-		$data['divisions'] = $this->Client_journal_model->getDivisions();
+		// $data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['main_title'] = "eJournal";

@@ -1055,8 +1055,7 @@ function register_author_acccount(formData){
     url: base_url + "client/signup/register_author_account/",
     data: formData,
     success: function (response) {
-      console.log("🚀 ~ register_author_acccount ~ response:", response)
-      //TODO: display loading
+      // console.log("🚀 ~ register_author_acccount ~ response:", response)
       window.location.href = response;
     }
   });

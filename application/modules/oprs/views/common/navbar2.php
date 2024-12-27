@@ -18,6 +18,13 @@
     .character-counter.exceeded {
         color: red;
     }
+
+
+    .no-focus-border:focus {
+            outline: none; /* Removes outline */
+            box-shadow: none; /* Removes shadow */
+            border-color: transparent; /* Optional: Makes the border color invisible */
+        }
 </style>
 
 
@@ -36,13 +43,14 @@
             <a class="nav-link active" aria-current="page" href="#!">eReview</a>
         </li>
     </ul>
+    <button class="btn btn-dark text-start border border-1" style="width:20%" onclick="toggleSearch()"><span class="fas fa-search"></span> Search</button>
     <!-- Navbar Search-->
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+    <!-- <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         <div class="input-group">
             <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
             <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
         </div>
-    </form>
+    </form> -->
     <!-- Navbar-->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         <li class="nav-item dropdown no-arrow mx-1">
@@ -75,6 +83,50 @@
         </li>
     </ul>
 </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-light">
+      <!-- <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div> -->
+      <div class="modal-body">
+        <div class="mb-3">
+          <form class="row" id="search_form">
+            <div class="input-group input-group-lg mb-2">
+                <span class="input-group-text bg-white border border-dark border-2 border-end-0" id="basic-addon1"><i class="fas fa-search"></i></span>
+                <input class="form-control bg-white border border-dark border-2 border-start-0 no-focus-border" id="search" type="text" placeholder="Search here..." aria-label="Search here..." aria-describedby="search"/>
+            </div>
+            <div class="">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="search_filter" id="filter_keyword" value="1" checked>
+                <label class="form-check-label mt-2" for="filter_keyword">Keyword</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="search_filter" id="filter_author" value="2">
+                <label class="form-check-label mt-2" for="filter_author">Author</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="search_filter" id="filter_title" value="3">
+                <label class="form-check-label mt-2" for="filter_title">Title</label>
+              </div>
+            </div>
+          </form>   
+        </div>
+        <div class="alert alert-secondary d-flex gap-1 align-items-center" role="alert">
+        <span class="oi oi-warning"></span>Sorry, no results found.
+        </div>
+      </div>
+      <div class="modal-footer d-flex gap-1 justify-content-center">
+        <!-- <button class="btn btn-outline-secondary">Close</button> -->
+        <span class="badge bg-secondary small">ENTER</span> to search
+        <span class="badge bg-secondary small">ESC</span> to close
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Change Password Modal -->
 <div class="modal fade" id="changePassModal" tabindex="-1" role="dialog">
@@ -167,22 +219,26 @@
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark pt-5" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
+            <div class="sb-sidenav-menu overflow-hidden">
                 <div class="nav pt-3">
                     <?php if ($role == 7 || $role == 8 || $role == 3) {?>
-                    
+                        
+                        <div class="sb-sidenav-menu-heading">Main</div>
                         <a class="nav-link" href="dashboard">
                         <i class="fas fa-fw fa-tachometer-alt pe-1"></i>
                         <span>Dashboard</span>
                         </a>
                     
                     <?php }?>
+
                     
-                        <a class="nav-link" href="manuscripts">
-                        <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
-                        Manuscripts
-                        <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
-                        </a> 
+                    <div class="sb-sidenav-menu-heading">Content Management</div>
+                    
+                    <a class="nav-link" href="manuscripts">
+                    <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
+                    Manuscripts
+                    <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
+                    </a> 
                     
                     <?php if ($role == 7 || $role == 8) {?>
                     
@@ -193,7 +249,9 @@
                     
                     <?php }?>
                     <?php if ($role == 8 || $role == 3) {?>
-                    
+                        
+                        <div class="sb-sidenav-menu-heading">Reports and Logs</div>
+
                         <a class="nav-link" href="reports">
                         <i class="fas fa-fw fa-chart-bar me-1"></i>
                         <span>Reports</span>
@@ -208,30 +266,43 @@
                         </a>
                     
                     
+                        <div class="sb-sidenav-menu-heading">Settings</div>
+
                         <a class="nav-link" href="controls">
                         <i class="fas fa-fw fa-cogs me-1"></i>
                         <span>Control Panel</span>
                         </a>
-                    
-                    
-                        <a class="nav-link" href="feedbacks">
-                        <i class="fas fa-edit me-1"></i>
-                        Feedbacks<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
-                        </a>
-                    
-                    
+                        
                         <a class="nav-link" href="emails">
                         <i class="fas fa-envelope-open me-1"></i>
                         Email Notifcatiions
                         </a>
                     
-                    <?php }?>
-                    <?php if ($role == 8) {?>
+                        
+                        <?php if ($role == 8) {?>
+                        
+                            <a class="nav-link" href="backup">
+                            <i class="fas fa-database me-1"></i>
+                            <span>Database</span>
+                            </a>
+                        
+                        <?php }?>
+                        
+                        
+                        <div class="sb-sidenav-menu-heading">Feedback</div>
                     
-                        <a class="nav-link" href="backup">
-                        <i class="fas fa-database me-1"></i>
-                        <span>Database</span>
+                        <a class="nav-link" href="feedbacks">
+                        <i class="fas fa-star me-1"></i>
+                        CSF UI/UX<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
                         </a>
+
+                        <a class="nav-link" href="arta">
+                        <i class="fas fa-star me-1"></i>
+                        CSF ARTA<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
+                        </a>
+                    
+                    
+                    
                     
                     <?php }?>
                 </div>

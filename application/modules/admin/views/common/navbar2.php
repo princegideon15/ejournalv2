@@ -70,23 +70,41 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark pt-5" id="sidenavAccordion">
             <div class="sb-sidenav-menu overflow-hidden">
                 <div class="nav flex-column nav-pills pt-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    
+                    <div class="sb-sidenav-menu-heading">Main</div>
                     <button class="nav-link active" id="v-pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#v-pills-dashboard" type="button" role="tab" aria-controls="v-pills-dashboard" aria-selected="true"><i class="oi oi-shield me-2" title="oi-shield" aria-hidden="true"></i>Dashboard</button>
+
+                    
+                    <div class="sb-sidenav-menu-heading">Journal Management</div>
                     <?php if ($this->session->userdata('_prv_add') == 1) {?>
                         <button class="nav-link" id="v-pills-create-journal-tab" data-bs-toggle="pill" data-bs-target="#v-pills-create-journal" type="button" role="tab" aria-controls="v-pills-create-journal" aria-selected="false"><i class="oi oi-plus me-2" title="oi-plus" aria-hidden="true"></i>Create Journal</button>
-                        <button class="nav-link" id="v-pills-add-article-tab" data-bs-toggle="pill" data-bs-target="#v-pills-add-article" type="button" role="tab" aria-controls="v-pills-add-article" aria-selected="false"><i class="oi oi-book me-2" title="oi-book" aria-hidden="true"></i>Add Article</button>
                     <?php }?>
-                    <button class="nav-link" id="v-pills-article-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-article-list" type="button" role="tab" aria-controls="v-pills-article-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>View Articles<span class="ms-2 badge bg-primary ms-auto"><?php echo $art_count; ?></span></button>
                     <button class="nav-link" id="v-pills-journal-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-journal-list" type="button" role="tab" aria-controls="v-pills-journal-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>View Journals<span class="ms-2 badge bg-primary ms-auto"><?php echo $jor_count; ?></span></button>
+
+                    
+                    <div class="sb-sidenav-menu-heading">Article Management</div>
+                    <?php if ($this->session->userdata('_prv_add') == 1) {?>
+                        <button class="nav-link" id="v-pills-add-article-tab" data-bs-toggle="pill" data-bs-target="#v-pills-add-article" type="button" role="tab" aria-controls="v-pills-add-article" aria-selected="false"><i class="oi oi-book me-2" title="oi-book" aria-hidden="true"></i>Add Article</button>
+                    <?php } ?>
+                    <button class="nav-link" id="v-pills-article-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-article-list" type="button" role="tab" aria-controls="v-pills-article-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>View Articles<span class="ms-2 badge bg-primary ms-auto"><?php echo $art_count; ?></span></button>
                     <button class="nav-link" id="v-pills-client-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-client-list" type="button" role="tab" aria-controls="v-pills-client-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>View Clients<span class="ms-2 badge bg-primary ms-auto"><?php echo $client_count; ?></span></button>
-                    <button class="nav-link" id="v-pills-viewers-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-viewers-list" type="button" role="tab" aria-controls="v-pills-viewers-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>Abstract Hits<span class="ms-2 badge bg-primary ms-auto"><?php echo $hit_count; ?></span</button>
                     <button class="nav-link" id="v-pills-citees-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-citees-list" type="button" role="tab" aria-controls="v-pills-citees-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>View Citees<span class="ms-2 badge bg-primary ms-auto"><?php echo $cite_count; ?></span></button>
+                    <button class="nav-link" id="v-pills-viewers-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-viewers-list" type="button" role="tab" aria-controls="v-pills-viewers-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>Abstract Hits<span class="ms-2 badge bg-primary ms-auto"><?php echo $hit_count; ?></span></button>
+
+                    
+                    <div class="sb-sidenav-menu-heading">Editorial Management</div>
                     <?php if ($this->session->userdata('_prv_add') == 1) {?>
                         <button class="nav-link" id="v-pills-add-editorial-tab" data-bs-toggle="pill" data-bs-target="#v-pills-add-editorial" type="button" role="tab" aria-controls="v-pills-add-editorial" aria-selected="false"><i class="oi oi-people me-2" title="oi-people" aria-hidden="true" ></i>Add Editorial</button>
                         <button class="nav-link" id="v-pills-editorial-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-editorial-list" type="button" role="tab" aria-controls="v-pills-editorial-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>Editorial Board</button>
                     <?php }?>
-                    <button class="nav-link" id="v-pills-guidelines-tab" data-bs-toggle="pill" data-bs-target="#v-pills-guidelines" type="button" role="tab" aria-controls="v-pills-guidelines" aria-selected="false"><i class="oi oi-task me-2" title="oi-task" aria-hidden="true"></i>Manage Guidelines</button>
+                    
+                    <div class="sb-sidenav-menu-heading">Settings</div>
                     <button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="false"><i class="oi oi-home me-2" title="oi-home" aria-hidden="true"></i>Manage Home</button>
+                    <button class="nav-link" id="v-pills-guidelines-tab" data-bs-toggle="pill" data-bs-target="#v-pills-guidelines" type="button" role="tab" aria-controls="v-pills-guidelines" aria-selected="false"><i class="oi oi-task me-2" title="oi-task" aria-hidden="true"></i>Manage Guidelines</button>      
                     <button class="nav-link" id="v-pills-mail-tab" data-bs-toggle="pill" data-bs-target="#v-pills-mail" type="button" role="tab" aria-controls="v-pills-mail" aria-selected="false"><i class="oi oi-envelope-open me-2" title="oi-mail" aria-hidden="true"></i>Email Notifications</button>
+
+                    
+                    <div class="sb-sidenav-menu-heading">Logs</div>
                     <button class="nav-link" id="v-pills-logs-tab" data-bs-toggle="pill" data-bs-target="#v-pills-logs" type="button" role="tab" aria-controls="v-pills-logs" aria-selected="false"><i class="oi oi-envelope-open me-2" title="oi-mail" aria-hidden="true"></i>Activity Logs</button>
                 </div>
             </div>

@@ -36,7 +36,7 @@ current_button_id;    // button to enable/disable for catpcha
 var recaptchaWidgetId_logout; // recaptcha widget 
 
 $(document).ready(function() {
-
+    
     // get user access token
     accessToken = $.ajax({
         type: "GET",
@@ -258,7 +258,27 @@ $(document).ready(function() {
             return;
         }
     });
-  
+
+    $('#search').on('keypress', function (event) {
+        if (event.which === 13) { // 13 is the key code for Enter
+            event.preventDefault(); // Prevent form submission
+            alert('Enter key pressed: ' + $(this).val());
+            var search_value = $(this).val();
+            var search_filter = $('#search_filter').val();
+            if(search_value){
+                alert('searching...');
+            }else{
+                alert('no string');
+            }
+
+            let data = {
+                search: search_value,
+                filter: search_filter
+            };
+
+            
+        }
+    });
 
     let idleTime = 0;
 
@@ -5922,4 +5942,13 @@ function getCurrentOTP(refCode){
   function onRecaptchaExpired() {
     console.log("reCAPTCHA expired.");
     $(current_button_id).prop('disabled', true);
+  }
+
+  function toggleSearch(){
+    $('#searchModal').modal('toggle');
+    setTimeout(function (){
+        $('#search').focus();
+    }, 500);
+    // $('#searchModal #search').trigger('click');
+    // $('#searchModal #search').click();
   }
