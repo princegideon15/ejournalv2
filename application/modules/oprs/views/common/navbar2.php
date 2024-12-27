@@ -24,6 +24,28 @@
         box-shadow: none; /* Removes shadow */
         border-color: transparent; /* Optional: Makes the border color invisible */
     }
+    #search_result_list .list-group-item:hover {
+    background-color:#007bff;
+    color: white;
+    }
+
+
+    #search_result_list .list-group-item {
+    position: relative;
+    }
+
+    #search_result_list .list-group-item:hover::after {
+    content: "⮨"; /* Unicode for the arrow icon */
+    position: absolute;
+    right: 15px;
+    top:10px;
+    font-size:20px;
+    color: white; /* Adjust arrow color */
+    }
+
+    #search_result_list:hover{
+    overflow: auto !important;
+    }
 </style>
 
 
@@ -114,6 +136,7 @@
             </div>
           </form>   
         </div>
+        <div id="search_result"></div>
         <div class="alert alert-secondary d-flex gap-1 align-items-center d-none" role="alert">
         </div>
       </div>

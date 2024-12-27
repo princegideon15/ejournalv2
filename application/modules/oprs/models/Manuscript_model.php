@@ -1090,25 +1090,27 @@ class Manuscript_model extends CI_Model {
 		return $query->result();
 	}
 
-	//TODO: search submitted manuscripts
 	public function search($search, $filter){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('*');
-		$oprs->from($this->manus);
-		$oprs->join($this->coauthors, 'row_id = coa_man_id');
+		$oprs->select('m.*, GROUP_CONCAT(c.coa_name SEPARATOR ", ") AS coas');
+		$oprs->from($this->manus . ' m');
+		$oprs->join($this->coauthors . ' c', 'm.row_id = c.coa_man_id');
 
 		if($filter == 1){ // keyword
-			$oprs->where('row_id', $id);
+			$oprs->like('man_keywords', $search);
 		}else if($filter == 2){ // author or coauthors
-
+			$oprs->like('man_author', $search, 'both');
+			$oprs->or_like('coa_name', $search, 'both');
 		}else{ // title
-		$oprs->where('row_id', $id);
-			$oprs->where('row_id', $id);
+			$oprs->like('man_title', $search, 'both');
 		}
 
 
+		$oprs->order_by('man_title', 'asc');
+		$oprs->group_by('row_id');
 		$query = $oprs->get();
 		return $query->result();
+
 	}
 }
 

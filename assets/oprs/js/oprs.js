@@ -274,14 +274,34 @@ $(document).ready(function() {
                 };
                 
                 $.ajax({
-                    type: "POST",
                     url: base_url + "oprs/manuscripts/search",
                     data: data,
                     cache: false,
                     crossDomain: true,
+					dataType: 'json',
+                    type: "POST",
                     success: function(data) {
-                        if(data){
+                        console.log(data);
+						$('#search_result').empty();
+
+                        if(data.length > 0){
                             $('#searchModal .alert').addClass('d-none');
+
+
+							var html = '<div class="list-group overflow-hidden" style="max-height:65vh" id="search_result_list">';
+							$.each(data, function(key, val){
+								var coas = (val.coas) ? ', ' + val.coas : '';
+								html += `<a href="javscript:void(0);" class="list-group-item list-group-item-action p-3 pe-5" aria-current="true" onclick="view_manus('${val.row_id}')">
+										<h6 class="mb-1 fw-bold text-truncate">${val.man_title}</h6>
+										<p class="mb-1 text-truncate">${val.man_author}${coas}</p>
+										<p class="small text-truncate">${val.man_keywords}</p>
+										</a>`;
+							});
+
+							html += '</div>';
+							
+							$('#search_result').append(html);
+								
                         }else{
                             $('#searchModal .alert').removeClass('d-none');
                             $('#searchModal .alert').html('<span class="oi oi-warning"></span>Sorry, no results found.');
@@ -5964,5 +5984,5 @@ function getCurrentOTP(refCode){
     $('#searchModal').modal('toggle');
     setTimeout(function (){
         $('#search').focus();
-    }, 500);
+    }, 100);
   }

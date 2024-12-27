@@ -309,7 +309,7 @@ class Article_model extends CI_Model {
 
 	public function search($search, $filter){
 		
-		$this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn, c.*');
+		$this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn, GROUP_CONCAT(c.coa_name SEPARATOR ", ") AS coas');
 		$this->db->from($this->articles.' a');
 		$this->db->join($this->journals.' j','a.art_jor_id = j.jor_id');
 		$this->db->join($this->coauthors.' c', 'a.art_id = c.coa_art_id', 'left');

@@ -323,11 +323,12 @@ $(document).ready(function () {
                             $('#searchModal .alert').addClass('d-none');
 
 
-							var html = '<div class="list-group overflow-hidden" style="max-height:70vh" id="search_result_list">';
+							var html = '<div class="list-group overflow-hidden" style="max-height:65vh" id="search_result_list">';
 							$.each(data, function(key, val){
+								var coas = (val.coas) ? ', ' + val.coas : '';
 								html += `<a href="${base_url}/client/ejournal/article/${val.art_id}" target="_blank" class="list-group-item list-group-item-action p-3 pe-5" aria-current="true">
 										<h6 class="mb-1 fw-bold text-truncate">${val.art_title}</h6>
-										<p class="mb-1 text-truncate">${val.art_author}</p>
+										<p class="mb-1 text-truncate">${val.art_author}${coas}</p>
 										<p class="small text-truncate">${val.art_keywords}</p>
 										</a>`;
 							});
@@ -335,7 +336,7 @@ $(document).ready(function () {
 							html += '</div>';
 							
 							$('#search_result').append(html);
-							
+								
                         }else{
                             $('#searchModal .alert').removeClass('d-none');
                             $('#searchModal .alert').html('<span class="oi oi-warning"></span>Sorry, no results found.');
@@ -4617,5 +4618,5 @@ function toggleSearch(){
 	$('#searchModal').modal('toggle');
 	setTimeout(function (){
 		$('#search').focus();
-	}, 500);
+	}, 100);
 }
