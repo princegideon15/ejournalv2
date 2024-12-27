@@ -302,7 +302,7 @@
 									<tr>
 										<td></td>
 										<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
-												class="text-dark "><?php echo $title; ?></a>
+												class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
 											<?php if($stat > 1 && $stat != 99){ ?>
 											</br>
 											<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
@@ -313,10 +313,10 @@
 										</td>
 										<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
 										<td class="text-center"><span 
-												class="badge rounded-pill text-bg-<?php echo $class;?> text-center" data-bs-toggle="modal"
+												class="badge rounded-pill text-bg-<?php echo $m->status_class;?> text-center" data-bs-toggle="modal"
 												rel="tooltip" data-bs-placement="top" title="View Tracking"
 												data-bs-target="#trackingModal"
-												onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo rawurlencode($title) ?>','<?php echo $m->man_status ?>')"><?php echo $status;?></span>
+												onclick="tracking('<?php echo $m->row_id; ?>','<?php echo $this->session->userdata('_oprs_type_num');?>','<?php echo rawurlencode($title) ?>','<?php echo $m->man_status ?>')"><?php echo $m->status_desc;?></span>
 										</td>
 										<td>
 											<div class="btn-group" role="group">

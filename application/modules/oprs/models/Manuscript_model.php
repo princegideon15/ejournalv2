@@ -14,6 +14,7 @@ class Manuscript_model extends CI_Model {
 	private $committee = 'tblfinalreviews';
 	private $logs = 'tbllogs';
 	private $editorials = 'tbleditorials';
+	private $status = 'tblstatus_types';
 	// skms
 	private $skms_mem = 'tblpersonal_profiles';
 	private $skms_exp = 'tblmembership_profiles';
@@ -84,8 +85,9 @@ class Manuscript_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8 || _UserRoleFromSession() == 7 || _UserRoleFromSession() == 6 ) {
 			// superadmin, admin, managing editor
-			$oprs->select('*');
-			$oprs->from($this->manus);
+			$oprs->select('m.*, status_class, status_desc, status_id');
+			$oprs->from($this->manus . ' m');
+			$oprs->join($this->status . ' s', 'man_status = status_id');
 			// $order_by = 'date_created';
 		} elseif (_UserRoleFromSession() == 13) { // layouter 13
 			$oprs->select('*');

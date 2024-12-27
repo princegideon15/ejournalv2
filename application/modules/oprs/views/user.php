@@ -31,34 +31,37 @@
               <div class="card-body">
                 <form id="form_add_user">
                   <div class="mb-3">
-                    <label for="usr_email" class="fw-bold">Email</label>
+                    <label for="usr_email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="usr_username" name="usr_username" placeholder="Your email address">
                   </div>
                   <div class="mb-3">
-                    <label for="usr_password" class="fw-bold">Password</label>
+                    <label for="usr_password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="usr_password" name="usr_password" placeholder="Your password">
                   </div>
                   <div class="mb-3">
-                    <label for="usr_rep_password" class="fw-bold">Repeat Password</label>
+                    <label for="usr_rep_password" class="form-label">Repeat Password</label>
                     <input type="password" class="form-control" id="usr_rep_password" name="usr_rep_password" placeholder="Repeat your password">
                   </div>
                   <div class="mb-3">
-                    <label for="usr_contact" class="fw-bold">Contact</label>
+                    <label for="usr_contact" class="form-label">Contact</label>
                     <input type="text" class="form-control" id="usr_contact" name="usr_contact" placeholder="Your contact number">
                   </div>
-                  <div class="mb-3">
-                    <label for="usr_sys_acc" class="fw-bold">Module Access</label>
+                  <!-- <div class="mb-3">
+                    <label for="usr_sys_acc" class="form-label">Module Access</label>
                     <select id="usr_sys_acc" name="usr_sys_acc" class="form-control">
                       <option value="" selected>Select Module Access</option>
                       <option value='1'>eJournal only</option>
                       <option value='2'>OPRS only</option>
                       <option value='3'>eJournal/OPRS</option>
                     </select>
-                  </div>
+                  </div> -->
                   <div class="mb-3">
-                    <label for="usr_role" class="fw-bold">User Role</label>
-                    <select id="usr_role" name="usr_role" class="form-control" disabled="disabled">
+                    <label for="usr_role" class="form-label">User Role</label>
+                    <select id="usr_role" name="usr_role" class="form-select">
                       <option value="" selected>Select User Role</option>
+                      <?php foreach($user_types as $row): ?>
+                        <option value="<?= $row->role_id ?>"><?= $row->role_name ?></option>
+                      <?php endforeach ?>
                     </select>
                   </div>
                   <button type="submit" class="btn btn-primary ">Save</button>
@@ -96,7 +99,7 @@
                                     : 'danger')));?>
 
                       <?php $sys = (($u->usr_sys_acc == 1) ? 'eJournal' 
-                                    : (($u->usr_sys_acc == 2) ? 'OPRS' : 'eJournal | OPRS'));?>
+                                    : (($u->usr_sys_acc == 2) ? 'eReview' : 'eJournal | eReview'));?>
                       
                       <?php $sys_class = (($u->usr_sys_acc == 1) ? 'primary' 
                                     : (($u->usr_sys_acc == 2) ? 'success' : 'dark'));?>

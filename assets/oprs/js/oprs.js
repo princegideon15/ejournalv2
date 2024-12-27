@@ -3059,30 +3059,43 @@ $(document).ready(function() {
     });
 
     // dynamicallly show user role per system access
-    $('#usr_sys_acc').change(function() {
-        $('#usr_role').prop('disabled', false);
+    // $('#usr_sys_acc').change(function() {
+    //     $('#usr_role').prop('disabled', false);
 
-        $('#usr_role').empty();
+    //     $('#usr_role').empty();
 
-        if ($(this).val() == 1) {
-            $('#usr_role').append('<option value="" selected>Select User Role</option>' +
-                '<option value="7">Admin</option>' +
-                '<option value="6">Manager</option>');
-        }else if($(this).val() == 2) {
-            $('#usr_role').append('<option value="" selected>Select User Role</option>' +
-                '<option value="7">Admin</option>' +
-                '<option value="9">Publication Committee</option>' +
-                '<option value="3">Managing Editor</option>' +
-                '<option value="6">Manager</option>' +
-                '<option value="10">Editor</option>' +
-                '<option value="11">Guest Editor</option>' +
-                '<option value="12">Editor-in-Chief</option> '+
-                '<option value="13">Layout</option>');
-        }else{
-            $('#usr_role').append('<option value="" selected>Select User Role</option>' +
-                '<option value="3">Managing Editor</option>');
-        }
-    });
+            
+    //     $.ajax({
+    //         method: 'GET',
+    //         url: base_url + "oprs/user/get_user_types",
+    //         async: false,
+    //         dataType: "json",
+    //         success: function (data) {
+    //             $.each(data, function(key,val){
+    //                 if ($(this).val() == 1) { // ejournal only
+    //                     if(val.)
+    //                     $('#usr_role').append('<option value="" selected>Select User Role</option>' +
+    //                         '<option value="7">Admin</option>' +
+    //                         '<option value="6">Manager</option>');
+    //                 }else if($(this).val() == 2) { // oprs only
+    //                     $('#usr_role').append('<option value="" selected>Select User Role</option>' +
+    //                         '<option value="7">Admin</option>' +
+    //                         '<option value="9">Publication Committee</option>' +
+    //                         '<option value="3">Managing Editor</option>' +
+    //                         '<option value="6">Manager</option>' +
+    //                         '<option value="10">Editor</option>' +
+    //                         '<option value="11">Guest Editor</option>' +
+    //                         '<option value="12">Editor-in-Chief</option> '+
+    //                         '<option value="13">Layout</option>');
+    //                 }else{ //both
+    //                     $('#usr_role').append('<option value="" selected>Select User Role</option>' +
+    //                         '<option value="3">Managing Editor</option>');
+    //                 }
+    //             });
+
+    //         }
+    //     });
+    // });
 
     // edit user
     $('#editUserModal #usr_sys_acc').change(function() {
@@ -4922,7 +4935,7 @@ function edit_user(id) {
     user_id = id;
     $('#editUserModal').modal('toggle');
     $('#form_edit_user')[0].reset();
-    $('#editUserModal #usr_role').empty();
+    // $('#editUserModal #usr_role').empty();
 
     $.ajax({
         type: "GET",
@@ -4931,34 +4944,35 @@ function edit_user(id) {
         crossDomain: true,
         success: function(data) {
 
+            console.log(data);
             $.each(data, function(key, val) {
                 
-                if(val.usr_sys_acc == 1){
-                    $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
-                        '<option value="7">Admin</option>' +
-                        '<option value="6">Manager</option>');
-                }else if(val.usr_sys_acc == 2){
-                    $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
-                        '<option value="7">Admin</option>' +
-                        '<option value="9">Publication Committee</option>' +
-                        '<option value="3">Managing Editor</option>' +
-                        '<option value="6">Manager</option>' +
-                        '<option value="10">Editor</option>' +
-                        '<option value="11">Guest Editor</option>' +
-                        '<option value="12">Editor-in-Chief</option> '+
-                        '<option value="13">Layout</option>');
-                }else{
-                    $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
-                    '<option value="3">Managing Editor</option>');
-                }
+                // if(val.usr_sys_acc == 1){
+                //     $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
+                //         '<option value="7">Admin</option>' +
+                //         '<option value="6">Manager</option>');
+                // }else if(val.usr_sys_acc == 2){
+                //     $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
+                //         '<option value="7">Admin</option>' +
+                //         '<option value="9">Publication Committee</option>' +
+                //         '<option value="3">Managing Editor</option>' +
+                //         '<option value="6">Manager</option>' +
+                //         '<option value="10">Editor</option>' +
+                //         '<option value="11">Guest Editor</option>' +
+                //         '<option value="12">Editor-in-Chief</option> '+
+                //         '<option value="13">Layout</option>');
+                // }else{
+                //     $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
+                //     '<option value="3">Managing Editor</option>');
+                // }
 
-                if(val.usr_role == 5 || val.usr_role == 1){
-                    $('#editUserModal #usr_role').attr('disabled', 'disabled')
-                    $('#editUserModal #usr_sys_acc').attr('disabled', 'disabled')
-                }else{
-                    $('#editUserModal #usr_role').attr('disabled', false)
-                    $('#editUserModal #usr_sys_acc').attr('disabled', false)
-                }
+                // if(val.usr_role == 5 || val.usr_role == 1){
+                //     $('#editUserModal #usr_role').attr('disabled', 'disabled')
+                //     $('#editUserModal #usr_sys_acc').attr('disabled', 'disabled')
+                // }else{
+                //     $('#editUserModal #usr_role').attr('disabled', false)
+                //     $('#editUserModal #usr_sys_acc').attr('disabled', false)
+                // }
 
                 $.each(val, function(k, v) {
                     if (k != 'usr_password')

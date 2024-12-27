@@ -7,6 +7,8 @@ class User_model extends CI_Model {
 	private $reviewers = 'tblreviewers';
 	private $privileges = 'tblprivileges';
 	private $roles = 'tblroles';
+	private $publication_types = 'tblpublication_types';
+	private $status_types = 'tblstatus_types';
 	// skms
 	private $skms_users = 'tblusers';
 	private $personal = 'tblpersonal_profiles';
@@ -95,8 +97,8 @@ class User_model extends CI_Model {
 		return $query->result();
 
 		
-		$oprs->from($this->oprs_users . ' a');
-		$oprs->join($this->privileges . ' p', 'a.usr_id = p.prv_usr_id');
+		// $oprs->from($this->oprs_users . ' a');
+		// $oprs->join($this->privileges . ' p', 'a.usr_id = p.prv_usr_id');
 	}
 
 	/**
@@ -548,6 +550,14 @@ class User_model extends CI_Model {
 		$this->db->from($this->oprs_users);
 		$this->db->where('otp_ref_code', $refCode);
 		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_user_types(){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->roles);
+		$query = $oprs->get();
 		return $query->result();
 	}
 	

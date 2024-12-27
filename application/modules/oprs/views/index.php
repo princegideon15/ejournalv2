@@ -82,7 +82,7 @@
                     <?php $title = $row->man_title . ', ' . $row->man_author . ', ' . $acoa?>
                     <tr>
                       <td class="text-center align-middle"><?php echo $c++; ?></td>
-                      <td class="align-middle" style="width:70%; !important"><a href="javascript:void(0);" class="btn-link text-dark" onclick="open_manuscript('<?php echo $row->man_title;?>')"><?php echo $title;?></a></td>
+                      <td class="align-middle" style="width:70%; !important"><a href="javascript:void(0);" class="btn-link text-dark text-decoration-none" onclick="open_manuscript('<?php echo $row->man_title;?>')"><?php echo $title;?></a></td>
                       <td class="align-middle"><?php echo date_format(new DateTime($row->date_created), 'F j, Y, g:i a'); ?></td>
                     </tr>
                     <?php endforeach;?>
@@ -111,7 +111,7 @@
                     <tr>
                       <td class="text-center"><?php echo $c++; ?></td>
                       <td class="align-middle"><?php echo $row->revname; ?></td>
-                      <td class="align-middle" style="width:50%; !important"><a href="javascript:void(0);" class="btn-link text-dark" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
+                      <td class="align-middle" style="width:50%; !important"><a href="javascript:void(0);" class="btn-link text-dark text-decoration-none" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
                       <td class="align-middle"><?php echo date_format(new DateTime($row->date_created), 'F j, Y, g:i a'); ?></td>
                     </tr>
                     <?php endforeach;?>
@@ -140,7 +140,7 @@
                     <tr>
                       <td class="text-center"><?php echo $c++; ?></td>
                       <td class="align-middle"><?php echo $row->revname; ?></td>
-                      <td class="align-middle" style="width:50%; !important"><a href="javascript:void(0);" class="btn-link text-dark" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
+                      <td class="align-middle" style="width:50%; !important"><a href="javascript:void(0);" class="btn-link text-dark text-decoration-none" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
                       <td class="align-middle"><?php echo date_format(new DateTime($row->date_declined), 'F j, Y, g:i a'); ?></td>
                     </tr>
                     <?php endforeach;?>
@@ -169,7 +169,7 @@
                     <tr>
                       <td class="text-center align-middle"><?php echo $c++; ?></td></td>
                       <td class="align-middle"><?php echo $row->revname; ?></td>
-                      <td class="align-middle" style="width:50%; !important"><a href="javascript:void(0);" class="btn-link text-dark" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
+                      <td class="align-middle" style="width:50%; !important"><a href="javascript:void(0);" class="btn-link text-dark text-decoration-none" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
                       <td class="align-middle"><?php echo date_format(new DateTime($row->date_respond), 'F j, Y, g:i a'); ?></td>
                     </tr>
                     <?php endforeach;?>
@@ -254,7 +254,7 @@
                     <?php $c = 1;foreach ($reviewed as $row): ?>
                         <tr>
                         <td class="text-center align-middle"><?php echo $c++; ?></td></td>
-                        <td class="align-middle" style="width:70%; !important"><a href="javascript:void(0);" class="btn-link text-dark" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
+                        <td class="align-middle" style="width:70%; !important"><a href="javascript:void(0);" class="btn-link text-dark text-decoration-none" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
                         <td class="align-middle"><?php echo date_format(new DateTime($row->date_reviewed), 'F j, Y, g:i a'); ?></td>
                       </tr>
                     <?php endforeach;?>
@@ -283,7 +283,7 @@
                     <?php $c = 1;foreach ($completed as $row): ?>
                         <tr>
                         <td class="text-center align-middle" style="width:1%; !important"><?php echo $c++; ?></td></td>
-                        <td class="align-middle" style="width:70%; !important"><a href="javascript:void(0);" class="btn-link text-dark" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
+                        <td class="align-middle" style="width:70%; !important"><a href="javascript:void(0);" class="btn-link text-dark text-decoration-none" onclick="open_manuscript('<?php echo $row->mantitle;?>')"><?php echo $row->mantitle;?></a></td>
                         <td class="align-middle"><?php echo date_format(new DateTime($row->date_reviewed), 'F j, Y, g:i a'); ?></td>
                       </tr>
                     <?php endforeach;?>

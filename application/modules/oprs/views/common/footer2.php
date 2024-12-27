@@ -122,7 +122,7 @@
       <div class="modal-body">
         <form id="form_edit_user">
           <div class="mb-3">
-            <label for="usr_email">Email</label>
+            <label for="usr_email" class="form-label">Email</label>
             <input type="email" class="form-control" id="usr_username" name="usr_username" placeholder="Your email address">
           </div>
           <!-- <div class="mb-3">
@@ -130,35 +130,38 @@
             <input type="text" class="form-control" id="usr_username" name="usr_username" placeholder="Your username">
           </div> -->
           <div class="mb-3">
-            <label for="usr_password">New Password (If any)</label>
+            <label for="usr_password" class="form-label">New Password (If any)</label>
             <input type="password" class="form-control" id="usr_password" name="usr_password" placeholder="Your password">
           </div>
           <div class="mb-3">
-            <label for="usr_rep_password">Repeat New Password</label>
+            <label for="usr_rep_password" class="form-label">Repeat New Password</label>
             <input type="password" class="form-control" id="usr_rep_password" name="usr_rep_password" placeholder="Repeat your password">
           </div>
           <div class="mb-3">
-            <label for="usr_contact">Contact</label>
+            <label for="usr_contact" class="form-label">Contact</label>
             <input type="text" class="form-control" id="usr_contact" name="usr_contact" placeholder="Your contact number">
           </div>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="usr_sys_acc">System Access</label>
             <select id="usr_sys_acc" name="usr_sys_acc" class="form-select">
               <option value="" selected>Select System Access</option>
               <option value='1'>OPRS</option>
               <option value='2'>eJournal</option>
             </select>
-          </div>
+          </div> -->
           <div class="mb-3">
-            <label for="usr_role">User Role</label>
-            <select id="usr_role" name="usr_role" class="form-control">
-              <option value="" selected>Select User Role</option>
-            </select>
+            <label for="usr_role" class="form-label">User Role</label>
+            <select id="usr_role" name="usr_role" class="form-select">
+				<option value="" selected>Select User Role</option>
+				<?php foreach($user_types as $row): ?>
+				<option value="<?= $row->role_id ?>"><?= $row->role_name ?></option>
+				<?php endforeach ?>
+			</select>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger mr-auto deactivate " style="display:none;"  onclick="act_deact_modal(2);">Deactivate Account</button>
-          <button type="button" class="btn btn-success mr-auto activate " style="display:none;" onclick="act_deact_modal(0);">Activate Account</button>
+          <button type="button" class="btn btn-danger me-auto deactivate " style="display:none;"  onclick="act_deact_modal(2);">Deactivate Account</button>
+          <button type="button" class="btn btn-success me-auto activate " style="display:none;" onclick="act_deact_modal(0);">Activate Account</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">Save changes</button>
         </form>
