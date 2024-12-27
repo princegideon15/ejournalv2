@@ -295,6 +295,61 @@ $(document).ready(function () {
 		}
 	});
 
+	$('#search').on('keypress', function (event) {
+        if (event.which === 13) { // 13 is the key code for Enter
+            event.preventDefault(); // Prevent form submission
+            var search_value = $(this).val();
+            var search_filter = $('input[name="search_filter"]:checked').val();
+
+            if(search_value){
+
+                
+                let data = {
+                    search: search_value,
+                    filter: search_filter
+                };
+                
+                $.ajax({
+                    url: base_url + "admin/journal/search",
+                    data: data,
+                    cache: false,
+                    crossDomain: true,
+					dataType: 'json',
+                    type: "POST",
+                    success: function(data) {
+						$('#search_result').empty();
+
+                        if(data.length > 0){
+                            $('#searchModal .alert').addClass('d-none');
+
+
+							var html = '<div class="list-group overflow-hidden" style="max-height:70vh" id="search_result_list">';
+							$.each(data, function(key, val){
+								html += `<a href="${base_url}/client/ejournal/article/${val.art_id}" target="_blank" class="list-group-item list-group-item-action p-3 pe-5" aria-current="true">
+										<h6 class="mb-1 fw-bold text-truncate">${val.art_title}</h6>
+										<p class="mb-1 text-truncate">${val.art_author}</p>
+										<p class="small text-truncate">${val.art_keywords}</p>
+										</a>`;
+							});
+
+							html += '</div>';
+							
+							$('#search_result').append(html);
+							
+                        }else{
+                            $('#searchModal .alert').removeClass('d-none');
+                            $('#searchModal .alert').html('<span class="oi oi-warning"></span>Sorry, no results found.');
+                        }
+                    }
+                });
+
+            }
+
+
+            
+        }
+    });
+
 	tinymce.init({
 		selector: '#enc_content',
 		forced_root_block: false,
@@ -4536,24 +4591,31 @@ function logout(){
 }
 
 function onRecaptchaSuccess(token) {
-    console.log("reCAPTCHA validated!");
-    $(current_button_id).prop('disabled', false); // Enable submit button
-  }
+	console.log("reCAPTCHA validated!");
+	$(current_button_id).prop('disabled', false); // Enable submit button
+}
   
-  // Callback when reCAPTCHA expires
-  function onRecaptchaExpired() {
-    console.log("reCAPTCHA expired.");
-    $(current_button_id).prop('disabled', true);
-  }
+// Callback when reCAPTCHA expires
+function onRecaptchaExpired() {
+	console.log("reCAPTCHA expired.");
+	$(current_button_id).prop('disabled', true);
+}
 
-  function destroyUserSession(){
-  
+function destroyUserSession(){
+
 	$.ajax({
-	  type: "POST",
-	  url: base_url + "oprs/login/destroy_user_session/" ,
-	  data: { user_access_token : accessToken },
-	  success: function(data) {
+		type: "POST",
+		url: base_url + "oprs/login/destroy_user_session/" ,
+		data: { user_access_token : accessToken },
+		success: function(data) {
 		// console.log(data);
-	  }
+		}
 	});
+}
+
+function toggleSearch(){
+	$('#searchModal').modal('toggle');
+	setTimeout(function (){
+		$('#search').focus();
+	}, 500);
 }

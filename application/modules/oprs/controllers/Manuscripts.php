@@ -38,23 +38,23 @@ class Manuscripts extends OPRS_Controller {
 				$data['u_year'] = $this->Manuscript_model->get_unique_journal_year();
 				$data['criteria'] = $this->Review_model->get_criterias();
 				$data['logs'] = $this->Log_model->count_logs();
-				$data['main_title'] = "OPRS";
-				$data['main_content'] = "oprs/manuscripts";
 				$data['titles'] = $this->Library_model->get_titles();
-				$data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
-				$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
-				$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
-				$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
-				$data['completed'] = $this->Manuscript_model->get_completed_reviews();
-				$data['editorial'] = $this->Manuscript_model->get_manuscripts(4);
-				$data['man_final'] = $this->Manuscript_model->get_manuscripts(5);
-				$data['man_for_p'] = $this->Manuscript_model->get_manuscripts(6);
-				$data['man_lay'] = $this->Manuscript_model->get_manuscripts(7);	
-				$data['publishables'] = $this->Manuscript_model->get_manuscripts(8);	
-				$data['published'] = $this->Manuscript_model->get_manuscripts(9);		
+				// $data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
+				// $data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
+				// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
+				// $data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
+				// $data['completed'] = $this->Manuscript_model->get_completed_reviews();
+				// $data['editorial'] = $this->Manuscript_model->get_manuscripts(4);
+				// $data['man_final'] = $this->Manuscript_model->get_manuscripts(5);
+				// $data['man_for_p'] = $this->Manuscript_model->get_manuscripts(6);
+				// $data['man_lay'] = $this->Manuscript_model->get_manuscripts(7);	
+				// $data['publishables'] = $this->Manuscript_model->get_manuscripts(8);	
+				// $data['published'] = $this->Manuscript_model->get_manuscripts(9);		
 				$data['usr_count'] = $this->User_model->count_user();
 				$data['feed_count'] = $this->Feedback_model->count_feedbacks();
-				$data['existing'] = $this->Manuscript_model->get_manuscripts(99);
+				// $data['existing'] = $this->Manuscript_model->get_manuscripts(99);
+				$data['main_title'] = "OPRS";
+				$data['main_content'] = "oprs/manuscripts";
 				$this->_LoadPage('common/body', $data);
 			}else{
 				redirect('admin/dashboard');
@@ -2472,6 +2472,14 @@ class Manuscripts extends OPRS_Controller {
 		foreach($user_group_emails as $name){
 			echo $name->usr_username;
 		}
+	}
+
+	public function search(){
+		$search = $this->input->post('search', TRUE);
+		$filter = $this->input->post('filter', TRUE);
+
+		$output = $this->Manuscript_model->search($search, $filter);
+		echo json_encode($output);
 	}
 
 	

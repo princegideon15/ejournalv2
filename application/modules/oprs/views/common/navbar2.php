@@ -19,12 +19,11 @@
         color: red;
     }
 
-
     .no-focus-border:focus {
-            outline: none; /* Removes outline */
-            box-shadow: none; /* Removes shadow */
-            border-color: transparent; /* Optional: Makes the border color invisible */
-        }
+        outline: none; /* Removes outline */
+        box-shadow: none; /* Removes shadow */
+        border-color: transparent; /* Optional: Makes the border color invisible */
+    }
 </style>
 
 
@@ -97,7 +96,7 @@
           <form class="row" id="search_form">
             <div class="input-group input-group-lg mb-2">
                 <span class="input-group-text bg-white border border-dark border-2 border-end-0" id="basic-addon1"><i class="fas fa-search"></i></span>
-                <input class="form-control bg-white border border-dark border-2 border-start-0 no-focus-border" id="search" type="text" placeholder="Search here..." aria-label="Search here..." aria-describedby="search"/>
+                <input class="form-control bg-white border border-dark border-2 border-start-0 no-focus-border ps-0" id="search" type="text" placeholder="Search here..." aria-label="Search here..." aria-describedby="search"/>
             </div>
             <div class="">
               <div class="form-check form-check-inline">
@@ -115,14 +114,14 @@
             </div>
           </form>   
         </div>
-        <div class="alert alert-secondary d-flex gap-1 align-items-center" role="alert">
-        <span class="oi oi-warning"></span>Sorry, no results found.
+        <div class="alert alert-secondary d-flex gap-1 align-items-center d-none" role="alert">
         </div>
       </div>
-      <div class="modal-footer d-flex gap-1 justify-content-center">
+      <div class="modal-footer py-1 d-flex gap-2 justify-content-start align-items-center" style="font-size:12px">
         <!-- <button class="btn btn-outline-secondary">Close</button> -->
-        <span class="badge bg-secondary small">ENTER</span> to search
-        <span class="badge bg-secondary small">ESC</span> to close
+        <div><span class="badge fw-light bg-secondary">Enter</span> to search</div>
+        <div><span class="badge fw-light bg-secondary">Esc</span> to close</div>
+        
       </div>
     </div>
   </div>
@@ -221,9 +220,11 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark pt-5" id="sidenavAccordion">
             <div class="sb-sidenav-menu overflow-hidden">
                 <div class="nav pt-3">
+                    
+                    <div class="sb-sidenav-menu-heading">Main</div>
+
                     <?php if ($role == 7 || $role == 8 || $role == 3) {?>
                         
-                        <div class="sb-sidenav-menu-heading">Main</div>
                         <a class="nav-link" href="dashboard">
                         <i class="fas fa-fw fa-tachometer-alt pe-1"></i>
                         <span>Dashboard</span>
@@ -231,9 +232,6 @@
                     
                     <?php }?>
 
-                    
-                    <div class="sb-sidenav-menu-heading">Content Management</div>
-                    
                     <a class="nav-link" href="manuscripts">
                     <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
                     Manuscripts
@@ -242,51 +240,78 @@
                     
                     <?php if ($role == 7 || $role == 8) {?>
                     
+                    <div class="sb-sidenav-menu-heading">User Management</div>
+                    
                         <a class="nav-link" href="user">
                         <i class="fas fa-fw fa-user me-1"></i>
                         Users<span class="ms-2 badge text bg-danger"><?php echo $usr_count; ?></span>
+                        </a>
+
+                        <a class="nav-link" href="user">
+                        <i class="fas fa-fw fa-user me-1"></i>
+                        User Types</span>
                         </a>
                     
                     <?php }?>
                     <?php if ($role == 8 || $role == 3) {?>
                         
-                        <div class="sb-sidenav-menu-heading">Reports and Logs</div>
+                        <div class="sb-sidenav-menu-heading">Reports and Statisttics</div>
 
                         <a class="nav-link" href="reports">
                         <i class="fas fa-fw fa-chart-bar me-1"></i>
                         <span>Reports</span>
                         </a>
+                        <a class="nav-link" href="reports">
+                        <i class="fas fa-fw fa-chart-bar me-1"></i>
+                        <span>Submission Statistics</span>
+                        </a>
+                        <a class="nav-link" href="reports">
+                        <i class="fas fa-fw fa-chart-bar me-1"></i>
+                        <span>Author by Sex</span>
+                        </a>
                     
                     <?php }?>
                     <?php if ($role == 8) {?>
                     
-                        <a class="nav-link" href="logs">
-                        <i class="fas fa-fw fa-clipboard-list me-1"></i>
-                        <span>Activity Logs</span>
+                    
+                        <div class="sb-sidenav-menu-heading">Library</div>
+
+                        <a class="nav-link" href="emails">
+                        <i class="fas fa-envelope-open me-1"></i>
+                        Status Types
                         </a>
-                    
-                    
+
+                        <a class="nav-link" href="emails">
+                        <i class="fas fa-envelope-open me-1"></i>
+                        Publication Types
+                        </a>
+
+                        <a class="nav-link" href="emails">
+                        <i class="fas fa-envelope-open me-1"></i>
+                        Email Notifcatiions
+                        </a>
+
+                        <a class="nav-link" href="emails">
+                        <i class="fas fa-envelope-open me-1"></i>
+                        Process Time Duration
+                        </a>
+
+                        <a class="nav-link" href="emails">
+                        <i class="fas fa-envelope-open me-1"></i>
+                        Publication Committee
+                        </a>
+                        
                         <div class="sb-sidenav-menu-heading">Settings</div>
 
                         <a class="nav-link" href="controls">
                         <i class="fas fa-fw fa-cogs me-1"></i>
                         <span>Control Panel</span>
                         </a>
-                        
-                        <a class="nav-link" href="emails">
-                        <i class="fas fa-envelope-open me-1"></i>
-                        Email Notifcatiions
+
+                        <a class="nav-link" href="backup">
+                        <i class="fas fa-database me-1"></i>
+                        <span>Database</span>
                         </a>
-                    
-                        
-                        <?php if ($role == 8) {?>
-                        
-                            <a class="nav-link" href="backup">
-                            <i class="fas fa-database me-1"></i>
-                            <span>Database</span>
-                            </a>
-                        
-                        <?php }?>
                         
                         
                         <div class="sb-sidenav-menu-heading">Feedback</div>
@@ -300,7 +325,14 @@
                         <i class="fas fa-star me-1"></i>
                         CSF ARTA<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
                         </a>
+
+                        
+                        <div class="sb-sidenav-menu-heading">Logs</div>
                     
+                        <a class="nav-link" href="logs">
+                        <i class="fas fa-fw fa-clipboard-list me-1"></i>
+                        <span>Activity Logs</span>
+                        </a>
                     
                     
                     

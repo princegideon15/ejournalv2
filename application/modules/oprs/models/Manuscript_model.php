@@ -1089,6 +1089,27 @@ class Manuscript_model extends CI_Model {
 		$query = $skms->get();
 		return $query->result();
 	}
+
+	//TODO: search submitted manuscripts
+	public function search($search, $filter){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->manus);
+		$oprs->join($this->coauthors, 'row_id = coa_man_id');
+
+		if($filter == 1){ // keyword
+			$oprs->where('row_id', $id);
+		}else if($filter == 2){ // author or coauthors
+
+		}else{ // title
+		$oprs->where('row_id', $id);
+			$oprs->where('row_id', $id);
+		}
+
+
+		$query = $oprs->get();
+		return $query->result();
+	}
 }
 
 /* End of file Manuscript_model.php */

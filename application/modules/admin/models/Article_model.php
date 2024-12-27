@@ -306,6 +306,28 @@ class Article_model extends CI_Model {
 		$result2 = $query2->result();
 		return array('authors' => $result, 'coas' => $result2);
 	}
+
+	public function search($search, $filter){
+		
+		$this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn, c.*');
+		$this->db->from($this->articles.' a');
+		$this->db->join($this->journals.' j','a.art_jor_id = j.jor_id');
+		$this->db->join($this->coauthors.' c', 'a.art_id = c.coa_art_id', 'left');
+
+		if($filter == 1){ // keyword
+			$this->db->like('art_keywords', $search, 'both');
+		}else if($filter == 2){ // author or coauthors
+			$this->db->like('art_author', $search, 'both');
+			$this->db->or_like('coa_name', $search, 'both');
+		}else{ // title
+			$this->db->like('art_title', $search, 'both');
+		}
+
+		$this->db->order_by('art_title', 'asc');
+		$this->db->group_by('art_id');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
 
 /* End of file Article_model.php */

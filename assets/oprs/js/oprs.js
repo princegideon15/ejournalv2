@@ -262,19 +262,35 @@ $(document).ready(function() {
     $('#search').on('keypress', function (event) {
         if (event.which === 13) { // 13 is the key code for Enter
             event.preventDefault(); // Prevent form submission
-            alert('Enter key pressed: ' + $(this).val());
             var search_value = $(this).val();
-            var search_filter = $('#search_filter').val();
+            var search_filter = $('input[name="search_filter"]:checked').val();
+
             if(search_value){
-                alert('searching...');
-            }else{
-                alert('no string');
+
+                
+                let data = {
+                    search: search_value,
+                    filter: search_filter
+                };
+                
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "oprs/manuscripts/search",
+                    data: data,
+                    cache: false,
+                    crossDomain: true,
+                    success: function(data) {
+                        if(data){
+                            $('#searchModal .alert').addClass('d-none');
+                        }else{
+                            $('#searchModal .alert').removeClass('d-none');
+                            $('#searchModal .alert').html('<span class="oi oi-warning"></span>Sorry, no results found.');
+                        }
+                    }
+                });
+
             }
 
-            let data = {
-                search: search_value,
-                filter: search_filter
-            };
 
             
         }
@@ -5949,6 +5965,4 @@ function getCurrentOTP(refCode){
     setTimeout(function (){
         $('#search').focus();
     }, 500);
-    // $('#searchModal #search').trigger('click');
-    // $('#searchModal #search').click();
   }

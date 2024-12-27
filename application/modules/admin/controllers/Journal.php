@@ -398,4 +398,12 @@ class Journal extends EJ_Controller {
 		echo $output;
 	}
 
+	public function search(){
+		$search = $this->input->post('search', TRUE);
+		$filter = $this->input->post('filter', TRUE);
+
+		$output = $this->Article_model->search($search, $filter);
+		echo json_encode($output);
+	}
+
 }
