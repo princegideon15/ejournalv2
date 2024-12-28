@@ -270,10 +270,7 @@
                         Users<span class="ms-2 badge text bg-danger"><?php echo $usr_count; ?></span>
                         </a>
 
-                        <a class="nav-link" href="user">
-                        <i class="fas fa-fw fa-user me-1"></i>
-                        User Types</span>
-                        </a>
+                    
                     
                     <?php }?>
                     <?php if ($role == 8 || $role == 3) {?>
@@ -298,6 +295,11 @@
                     
                     
                         <div class="sb-sidenav-menu-heading">Library</div>
+
+                        <a class="nav-link" href="roles">
+                        <i class="fas fa-fw fa-user me-1"></i>
+                        User Types</span>
+                        </a>
 
                         <a class="nav-link" href="emails">
                         <i class="fas fa-envelope-open me-1"></i>

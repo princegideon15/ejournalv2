@@ -553,13 +553,40 @@ class User_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function get_user_types(){
+	public function get_user_types($id = null){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
 		$oprs->from($this->roles);
+
+		if($id){
+			$oprs->where('row_id', $id);
+		}
+
 		$query = $oprs->get();
 		return $query->result();
 	}
+	
+	public function check_unique_role($name, $id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->roles);
+		$oprs->where('role_name', $name);
+        $oprs->where('row_id !=', $id); // Exclude the current record
+        $query = $oprs->get();
+		$rows = $query->num_rows();
+		if ($rows > 0) {
+			return 'false';
+		} else {
+			return 'true';
+		}
+	}
+
+	public function update_user_type($post, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->roles, $post, $where);
+	}
+
+
 	
 }
 

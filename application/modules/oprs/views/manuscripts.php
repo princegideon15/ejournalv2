@@ -3,7 +3,6 @@
 <div id="layoutSidenav_content">
     <main>
 		<div class="container-fluid pt-3">
-        <h3 class="fw-bold">Manuscripts</h3>
 			<!-- Breadcrumbs-->
 			<!-- <ol class="breadcrumb">
 				<li class="breadcrumb-item">
@@ -15,10 +14,11 @@
 
 			<!-- Manuscript Table -->
 			<div class="card mb-3 border border-dark">
-				<div class="card-header fw-bold">
+				<!-- <div class="card-header fw-bold">
 					<i class="fa fa-table"></i> List of Manuscripts
-				</div>
+				</div> -->
 				<div class="card-body">
+				<h3 class="fw-bold">Manuscripts</h3>
 					<div class="table-responsive">
 						<!-- REVIEWER -->
 						<?php if (_UserRoleFromSession() == 5) {?>

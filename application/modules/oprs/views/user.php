@@ -1,7 +1,6 @@
 <div id="layoutSidenav_content">
     <main>
 		  <div class="container-fluid pt-3">
-        <h3 class="fw-bold">Users</h3>
         <?php if ($this->session->flashdata('_oprs_usr_message')) {
           $msg = $this->session->flashdata('_oprs_usr_message');
           $message = $msg['msg'];
@@ -47,12 +46,12 @@
                     <input type="text" class="form-control" id="usr_contact" name="usr_contact" placeholder="Your contact number">
                   </div>
                   <!-- <div class="mb-3">
-                    <label for="usr_sys_acc" class="form-label">Module Access</label>
+                    <label for="usr_sys_acc" class="form-label">System Access</label>
                     <select id="usr_sys_acc" name="usr_sys_acc" class="form-control">
-                      <option value="" selected>Select Module Access</option>
-                      <option value='1'>eJournal only</option>
-                      <option value='2'>OPRS only</option>
-                      <option value='3'>eJournal/OPRS</option>
+                      <option value="" selected>Select System Access</option>
+                      <option value='1'>eJournal</option>
+                      <option value='2'>eReview</option>
+                      <option value='3'>eJournal/eReview</option>
                     </select>
                   </div> -->
                   <div class="mb-3">

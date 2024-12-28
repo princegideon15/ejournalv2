@@ -122,7 +122,7 @@
       <div class="modal-body">
         <form id="form_edit_user">
           <div class="mb-3">
-            <label for="usr_email" class="form-label">Email</label>
+            <label for="usr_username" class="form-label">Email</label>
             <input type="email" class="form-control" id="usr_username" name="usr_username" placeholder="Your email address">
           </div>
           <!-- <div class="mb-3">
@@ -544,64 +544,6 @@
     </div>
   </div>
 </div>
-
-<!-- UPDATE USER -->
-<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" >
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Info</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="form_edit_user">
-          <div class="mb-3">
-            <label for="usr_email">Email</label>
-            <input type="email" class="form-control" id="usr_username" name="usr_username" placeholder="Your email address">
-          </div>
-          <!-- <div class="mb-3">
-            <label for="usr_username">Username</label>
-            <input type="text" class="form-control" id="usr_username" name="usr_username" placeholder="Your username">
-          </div> -->
-          <div class="mb-3">
-            <label for="usr_password">New Password (If any)</label>
-            <input type="password" class="form-control" id="usr_password" name="usr_password" placeholder="Your password">
-          </div>
-          <div class="mb-3">
-            <label for="usr_rep_password">Repeat New Password</label>
-            <input type="password" class="form-control" id="usr_rep_password" name="usr_rep_password" placeholder="Repeat your password">
-          </div>
-          <div class="mb-3">
-            <label for="usr_contact">Contact</label>
-            <input type="text" class="form-control" id="usr_contact" name="usr_contact" placeholder="Your contact number">
-          </div>
-          <div class="mb-3">
-            <label for="usr_sys_acc">Module Access</label>
-            <select id="usr_sys_acc" name="usr_sys_acc" class="form-select">
-              <option value="" selected>Select Module Access</option>
-              <option value='1'>eJournal only</option>
-              <option value='2'>OPRS only</option>
-              <option value='3'>eJournal/OPRS</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="usr_role">User Role</label>
-            <select id="usr_role" name="usr_role" class="form-select">
-              <!-- <option value="" selected>Select User Role</option> -->
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger mr-auto deactivate " style="display:none;"  onclick="act_deact_modal(2);">Deactivate Account</button>
-          <button type="button" class="btn btn-success mr-auto activate " style="display:none;" onclick="act_deact_modal(0);">Activate Account</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- /.UPDATE USER -->
 
 <!-- REVIEW INPUT -->
 <div class="modal fade" id="confirmDeactivationModal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index:999999">
@@ -2013,6 +1955,48 @@
 	</div>
 </div>
 <!--/. For Publishable Modal -->
+
+<!-- Edit User Type Modal -->
+<div class="modal fade" id="editUserTypeModal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit User Type</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form_edit_user_type">
+			<input type="hidden" id="row_id" name="row_id">
+          <div class="mb-3">
+            <label for="role_name" class="form-label">Type</label>
+            <input type="text" class="form-control" id="role_name" name="role_name">
+          </div>
+          <div class="mb-3">
+            <label for="role_access" class="form-label">System Access</label>
+            <select id="role_access" name="role_access" class="form-select">
+              <option value="" selected>Select System Access</option>
+              <option value='1'>eJournal</option>
+              <option value='2'>eReview</option>
+              <option value='3'>eJournal/eReview</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="role_status" class="form-label">Status</label>
+            <select id="role_status" name="role_status" class="form-select">
+              <option value="" selected>Select Status</option>
+              <option value="1">Enable</option>
+              <option value="2">Disable</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript" >
 var base_url = '<?php echo base_url(); ?>';

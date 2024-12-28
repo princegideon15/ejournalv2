@@ -708,6 +708,16 @@ $(document).ready(function() {
         }
     );
 
+    // user types 
+    var utt = $('#user_types_table').DataTable();
+ 
+    utt.on( 'order.dt search.dt', function () {
+        utt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+    
+
     // all manuscripts;
     var amt = $('#dataTable').DataTable({
         "order": [[ 2, "desc" ]],
@@ -1774,6 +1784,94 @@ $(document).ready(function() {
                 success: function(data) {
                     // console.log(data);
                     location.reload();
+                }
+            });
+        }
+    });
+
+
+    $.validator.addMethod(
+        "uniqueName",
+        function (value, element, params) {
+            var isValid = false;
+    
+            $.ajax({
+                url: params.url, // Pass your backend URL here
+                type: "POST",
+                data: {
+                    name: value,
+                    id: params.id, // Current record ID to exclude
+                },
+                dataType: "json",
+                async: false, // Synchronous to return validation result
+                success: function (response) {
+                    isValid = response.isUnique; // Backend should return a boolean
+                },
+            });
+    
+            return isValid;
+        },
+        "This name is already taken."
+    );
+    
+    // edit user type validation
+    $("#form_edit_user_type").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            role_name: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/roles/check_unique_role",
+                    type: "POST",
+                    data: {
+                        role: function () {
+                            return $("#form_edit_user_type #role_name").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_user_type #row_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+        },
+        messages: {
+            role_name: {
+                remote: "This user type is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/roles/update",
+                data: $('#form_edit_user_type').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editUserTypeModal').toggle('modal');
+                    Swal.fire({
+                        title: "User type updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        });
                 }
             });
         }
@@ -3072,7 +3170,7 @@ $(document).ready(function() {
     //         dataType: "json",
     //         success: function (data) {
     //             $.each(data, function(key,val){
-    //                 if ($(this).val() == 1) { // ejournal only
+    //                 if ($(this).val() == 1) { // eJournal
     //                     if(val.)
     //                     $('#usr_role').append('<option value="" selected>Select User Role</option>' +
     //                         '<option value="7">Admin</option>' +
@@ -5999,4 +6097,21 @@ function getCurrentOTP(refCode){
     setTimeout(function (){
         $('#search').focus();
     }, 100);
+  }
+
+  function edit_user_type(id){
+    $('#editUserTypeModal').modal('toggle');
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/user/get_user_types/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val) {
+                $.each(val, function(k, v){
+                    $('#form_edit_user_type #'+k).val(v);
+                });
+            });
+        }
+    });
   }
