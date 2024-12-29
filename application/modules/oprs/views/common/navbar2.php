@@ -301,12 +301,12 @@
                         User Types</span>
                         </a>
 
-                        <a class="nav-link" href="emails">
+                        <a class="nav-link" href="status">
                         <i class="fas fa-envelope-open me-1"></i>
                         Status Types
                         </a>
 
-                        <a class="nav-link" href="emails">
+                        <a class="nav-link" href="publication_types">
                         <i class="fas fa-envelope-open me-1"></i>
                         Publication Types
                         </a>

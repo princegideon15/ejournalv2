@@ -717,6 +717,24 @@ $(document).ready(function() {
         } );
     } ).draw();
     
+    // status types 
+    var utt = $('#status_types_table').DataTable();
+ 
+    utt.on( 'order.dt search.dt', function () {
+        utt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // publication types 
+    var utt = $('#publication_types_table').DataTable();
+ 
+    utt.on( 'order.dt search.dt', function () {
+        utt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+    
 
     // all manuscripts;
     var amt = $('#dataTable').DataTable({
@@ -1789,31 +1807,6 @@ $(document).ready(function() {
         }
     });
 
-
-    $.validator.addMethod(
-        "uniqueName",
-        function (value, element, params) {
-            var isValid = false;
-    
-            $.ajax({
-                url: params.url, // Pass your backend URL here
-                type: "POST",
-                data: {
-                    name: value,
-                    id: params.id, // Current record ID to exclude
-                },
-                dataType: "json",
-                async: false, // Synchronous to return validation result
-                success: function (response) {
-                    isValid = response.isUnique; // Backend should return a boolean
-                },
-            });
-    
-            return isValid;
-        },
-        "This name is already taken."
-    );
-    
     // edit user type validation
     $("#form_edit_user_type").validate({
         debug: true,
@@ -1851,6 +1844,132 @@ $(document).ready(function() {
                     $('#editUserTypeModal').toggle('modal');
                     Swal.fire({
                         title: "User type updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        });
+                }
+            });
+        }
+    });
+
+    // edit status type validation
+    $("#form_edit_status_type").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            status_desc: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/status/check_unique_status",
+                    type: "POST",
+                    data: {
+                        status: function () {
+                            return $("#form_edit_status_type #status_desc").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_status_type #id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+        },
+        messages: {
+            status_desc: {
+                remote: "This status type is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/status/update",
+                data: $('#form_edit_status_type').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editStatusTypeModal').toggle('modal');
+                    Swal.fire({
+                        title: "Status type updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        });
+                }
+            });
+        }
+    });
+
+    // edit publication type validation
+    $("#form_edit_publication_type").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            publication_desc: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/publication_types/check_unique_publication_type",
+                    type: "POST",
+                    data: {
+                        publication: function () {
+                            return $("#form_edit_publication_type #publication_desc").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_publication_type #id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+        },
+        messages: {
+            publication_desc: {
+                remote: "This publication type is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/publication_types/update",
+                data: $('#form_edit_publication_type').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editPublicationTypeModal').toggle('modal');
+                    Swal.fire({
+                        title: "Publication type updated successfully!",
                         icon: 'success',
                         // html: "I will close in <b></b> milliseconds.",
                         timer: 2000,
@@ -6110,6 +6229,40 @@ function getCurrentOTP(refCode){
             $.each(data, function(key, val) {
                 $.each(val, function(k, v){
                     $('#form_edit_user_type #'+k).val(v);
+                });
+            });
+        }
+    });
+  }
+
+  function edit_status_type(id){
+    $('#editStatusTypeModal').modal('toggle');
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/status/get_status_types/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val) {
+                $.each(val, function(k, v){
+                    $('#form_edit_status_type #'+k).val(v);
+                });
+            });
+        }
+    });
+  }
+
+  function edit_publication_type(id){
+    $('#editPublicationTypeModal').modal('toggle');
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/publication_types/get_publication_types/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val) {
+                $.each(val, function(k, v){
+                    $('#form_edit_publication_type #'+k).val(v);
                 });
             });
         }

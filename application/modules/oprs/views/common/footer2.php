@@ -1998,6 +1998,64 @@
   </div>
 </div>
 
+<!-- Edit Status Type Modal -->
+<div class="modal fade" id="editStatusTypeModal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Status Type</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form_edit_status_type">
+			<input type="hidden" id="id" name="id">
+          <div class="mb-3">
+            <label for="status_desc" class="form-label">Description</label>
+            <input type="text" class="form-control" id="status_desc" name="status_desc">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit publication Type Modal -->
+<div class="modal fade" id="editPublicationTypeModal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit publication Type</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form_edit_publication_type">
+			<input type="hidden" id="id" name="id">
+          <div class="mb-3">
+            <label for="publication_desc" class="form-label">Description</label>
+            <input type="text" class="form-control" id="publication_desc" name="publication_desc">
+          </div>
+          <div class="mb-3">
+            <label for="publication_status" class="form-label">Status</label>
+            <select id="publication_status" name="publication_status" class="form-select">
+              <option value="" selected>Select Status</option>
+              <option value="1">Enable</option>
+              <option value="2">Disable</option>
+            </select>
+		  </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript" >
 var base_url = '<?php echo base_url(); ?>';
 var prv_add = <?php echo (!empty($this->session->userdata('_prv_add'))) ? $this->session->userdata('_prv_add') : '0'; ?>;
