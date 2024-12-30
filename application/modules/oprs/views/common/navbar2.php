@@ -281,14 +281,18 @@
                         <i class="fas fa-fw fa-chart-bar me-1"></i>
                         <span>Reports</span>
                         </a>
-                        <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=1'); ?>">
+                        <a class="nav-link" href="<?php echo base_url('oprs/statistics'); ?>">
+                        <i class="fas fa-fw fa-chart-bar me-1"></i>
+                        <span>Statistics</span>
+                        </a>
+                        <!-- <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=1'); ?>">
                         <i class="fas fa-fw fa-chart-bar me-1"></i>
                         <span>Submission Statistics</span>
                         </a>
                         <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=2'); ?>">
                         <i class="fas fa-fw fa-chart-bar me-1"></i>
                         <span>Author by Sex</span>
-                        </a>
+                        </a> -->
                     
                     <?php }?>
                     <?php if ($role == 8) {?>

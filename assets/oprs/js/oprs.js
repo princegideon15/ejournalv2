@@ -744,8 +744,84 @@ $(document).ready(function() {
         } );
     } ).draw();
     
+    // submission summary 
+    var sst = $('#sub_sum_table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        columnDefs: [
+            {
+                targets: 0, // Target the first column (ID column)
+                visible: false // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+    
     // submission statistics 
-    var sst = $('#sub_stats_table').DataTable({
+    var sstt = $('#sub_stats_table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        columnDefs: [
+            {
+                targets: 0, // Target the first column (ID column)
+                visible: false // Hide the ID column
+            }
+        ],
         autowidth: true,
         dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
              "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
@@ -802,12 +878,62 @@ $(document).ready(function() {
         ]
     });
     
- 
-    sst.on( 'order.dt search.dt', function () {
-        sst.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
+    // authro by sex statistics 
+    var abst = $('#auth_by_sex_table').DataTable({
+        "order": [
+            [0, "desc"]
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
     
 
     // all manuscripts;
