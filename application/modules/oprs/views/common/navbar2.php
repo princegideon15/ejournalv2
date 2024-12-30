@@ -281,11 +281,11 @@
                         <i class="fas fa-fw fa-chart-bar me-1"></i>
                         <span>Reports</span>
                         </a>
-                        <a class="nav-link" href="reports">
+                        <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=1'); ?>">
                         <i class="fas fa-fw fa-chart-bar me-1"></i>
                         <span>Submission Statistics</span>
                         </a>
-                        <a class="nav-link" href="reports">
+                        <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=2'); ?>">
                         <i class="fas fa-fw fa-chart-bar me-1"></i>
                         <span>Author by Sex</span>
                         </a>

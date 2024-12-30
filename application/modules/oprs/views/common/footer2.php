@@ -33,32 +33,32 @@
           <div class="row">
             <div class="col-5">
               <div class="mb-3">
-                <label class="fw-bold"  for="enc_subject">Email subject</label>
+                <label class="fw-bold form-label" for="enc_subject">Email subject</label>
                 <input type="text" class="form-control" id="enc_subject" name="enc_subject" required>
               </div>
               <div class="mb-3">
-                <label class="fw-bold"  for="enc_description">Notification trigger</label>
+                <label class="fw-bold form-label"  for="enc_description">Notification trigger</label>
                 <input type="text" class="form-control" id="enc_description" name="enc_description" required>
               </div>
               <div class="mb-3">
-                <label class="fw-bold" for="enc_cc">CC <small class="text-muted">(optional)</small></label>
+                <label class="fw-bold form-label" for="enc_cc">CC <span class="badge rounded-pill bg-secondary">Optional</span></label>
                 <input type="text" class="form-control" id="enc_cc" name="enc_cc" placeholder="juandelacruz@gmail.com,mariadelacruz@gmail.com">
                 <small class="text-muted pt-2">Please separate emails by comma (,)</small>
               </div>
               <div class="mb-3">
-                <label class="fw-bold" for="enc_bcc">BCC <small class="text-muted">(optional)</small></label>
+                <label class="fw-bold form-label" for="enc_bcc">BCC <span class="badge rounded-pill bg-secondary">Optional</span></label>
                 <input type="text" class="form-control" id="enc_bcc" name="enc_bcc" placeholder="juandelacruz@gmail.com,mariadelacruz@gmail.com">
                 <small class="text-muted pt-2">Please separate emails by comma (,)</small>
               </div>
               <div class="mb-3 enc_user_group">
-                <label class="fw-bold" for="enc_user_group">User group
-                <br/><small class="text-muted">Following user roles will also receive this email notification.</small>
+                <label class="fw-bold form-label" for="enc_user_group">User group
                 </label>
+                <p><small class="text-muted">Following user roles will also receive this email notification.</small></p>
                
                 <?php foreach($user_roles as $row): ?>
                   <div class="form-check"> 
                     <input class="form-check-input" id="enc_user_group<?php echo $row->role_id;?>" name="enc_user_group[]" value="<?php echo $row->role_id;?>" type="checkbox" > 
-                    <label class="form-check-label" for="<?php echo $row->role_id;?>"> 
+                    <label class="form-check-label mt-2" for="<?php echo $row->role_id;?>"> 
                      <?php echo $row->role_name;?> 
                     </label> 
                   </div>
@@ -2138,8 +2138,17 @@ var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this-
 <script type="text/javascript" src="<?php echo base_url("assets/js/sweetalert2@11.js");?>"></script>
 <script src="<?php echo base_url("assets/oprs/js/chart.js");?>"></script>
 <script src="<?php echo base_url("assets/oprs/js/jquery.min.js");?>"></script>
-<script src="<?php echo base_url("assets/oprs/js/bootstrap.bundle.min.js");?>"></script>
-<script src="<?php echo base_url("assets/oprs/js/datatables.js");?>"></script>
+
+
+<!-- Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- <script src="<?php echo base_url("assets/oprs/js/bootstrap.bundle.min.js");?>"></script>
+<script src="<?php echo base_url("assets/oprs/js/datatables.js");?>"></script> -->
 <!-- Main jquery-->
 <script src="<?php echo base_url("assets/oprs/js/oprs.js");?>"></script>
 <!-- Jquery Validate-->
@@ -2172,6 +2181,7 @@ var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this-
 <script type="text/javascript" src="<?php echo base_url("assets/oprs/js/vfs_fonts.js"); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.html5.min.js"); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url("assets/oprs/js/buttons.print.min.js"); ?>"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
 
 <!-- Core plugin JavaScript-->

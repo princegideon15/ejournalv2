@@ -35,9 +35,9 @@ class Email_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
         $oprs->select('*');
         $oprs->from($this->roles);
-		$oprs->where('role_access !=', '1');
-		$oprs->where('role_id !=', '5');
-		$oprs->where('role_id !=', '1');
+		// $oprs->where('role_access !=', '1');
+		// $oprs->where('role_id !=', '5');
+		// $oprs->where('role_id !=', '1');
         $query = $oprs->get();
 		return $query->result();
 	}
