@@ -306,6 +306,16 @@
                         Status Types
                         </a>
 
+                        <a class="nav-link" href="<?php echo base_url('oprs/criterion?type=1'); ?>">
+                        <i class="fas fa-envelope-open me-1"></i>
+                        Technical Review Criterion
+                        </a>
+
+                        <a class="nav-link" href="<?php echo base_url('oprs/criterion?type=2'); ?>">
+                        <i class="fas fa-envelope-open me-1"></i>
+                        Peer Review Criterion
+                        </a>
+
                         <a class="nav-link" href="publication_types">
                         <i class="fas fa-envelope-open me-1"></i>
                         Publication Types

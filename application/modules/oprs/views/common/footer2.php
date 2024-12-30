@@ -2023,12 +2023,12 @@
   </div>
 </div>
 
-<!-- Edit publication Type Modal -->
+<!-- Edit Publication Type Modal -->
 <div class="modal fade" id="editPublicationTypeModal" tabindex="-1" role="dialog" >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit publication Type</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit Publication Type</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -2045,6 +2045,76 @@
               <option value="1">Enable</option>
               <option value="2">Disable</option>
             </select>
+		  </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Technical Review Criteria Modal -->
+<div class="modal fade" id="editTRCModal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Tehnical Review Criteria</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form_edit_tech_rev_crit">
+			<input type="hidden" id="crt_id" name="crt_id">
+          <div class="mb-3">
+            <label for="crt_code" class="form-label">Criteria Code</label>
+            <input type="text" class="form-control" id="crt_code" name="crt_code">
+          </div>
+          <div class="mb-3">
+            <label for="crt_desc" class="form-label">Description</label>
+            <input type="text" class="form-control" id="crt_desc" name="crt_desc">
+          </div>
+          <!-- <div class="mb-3">
+            <label for="publication_status" class="form-label">Status</label>
+            <select id="publication_status" name="publication_status" class="form-select">
+              <option value="" selected>Select Status</option>
+              <option value="1">Enable</option>
+              <option value="2">Disable</option>
+            </select>
+		  </div> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Peer Review Criteria Modal -->
+<div class="modal fade" id="editPRCModal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Peer Review Criteria</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form_edit_peer_rev_crit">
+			<input type="hidden" id="pcrt_id" name="pcrt_id">
+          <div class="mb-3">
+            <label for="pcrt_code" class="form-label">Criteria Code</label>
+            <input type="text" class="form-control" id="pcrt_code" name="pcrt_code">
+          </div>
+          <div class="mb-3">
+            <label for="pcrt_desc" class="form-label">Description</label>
+            <input type="text" class="form-control" id="pcrt_desc" name="pcrt_desc">
+          </div>
+          <div class="mb-3">
+            <label for="pcrt_score" class="form-label">Score</label>
+            <input type="text" class="form-control" id="pcrt_score" name="pcrt_score">
 		  </div>
         </div>
         <div class="modal-footer">

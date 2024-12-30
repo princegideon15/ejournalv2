@@ -6,6 +6,8 @@ class Library_model extends CI_Model {
 	private $titles = 'tbltitles';
 	private $status = 'tblstatus_types';
 	private $publication = 'tblpublication_types';
+	private $tech_rev_crit = 'tbltech_rev_criterias';
+	private $peer_rev_crit = 'tblpeer_rev_criterias';
 
 
 	public function __construct() {
@@ -102,6 +104,82 @@ class Library_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->update($this->publication, $post, $where);
 	}
+
+	// review criterion
+
+	public function get_criteria($id = null, $category = null){
+		$oprs = $this->load->database('dboprs', TRUE);
+		if($category){
+			if($category == 1){
+				$oprs->select('crt_id as id, crt_code as code, crt_desc as desc, created_at, last_updated');
+				$oprs->from($this->tech_rev_crit);
+				if($id){
+					$oprs->where('crt_id', $id);
+				}
+			}else{
+				$oprs->select('pcrt_id as id, pcrt_code as code, pcrt_desc as desc, pcrt_score as score, created_at, last_updated');
+				$oprs->from($this->peer_rev_crit);
+				if($id){
+					$oprs->where('pcrt_id', $id);
+				}
+			}
+		}
+
+		$query = $oprs->get();
+		return $query->result();
+	}
+	
+	public function check_unique_criteria_code($name, $id, $criteria){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		if($criteria == 1){
+			$oprs->from($this->tech_rev_crit);
+			$oprs->where('crt_code', $name);
+			$oprs->where('crt_id !=', $id); // Exclude the current record
+		}else{
+			$oprs->from($this->peer_rev_crit);
+			$oprs->where('pcrt_code', $name);
+			$oprs->where('pcrt_id !=', $id); // Exclude the current record
+		}
+        $query = $oprs->get();
+		$rows = $query->num_rows();
+		if ($rows > 0) {
+			return 'false';
+		} else {
+			return 'true';
+		}
+	}
+	
+	public function check_unique_criteria_desc($name, $id, $criteria){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		if($criteria == 1){
+			$oprs->from($this->tech_rev_crit);
+			$oprs->where('crt_desc', $name);
+			$oprs->where('crt_id !=', $id); // Exclude the current record
+		}else{
+			$oprs->from($this->peer_rev_crit);
+			$oprs->where('pcrt_desc', $name);
+			$oprs->where('pcrt_id !=', $id); // Exclude the current record
+		}
+        $query = $oprs->get();
+		$rows = $query->num_rows();
+		if ($rows > 0) {
+			return 'false';
+		} else {
+			return 'true';
+		}
+	}
+
+	public function update_critera($post, $where, $criteria){
+		$oprs = $this->load->database('dboprs', TRUE);
+		if($criteria == 1){
+			$oprs->update($this->tech_rev_crit, $post, $where);
+		}else{
+			$oprs->update($this->peer_rev_crit, $post, $where);
+		}
+	}
+
 }
 
 /* End of file Library_model.php */

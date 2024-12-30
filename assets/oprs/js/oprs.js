@@ -735,6 +735,15 @@ $(document).ready(function() {
         } );
     } ).draw();
     
+    // criteria 
+    var ct = $('#criteria_table').DataTable();
+ 
+    ct.on( 'order.dt search.dt', function () {
+        ct.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+    
 
     // all manuscripts;
     var amt = $('#dataTable').DataTable({
@@ -1995,6 +2004,172 @@ $(document).ready(function() {
             });
         }
     });
+
+    // edit tech rev criteria validation
+    $("#form_edit_tech_rev_crit").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            crt_code: {
+                required:true,
+                remote: {
+                    url: base_url + "oprs/criterion/check_unique_criteria_code/1",
+                    type: "POST",
+                    data: {
+                        code: function () {
+                            return $("#form_edit_tech_rev_crit #crt_code").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_tech_rev_crit #crt_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+            crt_desc: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/criterion/check_unique_criteria_desc/1",
+                    type: "POST",
+                    data: {
+                        desc: function () {
+                            return $("#form_edit_tech_rev_crit #crt_desc").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_tech_rev_crit #crt_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+        },
+        messages: {
+            crt_code: {
+                remote: "This Criteria code is already taken."
+            },
+            crt_desc: {
+                remote: "This Criteria description is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/criterion/update/1",
+                data: $('#form_edit_tech_rev_crit').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editTRCModal').toggle('modal');
+                    Swal.fire({
+                        title: "Criteria updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        });
+                }
+            });
+        }
+    });
+
+    // edit peer rev criteria validation
+    $("#form_edit_peer_rev_crit").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            pcrt_code: {
+                required:true,
+                remote: {
+                    url: base_url + "oprs/criterion/check_unique_criteria_code/2",
+                    type: "POST",
+                    data: {
+                        code: function () {
+                            return $("#form_edit_peer_rev_crit #pcrt_code").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_peer_rev_crit #pcrt_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+            pcrt_desc: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/criterion/check_unique_criteria_desc/2",
+                    type: "POST",
+                    data: {
+                        desc: function () {
+                            return $("#form_edit_peer_rev_crit #pcrt_desc").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_peer_rev_crit #pcrt_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+            pcrt_score: {
+                required: true,
+            }
+        },
+        messages: {
+            pcrt_code: {
+                remote: "This Criteria code is already taken."
+            },
+            pcrt_desc: {
+                remote: "This Criteria description is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/criterion/update/2",
+                data: $('#form_edit_peer_rev_crit').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editPRCModal').toggle('modal');
+                    Swal.fire({
+                        title: "Criteria updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        });
+                }
+            });
+        }
+    });
+
 
     // // upload manuscript validation
     // $("#manuscript_form").validate({
@@ -6264,6 +6439,43 @@ function getCurrentOTP(refCode){
                 $.each(val, function(k, v){
                     $('#form_edit_publication_type #'+k).val(v);
                 });
+            });
+        }
+    });
+  }
+
+  
+  function edit_criteria(id, criteria){
+    var url = '', form = '';
+
+    if(criteria == 1){ // tech rev criteria
+        $('#editTRCModal').modal('toggle');
+        url = base_url + "oprs/criterion/get_criteria/"+id+"/"+criteria;
+        form = '#form_edit_tech_rev_crit';
+    }else{ // peer rev criteria
+        $('#editPRCModal').modal('toggle');
+        url = base_url + "oprs/criterion/get_criteria/"+id+"/"+criteria;
+        form = '#form_edit_peer_rev_crit';
+    }
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+
+            $.each(data, function(key, val) {
+                if(criteria == 1){ // tech rev criteria
+                    $(form + ' #crt_id').val(val.id);
+                    $(form + ' #crt_code').val(val.code);
+                    $(form + ' #crt_desc').val(val.desc);
+                }else{ // peer rev criteria
+                    $(form + ' #pcrt_id').val(val.id);
+                    $(form + ' #pcrt_code').val(val.code);
+                    $(form + ' #pcrt_desc').val(val.desc);
+                    $(form + ' #pcrt_score').val(val.score);
+                }
             });
         }
     });
