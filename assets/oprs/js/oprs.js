@@ -22,7 +22,9 @@ var remove_man_id;
 var mail_content;
 var mail_title = '';
 var editor_mail_content;
-
+var sst;
+var sstt;
+var abst;
 // var prv_exp = 0;
 
 var minutes = 5,          // otp timer
@@ -56,12 +58,12 @@ $(document).ready(function() {
     accessToken = (accessToken.responseText).trim();
 
     // feedback suggestion box character limit
-    let $textArea = $("#fb_suggest_ui");
-    let $charCount = $("#char_count_ui");
-    let maxLength = $textArea.attr("maxlength");
+    var $textArea = $("#fb_suggest_ui");
+    var $charCount = $("#char_count_ui");
+    var maxLength = $textArea.attr("maxlength");
 
     $textArea.on("input", function () {
-        let currentLength = $(this).val().length;
+        var currentLength = $(this).val().length;
         $charCount.text(`${currentLength} / ${maxLength} characters`);
 
         if (currentLength > maxLength) {
@@ -71,12 +73,12 @@ $(document).ready(function() {
         }
     });
 
-    let $textArea2 = $("#fb_suggest_ux");
-    let $charCount2 = $("#char_count_ux");
-    let maxLength2 = $textArea2.attr("maxlength");
+    var $textArea2 = $("#fb_suggest_ux");
+    var $charCount2 = $("#char_count_ux");
+    var maxLength2 = $textArea2.attr("maxlength");
 
     $textArea2.on("input", function () {
-        let currentLength = $(this).val().length;
+        var currentLength = $(this).val().length;
         $charCount2.text(`${currentLength} / ${maxLength2} characters`);
 
         if (currentLength > maxLength2) {
@@ -87,8 +89,8 @@ $(document).ready(function() {
     });
 
     // csf ui ux star rating
-    let selectedRatingUI = 0;
-    let selectedRatingUX = 0;
+    var selectedRatingUI = 0;
+    var selectedRatingUX = 0;
 
     $('.rate-ui').on('mouseover', function () {
         const value = $(this).data('value');
@@ -186,10 +188,10 @@ $(document).ready(function() {
     $('#submit_feedback').on('click', function(){
         if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
 
-            let uiSuggestion = $('#fb_suggest_ui').val();
-            let uxSuggestion = $('#fb_suggest_ux').val();
+            var uiSuggestion = $('#fb_suggest_ui').val();
+            var uxSuggestion = $('#fb_suggest_ux').val();
             
-            let data = {
+            var data = {
             'ui' : selectedRatingUI,
             'ux' : selectedRatingUX,
             'ui_sug' : uiSuggestion,
@@ -211,7 +213,7 @@ $(document).ready(function() {
                 success: function(data) {
                     $('#feedbackModal').modal('toggle');
                     if(data == 1){
-                    let timerInterval;
+                    var timerInterval;
                     Swal.fire({
                         title: "Thank you for your feedback.",
                         html: "Logging out...",
@@ -268,7 +270,7 @@ $(document).ready(function() {
             if(search_value){
 
                 
-                let data = {
+                var data = {
                     search: search_value,
                     filter: search_filter
                 };
@@ -316,14 +318,14 @@ $(document).ready(function() {
         }
     });
 
-    let idleTime = 0;
+    var idleTime = 0;
 
     if(accessToken != 0){
       $(document).on('mousemove keydown scroll', function() {
           idleTime = 0;
       });
   
-      let timerInterval = setInterval(function() {
+      var timerInterval = setInterval(function() {
           idleTime += 1;
           
           if (idleTime >= 1200) { // 20 minutes in seconds
@@ -745,7 +747,7 @@ $(document).ready(function() {
     } ).draw();
     
     // submission summary 
-    var sst = $('#sub_sum_table').DataTable({
+    sst = $('#sub_sum_table').DataTable({
         "order": [
             [0, "asc"]
         ],
@@ -812,7 +814,7 @@ $(document).ready(function() {
     });
     
     // submission statistics 
-    var sstt = $('#sub_stats_table').DataTable({
+    sstt = $('#sub_stats_table').DataTable({
         "order": [
             [0, "asc"]
         ],
@@ -879,7 +881,7 @@ $(document).ready(function() {
     });
     
     // authro by sex statistics 
-    var abst = $('#auth_by_sex_table').DataTable({
+    abst = $('#auth_by_sex_table').DataTable({
         "order": [
             [0, "desc"]
         ],
@@ -6484,7 +6486,7 @@ function togglePassword(elementID, iconID){
 }
 
 function disableOnSubmit(element, form, action){
-    let newButtonText = (action == 'verify') ? 'Verifying' : 'Loading';
+    var newButtonText = (action == 'verify') ? 'Verifying' : 'Loading';
 
     $(element).prop('disabled' ,true);
     $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>' + newButtonText);
@@ -6698,6 +6700,135 @@ function getCurrentOTP(refCode){
                     $(form + ' #pcrt_score').val(val.score);
                 }
             });
+        }
+    });
+  }
+
+  function filter_submission_summary(){
+    var from = $('#sub_sum #date_from').val();
+    var to = $('#sub_sum #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_sub_sum",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+
+            sst.clear();
+                $.each(data, function(key, val){
+
+                    sst.row.add([
+                        val.pub_id,
+                        val.publication_desc,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                    ]);
+                });
+            sst.draw();
+        }
+    });
+  }
+  
+  function filter_submission_statistics(){
+    var from = $('#sub_stat #date_from').val();
+    var to = $('#sub_stat #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_sub_stat",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+
+            sstt.clear();
+                $.each(data, function(key, val){
+
+                    sstt.row.add([
+                        val.pub_id,
+                        val.publication_desc,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                        val.subm_count,
+                    ]);
+                });
+            sstt.draw();
+        }
+    });
+  }
+
+  function filter_author_by_sex(){
+    var from = $('#auth_sex #date_from').val();
+    var to = $('#auth_sex #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_auth_by_sex",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            console.log(data);
+            abst.clear();
+            var total_auth = 0;
+            var total_coa = 0;
+            var author_row_array = [];
+            var coauthor_row_array = [];
+
+            author_row_array.push('Primary Author');
+                $.each(data['authors'], function(key, val){
+                    total_auth += parseInt(val.total);
+                    author_row_array.push(val.total);
+                });
+                author_row_array.push(total_auth);
+            abst.row.add(author_row_array);
+            
+            coauthor_row_array.push('Co-Authors');
+                $.each(data['coauthors'], function(key, val){
+                    total_coa += parseInt(val.total);
+                    coauthor_row_array.push(val.total);
+                });
+            coauthor_row_array.push(total_coa);
+            abst.row.add(coauthor_row_array);
+
+            abst.draw();
         }
     });
   }
