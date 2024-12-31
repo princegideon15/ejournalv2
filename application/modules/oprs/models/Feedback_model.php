@@ -18,11 +18,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 
 class Feedback_model extends CI_Model {
+	// oprs
 	private $feedbacks = 'tblfeedbacks';
-    private $users = 'tblusers';
+    private $oprs_users = 'tblusers';
     private $clients = 'tblclients';
     private $citee = 'tblcitations';
     private $csf = 'tblservice_feedbacks';
+	// ejournal
+	private $uiux = 'tblcsf_uiux';
+    private $ej_users = 'tblusers';
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->database(ENVIRONMENT);
@@ -35,9 +40,7 @@ class Feedback_model extends CI_Model {
 	 */
 	public function get_feedbacks()
 	{
-		
-        $CI =& get_instance();
-        $oprs = $CI->load->database('dboprs', TRUE);
+        $oprs = $this->load->database('dboprs', TRUE);
 
         $oprs->select('*');
         $oprs->from($this->feedbacks);
@@ -54,40 +57,23 @@ class Feedback_model extends CI_Model {
 	 * @param [int] $sys		
 	 * @return void
 	 */
-	public function get_name($id, $sys, $src){
+	public function get_name($id, $sys){
 
-		if($sys == 1 || $sys == 2){
-			$CI =& get_instance();
-			$oprs = $CI->load->database('dboprs', TRUE);
-	
+		if($sys == 'eReview' || $sys == 'eJournal Admin'){
+			
+			$oprs = $this->load->database('dboprs', TRUE);
 			$oprs->select('usr_username');
-			$oprs->from('dboprs.tblusers');
+			$oprs->from($this->oprs_users);
 			$oprs->where('usr_id', $id);
 			$data = $oprs->get()->row_array();
 			return $data['usr_username'];
 
 		}else{
-			if($src == 1){
-
-				$this->db->select('clt_name');
-				$this->db->from($this->clients);
-				$this->db->where('clt_id', $id);
-				$data = $this->db->get()->row_array();
-				$return = (empty($data['clt_name'])) ? '-' : $data['clt_name'];
-	
-				return $return;
-
-			}else if($src == 2){
-
-				$this->db->select('cite_name');
-				$this->db->from($this->citee);
-				$this->db->where('row_id', $id);
-				$data = $this->db->get()->row_array();
-				$return = (empty($data['cite_name'])) ? '-' : $data['cite_name'];
-
-				return $return;
-			}
-
+			$this->db->select('email');
+			$this->db->from($this->ej_users);
+			$this->db->where('id', $id);
+			$data = $this->db->get()->row_array();
+			return $data['email'];
 		}
 	}
 
@@ -98,8 +84,8 @@ class Feedback_model extends CI_Model {
 	 */
 	public function count_feedbacks(){
 
-		$CI =& get_instance();
-		$oprs = $CI->load->database('dboprs', TRUE);
+		
+		$oprs = $this->load->database('dboprs', TRUE);
 
 		$oprs->select('*');
 		$oprs->from('tblfeedbacks');
@@ -116,7 +102,7 @@ class Feedback_model extends CI_Model {
 	 */
 	public function update_feedbacks($data, $where){
 
-		$CI =& get_instance();
+		
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->update('tblfeedbacks', $data, $where);
 	}
@@ -143,26 +129,71 @@ class Feedback_model extends CI_Model {
 	}
 
 	public function ui_graph(){
-		$CI =& get_instance();
-        $oprs = $CI->load->database('dboprs', TRUE);
+		
+        // $oprs = $this->load->database('dboprs', TRUE);
 
-		$oprs->select('count(*) as total, (CASE WHEN fb_rate_ui = 1 THEN "Sad" WHEN fb_rate_ui = 2 THEN "Neutral" else "Happy" end) as label');
-		$oprs->from($this->feedbacks);
-		$oprs->where($this->feedbacks.'.fb_rate_ui >', '0');
-		$oprs->group_by($this->feedbacks.'.fb_rate_ui');
-		$query = $oprs->get();
+		// $oprs->select('count(*) as total, (CASE WHEN fb_rate_ui = 1 THEN "Sad" WHEN fb_rate_ui = 2 THEN "Neutral" else "Happy" end) as label');
+		// $oprs->from($this->feedbacks);
+		// $oprs->where($this->feedbacks.'.fb_rate_ui >', '0');
+		// $oprs->group_by($this->feedbacks.'.fb_rate_ui');
+		// $query = $oprs->get();
+		// return $query->result();
+
+		$sql = "
+					SELECT stars AS star_count, 
+						COUNT(r.csf_rate_ui) AS total_ratings
+					FROM (
+						SELECT 5 AS stars UNION ALL
+						SELECT 4 UNION ALL
+						SELECT 3 UNION ALL
+						SELECT 2 UNION ALL
+						SELECT 1
+					) AS star_counts
+					LEFT JOIN dbej.tblcsf_uiux r ON star_counts.stars = r.csf_rate_ui
+					GROUP BY stars
+					ORDER BY stars DESC 
+					LIMIT 100
+				";
+
+		// Execute the query
+		$query = $this->db->query($sql);
+
+		// Fetch the result
 		return $query->result();
 	}
 
 	public function ux_graph(){
-		$CI =& get_instance();
-        $oprs = $CI->load->database('dboprs', TRUE);
+		
+        // $oprs = $this->load->database('dboprs', TRUE);
 
-		$oprs->select('count(*) as total, (CASE WHEN fb_rate_ux = 1 THEN "Sad" WHEN fb_rate_ux = 2 THEN "Neutral" else "Happy" end) as label');
-		$oprs->from($this->feedbacks);
-		$oprs->where($this->feedbacks.'.fb_rate_ux >', '0');
-		$oprs->group_by($this->feedbacks.'.fb_rate_ux');
-		$query = $oprs->get();
+		// $oprs->select('count(*) as total, (CASE WHEN fb_rate_ux = 1 THEN "Sad" WHEN fb_rate_ux = 2 THEN "Neutral" else "Happy" end) as label');
+		// $oprs->from($this->feedbacks);
+		// $oprs->where($this->feedbacks.'.fb_rate_ux >', '0');
+		// $oprs->group_by($this->feedbacks.'.fb_rate_ux');
+		// $query = $oprs->get();
+		// return $query->result();
+
+		
+		$sql = "
+					SELECT stars AS star_count, 
+						COUNT(r.csf_rate_ui) AS total_ratings
+					FROM (
+						SELECT 5 AS stars UNION ALL
+						SELECT 4 UNION ALL
+						SELECT 3 UNION ALL
+						SELECT 2 UNION ALL
+						SELECT 1
+					) AS star_counts
+					LEFT JOIN dbej.tblcsf_uiux r ON star_counts.stars = r.csf_rate_ux
+					GROUP BY stars
+					ORDER BY stars DESC 
+					LIMIT 100
+				";
+
+		// Execute the query
+		$query = $this->db->query($sql);
+
+		// Fetch the result
 		return $query->result();
 	}
 
@@ -193,6 +224,20 @@ class Feedback_model extends CI_Model {
 			$this->db->group_by('svc_fdbk_rating_id');
 		}
 
+
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_uiux($from = null, $to = null){
+
+		$this->db->select('*');
+		$this->db->from($this->uiux);
+
+		if($from > 0 && $to > 0){
+			$this->db->where('csf_created_at >=',$from);
+			$this->db->where('csf_created_at <=',$to);
+		}
 
 		$query = $this->db->get();
 		return $query->result();

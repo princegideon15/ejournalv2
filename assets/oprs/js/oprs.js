@@ -1612,6 +1612,20 @@ $(document).ready(function() {
                 action: function(e, dt, node, config) {
                     log_export('Copy to clipboard', 'List of UI/UX Feedbacks');
                     $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                },
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Replace stars with numerical rating
+                            if ($(node).find('.star-icon').length) {
+                                // Count the number of stars or extract the rating
+                                return $(node).find('.star-icon').length;
+                            }
+                            // Return plain text if not stars
+                            return data;
+                        }
+                    }
                 }
             }, {
                 extend: 'excel',
@@ -1621,6 +1635,20 @@ $(document).ready(function() {
                 action: function(e, dt, node, config) {
                     log_export('Export as Excel', 'List of UI/UX Feedbacks');
                     $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                },
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Replace stars with numerical rating
+                            if ($(node).find('.star-icon').length) {
+                                // Count the number of stars or extract the rating
+                                return $(node).find('.star-icon').length;
+                            }
+                            // Return plain text if not stars
+                            return data;
+                        }
+                    }
                 }
             }, {
                 extend: 'pdf',
@@ -1630,6 +1658,20 @@ $(document).ready(function() {
                 action: function(e, dt, node, config) {
                     log_export('Export as PDF', 'List of UI/UX Feedbacks');
                     $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                },
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Replace stars with numerical rating
+                            if ($(node).find('.star-icon').length) {
+                                // Count the number of stars or extract the rating
+                                return $(node).find('.star-icon').length;
+                            }
+                            // Return plain text if not stars
+                            return data;
+                        }
+                    }
                 }
             }, {
                 extend: 'print',
@@ -1638,6 +1680,20 @@ $(document).ready(function() {
                 action: function(e, dt, node, config) {
                     log_export('Print', 'List of UI/UX Feedbacks');
                     window.print();
+                },
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Replace stars with numerical rating
+                            if ($(node).find('.star-icon').length) {
+                                // Count the number of stars or extract the rating
+                                return $(node).find('.star-icon').length;
+                            }
+                            // Return plain text if not stars
+                            return data;
+                        }
+                    }
                 }
             }]
         });
@@ -6036,8 +6092,13 @@ function generate_uiux_graph(){
       dataType: "json",
       success: function (response) {
             $.each(response, function(key, val){
-            ui_values.push(val.total);
-                ui_labels.push(val.label);
+                ui_values.push(val.total_ratings);
+                // var star = '';
+                // for (let i = 0; i < val.star_count; i++) {
+                //     // Append a star icon (can be an image or a Unicode character)
+                //     star += '★'; // Unicode for a filled star
+                // }
+                ui_labels.push(val.star_count + ' Stars');
             });
     
             
@@ -6057,6 +6118,10 @@ function generate_uiux_graph(){
                     legend: {
                         display: false,
                         position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'User Interface Rating'
                     },
                     scales: {
                         yAxes: [{
@@ -6085,15 +6150,8 @@ function generate_uiux_graph(){
                 maintainAspectRatio: false,
                 legend: {
                     display: true,
-                    position: 'top',
+                    position: 'bottom',
                 },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true,
-                        },
-                    }],
-                }
                 }
             });
         }
@@ -6107,8 +6165,13 @@ function generate_uiux_graph(){
         dataType: "json",
         success: function (response) {
               $.each(response, function(key, val){
-              ux_values.push(val.total);
-                  ux_labels.push(val.label);
+                ux_values.push(val.total_ratings);
+                // var star = '';
+                // for (let i = 0; i < val.star_count; i++) {
+                //     // Append a star icon (can be an image or a Unicode character)
+                //     star += '★'; // Unicode for a filled star
+                // }
+                ux_labels.push(val.star_count + ' Stars');
               });
       
               
@@ -6128,6 +6191,10 @@ function generate_uiux_graph(){
                       legend: {
                           display: false,
                           position: 'top',
+                      },
+                      title: {
+                          display: true,
+                          text: 'User Experience Rating'
                       },
                       scales: {
                           yAxes: [{
@@ -6156,15 +6223,8 @@ function generate_uiux_graph(){
                   maintainAspectRatio: false,
                   legend: {
                       display: true,
-                      position: 'top',
+                      position: 'bottom',
                   },
-                  scales: {
-                      yAxes: [{
-                          ticks: {
-                              beginAtZero:true,
-                          },
-                      }],
-                  }
                   }
               });
           }

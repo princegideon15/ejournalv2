@@ -1,7 +1,6 @@
 <div id="layoutSidenav_content">
     <main>
 		  <div class="container-fluid pt-3">
-        <h3 class="fw-bold">Feedbacks</h3>
         <!-- Breadcrumbs-->
         <!-- <ol class="breadcrumb">
           <li class="breadcrumb-item">
@@ -9,10 +8,9 @@
             <li class="breadcrumb-item active"><?php echo $this->session->userdata('_oprs_type'); ?>  (<?php echo $this->session->userdata('_oprs_username'); ?>)</li>
         </ol> -->
         <div class="card border border-dark">
-          <div class="card-header fw-bold">
-            <i class="fa fa-table"></i> Feedbacks
-          </div>
           <div class="card-body">
+            <h3 class="fw-bold">CSF UI/UX</h3>
+            <h6 class="mb-3">Customer Service Feedback - User Interface / User Experience</h6>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="uiux-tab" data-bs-toggle="tab" href="#uiux" role="tab" aria-controls="uiux" aria-selected="true">UI/UX Feedbacks</a>
@@ -20,12 +18,12 @@
               <li class="nav-item" role="presentation">
                 <a class="nav-link" id="uiux-grph-tab" onclick="generate_uiux_graph()" data-bs-toggle="tab" href="#uiux-grph" role="tab" aria-controls="uiux-grph" aria-selected="false">UI/UX Graph</a>
               </li>
-              <li class="nav-item" role="presentation">
+              <!-- <li class="nav-item" role="presentation">
                 <a class="nav-link" id="csf-tab" data-bs-toggle="tab" href="#csf" role="tab" aria-controls="csf" aria-selected="false">Client Satisfaction Feedbacks</a>
               </li>
               <li class="nav-item" role="presentation">
                 <a class="nav-link" id="csf-grph-tab"  onclick="generate_csf_graph(0)" data-bs-toggle="tab" href="#csf-grph" role="tab" aria-controls="csf-grph" aria-selected="false">CSF Graph</a>
-              </li>
+              </li> -->
             </ul>
             <div class="tab-content" id="myTabContent">
               <div class="tab-pane fade show active" id="uiux" role="tabpanel" aria-labelledby="uiux-tab">
@@ -34,31 +32,34 @@
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th>Name</th>
+                        <th>Email</th>
                         <th>UI Rating</th>
                         <th>UI Suggestions</th>
                         <th>UX Rating</th>
-                        <th>UX Rating</th>
-                        <th>Category</th>
-                        <th>Date</th>
+                        <th>UX Suggestions</th>
+                        <th>System</th>
+                        <th>Feedback Date</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <?php $c = 1;foreach ($feedbacks as $row): ?>
-                      <?php $rate_ui = (($row->fb_rate_ui == 1) ? 'Sad' : (($row->fb_rate_ui == 2) ? 'Neutral' : 'Happy')); ?>
-                      <?php $badge_ui = (($row->fb_rate_ui == 1) ? 'danger' : (($row->fb_rate_ui == 2) ? 'warning' : 'success')); ?>
-                      <?php $rate_ux = (($row->fb_rate_ux == 1) ? 'Sad' : (($row->fb_rate_ux == 2) ? 'Neutral' : 'Happy')); ?>
-                      <?php $badge_ux = (($row->fb_rate_ux == 1) ? 'danger' : (($row->fb_rate_ux == 2) ? 'warning' : 'success')); ?>
-                      <?php $sys = (($row->fb_system == 1) ? 'eJournal' : (($row->fb_system == 2) ? 'OPRS' : 'Client')); ?>
-                      <?php $name = $this->Feedback_model->get_name($row->fb_usr_id, $row->fb_system, $row->fb_source); ?>
+                      <?php $c = 1;foreach ($uiux as $row): ?>
+                      <?php $name = $this->Feedback_model->get_name($row->csf_user_id, $row->csf_system); ?>
                         <td><?php echo $c++; ?></td>
                         <td><?php echo $name; ?></td>
-                        <td><span class="badge bg-<?php echo $badge_ui;?>"><?php echo $rate_ui;?></span></td>
-                        <td><?php echo $row->fb_suggest_ui;?></td>
-                        <td><span class="badge bg-<?php echo $badge_ux;?>"><?php echo $rate_ux;?></span></td>
-                        <td><?php echo $row->fb_suggest_ux;?></td>
-                        <td><?php echo $sys;?></td>
-                        <td><?php echo date_format(new DateTime($row->date_created), 'F j, Y g:i a'); ?></td>
+                        <td class="mt-0 pt-0">
+                            <?php for($i = 0; $i < $row->csf_rate_ui; $i++): ?>
+                              <span class="text-warning fs-5 star-icon">★</span>
+                            <?php endfor ?>
+                        </td>
+                        <td><?php echo $row->csf_ui_suggestions;?></td>
+                        <td class="mt-0 pt-0">
+                            <?php for($i = 0; $i < $row->csf_rate_ux; $i++): ?>
+                              <span class="text-warning fs-5 star-icon">★</span>
+                            <?php endfor ?>
+                        </td>
+                        <td><?php echo $row->csf_ux_suggestions;?></td>
+                        <td><?php echo $row->csf_system;?></td>
+                        <td><?php echo date_format(new DateTime($row->csf_created_at), 'F j, Y g:i a'); ?></td>
                       </tr>
                       <?php endforeach;?>
                     </tbody>
@@ -94,26 +95,18 @@
                 </div>
               </div>
               <div class="tab-pane fade" id="uiux-grph" role="tabpanel" aria-labelledby="uiux-grph-tab">
-                <div class="alert alert-secondary" role="alert">
-                  User Interface Feedbacks
-                </div>
                 <div class="row">
-                  <div class="col-8">
-                    <canvas id="ui_bar_chart" height="100"></canvas>
+                  <div class="col">
+                    <div class="mb-3"><canvas id="ui_bar_chart" height="100"></canvas></div>
+                    <div><canvas id="ui_pie_chart" height="300"></canvas></div>
                   </div>
-                  <div class="col-4">
-                    <canvas id="ui_pie_chart" height="80"></canvas>
-                  </div>
-                </div>
-                <div class="alert alert-secondary" role="alert">
-                  User Experience Feedbacks
-                </div>
-                <div class="row">
-                  <div class="col-8">
-                    <canvas id="ux_bar_chart" height="100"></canvas>
-                  </div>
-                  <div class="col-4">
-                    <canvas id="ux_pie_chart" height="80"></canvas>
+                  <div class="col">
+                    <div>
+                      <canvas id="ux_bar_chart" height="100"></canvas>
+                    </div>
+                    <div class="mb-3">
+                      <canvas id="ux_pie_chart" height="300"></canvas>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -47,7 +47,7 @@ class Feedbacks extends OPRS_Controller {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/feedbacks";
 					$data['logs'] = $this->Log_model->count_logs();
-					$data['feedbacks'] = $this->Feedback_model->get_feedbacks();
+					$data['uiux'] = $this->Feedback_model->get_uiux();
 					$data['csf_feedbacks'] = $this->Feedback_model->get_csf_feedbacks();
 					$data['questions'] = $this->Library_model->get_csf_questions();
 					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
@@ -103,7 +103,8 @@ class Feedbacks extends OPRS_Controller {
 		echo json_encode($output);
 	}
 
-	public function submit_csf_ui_ux(){
+	public function submit_csf_ui_ux($flag){
+		
         $post = [
             'csf_user_id' => $this->session->userdata('_oprs_user_id'),
             'csf_rate_ui' => $this->input->post('ui', TRUE),

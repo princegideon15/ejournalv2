@@ -178,46 +178,46 @@ $(document).ready(function () {
 		});
 	});
 
-	$("#feedback_form").validate({
-		debug: true,
-		errorClass: 'text-danger',
-		rules: {
-			non_title: {
-				required: true,
-				minlength: 2
-			},
+	// $("#feedback_form").validate({
+	// 	debug: true,
+	// 	errorClass: 'text-danger',
+	// 	rules: {
+	// 		non_title: {
+	// 			required: true,
+	// 			minlength: 2
+	// 		},
 		
-		},
-		messages: {
-			usr_captcha: {
-				equalTo: "Incorrect verification code"
-			},
-			non_email: {
-				remote: "Email already in use"
-			}
-		},
-		submitHandler: function() {
-			$.ajax({
-				type: "POST",
-				url: base_url + "oprs/signup/sign_up/",
-				data: $('#form_sign_up').serializeArray(),
-				cache: false,
-				crossDomain: true,
-				success: function(data) {
-					$.notify({
-						icon: 'fa fa-check-circle',
-						message: 'Thank you for signing up. You can now log in.'
-					}, {
-						type: 'success',
-						timer: 3000,
-					});
+	// 	},
+	// 	messages: {
+	// 		usr_captcha: {
+	// 			equalTo: "Incorrect verification code"
+	// 		},
+	// 		non_email: {
+	// 			remote: "Email already in use"
+	// 		}
+	// 	},
+	// 	submitHandler: function() {
+	// 		$.ajax({
+	// 			type: "POST",
+	// 			url: base_url + "oprs/signup/sign_up/",
+	// 			data: $('#form_sign_up').serializeArray(),
+	// 			cache: false,
+	// 			crossDomain: true,
+	// 			success: function(data) {
+	// 				$.notify({
+	// 					icon: 'fa fa-check-circle',
+	// 					message: 'Thank you for signing up. You can now log in.'
+	// 				}, {
+	// 					type: 'success',
+	// 					timer: 3000,
+	// 				});
 
-					$('#form_sign_up')[0].reset();
-					$('#refresh_captcha').click();
-				}
-			});
-		}
-	});
+	// 				$('#form_sign_up')[0].reset();
+	// 				$('#refresh_captcha').click();
+	// 			}
+	// 		});
+	// 	}
+	// });
 
 	$('#submit_feedback').on('click', function(){
 		if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
@@ -230,7 +230,7 @@ $(document).ready(function () {
 			'ux' : selectedRatingUX,
 			'ui_sug' : uiSuggestion,
 			'ux_sug' : uxSuggestion,
-			'csf_system' : 'eReview'
+			'csf_system' : 'eJournal Admin'
 			};
 	
 			const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
@@ -3094,54 +3094,54 @@ $(document).ready(function () {
 			}
 		});
 
-	$('#feedback_form').on('submit', function (e) {
+	// $('#feedback_form').on('submit', function (e) {
 
-		e.preventDefault();
+	// 	e.preventDefault();
 
-		var alert = '<div class="alert alert-danger w-100" role="alert"> \
-                        Please select your rating. \
-                        </div>';
+	// 	var alert = '<div class="alert alert-danger w-100" role="alert"> \
+    //                     Please select your rating. \
+    //                     </div>';
 
-		if (!$("input[name='fb_rate_ui']").is(':checked')) {
-			$(".ui-container .alert-danger").remove();
-			$(alert).hide().appendTo(".ui-container").fadeIn();
-		}
+	// 	if (!$("input[name='fb_rate_ui']").is(':checked')) {
+	// 		$(".ui-container .alert-danger").remove();
+	// 		$(alert).hide().appendTo(".ui-container").fadeIn();
+	// 	}
 
-		if (!$("input[name='fb_rate_ux']").is(':checked')) {
-			$(".ux-container .alert-danger").remove();
-			$(alert).hide().appendTo(".ux-container").fadeIn();
-		}
+	// 	if (!$("input[name='fb_rate_ux']").is(':checked')) {
+	// 		$(".ux-container .alert-danger").remove();
+	// 		$(alert).hide().appendTo(".ux-container").fadeIn();
+	// 	}
 
-		if ($("input[name='fb_rate_ui']").is(':checked') && $("input[name='fb_rate_ux']").is(':checked')) {
+	// 	if ($("input[name='fb_rate_ui']").is(':checked') && $("input[name='fb_rate_ux']").is(':checked')) {
 
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
+	// 		$.ajaxSetup({
+	// 			headers: {
+	// 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	// 			}
+	// 		});
 
-			var formdata = $(this).serializeArray();
-			// console.log(formdata);
-			$.ajax({
-				type: "POST",
-				url: base_url + 'admin/feedback/submit/1',
-				data: formdata,
-				cache: false,
-				crossDomain: true,
-				success: function (data) {
-					// console.log(data);return false;
-					$('#feedback_form').remove();
+	// 		var formdata = $(this).serializeArray();
+	// 		// console.log(formdata);
+	// 		$.ajax({
+	// 			type: "POST",
+	// 			url: base_url + 'admin/feedback/submit/1',
+	// 			data: formdata,
+	// 			cache: false,
+	// 			crossDomain: true,
+	// 			success: function (data) {
+	// 				// console.log(data);return false;
+	// 				$('#feedback_form').remove();
 
-					var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
-                              <p class="text-center btn-link fw-bold"><u><a href="' + base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
+	// 				var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
+    //                           <p class="text-center btn-link fw-bold"><u><a href="' + base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
 
 
-					$(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
+	// 				$(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
 
-				}
-			});
-		}
-	});
+	// 			}
+	// 		});
+	// 	}
+	// });
 
 
 
