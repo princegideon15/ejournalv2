@@ -361,8 +361,8 @@
                         </a>
 
                         <a class="nav-link" href="arta">
-                        <i class="fas fa-star me-1"></i>
-                        CSF ARTA<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
+                        <i class="fas fa-edit me-1"></i>
+                        CSF ARTA<span class="ms-2 badge text bg-danger"><?php echo $arta_count; ?></span>
                         </a>
 
                         

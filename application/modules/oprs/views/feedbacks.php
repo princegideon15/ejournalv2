@@ -99,6 +99,8 @@
                   <div class="col">
                     <div class="mb-3"><canvas id="ui_bar_chart" height="100"></canvas></div>
                     <div><canvas id="ui_pie_chart" height="300"></canvas></div>
+                    
+                    <button class="btn btn-light btn-sm mt-5" id="downloadBtn"><span class="fas fa-download"></span> Download Graph</button>
                   </div>
                   <div class="col">
                     <div>
@@ -108,6 +110,7 @@
                       <canvas id="ux_pie_chart" height="300"></canvas>
                     </div>
                   </div>
+                  
                 </div>
               </div>
               <div class="tab-pane fade" id="csf-grph" role="tabpanel" aria-labelledby="csf-grph-tab" >
@@ -132,3 +135,50 @@
         </div>
       </div>
     </main>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', () => {const charts = [
+            document.getElementById('ui_bar_chart'),
+            document.getElementById('ui_pie_chart'),
+            document.getElementById('ux_bar_chart'),
+            document.getElementById('ux_pie_chart')
+        ];
+
+        // Create a combined canvas
+        const combinedCanvas = document.createElement('canvas');
+        const ctx = combinedCanvas.getContext('2d');
+
+        // Determine total height and max width for combined canvas
+        const width = charts[0].width;
+        const totalHeight = charts.reduce((sum, chart) => sum + chart.height, 0);
+
+        combinedCanvas.width = width;
+        combinedCanvas.height = totalHeight;
+
+        // Draw each chart onto the combined canvas
+        let yOffset = 0;
+        charts.forEach(chart => {
+            ctx.drawImage(chart, 0, yOffset);
+            yOffset += chart.height;
+        });
+
+        // Download the combined canvas as an image
+        const now = new Date();
+
+        // Format the date and time as a string
+        const formattedDateTime = `${now.getFullYear()}-${(now.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${now.getDate()
+        .toString()
+        .padStart(2, '0')} ${now.getHours()
+        .toString()
+        .padStart(2, '0')}:${now.getMinutes()
+        .toString()
+        .padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const link = document.createElement('a');
+        link.download = formattedDateTime + '_ui_ux_charts.jpg';
+        link.href = combinedCanvas.toDataURL('image/jpeg');
+        link.click();
+        });
+    </script>

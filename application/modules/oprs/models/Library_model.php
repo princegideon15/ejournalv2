@@ -9,6 +9,12 @@ class Library_model extends CI_Model {
 	private $tech_rev_crit = 'tbltech_rev_criterias';
 	private $peer_rev_crit = 'tblpeer_rev_criterias';
 
+	// ejournal
+	private $client_type = 'tblcsf_client_type';
+
+	// skms
+	private $regions = 'tblregions';
+
 
 	public function __construct() {
 		parent::__construct();
@@ -178,6 +184,21 @@ class Library_model extends CI_Model {
 		}else{
 			$oprs->update($this->peer_rev_crit, $post, $where);
 		}
+	}
+
+	public function get_regions(){
+		$regions = $this->load->database('members', TRUE);
+		$regions->select('*');
+		$regions->from($this->regions);
+		$query = $regions->get();
+		return $query->result();
+	}
+
+	public function get_client_type(){
+		$this->db->select('*');
+		$this->db->from($this->client_type);
+		$query = $this->db->get();
+		return $query->result();
 	}
 
 }
