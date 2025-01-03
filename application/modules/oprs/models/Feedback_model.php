@@ -151,8 +151,7 @@ class Feedback_model extends CI_Model {
 					) AS star_counts
 					LEFT JOIN dbej.tblcsf_uiux r ON star_counts.stars = r.csf_rate_ui
 					GROUP BY stars
-					ORDER BY stars DESC 
-					LIMIT 100
+					ORDER BY stars DESC
 				";
 
 		// Execute the query

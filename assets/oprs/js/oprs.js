@@ -23,7 +23,7 @@ var mail_content;
 var mail_title = '';
 var editor_mail_content;
 var sst,sstt,abst; // statistics
-var arta_table; // arta
+var arta_table,arta_age_table,arta_reg_table,arta_cc_table,arta_sqd_table; // arta
 
 var minutes = 5,          // otp timer
 seconds = 0,          // otp timer
@@ -940,6 +940,12 @@ $(document).ready(function() {
         "order": [
             [0, "desc"]
         ],
+        columnDefs: [
+            {
+                targets: '_all',
+                className: 'dt-center'
+            }
+        ],
         autowidth: true,
         dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
              "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
@@ -964,7 +970,7 @@ $(document).ready(function() {
             {
                 extend: 'excel',
                 text: 'Export as Excel',
-                messageTop: 'Submission Statistics',
+                messageTop: 'CSF-ARTA Respondents',
                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
                 action: function (e, dt, node, config) {
                     // action saved to logs table
@@ -975,7 +981,7 @@ $(document).ready(function() {
             {
                 extend: 'pdf',
                 text: 'Export as PDF',
-                messageTop: 'Submission Statistics',
+                messageTop: 'CSF-ARTA Respondents',
                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
                 action: function (e, dt, node, config) {
                     // action saved to logs table
@@ -985,7 +991,295 @@ $(document).ready(function() {
             },
             {
                 extend: 'print',
-                messageTop: 'Submission Statistics',
+                messageTop: 'CSF-ARTA Respondents',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+    
+    // arta age 
+    arta_age_table = $('#arta_age_table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        paging: false,
+        columnDefs: [
+            {
+                targets: 0, // Target the first column (ID column)
+                visible: false // Hide the ID column
+            },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents by Age',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents by Age',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents by Age',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents by Age',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+
+    // arta region 
+    arta_reg_table = $('#arta_reg_table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        paging: false,
+        columnDefs: [
+            {
+                targets: 0, // Target the first column (ID column)
+                visible: false // Hide the ID column
+            },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents by Region',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents by Region',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents by Region',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents by Region',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+
+    // arta cc 
+    arta_cc_table = $('#arta_cc_table').DataTable({
+        // "order": [
+        //     [0, "asc"]
+        // ],
+        paging: false,
+        columnDefs: [
+            // {
+            //     targets: 0, // Target the first column (ID column)
+            //     visible: false // Hide the ID column
+            // },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents by Citizen Charter',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents by Citizen Charter',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents by Citizen Charter',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents by Citizen Charter',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+
+    // arta sqd 
+    arta_sqd_table = $('#arta_sqd_table').DataTable({
+        // "order": [
+        //     [0, "asc"]
+        // ],
+        paging: false,
+        columnDefs: [
+            // {
+            //     targets: 0, // Target the first column (ID column)
+            //     visible: false // Hide the ID column
+            // },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents by SQD',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents by SQD',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents by SQD',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents by SQD',
                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
                 action: function (e, dt, node, config) {
                     // action saved to logs table
