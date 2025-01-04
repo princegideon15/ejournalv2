@@ -24,6 +24,7 @@ var mail_title = '';
 var editor_mail_content;
 var sst,sstt,abst; // statistics
 var arta_table,arta_age_table,arta_reg_table,arta_cc_table,arta_sqd_table; // arta
+var uiux_table, uiux_sex_table; // uiux
 
 var minutes = 5,          // otp timer
 seconds = 0,          // otp timer
@@ -1289,6 +1290,78 @@ $(document).ready(function() {
             }
         ]
     });
+
+    // ui/ux sex
+    uiux_sex_table = $('#uiux_sex_table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        paging: false,
+        columnDefs: [
+            // {
+            //     targets: 0, // Target the first column (ID column)
+            //     visible: false // Hide the ID column
+            // },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF UI/UX by Sex',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF UI/UX by Sex',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF UI/UX by Sex',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF UI/UX by Sex',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
     
 
     // all manuscripts;
@@ -1941,7 +2014,7 @@ $(document).ready(function() {
 
     // ui/ux datatable in reports
     if (prv_exp == 0) {
-        $('#uiux_table').DataTable({
+        uiux_table = $('#uiux_table').DataTable({
             columnDefs: [
                 { width: "10px", targets: 0 } // Set the width of the first column
             ],
@@ -1949,7 +2022,7 @@ $(document).ready(function() {
             autoWidth: false 
         });
     } else {
-        $('#uiux_table').DataTable({
+        uiux_table = $('#uiux_table').DataTable({
             columnDefs: [
                 { width: "10px", targets: 0 } // Set the width of the first column
             ],
@@ -7241,6 +7314,53 @@ function getCurrentOTP(refCode){
             abst.row.add(coauthor_row_array);
 
             abst.draw();
+        }
+    });
+  }
+
+  function filter_uiux(){
+    var from = $('#uiux #date_from').val();
+    var to = $('#uiux #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    uiux_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/feedbacks/filter_uiux",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            console.log(data);
+            var i = 1;
+            $.each(data, function(key, val){
+
+                var ui_star = '', ux_star = '';
+                for(var x=0;x<val.csf_rate_ui;x++){
+                    ui_star += '<span class="text-warning fs-5 star-icon">★</span>';
+                }
+                for(var x=0;x<val.csf_rate_ux;x++){
+                    ux_star += '<span class="text-warning fs-5 star-icon">★</span>';
+                }
+
+                uiux_table.row.add([
+                    i++,
+                    val.email,
+                    ui_star,
+                    val.csf_ui_suggestions,
+                    ux_star,
+                    val.csf_ux_suggestions,
+                    val.csf_system,
+                    moment(val.csf_created_at).format('MMMM D, YYYY h:mm a')
+                ]);
+            });
+            uiux_table.draw();
         }
     });
   }

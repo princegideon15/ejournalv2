@@ -49,7 +49,9 @@ class Feedbacks extends OPRS_Controller {
 					$data['main_content'] = "oprs/feedbacks";
 					$data['logs'] = $this->Log_model->count_logs();
 					$data['uiux'] = $this->Feedback_model->get_uiux();
-					$data['csf_feedbacks'] = $this->Feedback_model->get_csf_feedbacks();
+					// echo json_encode($this->Feedback_model->get_uiux());exit;
+					$data['uiux_sex'] = $this->Feedback_model->get_uiux_sex();
+					// $data['csf_feedbacks'] = $this->Feedback_model->get_csf_feedbacks();
 					$data['questions'] = $this->Library_model->get_csf_questions();
 					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
 					// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
@@ -122,6 +124,13 @@ class Feedbacks extends OPRS_Controller {
 
         echo $output;
     }
+
+	public function filter_uiux(){
+        $from = $this->input->post('from', TRUE);
+        $to = $this->input->post('to', TRUE);
+        $output = $this->Feedback_model->get_uiux($from, $to);
+        echo json_encode($output);
+	}
 }
 
 

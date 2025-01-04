@@ -13,10 +13,13 @@
             <h6 class="mb-3">Customer Service Feedback - User Interface / User Experience</h6>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="uiux-tab" data-bs-toggle="tab" href="#uiux" role="tab" aria-controls="uiux" aria-selected="true">UI/UX Feedbacks</a>
+                <a class="nav-link active" data-bs-toggle="tab" href="#uiux" role="tab" aria-controls="uiux" aria-selected="true">UI/UX Feedbacks</a>
               </li>
               <li class="nav-item" role="presentation">
-                <a class="nav-link" id="uiux-grph-tab" onclick="generate_uiux_graph()" data-bs-toggle="tab" href="#uiux-grph" role="tab" aria-controls="uiux-grph" aria-selected="false">UI/UX Graph</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#uiux-sex" role="tab" aria-controls="uiux-sex" aria-selected="true">UI/UX by Sex</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" onclick="generate_uiux_graph()" data-bs-toggle="tab" href="#uiux-grph" role="tab" aria-controls="uiux-grph" aria-selected="false">UI/UX Graph</a>
               </li>
               <!-- <li class="nav-item" role="presentation">
                 <a class="nav-link" id="csf-tab" data-bs-toggle="tab" href="#csf" role="tab" aria-controls="csf" aria-selected="false">Client Satisfaction Feedbacks</a>
@@ -26,7 +29,20 @@
               </li> -->
             </ul>
             <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active" id="uiux" role="tabpanel" aria-labelledby="uiux-tab">
+              <div class="tab-pane fade show active" id="uiux" role="tabpanel" aria-labelledby="uiux">
+                <div class="d-flex gap-2 mt-3">
+                  <div class="mb-1">
+                      <label for="date_from" class="form-label">Start Date</label>
+                      <input type="date" id="date_from" class="form-control">
+                  </div>
+                  <div class="mb-1">
+                      <label for="date_to" class="form-label">End Date</label>
+                      <input type="date" id="date_to" class="form-control">
+                  </div>
+                  <div class="mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light border border-1" onclick="filter_uiux()">Go</button>
+                  </div>
+                </div>
                 <div class="table-responsive mt-3">
                   <table class="table table-hover" id="uiux_table" width="100%" cellspacing="0">
                     <thead>
@@ -43,9 +59,9 @@
                     </thead>
                     <tbody>
                       <?php $c = 1;foreach ($uiux as $row): ?>
-                      <?php $name = $this->Feedback_model->get_name($row->csf_user_id, $row->csf_system); ?>
+                      <!-- <?php $name = $this->Feedback_model->get_name($row->csf_user_id, $row->csf_system); ?> -->
                         <td><?php echo $c++; ?></td>
-                        <td><?php echo $name; ?></td>
+                        <td><?php echo $row->email; ?></td>
                         <td class="mt-0 pt-0">
                             <?php for($i = 0; $i < $row->csf_rate_ui; $i++): ?>
                               <span class="text-warning fs-5 star-icon">★</span>
@@ -66,7 +82,39 @@
                   </table>
                 </div>
               </div>
-              <div class="tab-pane fade" id="csf" role="tabpanel" aria-labelledby="csf-tab">
+              <div class="tab-pane fade" id="uiux-sex" role="tabpanel" aria-labelledby="uiux-sex">
+                <div class="d-flex gap-2 mt-3">
+                  <div class="mb-1">
+                      <label for="date_from" class="form-label">Start Date</label>
+                      <input type="date" id="date_from" class="form-control">
+                  </div>
+                  <div class="mb-1">
+                      <label for="date_to" class="form-label">End Date</label>
+                      <input type="date" id="date_to" class="form-control">
+                  </div>
+                  <div class="mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light border border-1" onclick="filter_arta()">Go</button>
+                  </div>
+                </div>
+                <div class="table-responsive mt-3">
+                  <table class="table table-hover" id="uiux_sex_table" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Sex</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php $c = 1;foreach ($uiux_sex as $row): ?>
+                        <td><?php echo $row->sex_label; ?></td>
+                        <td><?php echo $row->total_count; ?></td>
+                      </tr>
+                      <?php endforeach;?>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- <div class="tab-pane fade" id="csf" role="tabpanel" aria-labelledby="csf-tab">
                 <div class="table-responsive mt-3">
                   <table class="table table-hover" id="cfs_table" width="100%" cellspacing="0">
                     <thead>
@@ -93,7 +141,7 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </div> -->
               <div class="tab-pane fade" id="uiux-grph" role="tabpanel" aria-labelledby="uiux-grph-tab">
                 <div class="row">
                   <div class="col">
@@ -113,7 +161,7 @@
                   
                 </div>
               </div>
-              <div class="tab-pane fade" id="csf-grph" role="tabpanel" aria-labelledby="csf-grph-tab" >
+              <!-- <div class="tab-pane fade" id="csf-grph" role="tabpanel" aria-labelledby="csf-grph-tab" >
                 <select class="form-control" id="csf_questions" onchange="generate_csf_graph()">
                 <option value="0">Overall Satisfcation</option>
                 <?php foreach($questions as $q){
@@ -129,7 +177,7 @@
                     <canvas id="csf_pie_chart" height="100"></canvas>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

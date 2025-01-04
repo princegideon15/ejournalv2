@@ -230,16 +230,103 @@ class Feedback_model extends CI_Model {
 
 	public function get_uiux($from = null, $to = null){
 
-		$this->db->select('*');
-		$this->db->from($this->uiux);
+		// Build the main query
+		$this->db->select('a.*'); // Replace 'joined_data' with actual column(s) needed from the joined table
+		$this->db->from($this->uiux . ' a');
+	
+		// Apply the date filters if both `$from` and `$to` are provided
+		if ($from > 0 && $to > 0) {
+			$this->db->where('a.csf_created_at >=', $from);
+			$this->db->where('a.csf_created_at <=', $to);
+		}
+	
+		// Perform the join dynamically based on `csf_system`
+		$query = $this->db->get();
+		$result = $query->result();
+	
+		// Process each result row to join based on `csf_system`
+		foreach ($result as &$row) {
+			if ($row->csf_system == 'eReview' || $row->csf_system == 'eJournal Admin') {
+				// Use the secondary database for these systems
+				$oprs = $this->load->database('dboprs', TRUE);
+				$oprs->select('usr_username');
+				$oprs->from($this->oprs_users);
+				$oprs->where('usr_id', $row->csf_user_id);
+				$data = $oprs->get()->row_array();
+	
+				// Add the joined data to the result row
+				$row->email = isset($data['usr_username']) ? $data['usr_username'] : null;
+			} else {
+				// Use the primary database for other systems
+				$this->db->select('email');
+				$this->db->from($this->ej_users);
+				$this->db->where('id', $row->csf_user_id);
+				$data = $this->db->get()->row_array();
+	
+				// Add the joined data to the result row
+				$row->email = isset($data['email']) ? $data['email'] : null;
+			}
+		}
+	
+		return $result;
+
+		// $this->db->select('*');
+		// $this->db->from($this->uiux);
+
+		// if($from > 0 && $to > 0){
+		// 	$this->db->where('csf_created_at >=',$from);
+		// 	$this->db->where('csf_created_at <=',$to);
+		// }
+
+		// $query = $this->db->get();
+		// return $query->result();
+	}
+
+	public function get_uiux_sex($from = null, $to = null){
+	
+
+	$query = "SELECT 
+			sex_label, 
+			SUM(total) AS total_count
+		FROM (
+			SELECT 
+				IFNULL(COUNT(csf_user_id), 0) AS total, 
+				sex_name AS sex_label
+			FROM dbej.tblsex
+			LEFT JOIN dbej.tbluser_profiles ON sex_id = sex
+			LEFT JOIN dbej.tblcsf_uiux ON user_id = csf_user_id";
+
 
 		if($from > 0 && $to > 0){
-			$this->db->where('csf_created_at >=',$from);
-			$this->db->where('csf_created_at <=',$to);
+			$query .= " WHERE DATE(csf_created_at) >= " . $from ." DATE(csf_created_at) <= " . $to;
 		}
+		
+		$query .= " GROUP BY sex_id
 
-		$query = $this->db->get();
+			UNION ALL
+
+			SELECT 
+				IFNULL(COUNT(csf_user_id), 0) AS total, 
+				sex AS sex_label
+			FROM dboprs.tblsex AS s
+			LEFT JOIN dboprs.tblusers ON s.id = usr_sex
+			LEFT JOIN dbej.tblcsf_uiux ON usr_id = csf_user_id";
+
+			if($from > 0 && $to > 0){
+				$query .= " WHERE DATE(csf_created_at) >= " . $from ." DATE(csf_created_at) <= " . $to;
+			}
+
+			$query .= "
+			GROUP BY s.id
+		) combined
+		GROUP BY sex_label";
+		
+		// Execute the query
+		$query = $this->db->query($query);
+
+		// Fetch the result
 		return $query->result();
+		
 	}
 }
 
