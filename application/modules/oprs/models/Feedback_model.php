@@ -298,7 +298,7 @@ class Feedback_model extends CI_Model {
 
 
 		if($from > 0 && $to > 0){
-			$query .= " WHERE DATE(csf_created_at) >= " . $from ." DATE(csf_created_at) <= " . $to;
+			$query .= " WHERE DATE(csf_created_at) >= " . $from ." AND DATE(csf_created_at) <= " . $to;
 		}
 		
 		$query .= " GROUP BY sex_id
@@ -313,7 +313,7 @@ class Feedback_model extends CI_Model {
 			LEFT JOIN dbej.tblcsf_uiux ON usr_id = csf_user_id";
 
 			if($from > 0 && $to > 0){
-				$query .= " WHERE DATE(csf_created_at) >= " . $from ." DATE(csf_created_at) <= " . $to;
+				$query .= " WHERE DATE(csf_created_at) >= " . $from ." AND DATE(csf_created_at) <= " . $to;
 			}
 
 			$query .= "

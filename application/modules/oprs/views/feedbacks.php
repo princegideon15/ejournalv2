@@ -93,7 +93,7 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-1" onclick="filter_arta()">Go</button>
+                      <button class="btn btn-light border border-1" onclick="filter_uiux_sex()">Go</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">

@@ -1294,7 +1294,7 @@ $(document).ready(function() {
     // ui/ux sex
     uiux_sex_table = $('#uiux_sex_table').DataTable({
         "order": [
-            [0, "asc"]
+            [0, "desc"]
         ],
         paging: false,
         columnDefs: [
@@ -7337,7 +7337,6 @@ function getCurrentOTP(refCode){
         dataType: 'json',
         type: "POST",
         success: function(data) {
-            console.log(data);
             var i = 1;
             $.each(data, function(key, val){
 
@@ -7361,6 +7360,38 @@ function getCurrentOTP(refCode){
                 ]);
             });
             uiux_table.draw();
+        }
+    });
+  }
+
+  function filter_uiux_sex(){
+    
+    var from = $('#uiux-sex #date_from').val();
+    var to = $('#uiux-sex #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    uiux_sex_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/feedbacks/filter_uiux_sex",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            $.each(data, function(key, val){
+                uiux_sex_table.row.add([
+                    val.sex_label,
+                    val.total_count
+                ]);
+            });
+
+            uiux_sex_table.draw();
         }
     });
   }

@@ -131,6 +131,13 @@ class Feedbacks extends OPRS_Controller {
         $output = $this->Feedback_model->get_uiux($from, $to);
         echo json_encode($output);
 	}
+
+	public function filter_uiux_sex(){
+        $from = $this->input->post('from', TRUE);
+        $to = $this->input->post('to', TRUE);
+        $output = $this->Feedback_model->get_uiux_sex($from, $to);
+        echo json_encode($output);
+	}
 }
 
 
