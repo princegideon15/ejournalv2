@@ -939,7 +939,7 @@ $(document).ready(function() {
     // arta 
     arta_table = $('#arta_table').DataTable({
         "order": [
-            [0, "desc"]
+            [0, "asc"]
         ],
         columnDefs: [
             {
@@ -7392,6 +7392,258 @@ function getCurrentOTP(refCode){
             });
 
             uiux_sex_table.draw();
+        }
+    });
+  }
+
+  function filter_arta(){
+    
+    var from = $('#arta-tab #date_from').val();
+    var to = $('#arta-tab #date_to').val();
+    var region = $('#arta-tab #region').val();
+    var ctype = $('#arta-tab #customer_type').val();
+    var sex = $('#arta-tab #sex').val();
+    
+    var data = {
+        from: from,
+        to: to,
+        region: region,
+        ctype: ctype,
+        sex: sex
+    };
+
+    arta_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            var i = 1;
+            $.each(data, function(key, val){
+                arta_table.row.add([
+                    i++,
+                    val.name,
+                    val.arta_age,
+                    val.sex_name,
+                    val.region_name,
+                    val.arta_agency,
+                    val.arta_service,
+                    val.ctype_desc,
+                    val.arta_cc1,
+                    val.arta_cc2,
+                    val.arta_cc3,
+                    val.arta_sqd1,
+                    val.arta_sqd2,
+                    val.arta_sqd3,
+                    val.arta_sqd4,
+                    val.arta_sqd5,
+                    val.arta_sqd6,
+                    val.arta_sqd7,
+                    val.arta_sqd8,
+                    val.arta_suggestion,
+                    moment(val.arta_created_at).format('MMMM D, YYYY h:mm a')
+                ]);
+            });
+
+            arta_table.draw();
+        }
+    });
+  }
+
+  function filter_arta_age(){
+    
+    var from = $('#arta-age-tab #date_from').val();
+    var to = $('#arta-age-tab #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    arta_age_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta_age",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            var i = 1;
+            var total_male = 0, total_female = 0;
+            $.each(data, function(key, val){
+                total_male += parseInt(val.male);
+                total_female += parseInt(val.female);
+                arta_age_table.row.add([
+                    i++,
+                    (val.age_range == '70-100') ? 'Above 70' : ((val.age_range == '1-19') ? 'Below 19' : val.age_range),
+                    val.male,
+                    val.female
+                ]);
+            });
+            
+            arta_age_table.row.add([
+                i++,
+                'Total',
+                total_male,
+                total_female
+            ]);
+
+            arta_age_table.draw();
+            arta_age_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+            arta_age_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
+        }
+    });
+  }
+
+  function filter_arta_region(){
+    
+    var from = $('#arta-reg-tab #date_from').val();
+    var to = $('#arta-reg-tab #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    arta_reg_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta_region",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            console.log(data);
+            var i = 1;
+            var total_male = 0, total_female = 0, total_per_region = 0, total_region = 0;
+            $.each(data, function(key, val){
+                total_male += parseInt(val.male);
+                total_female += parseInt(val.female);
+                total_per_region == parseInt(val.female) + parseInt(val.male);
+                total_region += parseInt(total_per_region);
+                arta_reg_table.row.add([
+                    i++,
+                    val.region_name,
+                    val.male,
+                    val.female,
+                    total_per_region
+                ]);
+            });
+            
+            arta_reg_table.row.add([
+                i++,
+                'Total',
+                total_male,
+                total_female,
+                total_region
+            ]);
+
+            arta_reg_table.draw();
+            arta_reg_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+            arta_reg_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
+        }
+    });
+  }
+
+  function filter_arta_cc(){
+    
+    var from = $('#arta-cc-tab #date_from').val();
+    var to = $('#arta-cc-tab #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    arta_cc_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta_cc",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            $.each(data, function(key, val){
+                arta_cc_table.row.add([
+                    val.cc,
+                    val.c1,
+                    val.c2,
+                    val.c3,
+                    val.c4,
+                    val.c5,
+                ]);
+            });
+            
+            arta_cc_table.draw();
+            arta_cc_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+            arta_cc_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
+        }
+    });
+  }
+
+  function filter_arta_sqd(){
+    
+    var from = $('#arta-sqd-tab #date_from').val();
+    var to = $('#arta-sqd-tab #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    arta_sqd_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta_sqd",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            var sqd1 = 0, sqd2 = 0, sqd3 = 0, sqd4 = 0, sqd5 = 0, sqdna = 0;
+            $.each(data, function(key, val){
+                sqd1 += parseInt(sqd1);
+                sqd2 += parseInt(sqd2);
+                sqd3 += parseInt(sqd3);
+                sqd4 += parseInt(sqd4);
+                sqd5 += parseInt(sqd5);
+                sqdna += parseInt(sqdna);
+                arta_sqd_table.row.add([
+                    val.sqd,
+                    val.sqd1,
+                    val.sqd2,
+                    val.sqd3,
+                    val.sqd4,
+                    val.sqd5,
+                    val.sqdna
+                ]);
+            });
+            
+            
+            arta_sqd_table.row.add([
+                'Total',
+                sqd1,
+                sqd2,
+                sqd3,
+                sqd4,
+                sqd5,
+                sqdna
+            ]);
+
+            arta_sqd_table.draw();
+            arta_sqd_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+            arta_sqd_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
         }
     });
   }

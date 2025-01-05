@@ -29,16 +29,16 @@
             </ul>
             <div class="tab-content" id="myTabContent">
               <div class="tab-pane fade show active" id="arta-tab" role="tabpanel" aria-labelledby="arta-tab">
-                <div class="d-flex gap-2 mt-3">
-                  <div class="mb-1">
+                <div class="row mt-3">
+                  <div class="col mb-1">
                       <label for="date_from" class="form-label">Start Date</label>
                       <input type="date" id="date_from" class="form-control">
                   </div>
-                  <div class="mb-1">
+                  <div class="col mb-1">
                       <label for="date_to" class="form-label">End Date</label>
                       <input type="date" id="date_to" class="form-control">
                   </div>
-                  <div class="mb-1">
+                  <div class="col mb-1">
                       <label for="region" class="form-label">Region</label>
                       <select class="form-select" name="region" id="region">
                         <option value="">All</option>
@@ -47,7 +47,7 @@
                         <?php endforeach ?>
                       </select>
                   </div>
-                  <div class="mb-1">
+                  <div class="col mb-1">
                       <label for="customer_type" class="form-label">Customer Type</label>
                       <select class="form-select" name="customer_type" id="customer_type">
                         <option value="">All</option>
@@ -56,7 +56,7 @@
                         <?php endforeach ?>
                       </select>
                   </div>
-                  <div class="mb-1">
+                  <div class="col mb-1">
                       <label for="sex" class="form-label">Sex</label>
                       <select class="form-select" name="sex" id="sex">
                         <option value="">All</option>
@@ -64,8 +64,8 @@
                         <option value="2">Female</option>
                       </select>
                   </div>
-                  <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-1" onclick="filter_arta()">Go</button>
+                  <div class="col mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light border border-3" onclick="filter_arta()">Apply Filter</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -135,7 +135,7 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-1" onclick="filter_arta()">Go</button>
+                      <button class="btn btn-light border border-3" onclick="filter_arta_age()">Apply Filter</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -180,7 +180,7 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-1" onclick="filter_arta()">Go</button>
+                      <button class="btn btn-light border border-3" onclick="filter_arta_region()">Apply Filter</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -231,7 +231,7 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-1" onclick="filter_arta()">Go</button>
+                      <button class="btn btn-light border border-3" onclick="filter_arta_cc()">Apply Filter</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -275,7 +275,7 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-1" onclick="filter_arta()">Go</button>
+                      <button class="btn btn-light border border-3" onclick="filter_arta_sqd()">Apply Filter</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">

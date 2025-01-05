@@ -70,6 +70,44 @@ class Arta extends OPRS_Controller {
 			}
 		}
 	}
+
+	public function filter_arta(){
+        $from = $this->input->post('from', TRUE);
+        $to = $this->input->post('to', TRUE);
+        $region = $this->input->post('region', TRUE);
+        $ctype = $this->input->post('ctype', TRUE);
+        $sex = $this->input->post('sex', TRUE);
+        $output = $this->Arta_model->get_arta($from, $to, $region, $ctype, $sex);
+        echo json_encode($output);
+	}
+
+	public function filter_arta_age(){
+        $from = $this->input->post('from', TRUE);
+        $to = $this->input->post('to', TRUE);
+        $output = $this->Arta_model->get_arta_resp_age($from, $to);
+        echo json_encode($output);
+	}
+
+	public function filter_arta_region(){
+        $from = $this->input->post('from', TRUE);
+        $to = $this->input->post('to', TRUE);
+        $output = $this->Arta_model->get_arta_region($from, $to);
+        echo json_encode($output);
+	}
+
+	public function filter_arta_cc(){
+        $from = $this->input->post('from', TRUE);
+        $to = $this->input->post('to', TRUE);
+        $output = $this->Arta_model->get_arta_cc($from, $to);
+        echo json_encode($output);
+	}
+
+	public function filter_arta_sqd(){
+        $from = $this->input->post('from', TRUE);
+        $to = $this->input->post('to', TRUE);
+        $output = $this->Arta_model->get_arta_sqd($from, $to);
+        echo json_encode($output);
+	}
 	
 }
 

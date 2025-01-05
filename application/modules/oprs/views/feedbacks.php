@@ -40,7 +40,7 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-1" onclick="filter_uiux()">Go</button>
+                      <button class="btn btn-light border border-3" onclick="filter_uiux()">Apply Filter</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -93,7 +93,7 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-1" onclick="filter_uiux_sex()">Go</button>
+                      <button class="btn btn-light border border-1" onclick="filter_uiux_sex()">Apply Filter</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">

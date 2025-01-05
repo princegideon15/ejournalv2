@@ -31,7 +31,7 @@ class Arta_model extends CI_Model {
 		$this->load->database(ENVIRONMENT);
 	}
 
-    public function get_arta($from = null, $to = null){
+    public function get_arta($from = null, $to = null, $region = null, $ctype = null, $sex = null){
         $this->db->select('a.*, CONCAT(first_name," ",last_name) as name, sex_name, ctype_desc, region_name');
 		$this->db->from($this->arta . ' a');
 		$this->db->join($this->ej_client . ' e', 'a.arta_user_id = e.user_id');
@@ -44,19 +44,34 @@ class Arta_model extends CI_Model {
 			$this->db->where('DATE(m.date_created) <=',$to);
         }
 
+		if($region){
+			$this->db->where('arta_region',$region);
+		}
+
+		if($ctype){
+			$this->db->where('arta_ctype',$ctype);
+		}
+
+		if($sex){
+			$this->db->where('arta_sex',$sex);
+		}
+
 		$query = $this->db->get();
 		return $query->result();
     }
 
 	public function get_arta_resp_age($from = null, $to = null){
-		$this->db->select('CONCAT(min_age,"-",max_age) AS age_range, 
-		(SELECT COUNT(*) FROM dbej.tblcsf_arta AS csf WHERE csf.arta_sex = 1 AND csf.arta_age >= min_age AND csf.arta_age <= max_age) AS male, 
-		(SELECT COUNT(*) FROM dbej.tblcsf_arta AS csf WHERE csf.arta_sex = 2 AND csf.arta_age >= min_age AND csf.arta_age <= max_age) AS female');
 
-		// if($from > 0 && $to > 0){
-		//     $this->db->where('DATE(m.date_created) >=',$from);
-		// 	$this->db->where('DATE(m.date_created) <=',$to);
-        // }
+		$where = '';
+		
+		if($from > 0 && $to > 0){
+		    $where = ' AND DATE(csf.arta_created_at) >= ' . $from . ' AND DATE(csf.arta_created_at) <= ' . $to;
+        }
+
+		$this->db->select('CONCAT(min_age,"-",max_age) AS age_range, 
+		(SELECT COUNT(*) FROM dbej.tblcsf_arta AS csf WHERE csf.arta_sex = 1 AND csf.arta_age >= min_age AND csf.arta_age <= max_age' . $where . ') AS male, 
+		(SELECT COUNT(*) FROM dbej.tblcsf_arta AS csf WHERE csf.arta_sex = 2 AND csf.arta_age >= min_age AND csf.arta_age <= max_age' . $where . ') AS female');
+
 
 		$this->db->from($this->age_group);
 		$query = $this->db->get();
@@ -65,39 +80,58 @@ class Arta_model extends CI_Model {
 
 	public function get_arta_region($from = null, $to = null){
 
-		$this->db->select('region_name, COUNT(CASE WHEN arta_sex = 1 THEN 1 END) AS male, COUNT(CASE WHEN arta_sex = 2 THEN 1 END) AS female');
-		$this->db->from('new_dbskms.tblregions');
-		$this->db->join($this->arta,'arta_region = region_id','left');
-
+		$where = '';
+		
 		if($from > 0 && $to > 0){
-		    $this->db->where('DATE(arta_created_at) >=',$from);
-			$this->db->where('DATE(arta_created_at) <=',$to);
+		    $where = ' AND DATE(csf.arta_created_at) >= ' . $from . ' AND DATE(csf.arta_created_at) <= ' . $to;
         }
 
+		$this->db->select('region_name, 
+		(SELECT COUNT(*) FROM dbej.tblcsf_arta AS csf WHERE csf.arta_sex = 1 AND arta_region LIKE region_id' . $where . ') AS male, 
+		(SELECT COUNT(*) FROM dbej.tblcsf_arta AS csf WHERE csf.arta_sex = 2 AND arta_region LIKE region_id' . $where . ') AS female');
+		$this->db->from('new_dbskms.tblregions');
+
+	
 		$this->db->group_by('region_id');
 		$query = $this->db->get();
 		return $query->result();
 	}
 
 	public function get_arta_cc($from = null, $to = null){
+
+		$where = '';
+		
+		if($from > 0 && $to > 0){
+		    $where = ' WHERE DATE(arta_created_at) >= ' . $from . ' AND DATE(arta_created_at) <= ' . $to . ' ';
+        }
+
 		
 		$query = "SELECT 
-						IFNULL(Citizen_Charter,'Total') as cc,
-						SUM(CASE WHEN val = 1 THEN 1 ELSE 0 END) AS 'c1',
-						SUM(CASE WHEN val = 2 THEN 1 ELSE 0 END) AS 'c2',
-						SUM(CASE WHEN val = 3 THEN 1 ELSE 0 END) AS 'c3',
-						SUM(CASE WHEN val = 4 THEN 1 ELSE 0 END) AS 'c4',
-						SUM(CASE WHEN val = 5 THEN 1 ELSE 0 END) AS 'c5'
-					FROM (
-						SELECT 'CC1' AS Citizen_Charter, arta_cc1 as val FROM tblcsf_cc1 left join tblcsf_arta on c1_value = arta_cc1
+						COALESCE(ref.Citizen_Charter,'Total') as cc,
+						COALESCE(SUM(CASE WHEN val = 1 THEN 1 ELSE 0 END),0) AS 'c1',
+						COALESCE(SUM(CASE WHEN val = 2 THEN 1 ELSE 0 END),0) AS 'c2',
+						COALESCE(SUM(CASE WHEN val = 3 THEN 1 ELSE 0 END),0) AS 'c3',
+						COALESCE(SUM(CASE WHEN val = 4 THEN 1 ELSE 0 END),0) AS 'c4',
+						COALESCE(SUM(CASE WHEN val = 5 THEN 1 ELSE 0 END),0) AS 'c5'
+					FROM 
+						(SELECT 'CC1' AS Citizen_Charter
 						UNION ALL
-						SELECT 'CC2' AS Citizen_Charter, arta_cc2 as val FROM tblcsf_cc2 left join tblcsf_arta on c2_value = arta_cc2
+						SELECT 'CC2'
 						UNION ALL
-						SELECT 'CC3' AS Citizen_Charter, arta_cc3 as val FROM tblcsf_cc3 left join tblcsf_arta on c3_value = arta_cc3
-					) AS combined_data
-					GROUP BY Citizen_Charter
+						SELECT 'CC3') AS ref
+					LEFT JOIN (
+						SELECT 'CC1' AS Citizen_Charter, arta_cc1 AS val FROM tblcsf_cc1 
+						LEFT JOIN tblcsf_arta ON c1_value = arta_cc1 " . $where . " 
+						UNION ALL
+						SELECT 'CC2' AS Citizen_Charter, arta_cc2 AS val FROM tblcsf_cc2 
+						LEFT JOIN tblcsf_arta ON c2_value = arta_cc2 " . $where . " 
+						UNION ALL
+						SELECT 'CC3' AS Citizen_Charter, arta_cc3 AS val FROM tblcsf_cc3 
+						LEFT JOIN tblcsf_arta ON c3_value = arta_cc3 " . $where . "
+					) AS combined_data 
+					ON ref.Citizen_Charter = combined_data.Citizen_Charter
+					GROUP BY ref.Citizen_Charter
 					WITH ROLLUP";
-			
 		// Execute the query
 		$query = $this->db->query($query);
 
@@ -107,13 +141,21 @@ class Arta_model extends CI_Model {
 	}
 
 	public function get_arta_sqd($from = null, $to = null){
+
+		$where = '';
+		
+		if($from > 0 && $to > 0){
+		    $where = ' AND DATE(arta_created_at) >= ' . $from . ' AND DATE(arta_created_at) <= ' . $to . ' ';
+        }
+
 		$this->db->select("sqd_value as sqd, 
-		(select count(*) from tblcsf_arta where arta_sqd1 = sqd_value) as 'sqd1', 
-		(select count(*) from tblcsf_arta where arta_sqd2 = sqd_value) as 'sqd2', 
-		(select count(*) from tblcsf_arta where arta_sqd3 = sqd_value) as 'sqd3',
-		(select count(*) from tblcsf_arta where arta_sqd4 = sqd_value) as 'sqd4', 
-		(select count(*) from tblcsf_arta where arta_sqd5 = sqd_value) as 'sqd5', 
-		(select count(*) from tblcsf_arta where arta_sqd5 != sqd_value) as 'sqdna'");
+		(select count(*) from tblcsf_arta where arta_sqd1 = sqd_value " . $where . " ) as 'sqd1', 
+		(select count(*) from tblcsf_arta where arta_sqd2 = sqd_value " . $where . " ) as 'sqd2', 
+		(select count(*) from tblcsf_arta where arta_sqd3 = sqd_value " . $where . " ) as 'sqd3',
+		(select count(*) from tblcsf_arta where arta_sqd4 = sqd_value " . $where . " ) as 'sqd4', 
+		(select count(*) from tblcsf_arta where arta_sqd5 = sqd_value " . $where . " ) as 'sqd5', 
+		(select count(*) from tblcsf_arta where arta_sqd5 != sqd_value " . $where . " ) as 'sqdna'");
+		
 		$this->db->from($this->sqd);
 		$query = $this->db->get();
 		return $query->result();
