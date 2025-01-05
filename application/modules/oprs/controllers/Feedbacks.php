@@ -29,7 +29,7 @@ class Feedbacks extends OPRS_Controller {
 		$this->load->model('Log_model');
 		$this->load->model('User_model');
 		$this->load->model('Manuscript_model');
-		$this->load->model('Client/CSF_model');
+		$this->load->model('client/CSF_model');
 		$this->load->helper('is_online_helper');
 		$this->load->model('client/Library_model');
 		$this->load->model('Arta_model');
@@ -108,7 +108,7 @@ class Feedbacks extends OPRS_Controller {
 		echo json_encode($output);
 	}
 
-	public function submit_csf_ui_ux($flag){
+	public function submit_csf_ui_ux(){
 		
         $post = [
             'csf_user_id' => $this->session->userdata('_oprs_user_id'),

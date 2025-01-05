@@ -92,6 +92,7 @@ class User extends OPRS_Controller {
 		$post['usr_role'] = $this->input->post('usr_role', TRUE);
 		$role = $post['usr_role'];
 		$post['usr_sys_acc'] = $this->input->post('usr_sys_acc', TRUE);
+		$post['usr_sex'] = $this->input->post('usr_sex', TRUE);
 		$post['usr_desc'] = $this->User_model->get_role($role);
 		$where['usr_id'] = $id;
 		$this->User_model->update_user(array_filter($post), $where);

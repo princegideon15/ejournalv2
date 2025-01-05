@@ -116,7 +116,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Info</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -140,6 +140,14 @@
           <div class="mb-3">
             <label for="usr_contact" class="form-label">Contact</label>
             <input type="text" class="form-control" id="usr_contact" name="usr_contact" placeholder="Your contact number">
+          </div>
+          <div class="mb-3">
+            <label for="usr_sex" class="form-label">Sex</label>
+            <select id="usr_sex" name="usr_sex" class="form-select">
+              <option value="" selected>Select Sex</option>
+              <option value='1'>Male</option>
+              <option value='2'>Female</option>
+            </select>
           </div>
           <!-- <div class="mb-3">
             <label for="usr_sys_acc">System Access</label>

@@ -143,46 +143,46 @@ $(document).ready(function() {
         });
     });
 
-    $("#feedback_form").validate({
-        debug: true,
-        errorClass: 'text-danger',
-        rules: {
-            non_title: {
-                required: true,
-                minlength: 2
-            },
+    // $("#feedback_form").validate({
+    //     debug: true,
+    //     errorClass: 'text-danger',
+    //     rules: {
+    //         non_title: {
+    //             required: true,
+    //             minlength: 2
+    //         },
      
-        },
-        messages: {
-            usr_captcha: {
-                equalTo: "Incorrect verification code"
-            },
-            non_email: {
-                remote: "Email already in use"
-            }
-        },
-        submitHandler: function() {
-            $.ajax({
-                type: "POST",
-                url: base_url + "oprs/signup/sign_up",
-                data: $('#form_sign_up').serializeArray(),
-                cache: false,
-                crossDomain: true,
-                success: function(data) {
-                    $.notify({
-                        icon: 'fa fa-check-circle',
-                        message: 'Thank you for signing up. You can now log in.'
-                    }, {
-                        type: 'success',
-                        timer: 3000,
-                    });
+    //     },
+    //     messages: {
+    //         usr_captcha: {
+    //             equalTo: "Incorrect verification code"
+    //         },
+    //         non_email: {
+    //             remote: "Email already in use"
+    //         }
+    //     },
+    //     submitHandler: function() {
+    //         $.ajax({
+    //             type: "POST",
+    //             url: base_url + "oprs/signup/sign_up",
+    //             data: $('#form_sign_up').serializeArray(),
+    //             cache: false,
+    //             crossDomain: true,
+    //             success: function(data) {
+    //                 $.notify({
+    //                     icon: 'fa fa-check-circle',
+    //                     message: 'Thank you for signing up. You can now log in.'
+    //                 }, {
+    //                     type: 'success',
+    //                     timer: 3000,
+    //                 });
 
-                    $('#form_sign_up')[0].reset();
-                    $('#refresh_captcha').click();
-                }
-            });
-        }
-    });
+    //                 $('#form_sign_up')[0].reset();
+    //                 $('#refresh_captcha').click();
+    //             }
+    //         });
+    //     }
+    // });
 
     $('#submit_feedback').on('click', function(){
         if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
@@ -2450,7 +2450,6 @@ $(document).ready(function() {
         },
         submitHandler: function() {
 
-            $('body').loading('start');
             $.ajax({
                 type: "POST",
                 url: base_url + "oprs/user/add_user",
@@ -2514,10 +2513,9 @@ $(document).ready(function() {
             usr_role: {
                 required: true,
             },
-            // usr_email: {
-            // 	email: true,
-            // 	required: true,
-            // }
+            usr_esx: {
+                required: true,
+            }
         },
         messages: {
             usr_password: {
@@ -2546,8 +2544,31 @@ $(document).ready(function() {
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    // console.log(data);
-                    location.reload();
+                    $('#editUserModal').modal('toggle');
+                    Swal.fire({
+                        title: "User updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
                 }
             });
         }

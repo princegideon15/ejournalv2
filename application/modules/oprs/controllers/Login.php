@@ -32,6 +32,9 @@ class Login extends OPRS_Controller {
 			}
 		}
 
+		if ($this->session->flashdata('_oprs_login_msg')) { 
+			$this->session->set_flashdata('_oprs_login_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
+		}
 		$data['main_title'] = "OPRS";
 		$data['titles'] = $this->Library_model->get_titles();
 		$data['main_content'] = "oprs/login";
@@ -489,6 +492,7 @@ class Login extends OPRS_Controller {
 								'sys_acc' => $sys);
 								
 							is_online($id);
+							$this->session->set_userdata('last_activity', time()); // Track the login time
 							$this->session->set_userdata($sess);
 							save_log_oprs(_UserIdFromSession(), 'login', 0, _UserRoleFromSession());
 							$this->create_access_token($id);
@@ -665,6 +669,7 @@ class Login extends OPRS_Controller {
 		session_unset();
 		redirect('oprs/login');
 	}
+
 
 	/**
 	 * Create temporary reviewer account if manuscript request accepted

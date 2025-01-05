@@ -31,6 +31,9 @@ class EJ_Controller extends MX_Controller {
 		$this->load->library("excel");
 		$this->load->library("My_phpmailer");
 
+		
+        $this->check_user_activity();
+
 		$objMail = $this->my_phpmailer->load();
 
 		//security headers
@@ -53,7 +56,37 @@ class EJ_Controller extends MX_Controller {
      
     public function _LoadPage($page = NULL, $data=NULL){
             $this->load->view($page, $data);
-      }
+	}
+
+	
+	private function check_user_activity() {
+		
+		if ($this->session->userdata('_oprs_logged_in')) {
+			$timeout = 1200; // 20 minutes
+			$current_time = time();
+
+			// Check if last activity is set in session
+			if ($this->session->userdata('last_activity')) {
+				$last_activity = $this->session->userdata('last_activity');
+
+				// Check if the user has been inactive for too long
+				if (($current_time - $last_activity) > $timeout) {
+					// Destroy the session and redirect to login
+					save_log_oprs(_UserIdFromSession(), 'session expired', 0, _UserRoleFromSession());
+					is_offline(_UserIdFromSession());
+					$this->session->unset_userdata('_oprs_logged_in'); // Clear specific session data
+					$this->session->unset_userdata('_oprs_username'); // Clear specific session data
+					$this->session->unset_userdata('_oprs_user_id'); // Clear specific session data
+					$this->session->set_flashdata('_oprs_login_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
+					redirect('oprs/login');
+				}
+			}
+
+			// Update the last activity timestamp
+			$this->session->set_userdata('last_activity', $current_time);
+		}
+    }
+
 
 }
 
