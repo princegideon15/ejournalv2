@@ -17,6 +17,7 @@ class Manuscripts extends OPRS_Controller {
 		$this->load->model('User_model');
 		$this->load->model('Feedback_model');
 		$this->load->model('Email_model');
+		$this->load->model('Arta_model');
 		$objMail = $this->my_phpmailer->load();
 		$this->check_expired_request();
 	}
@@ -51,6 +52,7 @@ class Manuscripts extends OPRS_Controller {
 				// $data['publishables'] = $this->Manuscript_model->get_manuscripts(8);	
 				// $data['published'] = $this->Manuscript_model->get_manuscripts(9);		
 				$data['usr_count'] = $this->User_model->count_user();
+				$data['arta_count'] = count($this->Arta_model->get_arta());
 				$data['feed_count'] = $this->Feedback_model->count_feedbacks();
 				// $data['existing'] = $this->Manuscript_model->get_manuscripts(99);
 				$data['main_title'] = "OPRS";

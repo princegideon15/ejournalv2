@@ -13,6 +13,7 @@ class Publication_types extends OPRS_Controller {
 		$this->load->model('Feedback_model');
 		$this->load->model('Log_model');
 		$this->load->model('Library_model');
+		$this->load->model('Arta_model');
 	}
 
 	public function index(){
@@ -32,7 +33,8 @@ class Publication_types extends OPRS_Controller {
 					// $data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
 					$data['usr_count'] = $this->User_model->count_user();
 					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
-					$data['user_types'] = $this->User_model->get_user_types();
+					$data['arta_count'] = count($this->Arta_model->get_arta());
+					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/publication";
 					$this->_LoadPage('common/body', $data);

@@ -41,7 +41,7 @@ $(document).ready(function() {
     // get user access token
     accessToken = $.ajax({
         type: "GET",
-        url: base_url + "oprs/login/get_access_token/",
+        url: base_url + "oprs/login/get_access_token",
         async:false,
         crossDomain: true,
         success: function(data) {
@@ -164,7 +164,7 @@ $(document).ready(function() {
         submitHandler: function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/signup/sign_up/",
+                url: base_url + "oprs/signup/sign_up",
                 data: $('#form_sign_up').serializeArray(),
                 cache: false,
                 crossDomain: true,
@@ -235,7 +235,7 @@ $(document).ready(function() {
                     }).then((result) => {
                         /* Read more about handling dismissals below */
                         if (result.dismiss === Swal.DismissReason.timer) {
-                        window.location.href = base_url + "oprs/login/logout/";
+                        window.location.href = base_url + "oprs/login/logout";
                         }
                     });
                     }else{
@@ -366,7 +366,7 @@ $(document).ready(function() {
     // get members info
     $.ajax({
         type: "GET",
-        url: base_url + "oprs/manuscripts/members/",
+        url: base_url + "oprs/manuscripts/members",
         dataType: "json",
         crossDomain: true,
         success: function(data) {
@@ -457,7 +457,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "GET",
-            url: base_url + "oprs/notifications/notif_tracker/",
+            url: base_url + "oprs/notifications/notif_tracker",
             dataType: "json",
             crossDomain: true,
             success: function(data) {  
@@ -626,7 +626,7 @@ $(document).ready(function() {
         var formAction = form.attr('action');
         
         $.ajax({
-            url: base_url + "oprs/manuscripts/upload/",
+            url: base_url + "oprs/manuscripts/upload",
             data: formdata ? formdata : form.serialize(),
             cache: false,
             contentType: false,
@@ -2238,7 +2238,7 @@ $(document).ready(function() {
     // get authors info
     $.ajax({
         type: "GET",
-        url: base_url + "oprs/manuscripts/authors/",
+        url: base_url + "oprs/manuscripts/authors",
         dataType: "json",
         crossDomain: true,
         success: function(data) {
@@ -2304,7 +2304,7 @@ $(document).ready(function() {
                 required: true,
                 email: true,
                 remote: {
-                    url: base_url + "oprs/signup/verify_email/",
+                    url: base_url + "oprs/signup/verify_email",
                     type: "post"
                 }
             },
@@ -2333,7 +2333,7 @@ $(document).ready(function() {
         submitHandler: function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/signup/sign_up/",
+                url: base_url + "oprs/signup/sign_up",
                 data: $('#form_sign_up').serializeArray(),
                 cache: false,
                 crossDomain: true,
@@ -2353,6 +2353,40 @@ $(document).ready(function() {
         }
     });
 
+    $('#form_add_user #usr_password').on('keyup', function() {
+        $("#password_strength_container").removeClass('d-none');
+        if($(this).val().length > 0){
+          var password = $(this).val();
+          var strength = getPasswordStrength(password);
+          var barColor, passwordStrength;
+          if (strength <= 25) {
+              barColor = 'red';
+              passwordStrength = 'Weak';
+          } else if (strength <= 50) {
+              barColor = 'orange';
+              passwordStrength = 'Good';
+          } else if (strength <= 75) {
+              barColor = 'yellow';
+              passwordStrength = 'Fair';
+          }else {
+            barColor = 'green';
+            passwordStrength = 'Excellent';
+          }
+          $('#password-strength').text(passwordStrength);
+          $('#password-strength-bar').css('width' , strength + '%');
+          $('#password-strength-bar').css('background-color', barColor);
+        }
+      });
+
+
+      // Add custom validation method for password
+      $.validator.addMethod("passwordCheck", function(value, element) {
+        return this.optional(element) || 
+            /[A-Za-z]/.test(value) && // At least 1 letter
+            /\d/.test(value) &&      // At least 1 number
+            /[!@#$%^&*(),.?":{}|<>]/.test(value); // At least 1 special character
+    }, "Password must contain at least 1 letter, 1 number, and 1 special character.");
+
     // add user validation
     $("#form_add_user").validate({
         debug: true,
@@ -2360,11 +2394,11 @@ $(document).ready(function() {
         rules: {
             usr_password: {
                 required: true,
-                minlength: 5
+                minlength: 8,
+                passwordCheck: true
             },
             usr_rep_password: {
                 required: true,
-                minlength: 5,
                 equalTo: "#form_add_user #usr_password"
             },
             usr_username: {
@@ -2372,7 +2406,7 @@ $(document).ready(function() {
                 minlength: 3,
                 email: true,
                 remote: {
-                    url: base_url + "oprs/user/verify_email/",
+                    url: base_url + "oprs/user/verify_email",
                     type: "post",
                     data: {
                         role: function() {
@@ -2388,24 +2422,30 @@ $(document).ready(function() {
             usr_role: {
                 required: true,
             },
+            usr_sex: {
+                required: true,
+            },
         },
         messages: {
             usr_password: {
-                required: "Please provide a password",
-                minlength: "Your password must be at least 5 characters long"
+                // required: "Please provide a password",
+                minlength: "Your password must be at least 8 characters long"
             },
             usr_rep_password: {
-                required: "Please provide a password",
+                // required: "Please provide a password",
                 minlength: "Your password must be at least 5 characters long",
-                equalTo: "Please enter the same password entered previously"
+                equalTo: "The Repeast Password field does not match the Password field."
             },
             usr_username: {
-                required: "Please provide a username",
+                // required: "Please provide a username",
                 minlength: "Your username must be at least 3 characters long",
                 remote: "Email already used",
             },
             usr_role: {
-                required: "Please select user role",
+                // required: "Please select user role",
+            },
+            usr_sex: {
+                // required: "Please select sex",
             },
         },
         submitHandler: function() {
@@ -2413,12 +2453,35 @@ $(document).ready(function() {
             $('body').loading('start');
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/user/add_user/",
+                url: base_url + "oprs/user/add_user",
                 data: $('#form_add_user').serializeArray(),
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    location.reload();
+                    Swal.fire({
+                        title: "New user added successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
                 }
             });
         }
@@ -3152,7 +3215,7 @@ $(document).ready(function() {
             var formAction = form.attr('action');
 
             $.ajax({
-                url: base_url + "oprs/manuscripts/final_review/",
+                url: base_url + "oprs/manuscripts/final_review",
                 data: formdata ? formdata : form.serialize(),
                 cache: false,
                 contentType: false,
@@ -3696,7 +3759,7 @@ $(document).ready(function() {
     $('#refresh_captcha').click(function() {
         $.ajax({
             type: "GET",
-            url: base_url + "oprs/signup/refresh_captcha/",
+            url: base_url + "oprs/signup/refresh_captcha",
             dataType: "json",
             crossDomain: true,
             success: function(data) {
@@ -4036,7 +4099,7 @@ $(document).ready(function() {
                 required: true,
                 minlength: 5,
                 remote: {
-                    url: base_url + "oprs/user/verify_old_password/",
+                    url: base_url + "oprs/user/verify_old_password",
                     type: "post"
                 }
             },
@@ -4065,7 +4128,7 @@ $(document).ready(function() {
         submitHandler: function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/user/change_password/",
+                url: base_url + "oprs/user/change_password",
                 data: $('#form_change_pass').serializeArray(),
                 cache: false,
                 crossDomain: true,
@@ -4105,7 +4168,7 @@ $(document).ready(function() {
     $('#default_auth').click(function() {
         $.ajax({
             type: "POST",
-            url: base_url + "oprs/manuscripts/default_auth/",
+            url: base_url + "oprs/manuscripts/default_auth",
             dataType: "json",
             cache: false,
             crossDomain: true,
@@ -4396,7 +4459,7 @@ $(document).ready(function() {
             var formAction = form.attr('action');
 
             $.ajax({
-                url: base_url + "oprs/logs/import_backup/",
+                url: base_url + "oprs/logs/import_backup",
                 data: formdata ? formdata : form.serialize(),
                 cache: false,
                 contentType: false,
@@ -4418,7 +4481,7 @@ $(document).ready(function() {
         $('body').loading('start');
 
         $.ajax({
-            url: base_url + "oprs/logs/clear_logs/",
+            url: base_url + "oprs/logs/clear_logs",
             cache: false,
             contentType: false,
             processData: false,
@@ -4617,7 +4680,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: base_url + "oprs/manuscripts/add_remarks/",
+            url: base_url + "oprs/manuscripts/add_remarks",
             data : formdata ? formdata :form.serialize(),
             cache: false,
             contentType: false,
@@ -4668,7 +4731,7 @@ $(document).ready(function() {
         
         $.ajax({
             type: "POST",
-            url: base_url + 'oprs/emails/update_email_content/',
+            url: base_url + 'oprs/emails/update_email_content',
             data:  formData,
             cache: false,
             crossDomain: true,
@@ -4748,7 +4811,7 @@ $(document).ready(function() {
         submitHandler: function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/manuscripts/for_publication/",
+                url: base_url + "oprs/manuscripts/for_publication",
                 data: $('#publication_form').serializeArray(),
                 cache: false,
                 crossDomain: true,
@@ -6282,7 +6345,7 @@ function notifications(){
 
         $.ajax({
             type: "GET",
-            url: base_url + "oprs/notifications/notif_tracker/",
+            url: base_url + "oprs/notifications/notif_tracker",
             dataType: "json",
             crossDomain: true,
             success: function(data) {  
@@ -6305,7 +6368,7 @@ function notifications(){
         var a = moment().format('MMMM DD YYYY hh:mm:ss');
         $.ajax({
             type: "GET",
-            url: base_url + "oprs/notifications/notif_tracker/",
+            url: base_url + "oprs/notifications/notif_tracker",
             dataType: "json",
             crossDomain: true,
             success: function(data) {
@@ -7075,7 +7138,7 @@ function getCurrentOTP(refCode){
   
       $.ajax({
         type: "POST",
-        url: base_url + "oprs/login/destroy_user_session/" ,
+        url: base_url + "oprs/login/destroy_user_session" ,
         data: { user_access_token : accessToken },
         success: function(data) {
           // console.log(data);
@@ -7646,4 +7709,34 @@ function getCurrentOTP(refCode){
             arta_sqd_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
         }
     });
+  }
+
+  function getPasswordStrength(password) {
+    // Implement your password strength logic here
+    // For example, you can check for length, uppercase, lowercase, numbers, and special characters
+    var strength = 0;
+    if (password.length >= 8) {
+        strength+=10;
+    }
+    if (password.length >= 12) {
+      strength+=15;
+    }
+    if (password.length >= 16) {
+      strength+=20;
+    }
+    if (/[A-Z]/.test(password)) {
+        strength+=15;
+    }
+    if (/[a-z]/.test(password)) {
+        strength+=10;
+    }
+    if (/[0-9]/.test(password)) {
+        strength+=15;
+    }
+    if   
+    (/[^A-Za-z0-9]/.test(password)) {
+        strength+=15;
+    }
+    return strength;   
+  
   }
