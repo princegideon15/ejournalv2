@@ -18,8 +18,8 @@
          <!-- Bootstrap 5 CSS -->
          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- DataTables Bootstrap 5 CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+        <!-- DataTables Bootstrap 5 CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
 
         <!-- <link rel="stylesheet" href="<?php echo base_url("assets/oprs/css/bootstrap.min.css"); ?>"/>
         <link rel="stylesheet" href="<?php echo base_url("assets/oprs/css/jquery.dataTables.css"); ?>"/> -->

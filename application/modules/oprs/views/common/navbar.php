@@ -24,7 +24,7 @@
   <!-- <ul class="navbar-nav ml-auto ml-md-0 w-100"> -->
   <ul class="navbar-nav ml-auto">
   <li class="nav-item dropdown no-arrow mx-1">
-        <?php if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8) { ?>
+        <?php if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17) { ?>
           <a class="nav-link dropdown-toggle" href="dashboard" id="alertsDropdown" role="button" data-toggle="dropdown">
             <i class="fas fa-bell fa-fw oprs_notif">
               <!-- <?php  if(count($logs) > 0){ ?>

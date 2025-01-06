@@ -25,9 +25,10 @@
                 </thead>
                 <tbody>
                   <?php $c = 1;foreach ($all_logs as $l): ?>
+                    <?php $user = $this->User_model->get_user_name($l->log_user_id); ?>
                   <tr>
                     <td><?php echo $c++; ?></td>
-                    <td><?php echo $this->User_model->get_user_name($l->log_user_id); ?></td>
+                    <td><?php echo $user; ?></td>
                     <td><?php echo $l->log_action; ?></td>
                     <td><?php echo date_format(new DateTime($l->date_created), 'F j, Y g:i a'); ?></td>
                   </tr>

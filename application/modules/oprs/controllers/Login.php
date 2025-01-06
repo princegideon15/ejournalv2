@@ -515,7 +515,7 @@ class Login extends OPRS_Controller {
 							save_log_oprs(_UserIdFromSession(), 'login', 0,  _UserRoleFromSession());
 							$this->create_access_token($id);
 
-							if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8) {
+							if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17) {
 								redirect('oprs/dashboard');
 							} else {
 								redirect('oprs/manuscripts');

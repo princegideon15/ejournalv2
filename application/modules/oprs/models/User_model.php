@@ -124,7 +124,7 @@ class User_model extends CI_Model {
 			$members->where('usr_id', $id);
 			$query = $members->get();
 			$result = $query->result_array();
-			return $result[0]['usr_name'];
+			return $result[0]['usr_name'] ?? 'N/A';
 		}
 	}
 

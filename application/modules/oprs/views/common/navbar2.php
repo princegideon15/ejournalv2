@@ -75,7 +75,7 @@
     <!-- Navbar-->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         <li class="nav-item dropdown no-arrow mx-1">
-            <?php if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8) { ?>
+            <?php if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17) { ?>
             <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="alertsDropdown" role="button" data-bs-toggle="dropdown">
                 <i class="fas fa-bell fa-fw oprs_notif">
                 <!-- <?php  if(count($logs) > 0){ ?>
@@ -246,7 +246,7 @@
                     
                     <div class="sb-sidenav-menu-heading">Main</div>
 
-                    <?php if ($role == 7 || $role == 8 || $role == 3) {?>
+                    <?php if ($role == 7 || $role == 17 || $role == 3) {?>
                         
                         <a class="nav-link" href="dashboard">
                         <i class="fas fa-fw fa-tachometer-alt pe-1"></i>
@@ -261,7 +261,7 @@
                     <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
                     </a> 
                     
-                    <?php if ($role == 7 || $role == 8) {?>
+                    <?php if ($role == 7 || $role == 17) {?>
                     
                     <div class="sb-sidenav-menu-heading">User Management</div>
                     
@@ -273,7 +273,7 @@
                     
                     
                     <?php }?>
-                    <?php if ($role == 8 || $role == 3) {?>
+                    <?php if ($role == 17 || $role == 3) {?>
                         
                         <div class="sb-sidenav-menu-heading">Reports and Statisttics</div>
 
@@ -295,7 +295,7 @@
                         </a> -->
                     
                     <?php }?>
-                    <?php if ($role == 8) {?>
+                    <?php if ($role == 17) {?>
                     
                     
                         <div class="sb-sidenav-menu-heading">Library</div>
@@ -379,7 +379,7 @@
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                <?php if ($role == 8 || $role == 3) {?>
+                <?php if ($role == 17 || $role == 3) {?>
                     <a class="btn btn-info w-100" href="<?php echo base_url('../../admin/dashboard'); ?>"><i class="fa fa-sync me-2"></i>eJournal Admin</a>
                     <hr class="text-light h-10 fw-bold">
                 <?php }?>

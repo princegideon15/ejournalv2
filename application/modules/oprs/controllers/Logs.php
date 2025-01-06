@@ -19,10 +19,10 @@ class Logs extends OPRS_Controller {
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8) {
+				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17) {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/logs";
-					$data['all_logs'] = $this->Log_model->get_logs(38);
+					$data['all_logs'] = $this->Log_model->get_logs(317);
 					$data['logs'] = $this->Log_model->count_logs();
 					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
 					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
@@ -69,8 +69,8 @@ class Logs extends OPRS_Controller {
 		if($flag == 0){
 			$output = $this->Log_model->get_logs(0);
 		}else{
-			if(_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8)
-			$output = $this->Log_model->get_logs(38);
+			if(_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17)
+			$output = $this->Log_model->get_logs(317);
 		}
 		echo json_encode($output);
 	}

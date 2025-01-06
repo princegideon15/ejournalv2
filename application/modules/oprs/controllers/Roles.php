@@ -18,7 +18,7 @@ class Roles extends OPRS_Controller {
 	public function index(){
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 8) {
+				if (_UserRoleFromSession() == 17) {
 					$data['roles'] = $this->User_model->get_user_types(null);
 					$id = $this->session->userdata('_oprs_user_id');
 					$data['users'] = $this->User_model->get_user($id);

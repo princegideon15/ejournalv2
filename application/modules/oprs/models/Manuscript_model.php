@@ -83,7 +83,7 @@ class Manuscript_model extends CI_Model {
 	 */
 	public function get_manus($man_source, $mail) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8 || _UserRoleFromSession() == 7 || _UserRoleFromSession() == 6 ) {
+		if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17 || _UserRoleFromSession() == 7 || _UserRoleFromSession() == 6 ) {
 			// superadmin, admin, managing editor
 			$oprs->select('m.*, status_class, status_desc, status_id');
 			$oprs->from($this->manus . ' m');
