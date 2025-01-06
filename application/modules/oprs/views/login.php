@@ -29,6 +29,12 @@
                     </div>
                 <?php } ?>
 
+                <?php if ($this->session->flashdata('_oprs_session_msg')) { ?>
+                    <div class="alert alert-danger d-flex">
+                        <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('_oprs_session_msg'); ?>
+                    </div>
+                <?php } ?>
+
                 <!-- success author account creation -->
                 <?php if ($this->session->flashdata('success')) { ?>
                     <?php echo $this->session->flashdata('success'); ?>

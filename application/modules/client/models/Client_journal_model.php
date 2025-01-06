@@ -569,7 +569,7 @@ class Client_journal_model extends CI_Model {
 	}
 
 	public function get_user_info($email){
-		$this->db->select('p.*, otp, otp_ref_code');
+		$this->db->select('p.*, otp, otp_ref_code, u.password');
 		$this->db->from($this->profiles . ' p');
 		$this->db->join($this->users . ' u', 'p.user_id = u.id');
 		$this->db->where('u.email', $email);
@@ -582,6 +582,15 @@ class Client_journal_model extends CI_Model {
 		$this->db->from($this->profiles . ' p');
 		$this->db->join($this->users . ' u', 'p.user_id = u.id');
 		$this->db->where('u.id', $id);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_client_info_email($email){
+		$this->db->select('p.*');
+		$this->db->from($this->profiles . ' p');
+		$this->db->join($this->users . ' u', 'p.user_id = u.id');
+		$this->db->where('u.email', $email);
 		$query = $this->db->get();
 		return $query->result();
 	}

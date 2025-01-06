@@ -491,6 +491,7 @@ class User_model extends CI_Model {
 		$oprs->select('*');
 		$oprs->from($this->oprs_users);
 		$oprs->where('usr_username', $email);
+		$oprs->where('usr_role', 1);
 		$query = $oprs->get();
 		$oprs_count_exist = $query->num_rows();
 
@@ -506,7 +507,7 @@ class User_model extends CI_Model {
 		$members->join($this->titles, 'pp_title = title_id');
 		$members->where('usr_name', $email);
 		$query = $members->get();
-		return $query->row_array();
+		return $query->result();
 	}
 
 	public function get_nrcp_member_info_by_id($id){

@@ -46,26 +46,33 @@ class Login extends EJ_Controller {
 	 */
 	public function index($flag = null){
 
-		if (!$this->session->userdata('user_id')) {
-			$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
-			$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
-			$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
-			$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
-			$data['titles'] = $this->Client_journal_model->getTitles();
-			$data['educations'] = $this->Client_journal_model->getEducations();
-			$data['main_title'] = "eJournal";
-			$data['main_content'] = "client/login";
-
-			if($flag){
-				$this->session->set_flashdata('active_link1', '');
-				$this->session->set_flashdata('active_link2', 'active');
-				$this->session->set_flashdata('active_tab1', '');
-				$this->session->set_flashdata('active_tab2', 'show active');
-			}
-			$this->_LoadPage('common/body', $data);
-		}else{
-			redirect('/');
+		if ($this->session->userdata('_ej_logged_in')) {
+			redirect('client/ejournal/');
 		}
+
+		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
+		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['titles'] = $this->Client_journal_model->getTitles();
+		$data['educations'] = $this->Client_journal_model->getEducations();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/login";
+
+		if($flag){
+			$this->session->set_flashdata('active_link1', '');
+			$this->session->set_flashdata('active_link2', 'active');
+			$this->session->set_flashdata('active_tab1', '');
+			$this->session->set_flashdata('active_tab2', 'show active');
+		}
+
+		
+		// if ($this->session->flashdata('_ej_session_msg')) { 
+		// 	$this->session->set_flashdata('_ej_session_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
+		// }
+
+		$this->_LoadPage('common/body', $data);
+		
 	}
 
 	/**
@@ -469,10 +476,12 @@ class Login extends EJ_Controller {
 						
 
 						//set session values
+						$this->session->set_userdata('_ej_logged_in', true);
 						$this->session->set_userdata('user_id', $id);
 						$this->session->set_userdata('email', $verifyOTP[0]->email);
 						$this->session->set_userdata('name', $verifyOTP[0]->name);
 						$this->session->set_userdata('last_visit_date', $last_visit_date);
+						$this->session->set_userdata('last_activity', time()); // Track the login time
 						$this->session->unset_userdata('otp_ref_code');
 						$this->Login_model->delete_otp($id);
 						

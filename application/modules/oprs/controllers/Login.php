@@ -15,6 +15,7 @@ class Login extends OPRS_Controller {
 		$this->load->model('Review_model');
 		$this->load->model('Library_model');
 		$this->load->model('Email_model');
+		$this->load->model('Client/Client_journal_model');
 	}
 
 	/**
@@ -32,9 +33,10 @@ class Login extends OPRS_Controller {
 			}
 		}
 
-		if ($this->session->flashdata('_oprs_login_msg')) { 
-			$this->session->set_flashdata('_oprs_login_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
+		if ($this->session->flashdata('_oprs_session_msg')) { 
+			$this->session->set_flashdata('_oprs_session_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
 		}
+		
 		$data['main_title'] = "OPRS";
 		$data['titles'] = $this->Library_model->get_titles();
 		$data['main_content'] = "oprs/login";
@@ -174,7 +176,7 @@ class Login extends OPRS_Controller {
 								$this->session->set_flashdata('_oprs_login_msg', 'Account temporarily locked for '.(30 - $time_remaining).' minutes.');
 							}
 	
-							redirect('orps/login');
+							redirect('oprs/login');
 						}else{
 							//store login attempt
 							$data = [
@@ -258,10 +260,11 @@ class Login extends OPRS_Controller {
 
 		if($user_info[0]->usr_category == 1){ // nrcp member
 			$nrcp_member_info = $this->User_model->get_nrcp_member_info($email);
-			$user_id = $nrcp_member_info['usr_id'];
-			$name = $nrcp_member_info['title_name'] . ' ' . $nrcp_member_info['pp_first_name'] . ' ' .  $nrcp_member_info['pp_last_name'];
+			$user_id = $nrcp_member_info[0]->usr_id;
+			$name = $nrcp_member_info[0]->title_name . ' ' . $nrcp_member_info[0]->pp_first_name . ' ' .  $nrcp_member_info[0]->pp_last_name;
 		}else if($user_info[0]->usr_category == 2){ // ejournal client and oprs non member author 
-			$ejournal_client_info = $this->Client_journal_model->get_user_info($email);
+			$ejournal_client_info = $this->Client_journal_model->get_client_info_email($email);
+
 			$user_id = $ejournal_client_info[0]->user_id;
 			$name = $ejournal_client_info[0]->title . ' ' . $ejournal_client_info[0]->first_name . ' ' . $ejournal_client_info[0]->last_name;
 		}else{ // oprs user
@@ -665,6 +668,7 @@ class Login extends OPRS_Controller {
 	 */
 	public function logout() {
 		save_log_oprs(_UserIdFromSession(), 'logout', 0, _UserRoleFromSession());
+		$this->Login_model->delete_access_token(_UserIdFromSession());
 		is_offline(_UserIdFromSession());
 		session_unset();
 		redirect('oprs/login');

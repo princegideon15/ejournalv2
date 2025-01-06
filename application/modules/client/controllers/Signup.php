@@ -749,7 +749,7 @@ class Signup extends EJ_Controller {
 			$ref_code = random_string('alnum', 16);
 
 			// get client info
-			$result = $this->Login_model->get_user_info($email);
+			$result = $this->Client_journal_model->get_user_info($email);
 			// create author account in oprs
 			$data = [
 				'usr_id' => $result[0]->user_id,
@@ -757,7 +757,7 @@ class Signup extends EJ_Controller {
 				'usr_password' => $result[0]->password,
 				'usr_contact' => $result[0]->contact,
 				'usr_desc' => 'Author',
-				'usr_role' => 6,
+				'usr_role' => 1,
 				'usr_status' => 2,
 				'usr_category' => 2,
 				'date_created' => date('Y-m-d H:i:s'),
@@ -766,7 +766,7 @@ class Signup extends EJ_Controller {
 				'otp_date' => date('Y-m-d H:i:s'),
 				'otp_ref_code' => $ref_code
 			];
-			
+
 			$this->User_model->create_author_account($data);
 
 			$this->send_create_account_otp($email, $otp, 'author', 3); // register existing client account as author

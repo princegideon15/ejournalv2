@@ -71,20 +71,13 @@ class OPRS_Controller extends MX_Controller {
 				// Check if the user has been inactive for too long
 				if (($current_time - $last_activity) > $timeout) {
 					// Destroy the session and redirect to login
-					// $this->session->sess_destroy();
-
-				
-					// save_log_oprs(_UserIdFromSession(), 'session expired', 0, _UserRoleFromSession());
-					// is_offline(_UserIdFromSession());
-					// session_unset();
-					// redirect('login/logout');
 					
 					save_log_oprs(_UserIdFromSession(), 'session expired', 0, _UserRoleFromSession());
 					is_offline(_UserIdFromSession());
 					$this->session->unset_userdata('_oprs_logged_in'); // Clear specific session data
 					$this->session->unset_userdata('_oprs_username'); // Clear specific session data
 					$this->session->unset_userdata('_oprs_user_id'); // Clear specific session data
-					$this->session->set_flashdata('_oprs_login_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
+					$this->session->set_flashdata('_oprs_session_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
 					redirect('oprs/login');
 				}
 			}

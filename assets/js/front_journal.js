@@ -1052,11 +1052,34 @@ function checkEmail(formData){
 function register_author_acccount(formData){
   $.ajax({
     type: 'POST',
-    url: base_url + "client/signup/register_author_account/",
+    url: base_url + "client/signup/register_author_account",
     data: formData,
     success: function (response) {
-      // console.log("🚀 ~ register_author_acccount ~ response:", response)
-      window.location.href = response;
+      
+      Swal.fire({
+        title: "Redirecting",
+        icon: 'success',
+        // html: "I will close in <b></b> milliseconds.",
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup().querySelector("b");
+            timerInterval = setInterval(() => {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+            window.location.href = response;
+        }
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log("I was closed by the timer");
+            }
+            window.location.href = response;
+        });
     }
   });
 }

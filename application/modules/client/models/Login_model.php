@@ -81,7 +81,7 @@ class Login_model extends CI_Model {
 
   public function activate_account_oprs($id){
 		$oprs = $this->load->database('dboprs', TRUE);
-    $oprs->update($this->oprs_users, ['usr_status' => 0], ['usr_id' => $id]);
+    $oprs->update($this->oprs_users, ['usr_status' => 1], ['usr_id' => $id]);
   }
 
   public function delete_otp($id){
