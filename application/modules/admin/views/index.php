@@ -316,12 +316,12 @@
 											<input type="text" class="form-control" id="art_page" placeholder="ex. 100-200" name="art_page">
 										</div>
 										<div class="mb-3">
-											<label for="art_abstract_file"  class="form-label">Abstract <span class="badge rounded-pill bg-success" id="badge_pdf">PDF only</span> <span class="badge bg-warning text-dark">20MB Limit</span></label>
+											<label for="art_abstract_file"  class="form-label">Abstract <span class="badge rounded-pill bg-success" id="badge_pdf">PDF</span> <span class="badge bg-warning text-dark">20MB Limit</span></label>
 											
 											<input type="file" class="form-control" id="art_abstract_file" name="art_abstract_file" accept="application/pdf">
 										</div>
 										<div class="mb-3">
-											<label for="art_full_text_pdf" class="form-label">Full Text PDF <span class="badge rounded-pill bg-success" id="badge_text">PDF only</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+											<label for="art_full_text_pdf" class="form-label">Full Text PDF <span class="badge rounded-pill bg-success" id="badge_text">PDF</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
 											<input type="file" class="form-control" id="art_full_text_pdf" name="art_full_text_pdf" accept="application/pdf" >
 										</div>
 									
@@ -740,7 +740,7 @@
 									</div>
 									<div class="col">
 										<div class="mb-3">
-											<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG only</span> <span class="badge rounded-pill bg-warning text-dark">200 x 250 pixels</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
+											<label for="edt_photo" class="form-label">Upload Photo <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">200 x 250 pixels</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
 											<input type="file" class="form-control" id="edt_photo" name="edt_photo" accept="image/jpeg" >
 										</div>
 										<div class="mb-3">
@@ -828,7 +828,7 @@
 								<div class="form-group">
 									<form id="form_guidelines">
 										<div class="mb-3">
-											<label for="upload_guidelines" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF only</span></label>
+											<label for="upload_guidelines" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF</span></label>
 											<input type="file" class="form-control" id="upload_guidelines" name="upload_guidelines" accept="application/pdf">
 										</div>
 										<div class="mb-3">
@@ -868,12 +868,12 @@
 									<div class="mb-3">
 										<!-- <label class="rd_container float-right"><input type="radio" name="upload_only" id="upload_only"  value="1"><span class="checkmark"></span></label> -->
 										<div class="upload_cfpi d-none">
-											<label for="upload_cfpi" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF Only</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+											<label for="upload_cfpi" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
 											<input type="file" class="form-control" id="upload_cfpi" name="upload_cfpi" accept="application/pdf">
 										</div>
 
 										<div class="upload_cfp d-none">
-											<label for="upload_cfp" class="form-label">Upload File <span class="badge rounded-pill bg-success">JPG Only</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
+											<label for="upload_cfp" class="form-label">Upload File <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
 											<input type="file" class="form-control" id="upload_cfp" name="upload_cfp" accept="image/jpeg">
 										</div>			
 										<!-- <label class="rd_container float-right"><input type="radio" class="float-right" name="upload_only" id="upload_only" value="2" ><span class="checkmark"></span></label> -->

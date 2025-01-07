@@ -6,6 +6,7 @@ var mem_id = [];
 var mem_exp = [];
 var mem_aff = [];
 var mem_prf = [];
+var mem_type = [];
 var acoa = [];
 var man_id;
 var maxx;
@@ -282,7 +283,6 @@ $(document).ready(function() {
 					dataType: 'json',
                     type: "POST",
                     success: function(data) {
-                        console.log(data);
 						$('#search_result').empty();
 
                         if(data.length > 0){
@@ -379,8 +379,8 @@ $(document).ready(function() {
                 mem_exp.push(val.pp_first_name + ' ' + val.pp_middle_name + ' ' + val.pp_last_name + ' (' + val.mpr_gen_specialization + ')');
                 mem_aff.push(val.bus_name);
                 mem_prf.push(val.title_name);
+                mem_type.push((val.usr_grp_id == 3) ? 'Member' : 'Non-Member');
             });
-
         }
     });
 
@@ -536,6 +536,10 @@ $(document).ready(function() {
         return this.optional(element) || (element.files[0].size <= param)
     }, 'File size must be less than 20 MB');
 
+    $.validator.addMethod("texFile", function (value, element) {
+        return this.optional(element) || /\.(tex)$/i.test(value);
+    }, "Please upload a valid .tex file.");
+
     // unused upload manuscript (author only)
     jQuery(function ($) {
         "use strict";
@@ -555,23 +559,31 @@ $(document).ready(function() {
                 },
                 man_abs : {
                     required: true,
-                    // extension: "pdf",
-                    // filesize : 20000000,
+                    extension: "pdf",
+                    filesize : 20000000,
                 },
                 man_file: {
                     required: true,
-                    // extension: "pdf",
-                    // filesize : 20000000,
+                    extension: "pdf",
+                    filesize : 20000000,
                 },
                 man_word: {
                     required: true,
-                    // extension: "doc|docx",
-                    // filesize : 20000000,
+                    extension: "doc|docx",
+                    filesize : 20000000,
                 },
+                man_latex: {
+                    texFile: true, // Use the custom rule
+                    filesize : 20000000,
+                },
+                man_category: {
+                    required: true,
+                },
+                
                 man_page_position: {
                     required: true,
                 },
-                optradio: {
+                man_author_type: {
                     required: true,
                 },
                 man_affiliation: {
@@ -581,27 +593,87 @@ $(document).ready(function() {
                     required: true,
                 }
             },
+            errorPlacement: function (error, element) {
+              if (element.attr("name") === "man_author_type") {
+                error.appendTo("#author_type_error"); // Place the error below the radio buttons
+              } else {
+                error.insertAfter(element); // Default behavior for other inputs
+              }
+            },
             submitHandler: function() {
-                var full = $('#man_file')[0].files[0].size;
-                var abs = $('#man_abs')[0].files[0].size;
-                var word = $('#man_word')[0].files[0].size;
-                if(full < 20000000) {
-                    $('#badge_full').next('.bg-danger').hide();
-                }else if(abs < 20000000){
-                    $('#badge_abs').next('.bg-danger').hide();
-                }else if(word < 20000000){
-                    $('#badge_word').next('.bg-danger').hide();
-                }
+                // var full = $('#man_file')[0].files[0].size;
+                // var abs = $('#man_abs')[0].files[0].size;
+                // var word = $('#man_word')[0].files[0].size;
+                // var latex = $('#man_latex')[0].files[0].size;
+                // if(full < 20000000) {
+                //     $('#badge_full').next('.bg-danger').hide();
+                // }else if(abs < 20000000){
+                //     $('#badge_abs').next('.bg-danger').hide();
+                // }else if(word < 20000000){
+                //     $('#badge_word').next('.bg-danger').hide();
+                // }else if(latex < 20000000){
+                //     $('#badge_latex').next('.bg-danger').hide();
+                // }
 
-                if (full >= 20000000) {
-                    $('#badge_full').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-                }else if(abs >= 20000000){
-                    $('#badge_abs').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-                }else if(word >= 20000000){
-                    $('#badge_word').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-                }else {
-                    $('#confirmUploadModal').modal('toggle');
-                }
+                // if (full >= 20000000) {
+                //     $('#badge_full').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                // }else if(abs >= 20000000){
+                //     $('#badge_abs').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                // }else if(word >= 20000000){
+                //     $('#badge_word').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                // }else {
+                // }
+                // $('#confirmUploadModal').modal('toggle');
+
+                
+                $('body').loading('start');
+                $('#uploadModal').modal('toggle');
+
+                // var form = $('#manuscript_form');
+                // var formdata = false;
+        
+                // if (window.FormData) {
+                //     formdata = new FormData(form[0]);
+                // }
+
+                var formdata = new FormData($('#manuscript_form')[0]);
+
+                $.ajax({
+                    url: base_url + "oprs/manuscripts/upload",
+                    data: formdata,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    crossDomain: true,
+                    type: 'POST',
+                    success: function(data) {
+                        $('body').loading('stop');
+                        Swal.fire({
+                        title: "Manuscript submitted successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
+                    }
+                });
 
             }
         });
@@ -2261,7 +2333,7 @@ $(document).ready(function() {
         
     // show aythir name on keyup
     if ($('#man_author').length){
-        autocomplete_acoa(document.getElementById("man_author"), mem_exp, '#man_affiliation', '#man_email', '#man_usr_id');
+        autocomplete_acoa(document.getElementById("man_author"), mem_exp, '#man_affiliation', '#man_email', '#man_usr_id', '#author_status');
     }
 
     $('body').tooltip({
@@ -3499,25 +3571,28 @@ $(document).ready(function() {
         var html = '';
         inpIncr++;
 
-        html = '<div id="added_coa"><div class="form-group autocomplete w-100">' +
-            '<label class="fw-bold" for="coa_name">Co-author ' + inpIncr + '</label> <small><a href="javascript:void(0);" class="text-danger"> Remove</a></small>' +
-            '<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="Search/Type by Name/Specialization/Non-member/Non-account">' +
-            '</div>' +
-            '<div class="form-group">' +
-            '<div class="form-row">' +
-            '<div class="col">' +
-            '<input type="text" class="form-control" placeholder="Affiliation" id="coa_affiliation' + inpIncr + '"" name="coa_affiliation[]">' +
-            '</div>' +
-            '<div class="col">' +
-            '<input type="email" class="form-control" placeholder="Email" id="coa_email' + inpIncr + '"" name="coa_email[]">' +
-            '</div>' +
-            '</div>' +
-            '</div></div>';
-
+        
+		html = '<div class="row mb-3">' +
+                    '<p class="fw-bold">Co-author: <span id="coauthor_status' + inpIncr + '" class="text-primary"></span></p>'+
+                    '<div class="col-4 autocomplete">' +
+                        '<label for="coa_name' + inpIncr + '" class="fw-bold form-label">Full Name</label>' +
+                        '<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="First Name M.I. Last name">' +
+                    '</div>' +
+                    '<div class="col-3">' +
+                        '<label for="coa_affiliation' + inpIncr + '" class="fw-bold form-label">Affiliation</label>' +
+                        '<input type="text" class="form-control" id="coa_affiliation' + inpIncr + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
+                    '</div>' +
+                    '<div class="col-4">' +
+                        '<label for="coa_email' + inpIncr + '" class="fw-bold form-label">Email Address</label>' +
+                        '<input type="text" class="form-control" id="coa_email' + inpIncr + '" name="coa_email[]" placeholder="Enter a valid email">' +
+                    '</div>' +
+                    '<div class="col-1">' +
+                        '<button type="button" class="btn btn-outline-danger mt-4"><span class="oi oi-x"></span></button>' +
+                    '</div>' +
+                '<div>';
 
         $('#coauthors').append(html);
-        // autocomplete_acoa(document.getElementById("coa_name" + inpIncr), acoa);
-        autocomplete_acoa(document.getElementById("coa_name" + inpIncr), mem_exp, '#coa_affiliation' + inpIncr, '#coa_email' + inpIncr);
+        autocomplete_acoa(document.getElementById("coa_name" + inpIncr), mem_exp, '#coa_affiliation' + inpIncr, '#coa_email' + inpIncr, '', '#coauthor_status' + inpIncr);
     });
 
     // remove added co-author
@@ -3526,8 +3601,8 @@ $(document).ready(function() {
     });
 
     // change button on send ecretification
-    $('#coauthors').on('click', 'a', function() {
-        $(this).closest('#added_coa').remove();
+    $('#coauthors').on('click', 'button', function() {
+		$(this).closest('.row').remove();
     });
 
     // add reviewers
@@ -4515,20 +4590,19 @@ $(document).ready(function() {
         });
     });
 
-    // non member
-    $('input:radio[name="non_member"]').change(function(){
+    // author type
+    $('input:radio[name="man_author_type"]').change(function(){
         var val = $(this).val();
-        $('.principal').find('span').empty();
+        $('#coauthors').empty();
         if(val == 1){
-            $('.principal').append(' <span class="badge rounded-pill badge-primary">Type Non-Member</span>');
-            $('#man_usr_id').val('');
+            $('#add_coauthors').removeClass('d-none');
         }else{
-            $('.principal').append(' <span class="badge rounded-pill bg-danger">Search Member</span>');
+            $('#add_coauthors').addClass('d-none');
         }
 
-        $('#man_author').val('');
-        $('#man_affiliation').val('');
-        $('#man_email').val('');
+        // $('#man_author').val('');
+        // $('#man_affiliation').val('');
+        // $('#man_email').val('');
     });
 
     // save feedback
@@ -5325,6 +5399,7 @@ function show_hidden_manus() {
     $('#uploadModal .modal-footer .btn_close').hide();
     $('#manuscript_form').show();
     $('.table-borderless').hide();
+    $('#author_status').text('');
 }
 
 // show all reviewers per manuscript
@@ -5779,7 +5854,7 @@ function generate_editor_email(rid, mid) {
                 var new_mail = '';
                 
                 var mail = moment().format('MMMM D, YYYY') + '<br/><br/>' + editor_mail_content;
-console.log(mail);
+
                 $('#rev_header' + mid).text($('#trk_rev' + mid).val());
                 $('#rev_header_mail' + mid).text($('#trk_rev' + mid).val());
 
@@ -7181,7 +7256,7 @@ function getCurrentOTP(refCode){
   function toggleSearch(){
     $('#searchModal').modal('toggle');
     setTimeout(function (){
-        $('#search').focus();
+        $('#searchModal #search').focus();
     }, 100);
   }
 

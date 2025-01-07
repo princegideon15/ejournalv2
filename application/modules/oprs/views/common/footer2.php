@@ -575,7 +575,7 @@
 
 <!-- Upload Manuscript-->
 <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModal" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Manuscript Details</h5>
@@ -587,65 +587,94 @@
 					</tbody>
 				</table>
 				<form id="manuscript_form">
+					<h6 class="text-uppercase text-muted fw-bold bg-light p-2" style="font-size:14px">Upload Manuscript</h6>
 					<div class="mb-3">
-						<label class="fw-bold" for="man_title">Title</label>
+						<label class="fw-bold form-label" for="man_title">Title</label>
 						<textarea class="form-control" id="man_title" name="man_title" placeholder=""></textarea>
 					</div>
 					<div class="mb-3">
-						<label class="fw-bold mr-1" for="man_title">Member?</label>
-						<div class="form-check-inline">
-							<label class="form-check-label">
-								<input type="radio" class="form-check-input" name="non_member" value="1">No
-							</label>
-						</div>
-						<div class="form-check-inline">
-							<label class="form-check-label">
-								<input type="radio" class="form-check-input" name="non_member" value="2">Yes
-							</label>
-						</div>
+						<label for="man_category" class="fw-bold form-label">Type of Publcation</label>
+						<select class="form-select" name="man_category" id="man_category">
+							<option value="">Select Type</option>
+							<?php foreach($publ_types as $row): ?>
+								<option value="<?php echo $row->id;?>"><?php echo $row->publication_desc;?></option>
+							<?php endforeach ?>
+						</select>
 					</div>
-					<div class="mb-3 autocomplete" style="width:100% !important">
-						<label class="fw-bold principal" for="man_author">Principal Author</label>
-						<input type="text" class="form-control mt-2" id="man_author" name="man_author"
-							placeholder="Search/Type by Name/Specialization/Non-member/Non-account">
-					</div>
-					<div class="mb-3">
-						<input type="text" class="form-control" placeholder="Affiliation" id="man_affiliation"
+					<h6 class="text-uppercase text-muted fw-bold bg-light p-2" style="font-size:14px">Author Details</h6>
+					<div class="mb-1">
+						<div class="row">
+							<p class="fw-bold">Corresponding Author: <span id="author_status" class="text-primary"></span></p>
+							<div class="col">
+								<div class="autocomplete" style="width:100% !important">
+									<label class="fw-bold principal" for="man_author">Full Name</label>
+									<input type="text" class="form-control mt-2" id="man_author" name="man_author"
+										placeholder="First Name M.I. Last name">
+								</div>
+							</div>
+							<div class="col">
+								<label for="man_affiliation" class="fw-bold form-label">Affiliation</label>
+								<input type="text" class="form-control" placeholder="Enter affiliation" id="man_affiliation"
 							name="man_affiliation">
+							</div>
+							<div class="col">
+								<label for="man_email" class="fw-bold form-label">Email</label>
+								<input type="email" class="form-control" placeholder="Enter a valid email" id="man_email" name="man_email">
+							</div>
+						</div>
+						<div class="form-check form-check-inline mb-3">
+							<input class="form-check-input" type="radio" name="man_author_type" id="status1" value="1">
+							<label class="form-check-label mt-2" for="status1">Main Author</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="man_author_type" id="status2" value="option2">
+							<label class="form-check-label mt-2" for="status2">Co-author</label>
+						</div>
+						<div class="form-check form-check-inline text-danger" id="author_type_error"></div>
 					</div>
-					<div class="mb-3">
-						<input type="email" class="form-control" placeholder="Email" id="man_email" name="man_email">
+					<div class="mb-3 d-none" id="add_coauthors">
+						<span id="coauthors"></span>
+						<button	button class="btn btn-outline-secondary mr-auto" type="button" id="btn_add_coa"><i
+						class="fa fa-plus"></i> Add Co-author</button>
 					</div>
 					<input type="hidden" class="form-control" id="man_usr_id" name="man_usr_id">
-					<span id="coauthors"></span>
+
+
+					<h6 class="text-uppercase text-muted fw-bold bg-light p-2" style="font-size:14px">File Uploads</h6>
 					<div class="mb-3" id="man_abs_div">
-						<label class="fw-bold" for="man_abs">Upload Abstract</label>
-						<span class="badge badge-danger" id="badge_abs">PDF only</span>
+						<label class="fw-bold form-label" for="man_abs">Abstract</label>
+						<span class="badge rounded-pill bg-danger" id="badge_abs">PDF</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
 						<input type="file" class="form-control" id="man_abs" name="man_abs" accept="application/pdf">
 					</div>
 					<div class="mb-3" id="man_file_div">
-						<label class="fw-bold" for="man_file">Upload Full Manuscript</label>
-						<span class="badge badge-danger" id="badge_pdf">PDF only</span>
+						<label class="fw-bold form-label" for="man_file">Full Manuscript</label>
+						<span class="badge rounded-pill bg-danger" id="badge_pdf">PDF</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
 						<input type="file" class="form-control" id="man_file" name="man_file" accept="application/pdf">
 					</div>
 					<div class="mb-3" id="man_word_div">
-						<label class="fw-bold" for="man_word">Upload Full Manuscript</label>
-						<span class="badge badge-primary" id="badge_word">WORD only</span>
+						<label class="fw-bold form-label" for="man_word">Full Manuscript</label>
+						<span class="badge rounded-pill bg-primary" id="badge_word">WORD</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
 						<input type="file" class="form-control" id="man_word" name="man_word"
 							accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
 					</div>
+					<div class="mb-3" id="man_latex_div">
+						<label class="fw-bold form-label" for="man_latex">LaTex Format</label>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_latex" name="man_latex">
+					</div>
 					<div class="mb-3">
-						<label class="fw-bold" for="man_pages">Number of pages</label>
+						<label class="fw-bold form-label" for="man_pages">Number of pages</label>
 						<input type="number" class="form-control w-25" placeholder="0" id="man_pages" name="man_pages"
 							min="1">
 					</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-outline-secondary mr-auto" type="button" id="btn_add_coa"><i
-						class="fa fa-plus"></i> Add Co-author</button>
 				<button class="btn btn-outline-secondary btn_cancel" type="button" data-bs-dismiss="modal">Cancel</button>
 				<button class="btn btn-outline-secondary btn_close" type="button" data-bs-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary" id="btn_save">Proceed</button>
+				<button type="submit" class="btn btn-primary" id="btn_save">Submit</button>
 				</form>
 			</div>
 		</div>
@@ -687,7 +716,7 @@
 				<form id="final_manuscript_form">
 					<!-- <div class="mb-3" id="man_file_div">
             <label for="man_file">Upload Final Manuscript</label>
-            <span class="badge badge-warning" id="badge_pdf">PDF only</span>
+            <span class="badge badge-warning" id="badge_pdf">PDF</span>
             <input type="file" class="form-control" id="man_file" name="man_file" accept="application/pdf">
           </div> -->
 					<div class="mb-3" id="man_word_div">

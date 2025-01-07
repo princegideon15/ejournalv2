@@ -40,6 +40,7 @@ class Manuscripts extends OPRS_Controller {
 				$data['criteria'] = $this->Review_model->get_criterias();
 				$data['logs'] = $this->Log_model->count_logs();
 				$data['titles'] = $this->Library_model->get_titles();
+				$data['publ_types'] = $this->Library_model->get_publication_types(null);
 				// $data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
 				// $data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
 				// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
@@ -125,15 +126,18 @@ class Manuscripts extends OPRS_Controller {
 		$oprs = $this->load->database('dboprs', true);
 		$result = $oprs->list_fields($tableName);
 		$post = array();
-		$uploader_id = $this->input->post('man_usr_id', true);
+		// $uploader_id = $this->input->post('man_usr_id', true);
+		$user_id = _UserIdFromSession();
+		$source = '_op'; // uploaded by managing editor
 
-		if($uploader_id == ''){
-			$user_id = _UserIdFromSession();
-			$source = '_me';
-		}else{
-			$user_id = $this->input->post('man_usr_id', true);
-			$source = '_sk_r'; // uploaded by managing editor
-		}
+		
+		// if($uploader_id == ''){
+		// 	$user_id = _UserIdFromSession();
+		// 	$source = '_me'; // uploaded by managing editor
+		// }else{
+		// 	$user_id = $this->input->post('man_usr_id', true);
+		// 	$source = '_sk_r'; 
+		// }
 
 		foreach ($result as $i => $field) {
 			$post[$field] = $this->input->post($field, true);
@@ -169,6 +173,17 @@ class Manuscripts extends OPRS_Controller {
 
 			$post['man_word'] = date('YmdHis') . '_' . $clean_file_word . '.' . $file_ext_word;
 			$upload_file_word = $post['man_word'];
+
+			//latex
+			$file_string_latex = str_replace(" ", "_", $_FILES['man_latex']['name']);
+			$file_no_ext_latex = preg_replace("/\.[^.]+$/", "", $file_string_latex);
+			$clean_file_latex = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_latex);
+
+			$filename_latex = $_FILES["man_latex"]["name"];
+			$file_ext_latex = pathinfo($filename_latex, PATHINFO_EXTENSION);
+
+			$post['man_latex'] = date('YmdHis') . '_' . $clean_file_latex . '.' . $file_ext_latex;
+			$upload_file_latex = $post['man_latex'];
 		}
 
 		$post['date_created'] = date('Y-m-d H:i:s');
@@ -177,9 +192,9 @@ class Manuscripts extends OPRS_Controller {
 		$post['man_source'] = $source; 
 
 		//local
-		// $dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/manuscripts/';
+		$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
 		//server
-		$dir_man = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
+		// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
 	
 		//upload full manuscript
 		$config_man['upload_path'] = $dir_man;
@@ -196,9 +211,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		//local
-		// $dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/abstracts/';
+		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
 		//server
-		 $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
+		//  $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
 	
 		//upload full manuscript
 		$config_abs['upload_path'] = $dir_abs;
@@ -215,9 +230,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		//local
-		// $dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/manuscriptsdoc/';
+		$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
 		//server
-		 $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
+		//  $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
 	
 		//upload full manuscript word
 		$config_word['upload_path'] = $dir_word;
@@ -228,6 +243,25 @@ class Manuscripts extends OPRS_Controller {
 		$this->upload->initialize($config_word);
 
 		if (!$this->upload->do_upload('man_word')) {
+			$error = $this->upload->display_errors(); 
+		} else {
+			$data = $this->upload->data();
+		}
+
+		//local
+		$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_latex/';
+		//server
+		//  $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/initial_latex/';
+	
+		//upload full manuscript latex
+		$config_latex['upload_path'] = $dir_latex;
+		$config_latex['allowed_types'] = 'tex';
+		$config_latex['file_name'] = $upload_file_latex;
+
+		$this->load->library('upload', $config_latex);
+		$this->upload->initialize($config_latex);
+
+		if (!$this->upload->do_upload('man_latex')) {
 			$error = $this->upload->display_errors(); 
 		} else {
 			$data = $this->upload->data();

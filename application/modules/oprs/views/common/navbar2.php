@@ -255,11 +255,22 @@
                     
                     <?php }?>
 
-                    <a class="nav-link" href="manuscripts">
-                    <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
-                    Manuscripts
-                    <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
-                    </a> 
+                    
+                    <?php if ($role == 1) {?>
+                        <a class="nav-link" href="manuscripts">
+                        <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
+                        My Submissions
+                        <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
+                        </a> 
+                    <?php }else{ ?>
+                        <a class="nav-link" href="manuscripts">
+                        <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
+                        Manuscripts
+                        <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
+                        </a> 
+                    <?php } ?>
+
+
                     
                     <?php if ($role == 7 || $role == 17) {?>
                     

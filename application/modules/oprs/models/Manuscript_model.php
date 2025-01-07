@@ -296,11 +296,12 @@ class Manuscript_model extends CI_Model {
 	 */
 	public function get_members() {
 		$members = $this->load->database('members', true);
-		$members->select('*');
+		$members->select('*, u.usr_grp_id');
 		$members->from($this->skms_mem . ' a');
 		$members->join($this->skms_exp . ' b', 'a.pp_usr_id = b.mpr_usr_id');
 		$members->join($this->skms_aff . ' c', 'a.pp_usr_id = c.bus_usr_id');
 		$members->join($this->skms_tit . ' d', 'a.pp_title = d.title_id');
+		$members->join($this->skms_usr . ' u', 'a.pp_usr_id = u.usr_id');
 		$members->where('mpr_h_index >', '0');
 		$members->order_by('a.pp_first_name', 'asc');
 		$query = $members->get();
