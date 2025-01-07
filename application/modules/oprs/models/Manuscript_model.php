@@ -15,6 +15,7 @@ class Manuscript_model extends CI_Model {
 	private $logs = 'tbllogs';
 	private $editorials = 'tbleditorials';
 	private $status = 'tblstatus_types';
+	private $publication = 'tblpublication_types';
 	// skms
 	private $skms_mem = 'tblpersonal_profiles';
 	private $skms_exp = 'tblmembership_profiles';
@@ -78,10 +79,10 @@ class Manuscript_model extends CI_Model {
 	 * Retrieve all manuscripts by user role
 	 *
 	 * @param [string] $man_source
-	 * @param [tystringpe] $mail
+	 * @param [tystringpe] $email
 	 * @return void
 	 */
-	public function get_manus($man_source, $mail) {
+	public function get_manus($man_source, $email) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17 || _UserRoleFromSession() == 7 || _UserRoleFromSession() == 6 ) {
 			// superadmin, admin, managing editor
@@ -111,12 +112,12 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->editors . ' e', 'e.edit_man_id = m.row_id');
 			$oprs->where('edit_id', _UserIdFromSession());
 			// $order_by = 'm.date_created';
-		} else {
-			// manager
-			$oprs->select('*');
-			$oprs->from($this->manus);
+		} else { // author
+			$oprs->select('m.*, p.publication_desc');
+			$oprs->from($this->manus . ' m');
+			$oprs->join($this->publication . ' p', 'm.man_category = p.id');
 			$oprs->where('man_user_id', _UserIdFromSession());
-			$oprs->where('man_source', $man_source);
+			// $oprs->where('man_source', $man_source);
 			// $order_by = 'date_created';
 		}
 		// $oprs->order_by($order_by, 'desc');
@@ -703,14 +704,12 @@ class Manuscript_model extends CI_Model {
 		} elseif ($id == 'dr') {
 			$table = $this->reviewers;
 			$where = $oprs->where('rev_status', '0');
+		} else if($id == 'total') {
+			$table = $this->manus;
+			$where = $oprs->where('date_created', 'LIKE', '%' . date('Y') . '%');
 		} else {
 			$table = $this->scores;
-			$oprs->select('*');
-			$oprs->from($this->scores);
-			$oprs->where('scr_status', 3);
-			$query = $oprs->get();
-			return $query->num_rows();
-			exit;
+			$where = $oprs->where('scr_status', 3);
 		}
 		$oprs->select('*');
 		$oprs->from($table);

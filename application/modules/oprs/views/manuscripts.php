@@ -295,9 +295,9 @@
 												<?php } ?>
 												<?php echo $mem_type;?>
 											</td>
-											<td><?php echo $m->man_category;?></td>
+											<td><?php echo $m->publication_desc;?></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td class="text-center"><a href="">[Tracking No]</a></td>
+											<td class="text-center"><a href=""><?php echo $m->man_trk_no;?></a></td>
 											<td>
 												<div class="btn-group d-flex gap-2" role="group" aria-label="Basic example">
 													<button type="button" class="btn btn-primary">View</button>

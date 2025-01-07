@@ -115,7 +115,7 @@ class Manuscripts extends OPRS_Controller {
 			echo json_encode($output);
 		}
 	}
-	
+
 	/**
 	 * Upload manuscript by Managing Editor (bypass)
 	 *
@@ -129,6 +129,11 @@ class Manuscripts extends OPRS_Controller {
 		// $uploader_id = $this->input->post('man_usr_id', true);
 		$user_id = _UserIdFromSession();
 		$source = '_op'; // uploaded by managing editor
+
+		$publication_type = "0" . $this->input->post('man_category'); 
+		$currentYear = date("Y"); // Get the current year
+		$totalEntries = $this->Manuscript_model->count_manus('total');
+		$newNumber = $totalEntries + 1; // Increment the count for the new entry
 
 		
 		// if($uploader_id == ''){
@@ -185,7 +190,8 @@ class Manuscripts extends OPRS_Controller {
 			$post['man_latex'] = date('YmdHis') . '_' . $clean_file_latex . '.' . $file_ext_latex;
 			$upload_file_latex = $post['man_latex'];
 		}
-
+		
+		$post['man_trk_no'] = sprintf("%s-%s-%05d", $currentYear, $publication_type, $newNumber); 	// Format the tracking number
 		$post['date_created'] = date('Y-m-d H:i:s');
 		$post['man_user_id'] = $user_id;
 		$post['man_status'] = 1;
