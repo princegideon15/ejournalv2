@@ -32,12 +32,14 @@ class Manuscripts extends OPRS_Controller {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 )
 			{
-				$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
+				// $data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
+				$data['manus'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
 				$data['u_man_jor'] = $this->Manuscript_model->get_oprs_journal();
 				$data['publish'] = $this->Dashboard_model->get_publishables();
 				$data['u_journal'] = $this->Manuscript_model->get_unique_journal();
 				$data['u_year'] = $this->Manuscript_model->get_unique_journal_year();
-				$data['criteria'] = $this->Review_model->get_criterias();
+				// $data['criteria'] = $this->Review_model->get_criterias();
+				$data['tech_rev_critera'] = $this->Library_model->get_criteria(null,1);
 				$data['logs'] = $this->Log_model->count_logs();
 				$data['titles'] = $this->Library_model->get_titles();
 				$data['publ_types'] = $this->Library_model->get_publication_types(null);

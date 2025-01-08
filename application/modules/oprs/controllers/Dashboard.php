@@ -21,12 +21,8 @@ class Dashboard extends OPRS_Controller {
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
-					redirect('oprs/manuscripts');
-				}else{
+				if(_UserRoleFromSession() == 17 || _UserRoleFromSession() == 3){
 					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
-					$data['main_title'] = "OPRS";
-					$data['main_content'] = "oprs/index";
 					$data['reviewers'] = $this->Manuscript_model->get_reviewers_reviewed();
 					$data['reviewed'] = $this->Manuscript_model->get_reviewed_manuscript();
 					$data['completed'] = $this->Manuscript_model->get_completed_reviews();
@@ -47,10 +43,12 @@ class Dashboard extends OPRS_Controller {
 					$data['usr_count'] = $this->User_model->count_user();
 					$data['arta_count'] = count($this->Arta_model->get_arta());
 					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
+					$data['main_title'] = "OPRS";
+					$data['main_content'] = "oprs/index";
 					$this->_LoadPage('common/body', $data);
+				}else{
+					redirect('oprs/manuscripts');
 				}
-			} else {
-				redirect('admin/dashboard');
 			}
 		}
 	}

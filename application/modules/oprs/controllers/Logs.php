@@ -34,7 +34,7 @@ class Logs extends OPRS_Controller {
 					$data['arta_count'] = count($this->Arta_model->get_arta());
 					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
 					$this->_LoadPage('common/body', $data);
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
 					redirect('oprs/manuscripts');
 				}else {
 					redirect('oprs/dashboard');

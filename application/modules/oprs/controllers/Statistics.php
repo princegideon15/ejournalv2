@@ -48,7 +48,7 @@ class Statistics extends OPRS_Controller {
 
 					$this->_LoadPage('common/body', $data);
 					$this->session->unset_userdata('_oprs_usr_message');
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
 					redirect('oprs/manuscripts');
 				}else {
 					redirect('oprs/dashboard');

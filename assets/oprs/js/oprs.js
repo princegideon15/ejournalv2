@@ -7840,3 +7840,7 @@ function getCurrentOTP(refCode){
     return strength;   
   
   }
+
+  function tech_rev_criterion(id, status){
+    $('#tedEdCriteriaModal').modal('toggle');
+  }

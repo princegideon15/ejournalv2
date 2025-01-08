@@ -238,73 +238,6 @@
   </div>
 </div>
 
-<!-- View Score -->
-<div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModal" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Score</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>TITLE</th>
-              <th colspan="4" id="score_title"></th>
-            </tr>
-            <tr>
-              <th>AUTHOR</th>
-              <th  colspan="4"  id="score_author"></th>
-            </tr>
-            <tr>
-              <th scope="col">CRITERIA</th>
-              <th scope="col">DESCRIPTION</th>
-              <th scope="col">WEIGHT</th>
-              <th scope="col" width="80px">SCORE</th>
-              <th scope="col">Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php $y = 1;
-  $x = 1;foreach ($criteria as $key => $c): ?>
-            <tr>
-              <td><?php echo $c->crt_subject; ?></td>
-              <td><?php echo $c->crt_description; ?></td>
-              <td><?php echo $c->crt_weight; ?></td>
-              <td id="<?php echo $c->crt_input_name; ?>" class="text-primary"></td>
-              <?php if ($c->crt_type == 'text') {
-	?>
-              <td id="scr_rem_<?php echo $x;
-	$x++; ?>" class="text-primary"></td>
-              <?php $y++;}?>
-            </tr>
-            <?php endforeach;?>
-            <tr>
-              <td colspan="3" class="fw-bold">TOTAL SCORE</td>
-              <td colspan="2" id="scr_total" class="text-primary"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="fw-bold">GENERAL REMARKS</td>
-              <td colspan="4" id="scr_remarks"></td>
-            </tr>
-            <tr>
-              <td class="fw-bold">REVIEWER</td>
-              <td colspan="4" id="score_reviewer"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Reviewers -->
 <div class="modal fade" id="reviewerModal" tabindex="-1" role="dialog" aria-labelledby="processModal" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
@@ -2162,6 +2095,64 @@
     </div>
   </div>
 </div>
+
+
+<!-- Technical Desk Editor Criteria Status  -->
+<div class="modal fade" id="tedEdCriteriaModal" tabindex="-1" role="dialog" aria-labelledby="startReviewModal"
+	aria-hidden="true" style="z-index:1499">
+	<div class="modal-dialog modal-lg" role="document" style="max-width:90%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">NRCP Research Journal - Manuscript Review</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-6">
+							<embed id="manus_review" width="100%" height="700px" type="application/pdf"
+								class="border border-dark">
+						</div>
+						<div class="col-6">
+							<form id="submit_tech_rev_crit">
+								<table class="table table-hover table-bordered">
+									<thead>
+										<tr>
+											<th width="15%">Criteria</th>
+											<th>Description</th>
+											<th width="15%">Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($tech_rev_critera as $row): ?>
+										<tr>
+											<td><?php echo $row->code; ?></td>
+											<td class="text-wrap"><?php echo $row->desc; ?></td>
+											<td>
+												<select class="form-select" name="tech_rev_status" id="tech_rev_status">
+													<option value="1">Passed</option>
+													<option value="2">Failed</option>
+												</select>
+											</td>
+										</tr>
+										<?php endforeach ?>
+									</tbody>
+								</table>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+				<div class="btn-group" role="group">
+					<button type="submit" class="btn btn-primary" id="submit_tech_rev_crit">Proceed</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.Technical Desk Editor Criteria Status  -->
 
 <script type="text/javascript" >
 var base_url = '<?php echo base_url(); ?>';

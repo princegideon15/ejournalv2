@@ -77,7 +77,7 @@ class Login extends OPRS_Controller {
 				$email = $user_category[0]->usr_username;
 
 			}else{ // oprs user
-				if( $user_category[0]->usr_role == 5 ){
+				if( $user_category[0]->usr_role == 12 ){
 					// reviewer
 					$reviewer_info = $this->User_model->get_reviewer_info_by_id($id);
 					$user_id = $reviewer_info[0]->rev_id;
@@ -268,7 +268,7 @@ class Login extends OPRS_Controller {
 			$user_id = $ejournal_client_info[0]->user_id;
 			$name = $ejournal_client_info[0]->title . ' ' . $ejournal_client_info[0]->first_name . ' ' . $ejournal_client_info[0]->last_name;
 		}else{ // oprs user
-			if( $user_info[0]->usr_role == 5 ){
+			if( $user_info[0]->usr_role == 12 ){
 				// reviewer
 				$reviewer_info = $this->User_model->get_reviewer_info_by_email($email);
 				$user_id = $reviewer_info[0]->rev_id;
@@ -939,7 +939,7 @@ class Login extends OPRS_Controller {
 		$mail->From = $sender_email;
 		$mail->FromName = $sender;
 
-		if($role == 5){
+		if($role == 12){
 			// reviewer
 
 			$output = $this->Manuscript_model->get_reviewer_by_id($id);
@@ -1310,7 +1310,7 @@ class Login extends OPRS_Controller {
 			}else if($user_info[0]->usr_category == 2){ // ejournal client and oprs non member author 
 				$name = $ejournal_client_info[0]->title . ' ' . $ejournal_client_info[0]->first_name . ' ' . $ejournal_client_info[0]->last_name;
 			}else{ // oprs user
-				if( $user_info[0]->usr_role == 5 ){
+				if( $user_info[0]->usr_role == 12 ){
 					// reviewer
 					$name = $reviewer_info[0]->rev_title . ' ' . $reviewer_info[0]->rev_name;
 				}else{

@@ -82,45 +82,60 @@ class Manuscript_model extends CI_Model {
 	 * @param [tystringpe] $email
 	 * @return void
 	 */
-	public function get_manus($man_source, $email) {
+	public function get_manus($role_id) {
+		
 		$oprs = $this->load->database('dboprs', TRUE);
-		if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17 || _UserRoleFromSession() == 7 || _UserRoleFromSession() == 6 ) {
-			// superadmin, admin, managing editor
-			$oprs->select('m.*, status_class, status_desc, status_id');
-			$oprs->from($this->manus . ' m');
-			$oprs->join($this->status . ' s', 'man_status = status_id');
-			// $order_by = 'date_created';
-		} elseif (_UserRoleFromSession() == 13) { // layouter 13
-			$oprs->select('*');
-			$oprs->from($this->manus);
-			$oprs->where('man_status', 7);
-			// $order_by = 'date_created';
-		} elseif (_UserRoleFromSession() == 5) {
-			// reviewers
-			$oprs->select('m.*,s.scr_status, s.date_reviewed, r.rev_hide_auth, scr_nda');
-			$oprs->from($this->scores . ' s');
-			$oprs->join($this->reviewers . ' r', 's.scr_man_rev_id = r.rev_id');
-			$oprs->join($this->manus . ' m', 'm.row_id = s.scr_man_id');
-			$oprs->where('r.rev_id', _UserIdFromSession());
-			$oprs->where('r.rev_status', 1);
-			$oprs->group_by('m.row_id');
-			// $order_by = 'm.date_created';
-		} elseif(_UserRoleFromSession() == 12) {
-			// editorial board
-			$oprs->select('m.*');
-			$oprs->from($this->manus . ' m');
-			$oprs->join($this->editors . ' e', 'e.edit_man_id = m.row_id');
-			$oprs->where('edit_id', _UserIdFromSession());
-			// $order_by = 'm.date_created';
-		} else { // author
+
+		if($role_id == 1){ // author
 			$oprs->select('m.*, p.publication_desc');
 			$oprs->from($this->manus . ' m');
 			$oprs->join($this->publication . ' p', 'm.man_category = p.id');
 			$oprs->where('man_user_id', _UserIdFromSession());
-			// $oprs->where('man_source', $man_source);
-			// $order_by = 'date_created';
+		}else if ($role_id == 5){ // technical desk editor
+			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
+			$oprs->from($this->manus . ' m');
+			$oprs->join($this->publication . ' p', 'm.man_category = p.id');
+			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+			$oprs->where('man_status', 1);
 		}
-		// $oprs->order_by($order_by, 'desc');
+
+		// if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17 || _UserRoleFromSession() == 7 || _UserRoleFromSession() == 6 ) {
+		// 	// superadmin, admin, managing editor
+		// 	$oprs->select('m.*, status_class, status_desc, status_id');
+		// 	$oprs->from($this->manus . ' m');
+		// 	$oprs->join($this->status . ' s', 'man_status = status_id');
+		// 	// $order_by = 'date_created';
+		// } elseif (_UserRoleFromSession() == 13) { // layouter 13
+		// 	$oprs->select('*');
+		// 	$oprs->from($this->manus);
+		// 	$oprs->where('man_status', 7);
+		// 	// $order_by = 'date_created';
+		// } elseif (_UserRoleFromSession() == 5) {
+		// 	// reviewers
+		// 	$oprs->select('m.*,s.scr_status, s.date_reviewed, r.rev_hide_auth, scr_nda');
+		// 	$oprs->from($this->scores . ' s');
+		// 	$oprs->join($this->reviewers . ' r', 's.scr_man_rev_id = r.rev_id');
+		// 	$oprs->join($this->manus . ' m', 'm.row_id = s.scr_man_id');
+		// 	$oprs->where('r.rev_id', _UserIdFromSession());
+		// 	$oprs->where('r.rev_status', 1);
+		// 	$oprs->group_by('m.row_id');
+		// 	// $order_by = 'm.date_created';
+		// } elseif(_UserRoleFromSession() == 12) {
+		// 	// editorial board
+		// 	$oprs->select('m.*');
+		// 	$oprs->from($this->manus . ' m');
+		// 	$oprs->join($this->editors . ' e', 'e.edit_man_id = m.row_id');
+		// 	$oprs->where('edit_id', _UserIdFromSession());
+		// 	// $order_by = 'm.date_created';
+		// } else { // author
+		// 	$oprs->select('m.*, p.publication_desc');
+		// 	$oprs->from($this->manus . ' m');
+		// 	$oprs->join($this->publication . ' p', 'm.man_category = p.id');
+		// 	$oprs->where('man_user_id', _UserIdFromSession());
+		// 	// $oprs->where('man_source', $man_source);
+		// 	// $order_by = 'date_created';
+		// }
+
 		$query = $oprs->get();
 		return $query->result();
 	}
@@ -1088,9 +1103,9 @@ class Manuscript_model extends CI_Model {
 		$skms->select('usr_grp_id');
 		$skms->from($this->skms_usr);
 		$skms->where('usr_id', $id);
-		$skms->where('usr_grp_id', 2);
 		$query = $skms->get();
-		return $query->result();
+		$result = $query->result_array();
+		return $result[0]['usr_grp_id'] ?? '';
 	}
 
 	public function search($search, $filter){

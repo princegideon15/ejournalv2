@@ -26,7 +26,7 @@ class Notifications extends OPRS_Controller {
 					$data['all_logs'] = $this->Log_model->get_logs('0');
 					$data['logs'] = $this->Log_model->count_logs();
 					$this->_LoadPage('common/body', $data);
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
 					redirect('oprs/manuscripts');
 				}else {
 					redirect('oprs/dashboard');

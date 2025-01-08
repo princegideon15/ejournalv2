@@ -147,7 +147,7 @@ class Login_model extends CI_Model {
 		$oprs->select('*');
 		$oprs->from($this->users);
 		$oprs->where('usr_username', $email);
-		$oprs->where('usr_role !=', 5);
+		// $oprs->where('usr_role !=', 5);
 		$query = $oprs->get();
 		// If a matching user is found, return the user object
 		if ($query->num_rows() == 1) {

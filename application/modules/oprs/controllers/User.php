@@ -18,7 +18,7 @@ class User extends OPRS_Controller {
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 8) {
+				if (_UserRoleFromSession() == 17) {
 					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
 					$id = $this->session->userdata('_oprs_user_id');
 					$data['users'] = $this->User_model->get_user($id);
@@ -38,7 +38,7 @@ class User extends OPRS_Controller {
 					$data['main_content'] = "oprs/user";
 					$this->_LoadPage('common/body', $data);
 					$this->session->unset_userdata('_oprs_usr_message');
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
 					redirect('oprs/manuscripts');
 				}else {
 					redirect('oprs/dashboard');
@@ -112,18 +112,13 @@ class User extends OPRS_Controller {
 		foreach ($result as $i => $field) {
 			if ($field != 'row_id') {
 				$role = $this->input->post('usr_role', true);
+				$role_info = $this->User_model->get_user_types($role);
 				$post[$field] = $this->input->post($field, true);
 				$post['usr_password'] = password_hash($this->input->post('usr_password', true), PASSWORD_BCRYPT);
-				$post['usr_desc'] = (($role == '1') ? 'Author' :
-					((($role == '2') ? 'Co-Author' :
-						((($role == '3') ? 'Managing Editor' :
-							((($role == '12') ? 'Editor-in-Chief' :
-								(($role == '5') ? 'Reviewer' :
-									(($role == '6') ? 'Manager' :
-										(($role == '7') ? 'Admin' :
-											(($role == '8') ? 'Superadmin' :
-												'Committee')))))))))));
+				$post['usr_desc'] = $role_info[0]->role_name;
 				$post['usr_id'] = $id;
+				$post['usr_sys_access'] = $role_info[0]->role_access;
+				$post['usr_status'] = 1;
 			}
 		}
 		$post['date_created'] = date('Y-m-d H:i:s');
@@ -269,7 +264,7 @@ class User extends OPRS_Controller {
 					$data['main_content'] = "oprs/user_types";
 					$this->_LoadPage('common/body', $data);
 					$this->session->unset_userdata('_oprs_usr_message');
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
 					redirect('oprs/manuscripts');
 				}else {
 					redirect('oprs/dashboard');
