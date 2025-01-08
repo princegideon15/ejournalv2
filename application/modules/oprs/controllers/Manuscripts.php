@@ -117,7 +117,7 @@ class Manuscripts extends OPRS_Controller {
 	}
 
 	/**
-	 * Upload manuscript by Managing Editor (bypass)
+	 * Upload manuscript by Author/Managing Editor (bypass)
 	 *
 	 * @return  void
 	 */
@@ -126,10 +126,7 @@ class Manuscripts extends OPRS_Controller {
 		$oprs = $this->load->database('dboprs', true);
 		$result = $oprs->list_fields($tableName);
 		$post = array();
-		// $uploader_id = $this->input->post('man_usr_id', true);
-		$user_id = _UserIdFromSession();
-		$source = '_op'; // uploaded by managing editor
-
+		$user_id = $this->input->post('man_usr_id', true);
 		$publication_type = "0" . $this->input->post('man_category'); 
 		$currentYear = date("Y"); // Get the current year
 		$totalEntries = $this->Manuscript_model->count_manus('total');
@@ -190,10 +187,26 @@ class Manuscripts extends OPRS_Controller {
 			$post['man_latex'] = date('YmdHis') . '_' . $clean_file_latex . '.' . $file_ext_latex;
 			$upload_file_latex = $post['man_latex'];
 		}
+
+		
+		$source = '_op'; // uploaded by managing editor
+
+		if($user_id > 0){
+			$user_id = $user_id;
+			$user_info = $this->User_model->get_nrcp_member_info_by_id($user_id);
+			$post['man_author_title'] = $user_info[0]->title_name;
+			$post['man_author_sex'] = $user_info[0]->pp_sex;
+		}else{
+			$user_id = _UserIdFromSession();
+			$user_info = $this->User_model->get_user($user_id);
+			// $post['man_author_title'] = '';
+			$post['man_author_sex'] = $user_info['usr_sex'];;
+		}
 		
 		$post['man_trk_no'] = sprintf("%s-%s-%05d", $currentYear, $publication_type, $newNumber); 	// Format the tracking number
 		$post['date_created'] = date('Y-m-d H:i:s');
-		$post['man_user_id'] = $user_id;
+		$post['man_user_id'] = _UserIdFromSession();
+		$post['man_author_user_id'] = $user_id;
 		$post['man_status'] = 1;
 		$post['man_source'] = $source; 
 
@@ -288,7 +301,7 @@ class Manuscripts extends OPRS_Controller {
 		$emails = $this->input->post('coa_email', true);
 		$coa = array();
 
-		if ($coauthors != '') {
+		if (!empty($coauthors)) {
 			for ($i = 0; $i < count($coauthors); $i++) {
 				$coa['coa_name'] = $coauthors[$i];
 				$coa['coa_affiliation'] = $affiliations[$i];

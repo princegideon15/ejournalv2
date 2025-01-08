@@ -89,7 +89,7 @@ class User_model extends CI_Model {
 	 */
 	public function get_user($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('usr_status, role_name, usr_sys_acc, usr_username, usr_id, usr_logout_time, usr_role');
+		$oprs->select('usr_status, role_name, usr_sys_acc, usr_username, usr_id, usr_logout_time, usr_role, usr_sex');
 		$oprs->from($this->oprs_users . ' a');
 		$oprs->join($this->roles . ' r', 'a.usr_role = r.role_id');
 		$oprs->where_not_in('a.row_id', $id);
@@ -501,7 +501,7 @@ class User_model extends CI_Model {
 
 	public function get_nrcp_member_info($email){
 		$members = $this->load->database('members', true);
-		$members->select('usr_id, pp_contact, title_name, pp_first_name, pp_last_name');
+		$members->select('usr_id, pp_contact, title_name, pp_first_name, pp_last_name, pp_sex');
 		$members->from($this->skms_users);
 		$members->join($this->personal, 'usr_id = pp_usr_id');
 		$members->join($this->titles, 'pp_title = title_id');
@@ -512,7 +512,7 @@ class User_model extends CI_Model {
 
 	public function get_nrcp_member_info_by_id($id){
 		$members = $this->load->database('members', true);
-		$members->select('usr_id, usr_name, pp_contact, title_name, pp_first_name, pp_last_name');
+		$members->select('usr_id, usr_name, pp_contact, title_name, pp_first_name, pp_last_name, pp_sex');
 		$members->from($this->skms_users);
 		$members->join($this->personal, 'usr_id = pp_usr_id');
 		$members->join($this->titles, 'pp_title = title_id');

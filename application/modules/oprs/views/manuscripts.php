@@ -20,216 +20,8 @@
 				<div class="card-body">
 				<h3 class="fw-bold">Manuscripts</h3>
 					<div class="table-responsive">
-						<!-- REVIEWER -->
-						<?php if (_UserRoleFromSession() == 5) {?>
-						<table class="table table-hover" id="dataTable_rev" width="100%" cellspacing="0">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>Title</th>
-									<th>Date Submitted</th>
-									<th>Date Reviewed</th>
-									<th>Action</th>
-									<th>Upload NDA</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php $c = 1;foreach ($manus as $m): ?>
-								<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
-								<?php $mantitle = rawurlencode($m->man_title); ?>
-								<?php $action = (($m->scr_status == '4') ? '<span class="badge rounded-pill badge-success">Recommended as submitted</span>' 
-									: ((($m->scr_status == '5') ? '<span class="badge rounded-pill badge-warning">Recommended with minor revisions</span>' 
-									: ((($m->scr_status == '6') ? '<span class="badge rounded-pill badge-warning">Recommended with major revisions</span>'  
-									: ((($m->scr_status == '7') ? '<span class="badge rounded-pill badge-danger">Not recommended</span>' 
-									: '<button type="button" class="btn btn-light text-success btn-sm"  data-bs-toggle="modal" rel="tooltip" data-bs-placement="top" title="View Tracking" data-bs-target="#startReviewModal" onclick="start_review(\'' . $m->man_file . '\',\'' . $m->row_id . '\',\'' . $mantitle . '\',\'' . $m->man_author . '\',\'' . $m->rev_hide_auth . '\')"><span class="fa fa-chevron-circle-right" ></span> Start Review</button>'))))))
-										);?>
-								<?php $i = $m->man_issue;
-										$issue = (($i == 5) ? 'Special Issue No. 1' 
-												: (($i == 6) ? 'Special Issue No. 2' 
-												: (($i == 7) ? 'Special Issue No. 3' 
-												: (($i == 8) ? 'Special Issue No. 4' 
-												: 'Issue ' . $i))));
-										?>
-								<tr>
-									<td></td>
-									<td>
-										<a href="javascript:void(0);"
-											onclick="view_manus(<?php echo $m->row_id; ?>,<?php echo $m->rev_hide_auth; ?>);"
-											class="text-dark "><i class="fa fa-plus-circle text-primary" rel="tooltip"
-												data-bs-placement="top" title="Click for more details"></i></a>
-										<?php echo $m->man_title; ?>
-									</td>
-									<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-									<td><?php echo $drev; ?></td>
-									<td><?php echo $action; ?></td>
-									<td>
-										<?php if($m->scr_nda == NULL){ ?>
-										<form id="submit_nda" method="POST" enctype="multipart/form-data">
-											<input type="hidden" id="scr_man_id" name="scr_man_id"
-												value="<?php echo $m->row_id;?>">
-											<div class="input-group is-invalid">
-												<div class="custom-file">
-													<input type="file" class="custom-file-input " id="scr_nda" name="scr_nda"
-														required>
-													<label class="custom-file-label scr_nda" for="scr_nda">Choose
-														file...</label>
-												</div>
-												<div class="input-group-append">
-													<button class="btn btn-outline-secondary" type="submit"
-														accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf">Submit</button>
-												</div>
-											</div>
-										</form>
-										<?php }else{ echo $m->scr_nda;} ?>
-									</td>
-								</tr>
-								<?php endforeach;?>
-
-							</tbody>
-						</table>
-						<!-- EDITOR -->
-						<?php } else if(_UserRoleFromSession() == 12) {?>
-						<table class="table table-hover" id="editorial_reviews_table" width="100%" cellspacing="0">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>Title</th>
-									<th>Status</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php $c = 1;foreach ($manus as $m): ?>
-								<?php $mantitle = rawurlencode($m->man_title); ?>
-								<?php $i = $m->man_issue;
-								$issue = (($i == 5) ? 'Special Issue No. 1' 
-								: (($i == 6) ? 'Special Issue No. 2' 
-								: (($i == 7) ? 'Special Issue No. 3' 
-								: (($i == 8) ? 'Special Issue No. 4' 
-								: 'Issue ' . $i))));
-								?>
-
-								<?php $status =  (($m->man_status == '4') ? 'Pending' 
-								: (($m->man_status == '5') ? 'To submit final manusript'
-								: 'For Publication'));?>
-
-								<?php $class = (($m->man_status == '1') ? 'warning' 
-								: ((($m->man_status == '2') ? 'primary' 
-								: ((($m->man_status == '3') ? 'info' 
-								: ((($m->man_status == '4') ? 'danger' 
-								: 'success')))))));?>
-								<tr>
-									<td></td>
-									<td width="60%"><?php echo $m->man_title; ?></br>
-										<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
-										<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
-										<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
-									<td><span class="badge text-bg-<?php echo $class;?>"><?php echo $status;?></span></td>
-									<td>
-
-										<?php if($m->man_status == 4){ ?>
-										<button type="button" class="btn btn-light btn-sm"
-											onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
-											title="View Reviews"><span class="fa fa-eye"></span> View Reviews
-										</button>
-										<button type="button" class="btn btn-light btn-sm"
-											onclick="submit_editorial_review('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-bs-toggle="modal" data-bs-target="#editorialModal" rel="tooltip" data-bs-placement="top"
-											title="Submit Editorial Review"><span class="fa fa-chevron-circle-right"></span>
-											Submit Editorial Review
-										</button>
-										<?php }else if($m->man_status == 6){ ?>
-										<a type="button" class="btn btn-light btn-sm"
-											href="<?php echo base_url('/assets/oprs/uploads/revised_manuscripts_word/'.$m->man_word); ?>"
-											download><span class="fa fa-chevron-circle-right"></span> Download Final Manuscript
-										</a>
-										<button type="button" class="btn btn-light btn-sm"
-											onclick="for_publication('<?php echo $m->row_id; ?>')" data-bs-toggle="modal"
-											data-bs-target="#publicationModal" rel="tooltip" data-bs-placement="top"
-											title="Submit to Layout Manager"><span class="fa fa-chevron-circle-right"></span>
-											Submit to Layout Manager
-										</button>
-										<?php } ?>
-
-									</td>
-								</tr>
-								<?php endforeach;?>
-
-							</tbody>
-						</table>
-						<!-- LAYOUT -->
-						<?php } else if(_UserRoleFromSession() == 13) {?>
-						<table class="table table-hover" id="layout_table" width="100%" cellspacing="0">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>Title</th>
-									<th>Status</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php $c = 1;foreach ($manus as $m): ?>
-								<?php $mantitle = rawurlencode($m->man_title); ?>
-								<?php $i = $m->man_issue;
-								$issue = (($i == 5) ? 'Special Issue No. 1' 
-								: (($i == 6) ? 'Special Issue No. 2' 
-								: (($i == 7) ? 'Special Issue No. 3' 
-								: (($i == 8) ? 'Special Issue No. 4' 
-								: 'Issue ' . $i))));
-								?>
-
-								<?php $status = 'For Layout'; ?>
-
-								<?php $class = 'success';?>
-								<tr>
-									<td></td>
-									<td width="60%"><?php echo $m->man_title; ?></br>
-										<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
-										<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
-										<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
-									<td><span class="badge text-bg-<?php echo $class;?>"><?php echo $status;?></span></td>
-									<td>
-
-										<?php if($m->man_status == 4){ ?>
-										<button type="button" class="btn btn-light btn-sm"
-											onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
-											title="View Reviews"><span class="fa fa-eye"></span> View Reviews
-										</button>
-										<button type="button" class="btn btn-light btn-sm"
-											onclick="submit_editorial_review('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-bs-toggle="modal" data-bs-target="#editorialModal" rel="tooltip" data-bs-placement="top"
-											title="Submit Editorial Review"><span class="fa fa-chevron-circle-right"></span>
-											Submit Editorial Review
-										</button>
-										<?php }else if($m->man_status == 7){ ?>
-										<a type="button" class="btn btn-light btn-sm"
-											href="<?php echo base_url('/assets/oprs/uploads/revised_abstracts_word/'.$m->man_abs); ?>"><span
-												class="fa fa-chevron-circle-right" download></span> Download Abtract
-										</a>
-										<a type="button" class="btn btn-light btn-sm"
-											href="<?php echo base_url('/assets/oprs/uploads/revised_manuscripts_word/'.$m->man_word); ?>"
-											download><span class="fa fa-chevron-circle-right"></span> Download Manuscript
-										</a>
-										<button type="button" class="btn btn-light btn-sm"
-											onclick="submit_publishable('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
-											data-bs-toggle="modal" data-bs-target="#publishableModal" rel="tooltip"
-											data-bs-placement="top" title="Submit Publishable Manuscript"><span
-												class="fa fa-chevron-circle-right"></span> Submit as Publishable
-										</button>
-										<?php } ?>
-
-									</td>
-								</tr>
-								<?php endforeach;?>
-
-							</tbody>
-						</table>
-						<?php } else {?>
-
-							<?php if(_UserRoleFromSession() == 1){ ?>
+						<!-- AUTHOR -->
+						<?php if(_UserRoleFromSession() == 1){ ?>
 								<div class="alert alert-primary " role="alert">
 									<p class="fw-bold"><span class="fas fa-info-circle me-2"></span>Instructions to Author</p>
 									<hr>
@@ -285,8 +77,7 @@
 										<?php $title = $m->man_title . ', ' . $m->man_author . $acoa; ?>
 										<tr>
 											<td></td>
-											<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
-													class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+											<td><?php echo $title; ?>
 												<?php if($stat > 1 && $stat != 99){ ?>
 												</br>
 												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
@@ -297,10 +88,10 @@
 											</td>
 											<td><?php echo $m->publication_desc;?></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
-											<td class="text-center"><a href=""><?php echo $m->man_trk_no;?></a></td>
+											<td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->man_trk_no;?>,<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
 											<td>
 												<div class="btn-group d-flex gap-2" role="group" aria-label="Basic example">
-													<button type="button" class="btn btn-primary">View</button>
+													<button type="button" class="btn btn-primary" onclick="view_manus(<?php echo $m->row_id; ?>);">View</button>
 													<button type="button" class="btn btn-primary">Upload</button>
 													<button type="button" class="btn btn-primary">Revision</button>
 												</div>
@@ -310,66 +101,41 @@
 									</tbody>
 								</table>
 
-							<?php } else { ?>
+						<?php } else{ ?>
+							<!-- PROCESSOR -->
+
+							<!-- TECHNICAL DESK EDITOR -->
+							<?php if(_UserRoleFromSession() == 5){ ?>
 								<table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
 									<thead>
 										<tr>
 											<th>#</th>
 											<th>Title</th>
+											<th>Author(s)</th>
+											<th>Membership Status</th>
 											<th>Date Submitted</th>
 											<th>Status</th>
+											<th>Tracking No.</th>
 											<th>Actions</th>
 											<th>Remarks</th>
+											<th>Fraction of Process Turnaround</th>
 										</tr>
 									</thead>
 									<tbody>
 										<?php $c = 1;foreach ($manus as $m): ?>
 										<?php $role = $this->session->userdata('_oprs_type_num');?>
-										<?php $rev_cnt = count($this->Manuscript_model->get_reviewers_display($m->row_id));?>
-										<?php $rev_total = count($this->Manuscript_model->get_reviewers_display($m->row_id, 999));?>
-										<?php $rev_act = count($this->Manuscript_model->get_reviewers_w_score($m->row_id));?>
-										<?php $scr = count($this->Review_model->get_review(_UserRoleFromSession(), $m->row_id));?>
 										<?php $mem_type = count($this->Manuscript_model->check_member($m->man_user_id)); ?>
-
 										<?php $mem_type = ($mem_type > 0) ? '<span class="badge rounded-pill text-bg-secondary">Non-member</span>' : ''; ?>
-										<!-- get total reveiewers with scores -->
-										<?php $status = (($m->man_status == '1') ? 'New' 
-										: ((($m->man_status == '2') ? 'On-review (0/' . $rev_cnt . ')' 
-										: ((($m->man_status == '3') ? 'Reviewed (' . $rev_act . '/' . $rev_cnt . ')'
-										: ((($m->man_status == '4') ? 'Editorial Review - Pending' 
-										: ((($m->man_status == '5') ? 'To submit final manucsript'
-										: ((($m->man_status == '6') ? 'For Publication' 
-										: ((($m->man_status == '7') ? 'For Layout' 
-										: ((($m->man_status == '8') ? 'Publishable' 
-										: ((($m->man_status == '9') ? 'Published' 
-										:	'Published to other journal platform')))))))))))))))));?>
-
-										<?php $stat = $m->man_status;
-											if($stat > 1 && $stat != 99){
-												$i = $m->man_issue;
-												$issue = (($i == 5) ? 'Special Issue No. 1' 
-												: (($i == 6) ? 'Special Issue No. 2' 
-												: (($i == 7) ? 'Special Issue No. 3' 
-												: (($i == 8) ? 'Special Issue No. 4' 
-												: 'Issue ' . $i))));
-											}
-										?>
-
-										<?php $class = (($m->man_status == '1') ? 'warning' 
-										: ((($m->man_status == '2') ? 'primary' 
-										: ((($m->man_status == '3') ? 'info' 
-										: ((($m->man_status == '4') ? 'danger' 
-										: ((($m->man_status == '5') ? 'danger' 
-										: ((($m->man_status == '99') ? 'secondary' 
-										: 'success')))))))))));?>
-
 										<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
-										<?php $title = $m->man_title . ', ' . $m->man_author . $acoa; ?>
+										<?php $title = $m->man_title; ?>
+										<?php $authors = $m->man_author . $acoa; ?>
+										<?php $status = $m->man_status; ?>
+										<?php $author_status = $m->man_status; ?>
 										<tr>
 											<td></td>
 											<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
 													class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
-												<?php if($stat > 1 && $stat != 99){ ?>
+												<?php if($status > 1 && $status != 99){ ?>
 												</br>
 												<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
 												<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
@@ -377,6 +143,8 @@
 												<?php } ?>
 												<?php echo $mem_type;?>
 											</td>
+											<td><?php echo $authors;?></td>
+											<td><?php echo $authors;?></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
 											<td class="text-center"><span 
 													class="badge rounded-pill text-bg-<?php echo $m->status_class;?> text-center" data-bs-toggle="modal"
@@ -481,7 +249,221 @@
 									</tbody>
 								</table>
 							<?php } ?>
-						<?php }?>
+						<?php } ?>
+						
+						
+
+
+
+
+						<!-- REVIEWER -->
+						<!-- <?php if (_UserRoleFromSession() == 5) {?>
+						<table class="table table-hover" id="dataTable_rev" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Title</th>
+									<th>Date Submitted</th>
+									<th>Date Reviewed</th>
+									<th>Action</th>
+									<th>Upload NDA</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php $c = 1;foreach ($manus as $m): ?>
+								<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
+								<?php $mantitle = rawurlencode($m->man_title); ?>
+								<?php $action = (($m->scr_status == '4') ? '<span class="badge rounded-pill badge-success">Recommended as submitted</span>' 
+									: ((($m->scr_status == '5') ? '<span class="badge rounded-pill badge-warning">Recommended with minor revisions</span>' 
+									: ((($m->scr_status == '6') ? '<span class="badge rounded-pill badge-warning">Recommended with major revisions</span>'  
+									: ((($m->scr_status == '7') ? '<span class="badge rounded-pill badge-danger">Not recommended</span>' 
+									: '<button type="button" class="btn btn-light text-success btn-sm"  data-bs-toggle="modal" rel="tooltip" data-bs-placement="top" title="View Tracking" data-bs-target="#startReviewModal" onclick="start_review(\'' . $m->man_file . '\',\'' . $m->row_id . '\',\'' . $mantitle . '\',\'' . $m->man_author . '\',\'' . $m->rev_hide_auth . '\')"><span class="fa fa-chevron-circle-right" ></span> Start Review</button>'))))))
+										);?>
+								<?php $i = $m->man_issue;
+										$issue = (($i == 5) ? 'Special Issue No. 1' 
+												: (($i == 6) ? 'Special Issue No. 2' 
+												: (($i == 7) ? 'Special Issue No. 3' 
+												: (($i == 8) ? 'Special Issue No. 4' 
+												: 'Issue ' . $i))));
+										?>
+								<tr>
+									<td></td>
+									<td>
+										<a href="javascript:void(0);"
+											onclick="view_manus(<?php echo $m->row_id; ?>,<?php echo $m->rev_hide_auth; ?>);"
+											class="text-dark "><i class="fa fa-plus-circle text-primary" rel="tooltip"
+												data-bs-placement="top" title="Click for more details"></i></a>
+										<?php echo $m->man_title; ?>
+									</td>
+									<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+									<td><?php echo $drev; ?></td>
+									<td><?php echo $action; ?></td>
+									<td>
+										<?php if($m->scr_nda == NULL){ ?>
+										<form id="submit_nda" method="POST" enctype="multipart/form-data">
+											<input type="hidden" id="scr_man_id" name="scr_man_id"
+												value="<?php echo $m->row_id;?>">
+											<div class="input-group is-invalid">
+												<div class="custom-file">
+													<input type="file" class="custom-file-input " id="scr_nda" name="scr_nda"
+														required>
+													<label class="custom-file-label scr_nda" for="scr_nda">Choose
+														file...</label>
+												</div>
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary" type="submit"
+														accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf">Submit</button>
+												</div>
+											</div>
+										</form>
+										<?php }else{ echo $m->scr_nda;} ?>
+									</td>
+								</tr>
+								<?php endforeach;?>
+
+							</tbody>
+						</table> -->
+						<!-- EDITOR -->
+						<?php } else if(_UserRoleFromSession() == 12) {?>
+						<!-- <table class="table table-hover" id="editorial_reviews_table" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Title</th>
+									<th>Status</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php $c = 1;foreach ($manus as $m): ?>
+								<?php $mantitle = rawurlencode($m->man_title); ?>
+								<?php $i = $m->man_issue;
+								$issue = (($i == 5) ? 'Special Issue No. 1' 
+								: (($i == 6) ? 'Special Issue No. 2' 
+								: (($i == 7) ? 'Special Issue No. 3' 
+								: (($i == 8) ? 'Special Issue No. 4' 
+								: 'Issue ' . $i))));
+								?>
+
+								<?php $status =  (($m->man_status == '4') ? 'Pending' 
+								: (($m->man_status == '5') ? 'To submit final manusript'
+								: 'For Publication'));?>
+
+								<?php $class = (($m->man_status == '1') ? 'warning' 
+								: ((($m->man_status == '2') ? 'primary' 
+								: ((($m->man_status == '3') ? 'info' 
+								: ((($m->man_status == '4') ? 'danger' 
+								: 'success')))))));?>
+								<tr>
+									<td></td>
+									<td width="60%"><?php echo $m->man_title; ?></br>
+										<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+										<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+										<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
+									<td><span class="badge text-bg-<?php echo $class;?>"><?php echo $status;?></span></td>
+									<td>
+
+										<?php if($m->man_status == 4){ ?>
+										<button type="button" class="btn btn-light btn-sm"
+											onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
+											data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
+											title="View Reviews"><span class="fa fa-eye"></span> View Reviews
+										</button>
+										<button type="button" class="btn btn-light btn-sm"
+											onclick="submit_editorial_review('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
+											data-bs-toggle="modal" data-bs-target="#editorialModal" rel="tooltip" data-bs-placement="top"
+											title="Submit Editorial Review"><span class="fa fa-chevron-circle-right"></span>
+											Submit Editorial Review
+										</button>
+										<?php }else if($m->man_status == 6){ ?>
+										<a type="button" class="btn btn-light btn-sm"
+											href="<?php echo base_url('/assets/oprs/uploads/revised_manuscripts_word/'.$m->man_word); ?>"
+											download><span class="fa fa-chevron-circle-right"></span> Download Final Manuscript
+										</a>
+										<button type="button" class="btn btn-light btn-sm"
+											onclick="for_publication('<?php echo $m->row_id; ?>')" data-bs-toggle="modal"
+											data-bs-target="#publicationModal" rel="tooltip" data-bs-placement="top"
+											title="Submit to Layout Manager"><span class="fa fa-chevron-circle-right"></span>
+											Submit to Layout Manager
+										</button>
+										<?php } ?>
+
+									</td>
+								</tr>
+								<?php endforeach;?>
+
+							</tbody>
+						</table> -->
+						<!-- LAYOUT -->
+						<?php } else if(_UserRoleFromSession() == 13) {?>
+						<!-- <table class="table table-hover" id="layout_table" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Title</th>
+									<th>Status</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php $c = 1;foreach ($manus as $m): ?>
+								<?php $mantitle = rawurlencode($m->man_title); ?>
+								<?php $i = $m->man_issue;
+								$issue = (($i == 5) ? 'Special Issue No. 1' 
+								: (($i == 6) ? 'Special Issue No. 2' 
+								: (($i == 7) ? 'Special Issue No. 3' 
+								: (($i == 8) ? 'Special Issue No. 4' 
+								: 'Issue ' . $i))));
+								?>
+
+								<?php $status = 'For Layout'; ?>
+
+								<?php $class = 'success';?>
+								<tr>
+									<td></td>
+									<td width="60%"><?php echo $m->man_title; ?></br>
+										<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+										<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+										<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span></td>
+									<td><span class="badge text-bg-<?php echo $class;?>"><?php echo $status;?></span></td>
+									<td>
+
+										<?php if($m->man_status == 4){ ?>
+										<button type="button" class="btn btn-light btn-sm"
+											onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
+											data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
+											title="View Reviews"><span class="fa fa-eye"></span> View Reviews
+										</button>
+										<button type="button" class="btn btn-light btn-sm"
+											onclick="submit_editorial_review('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
+											data-bs-toggle="modal" data-bs-target="#editorialModal" rel="tooltip" data-bs-placement="top"
+											title="Submit Editorial Review"><span class="fa fa-chevron-circle-right"></span>
+											Submit Editorial Review
+										</button>
+										<?php }else if($m->man_status == 7){ ?>
+										<a type="button" class="btn btn-light btn-sm"
+											href="<?php echo base_url('/assets/oprs/uploads/revised_abstracts_word/'.$m->man_abs); ?>"><span
+												class="fa fa-chevron-circle-right" download></span> Download Abtract
+										</a>
+										<a type="button" class="btn btn-light btn-sm"
+											href="<?php echo base_url('/assets/oprs/uploads/revised_manuscripts_word/'.$m->man_word); ?>"
+											download><span class="fa fa-chevron-circle-right"></span> Download Manuscript
+										</a>
+										<button type="button" class="btn btn-light btn-sm"
+											onclick="submit_publishable('<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>')"
+											data-bs-toggle="modal" data-bs-target="#publishableModal" rel="tooltip"
+											data-bs-placement="top" title="Submit Publishable Manuscript"><span
+												class="fa fa-chevron-circle-right"></span> Submit as Publishable
+										</button>
+										<?php } ?>
+
+									</td>
+								</tr>
+								<?php endforeach;?>
+
+							</tbody>
+						</table> -->
+						<?php } ?>
 					</div>
 				</div>
 				<!-- <div class="card-footer small text-muted">

@@ -85,7 +85,6 @@ class Signup extends OPRS_Controller {
 	}
 
 	public function register_author(){
-		//for otp
 		$email = $this->input->post('email', TRUE);
 		$member = $this->input->post('member', TRUE);
 		

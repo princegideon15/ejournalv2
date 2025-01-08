@@ -240,9 +240,10 @@ class Manuscript_model extends CI_Model {
 	 */
 	public function tracker($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('*');
-		$oprs->from($this->track);
-		$oprs->where('trk_man_id', $id);
+		$oprs->select('m.*');
+		$oprs->from($this->track . ' t');
+		$oprs->join($this->manus . ' m', 'trk_man_id = m.row_id');
+		$oprs->where('man_trk_no', $id);
 		$oprs->order_by('trk_process_datetime', 'desc');
 		$query = $oprs->get();
 		return $query->result();

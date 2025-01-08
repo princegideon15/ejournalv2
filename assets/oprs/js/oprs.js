@@ -647,6 +647,7 @@ $(document).ready(function() {
                     crossDomain: true,
                     type: 'POST',
                     success: function(data) {
+                        console.log(data);
                         $('body').loading('stop');
                         Swal.fire({
                         title: "Manuscript submitted successfully!",
@@ -663,14 +664,14 @@ $(document).ready(function() {
                         },
                         willClose: () => {
                             clearInterval(timerInterval);
-                            location.reload();
+                            // location.reload();
                         }
                         }).then((result) => {
                             /* Read more about handling dismissals below */
                             if (result.dismiss === Swal.DismissReason.timer) {
                                 console.log("I was closed by the timer");
                             }
-                            location.reload();
+                            // location.reload();
                         });
                     }
                 });
@@ -2308,19 +2309,19 @@ $(document).ready(function() {
     // });
 
     // get authors info
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/authors",
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val) {
-                acoa.push(val);
-            });
-            acoa.sort();
-            $.unique(acoa);
-        }
-    });
+    // $.ajax({
+    //     type: "GET",
+    //     url: base_url + "oprs/manuscripts/authors",
+    //     dataType: "json",
+    //     crossDomain: true,
+    //     success: function(data) {
+    //         $.each(data, function(key, val) {
+    //             acoa.push(val);
+    //         });
+    //         acoa.sort();
+    //         $.unique(acoa);
+    //     }
+    // });
 
     // show member name on keyup
     if ($('#trk_rev1').length){
@@ -2680,7 +2681,7 @@ $(document).ready(function() {
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    $('#editUserTypeModal').toggle('modal');
+                    $('#editUserTypeModal').modal('toggle');
                     Swal.fire({
                         title: "User type updated successfully!",
                         icon: 'success',
@@ -2744,7 +2745,7 @@ $(document).ready(function() {
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    $('#editStatusTypeModal').toggle('modal');
+                    $('#editStatusTypeModal').modal('toggle');
                     Swal.fire({
                         title: "Status type updated successfully!",
                         icon: 'success',
@@ -2808,7 +2809,7 @@ $(document).ready(function() {
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    $('#editPublicationTypeModal').toggle('modal');
+                    $('#editPublicationTypeModal').modal('toggle');
                     Swal.fire({
                         title: "Publication type updated successfully!",
                         icon: 'success',
@@ -2890,7 +2891,7 @@ $(document).ready(function() {
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    $('#editTRCModal').toggle('modal');
+                    $('#editTRCModal').modal('toggle');
                     Swal.fire({
                         title: "Criteria updated successfully!",
                         icon: 'success',
@@ -2975,7 +2976,7 @@ $(document).ready(function() {
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    $('#editPRCModal').toggle('modal');
+                    $('#editPRCModal').modal('toggle');
                     Swal.fire({
                         title: "Criteria updated successfully!",
                         icon: 'success',
@@ -4832,7 +4833,7 @@ $(document).ready(function() {
             crossDomain: true,
             success: function(data) {
                 
-                $('#emailContentModal').toggle('modal');
+                $('#emailContentModal').modal('toggle');
                 
                 Swal.fire({
                     title: "Email notification updated successfully!",
@@ -5071,10 +5072,11 @@ function edit_man(id) {
 
     
 }
-
 // show tracking modal
 function tracking(id, role, title, status) {
+    // console.log("🚀 ~ tracking ~ id, role, title, status:", id, role, title, status)
     
+    $('#trackingModal').modal('toggle');
 
     if(status == 1){
         $('#trackingModal .dropdown').show();
@@ -5373,14 +5375,16 @@ function view_manus(id, hide) {
                     '</tr>';
             });
 
-            $('#uploadModal .table-borderless > tbody').append(html);
-            $('#uploadModal').modal('toggle');
-            $('#man_file_div').hide();
-            $('#man_abs_div').hide();
-            $('#man_key_div').hide();
-            $('#uploadModal .modal-footer .btn').hide();
-            $('#manuscript_form').hide();
-            $('.table-borderless').show();
+            if(html){
+                $('#uploadModal .table-borderless > tbody').append(html);
+                $('#uploadModal').modal('toggle');
+                $('#man_file_div').hide();
+                $('#man_abs_div').hide();
+                $('#man_key_div').hide();
+                $('#uploadModal .modal-footer .btn').hide();
+                $('#manuscript_form').hide();
+                $('.table-borderless').show();
+            }
         }
     });
 
