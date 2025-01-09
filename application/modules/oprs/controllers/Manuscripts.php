@@ -2549,11 +2549,15 @@ class Manuscripts extends OPRS_Controller {
 				$post[$field] = $this->input->post($field, true);
 			
 		}
+		// update manuscript status
+		$post['man_status'] = 2;
+
+		// save criteria score
 		$post['tr_processor_id'] = _UserIdFromSession();
 		$post['tr_date_reviewed'] = date('Y-m-d H:i:s');
 		$this->Review_model->save_tech_rev_score(array_filter($post));
 
-		//save tracking
+		// save tracking
 		$track['trk_man_id'] = $this->input->post('tr_man_id', TRUE);
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
@@ -2565,6 +2569,11 @@ class Manuscripts extends OPRS_Controller {
 		}else{
 			// send email 2
 		}
+	}
+
+	public function get_tech_rev_score($id){
+		$output = $this->Review_model->get_tech_rev_score($id);
+		echo json_encode($output);
 	}
 	
 

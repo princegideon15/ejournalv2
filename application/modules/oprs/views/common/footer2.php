@@ -295,7 +295,7 @@
 						<tr>
 							<th width="15%">Criteria</th>
 							<th>Description</th>
-							<th width="20%">Status</th>
+							<th width="20%" class="text-center">Status</th>
 						</tr>
 					</thead>
 					<tbody> 
@@ -2142,7 +2142,7 @@
 									<tr>
 										<th width="15%">Criteria</th>
 										<th>Description</th>
-										<th width="20%">Status</th>
+										<th width="20%" class="text-center">Status</th>
 									</tr>
 								</thead>
 								<tbody> 
@@ -2193,15 +2193,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="process_manuscript_form" autocomplete="off">
+        <form id="eic_process_form" autocomplete="off">
           <div class="row">
             <div class="col-6">
-				<table class="table table-hover table-bordered">
+				<table class="table table-hover table-bordered" id="eic_table">
 					<thead>
 						<tr>
 							<th width="15%">Criteria</th>
 							<th>Description</th>
-							<th width="20%">Status</th>
+							<th width="20%" class="text-center">Status</th>
 						</tr>
 					</thead>
 					<tbody> 
@@ -2210,177 +2210,97 @@
 						<tr>
 							<td><?php echo $row->code; ?></td>
 							<td class="text-wrap"><?php echo $row->desc; ?></td>
-							<td>
-							</td>
+							<td class="text-center fw-bold" id="tr_crt_<?php echo $i;?>"></td>
 						</tr>
 						<?php endforeach ?>
+						<tr><td colspan="2">Overall</td>
+							<td class="text-center fw-bold text-white" id="tr_final"></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
             <div class="col-6">
-				
-			<div class="form-group" id="form_journal">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                  <li class="nav-item">
-                    <a class="nav-link active" id="new-tab" data-bs-toggle="tab" href="#new" role="tab" aria-controls="new" aria-selected="true"><span class="fa fa-book"></span> New Journal</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="article-tab" data-bs-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false"><span class="fa fa-plus-square"></span> Add Article</a>
-                  </li>
-                </ul>
-                <div class="tab-content p-3" id="myTabContent">
-                  <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new-tab">
-                    <div class="form-row">
-                      <div class="col">
-                        <label class="fw-bold" for="jor_volume">Volume No.</label>
-                        <select class="form-select text-uppercase" id="jor_volume" name="jor_volume" placeholder="ex. X" style="background-color:white">
-                          <?php foreach ($u_journal as $j): ?>
-                          <?php echo '<option value=' . $j->jor_volume . '>' . $j->jor_volume . '</option>'; ?>
-                          <?php endforeach;?>
-                        </select>
-                      </div>
-                      <div class="col">
-                        <label class="fw-bold" for="jor_issue">Issue No.</label>
-                        <select class="form-select" id="jor_issue" name="jor_issue">
-                          <option value="">Select Issue</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">Special Issue No. 1</option>
-                          <option value="6">Special Issue No. 2</option>
-                          <option value="7">Special Issue No. 3</option>
-                          <option value="8">Special Issue No. 4</option>
-                        </select>
-                      </div>
-                      <div class="col">
-                        <label class="fw-bold" for="jor_year">Year</label>
-                        <input type="number" class="form-control" id="jor_year" name="jor_year" max="9999" min="1000" >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
-                    <div class="form-row">
-                      <div class="col">
-                        <div class="col">
-                          <label for="jor_issue">Year</label>
-                          <select class="form-select" id="art_year" name="art_year">
-                            <option value="">Select year</option>
-                            <?php foreach ($u_year as $j): ?>
-                            <?php echo '<option value=' . $j->jor_year . '>' . $j->jor_year . '</option>'; ?>
-                            <?php endforeach;?>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <label for="art_issue">Volume, Issue</label>
-                        <select class="form-select" id="art_issue" name="art_issue">
-                          <option value="">Select Volume, Issue</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-			  </div>
-			</div>
-                <nav>
+				<div id="form_journal">
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<button class="nav-link active" id="new-tab" data-bs-toggle="tab" data-bs-target="#new-tab-pane" type="button" role="tab" aria-controls="new-tab-pane" aria-selected="false"><span class="fa fa-book"></span> New Journal</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="article-tab" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="false"><span class="fa fa-plus-square"></span> Add Article</button>
+						</li>
+					</ul>
+					<div class="tab-content p-3" id="myTabContent">
+						<div class="tab-pane fade show active" id="new-tab-pane" role="tabpanel" aria-labelledby="new-tab" tabindex="0">
+							<div class="mb-3">
+								<label class="fw-bold form-label" for="jor_volume">Volume No.</label>
+								<select class="form-select text-uppercase" id="jor_volume" name="jor_volume" placeholder="ex. X" style="background-mb-3or:white">
+								<?php foreach ($u_journal as $j): ?>
+								<?php echo '<option value=' . $j->jor_volume . '>' . $j->jor_volume . '</option>'; ?>
+								<?php endforeach;?>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label class="fw-bold form-label" for="jor_issue">Issue No.</label>
+								<select class="form-select" id="jor_issue" name="jor_issue">
+									<option value="">Select Issue</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">Special Issue No. 1</option>
+									<option value="6">Special Issue No. 2</option>
+									<option value="7">Special Issue No. 3</option>
+									<option value="8">Special Issue No. 4</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label class="fw-bold form-label" for="jor_year">Year</label>
+								<input type="number" class="form-control" id="jor_year" name="jor_year" max="9999" min="1000" >
+							</div>
+						</div>
+						<div class="tab-pane fade" id="article-tab-pane" role="tabpanel" aria-labelledby="article-tab" tabindex="0">
+							<div class="mb-3">
+								<label for="jor_issue" class="fw-bold form-label">Year</label>
+								<select class="form-select" id="art_year" name="art_year">
+								<option value="">Select year</option>
+								<?php foreach ($u_year as $j): ?>
+								<?php echo '<option value=' . $j->jor_year . '>' . $j->jor_year . '</option>'; ?>
+								<?php endforeach;?>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="art_issue" class="fw-bold form-label">Volume, Issue</label>
+								<select class="form-select" id="art_issue" name="art_issue">
+								<option value="">Select Volume, Issue</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                   <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-rev" role="tab" aria-controls="nav-rev" aria-selected="true"  id="btn_add_rev"><span class="fa fa-plus-square"></span> Add Reviewer</a>
-                  <a class="nav-item nav-link disabled" data-bs-toggle="tab" href="#nav-rev" role="tab" aria-controls="nav-rev" aria-selected="true"  id="btn_add_rev"><small>All reviewer emails will be Cc to <span class="text-info">exec_dir@gmail.com</span></small> </a>
+                  <!-- <a class="nav-item nav-link disabled" data-bs-toggle="tab" href="#nav-rev" role="tab" aria-controls="nav-rev" aria-selected="true"  id="btn_add_rev"><small>All reviewer emails will be Cc to <span class="text-info">exec_dir@gmail.com</span></small> </a> -->
                 </div>
-                </nav>
                 <div class="tab-content p-3" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-rev" role="tabpanel">
-                  <div class="form-group">
-                    <div id="rev_acc">
-                      <div class="card">
-                        <div class="card-header p-0" id="heading1"  data-bs-toggle="collapse" data-bs-target="#collapse1">
-                          <h5 class="mb-0">
-                          <button class="btn btn-link" type="button">
-                          <span class="fa fa-address-card"></span> Reviewer 1 : <span id="rev_header1"></span>
-                          </button>
-                          </h5>
-                        </div>
-                        <div id="collapse1" class="collapse show" data-parent="#rev_acc">
-                          <div class="card-body">
-                            <div class="form-row mb-2">
-                              <div class="col-3">
-                                <select class="form-select" id="trk_title1" name="trk_title[]" placeholder="Title">
-                                  <?php foreach ($titles as $t): ?>
-                                  <?php echo '<option value=' . $t->title_name . '>' . $t->title_name . '</option>'; ?>
-                                  <?php endforeach;?>
-                                </select>
-                              </div>
-                              <div class="col autocomplete">
-                                <input type="text" class="form-control " id="trk_rev1" name="trk_rev[]" placeholder="Search by Name/Specialization/Non-member/Non-account">
-                              </div>
-                            </div>
-                            <div class="form-row mb-2">
-                              <div class="col">
-                                <input type="text" class="form-control" placeholder="Email" id="trk_rev_email1" name="trk_rev_email[]">
-                              </div>
-                              <div class="col">
-                                <input type="text" class="form-control" placeholder="Contact" id="trk_rev_num1" name="trk_rev_num[]">
-                              </div>
-                              <input type="hidden" id="trk_rev_id1" name="trk_rev_id[]">
-                            </div>
-                            <div class="form-row">
-                              <div class="col">
-                                <input type="text" class="form-control" placeholder="Specialization" id="trk_rev_spec1" name="trk_rev_spec[]">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <nav>
-                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab" href="#nav-timeframe" role="tab" aria-controls="nav-timeframe" aria-selected="true"><span class="fas fa-stopwatch"></span> Timeframes</a>  </div>
-                </nav>
-                <div class="tab-content p-3" id="nav-tabContent">
-                  <div class="tab-pane fade show active" id="nav-timeframe" role="tabpanel" aria-labelledby="nav-timeframe-tab">
-                    <p class="fw-bold">Accept Review</p>
-                    <div class="input-group mb-3">
-                      <input type="number" placeholder="0" id="trk_request_timer" name="trk_request_timer" style="width:70px !important;" min="1">
-                      <div class="input-group-append">
-                        <span class="input-group-text">Days to accept/decline the review request.</span>
-                      </div>
-                    </div>
-                    <p class="fw-bold">Review Request</p>
-                    <div class="input-group mb-3">
-                      <input type="number" placeholder="0" id="trk_timeframe" name="trk_timeframe" style="width:70px !important;" min="1">
-                      <div class="input-group-append">
-                        <span class="input-group-text">Days to finish the review task</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <nav>
-                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab" href="#nav-timeframe" role="tab" aria-controls="nav-timeframe" aria-selected="true"><span class="fas fa-check-square"></span> Optionals</a>  </div>
-                </nav>
-                <div class="tab-content p-3" id="nav-tabContent">
-                  <div class="tab-pane fade show active" id="nav-timeframe" role="tabpanel" aria-labelledby="nav-timeframe-tab">
-                    <div class="form-group text-left">
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" value="1" id="rev_hide_auth" name="rev_hide_auth">
-                        <label class="custom-control-label pt-1" for="rev_hide_auth"> Hide Authors to Reviewers <small>(Names, affiliations and emails are hidden)</small></label>
-                      </div>
-                    </div>
-                    <div class="form-group text-left">
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" value="1" id="rev_hide_rev" name="rev_hide_rev">
-                        <label class="custom-control-label pt-1" for="rev_hide_rev"> Hide Reviewers to Authors <small>(Names, affiliations and emails are hidden)</small></label>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="fw-bold" for="man_remarks">Remarks</label>
-                      <textarea class="form-control" id="trk_remarks" name="trk_remarks" placeholder="Type your remarks here" onkeydown="countChar(this)"></textarea>
-                      <small class="text-muted float-right limit"></small>
-                    </div>
-                  </div>
+					<div class="tab-pane fade show active" id="nav-rev" role="tabpanel">
+						<div class="mb-3 row">
+							<div class="col col-4">
+								<label for="" class="fw-bold form-label">Reviewer Type</label>
+								<select class="form-select" name="" id="">
+									<option value="">Select Type</option>
+									<option value="1">Cluster Editor</option>
+									<option value="2">Associate Editor</option>
+								</select>
+							</div>
+							<div class="col">
+								<label for="" class="fw-bold form-label">Reviewer</label>
+								<select class="form-select" name="" id="">
+									<option value="">Select Reviewer</option>
+								</select>
+							</div>
+						</div>
+					</div>
                 </div>
             </div>
           </div>

@@ -7918,15 +7918,12 @@ function getCurrentOTP(refCode){
   }
 
   function eic_process(id) {
+  console.log("🚀 ~ eic_process ~ id:", id)
 
     tinyMCE.remove();
     
     revIncr = 1;
-    $('#process_manuscript_form')[0].reset();
-    $('#rev_acc .card').not(':first').remove();
-    $('#rev_acc #collapse1').addClass('show');
-    $('#rev_acc_mail .card').not(':first').remove();
-    $('#rev_acc_mail #collapse_mail1').addClass('show');
+    $('#eic_process_form')[0].reset();
     
     man_id = id;
 
@@ -7936,28 +7933,46 @@ function getCurrentOTP(refCode){
         dataType: "json",
         crossDomain: true,
         success: function(data) {
+            console.log("🚀 ~ eic_process ~ data:", data)
             $.each(data, function(key, val) {
                 mail_title = val.man_title;
 
-                $('#jor_volume').val(val.man_volume);
-                $('#jor_issue').val(val.man_issue);
-                $('#jor_year').val(val.man_year);
+                $('#eic_process_form #jor_volume').val(val.man_volume);
+                $('#eic_process_form #jor_issue').val(val.man_issue);
+                $('#eic_process_form #jor_year').val(val.man_year);
 
                 if(val.man_status > 1){
                     localStorage.setItem('jor_vol', val.man_volume);
                     localStorage.setItem('jor_issue', val.man_issue);
                     localStorage.setItem('jor_year', val.man_year);
                 }
-           
             });
+        }
+    });   
 
+    $('#tr_crt_1').text('passed');
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            console.log("🚀 ~ eic_process ~ data:", data)
+            $.each(data, function(key, val){
+                $.each(val, function(k, v){
+                    var status_class = (v == 1) ? 'text-success' : 'text-danger';
+                    var status_bg_class = (v == 1) ? 'bg-success' : 'bg-danger';
+                    var status_text = (v == 1) ? 'Passed' : 'Failed';
+
+                    if(k == 'tr_final'){
+                        $('#eic_table #' +k).text(status_text);
+                        $('#eic_table #' +k).addClass(status_bg_class);
+                    }else{
+                        $('#eic_table #' +k).text(status_text);
+                        $('#eic_table #' +k).addClass(status_class);
+                    }
+                });
+            });
         }
     });
-
-    $('#form_journal').show();
-    if($('#trk_rev1').val() == ''){
-        load_email_content();       
-    }
-
-    
 }
