@@ -185,6 +185,63 @@ $(document).ready(function() {
     //     }
     // });
 
+    // tech rev criteria process
+    $("#tech_rev_form").validate({
+        submitHandler: function() {
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    var formdata = new FormData($('#tech_rev_form')[0]);
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/technical_review_process",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+            
+
+        }
+    });
+
     $('#submit_feedback').on('click', function(){
         if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
 
@@ -541,8 +598,8 @@ $(document).ready(function() {
     }, "Please upload a valid .tex file.");
 
     // unused upload manuscript (author only)
-    jQuery(function ($) {
-        "use strict";
+    // jQuery(function ($) {
+        // "use strict";
         //validate upload manuscript form
         $("#manuscript_form").validate({
             debug: true,
@@ -626,8 +683,61 @@ $(document).ready(function() {
                 // $('#confirmUploadModal').modal('toggle');
 
                 
-                $('body').loading('start');
-                $('#uploadModal').modal('toggle');
+                Swal.fire({
+                    title: "Are you sure?",
+                    // text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Submit"
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $('body').loading('start');
+                        $('#uploadModal').modal('toggle');
+                        
+                        var formdata = new FormData($('#manuscript_form')[0]);
+        
+                        $.ajax({
+                            url: base_url + "oprs/manuscripts/upload",
+                            data: formdata,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            crossDomain: true,
+                            type: 'POST',
+                            success: function(data) {
+                                console.log(data);
+                                $('body').loading('stop');
+                                Swal.fire({
+                                title: "Manuscript submitted successfully!",
+                                icon: 'success',
+                                // html: "I will close in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                    location.reload();
+                                }
+                                }).then((result) => {
+                                    /* Read more about handling dismissals below */
+                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                        console.log("I was closed by the timer");
+                                    }
+                                    location.reload();
+                                });
+                            }
+                        });
+                    }
+                  });
 
                 // var form = $('#manuscript_form');
                 // var formdata = false;
@@ -636,50 +746,11 @@ $(document).ready(function() {
                 //     formdata = new FormData(form[0]);
                 // }
 
-                var formdata = new FormData($('#manuscript_form')[0]);
-
-                $.ajax({
-                    url: base_url + "oprs/manuscripts/upload",
-                    data: formdata,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    crossDomain: true,
-                    type: 'POST',
-                    success: function(data) {
-                        console.log(data);
-                        $('body').loading('stop');
-                        Swal.fire({
-                        title: "Manuscript submitted successfully!",
-                        icon: 'success',
-                        // html: "I will close in <b></b> milliseconds.",
-                        timer: 2000,
-                        timerProgressBar: true,
-                        didOpen: () => {
-                            Swal.showLoading();
-                            const timer = Swal.getPopup().querySelector("b");
-                            timerInterval = setInterval(() => {
-                            timer.textContent = `${Swal.getTimerLeft()}`;
-                            }, 100);
-                        },
-                        willClose: () => {
-                            clearInterval(timerInterval);
-                            // location.reload();
-                        }
-                        }).then((result) => {
-                            /* Read more about handling dismissals below */
-                            if (result.dismiss === Swal.DismissReason.timer) {
-                                console.log("I was closed by the timer");
-                            }
-                            // location.reload();
-                        });
-                    }
-                });
 
             }
         });
 
-    });
+    // });
 
     // submit manuscript if author account (unused)
     $('#submit_upload_manuscript').click(function(){
@@ -7843,4 +7914,50 @@ function getCurrentOTP(refCode){
 
   function tech_rev_criterion(id, status){
     $('#tedEdCriteriaModal').modal('toggle');
+    $('#tr_man_id').val(id);
   }
+
+  function eic_process(id) {
+
+    tinyMCE.remove();
+    
+    revIncr = 1;
+    $('#process_manuscript_form')[0].reset();
+    $('#rev_acc .card').not(':first').remove();
+    $('#rev_acc #collapse1').addClass('show');
+    $('#rev_acc_mail .card').not(':first').remove();
+    $('#rev_acc_mail #collapse_mail1').addClass('show');
+    
+    man_id = id;
+
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_manuscript_by_id/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val) {
+                mail_title = val.man_title;
+
+                $('#jor_volume').val(val.man_volume);
+                $('#jor_issue').val(val.man_issue);
+                $('#jor_year').val(val.man_year);
+
+                if(val.man_status > 1){
+                    localStorage.setItem('jor_vol', val.man_volume);
+                    localStorage.setItem('jor_issue', val.man_issue);
+                    localStorage.setItem('jor_year', val.man_year);
+                }
+           
+            });
+
+        }
+    });
+
+    $('#form_journal').show();
+    if($('#trk_rev1').val() == ''){
+        load_email_content();       
+    }
+
+    
+}

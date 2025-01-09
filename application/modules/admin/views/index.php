@@ -705,7 +705,14 @@
 										</div>
 										<div class="mb-3">
 											<label for="edt_position" class="form-label">Editorial Position</label>
-											<input type="text" class="form-control" id="edt_position" name="edt_position" placeholder="ex. Editor-in-Chief">
+											<select class="form-select" name="edt_position" id="edt_position">
+												<option value="">Select Editorial Position</option>
+												<?php foreach($editorial_board_position as $row):?>
+													<?php echo '<option value=' . $row->role_name . '>' . $row->role_name . '</option>'; ?>
+												<?php endforeach ?>
+												<option value="Editorial Staff">Editorial Staff</option>
+											</select>
+											<!-- <input type="text" class="form-control" id="edt_position" name="edt_position" placeholder="ex. Editor-in-Chief"> -->
 										</div>	
 										<div class="mb-3">
 											<label for="edt_position_affiliation" class="form-label">Employment Position</label>

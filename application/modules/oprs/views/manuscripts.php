@@ -153,17 +153,7 @@
 															onclick="tech_rev_criterion(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
-														 
-														<!-- <button type="button" class="btn border border-1 btn-light text-success"
-															onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-															data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
-															data-bs-placement="top" title="Add Reviewers"><span
-																class="fas fa-user-plus"></span></button> -->
-														<!-- add remarks -->
-														<button type="button" class="btn border border-1 btn-light"
-															onclick="add_remarks('<?php echo $m->row_id; ?>')" data-bs-toggle="modal"
-															data-bs-target="#remarksModal" rel="tooltip" data-bs-placement="top"
-															title="Add Remarks"><span class="far fa-edit"></span></button>
+													
 
 														<?php }else if($m->man_status <= 3){ ?>
 														<!-- process manuscript -->
@@ -185,48 +175,45 @@
 															data-bs-toggle="modal" data-bs-target="#publishModal" rel="tooltip"
 															data-bs-placement="top" title="Publish to eJournal"><span
 																class="fas fa-paper-plane"></span></button>
-														<?php } ?>
-
-														<!-- view abstract, full text manuscript, word -->
-														<button type="button" class="btn border border-1 btn-light text-dark"
-															onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-															data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
-															data-bs-placement="top" title="View Abstract"><span
-															class="far fa-file-alt"></span> </button>
-														<button type="button" class="btn border border-1 btn-light text-dark"
-															onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-															data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
-															data-bs-placement="top" title="View Full Manuscript"><span
-															class="far fa-file-pdf"></span> </button>
-														<a type="button" class="btn border border-1 btn-light text-dark"
-															href="<?php echo base_url('/assets/oprs/uploads/\initial_manuscripts_word/'.$m->man_word); ?>" rel="tooltip"
-															data-bs-placement="top" title="Download Full Text Word" download><span
-															class="far fa-file-alt"></span></a>
 													<?php } ?>
+												<?php } ?>
+
+												
+												<!-- EDITOR-IN-CHIEF -->
+												<?php if (_UserRoleFromSession() == 6) { ?>
+	 
+													<button type="button" class="btn border border-1 btn-light text-success"
+														onclick="eic_process(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
+														data-bs-toggle="modal" data-bs-target="#eicProcessModal" rel="tooltip"
+														data-bs-placement="top" title="Add Reviewers"><span
+															class="fas fa-user-plus"></span></button>
+
+												<?php } ?>
+
 												<!-- SUPERADMIN -->
-												<?php if (_UserRoleFromSession() == 8 ) { ?>
-												<!-- view reviewers -->
-												<button type="button" class="btn border border-1  btn-light text-info"
-													onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-													data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
-													data-bs-placement="top" title="View Reviewers"><span
-														class="fas fa-users"></span></button>
-												<!-- view abstract and full text manuscript -->
-												<button type="button" class="btn border border-1 btn-light text-dark"
-													onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
-													data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
-													data-bs-placement="top" title="View Abstract"><span
-														class="far fa-file-alt"></span> </button>
-												<button type="button" class="btn border border-1 btn-light text-dark"
-													onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
-													data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
-													data-bs-placement="top" title="View Full Manuscript"><span
-														class="far fa-file-pdf"></span> </button>
-												<!-- delete manuscript -->
-												<button type="button" class="btn border border-1 btn-light text-danger"
-													rel="tooltip" data-bs-placement="top" title="Delete"
-													onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
-														class="fa fa-trash"></span></button>
+												<?php if (_UserRoleFromSession() == 17 ) { ?>
+													<!-- view reviewers -->
+													<button type="button" class="btn border border-1  btn-light text-info"
+														onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+														data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+														data-bs-placement="top" title="View Reviewers"><span
+															class="fas fa-users"></span></button>
+													<!-- view abstract and full text manuscript -->
+													<button type="button" class="btn border border-1 btn-light text-dark"
+														onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Abstract"><span
+															class="far fa-file-alt"></span> </button>
+													<button type="button" class="btn border border-1 btn-light text-dark"
+														onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
+														data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+														data-bs-placement="top" title="View Full Manuscript"><span
+															class="far fa-file-pdf"></span> </button>
+													<!-- delete manuscript -->
+													<button type="button" class="btn border border-1 btn-light text-danger"
+														rel="tooltip" data-bs-placement="top" title="Delete"
+														onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+															class="fa fa-trash"></span></button>
 												<?php } ?>
 
 												<!-- approve manuscript -->
@@ -236,6 +223,28 @@
 													onclick="final_review('<?php echo $m->row_id; ?>')"><span
 														class="	fa fa-gavel"></span> Final Review</button> -->
 												<?php } ?>
+
+												
+												<!-- view abstract, full text manuscript, word -->
+												<button type="button" class="btn border border-1 btn-light text-dark"
+													onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
+													data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+													data-bs-placement="top" title="View Abstract"><span
+													class="far fa-file-alt"></span> </button>
+												<button type="button" class="btn border border-1 btn-light text-dark"
+													onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
+													data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
+													data-bs-placement="top" title="View Full Manuscript"><span
+													class="far fa-file-pdf"></span> </button>
+												<a type="button" class="btn border border-1 btn-light text-dark"
+													href="<?php echo base_url('/assets/oprs/uploads/\initial_manuscripts_word/'.$m->man_word); ?>" rel="tooltip"
+													data-bs-placement="top" title="Download Full Text Word" download><span
+													class="far fa-file-alt"></span></a>
+												<!-- add remarks -->
+												<button type="button" class="btn border border-1 btn-light"
+													onclick="add_remarks('<?php echo $m->row_id; ?>')" data-bs-toggle="modal"
+													data-bs-target="#remarksModal" rel="tooltip" data-bs-placement="top"
+													title="Add Remarks"><span class="far fa-edit"></span></button>
 											</div>
 										</td>
 										<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>

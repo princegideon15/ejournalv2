@@ -8,6 +8,7 @@ class Review_model extends CI_Model {
 	private $user = 'tblusers';
 	private $reviewers = 'tblreviewers';
 	private $non = 'tblnonmembers';
+	private $tech_rev_score = 'tbltech_rev_score';
 	// skms
 	private $business = 'tblbusiness_address';
 	private $specs = 'tblmembership_profiles';
@@ -240,6 +241,12 @@ class Review_model extends CI_Model {
 		} else {
 			return '0';
 		}
+	}
+
+	// Process v2
+	public function save_tech_rev_score($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->tech_rev_score, $data);
 	}
 }
 

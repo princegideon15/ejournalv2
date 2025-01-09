@@ -38,11 +38,19 @@ class Library_model extends CI_Model {
 		return $query->result();
 	}
 
-	
-
     public function get_tables(){
         return $this->db->list_tables();
     }
+
+	public function get_editorial_board_position(){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from('tblroles');
+		$oprs->where('role_id >=', 2);
+		$oprs->where('role_id <=', 15);
+		$query = $oprs->get();
+		return $query->result();
+	}
 }
 
 /* End of file Library_model.php */

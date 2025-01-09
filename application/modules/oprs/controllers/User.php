@@ -117,7 +117,7 @@ class User extends OPRS_Controller {
 				$post['usr_password'] = password_hash($this->input->post('usr_password', true), PASSWORD_BCRYPT);
 				$post['usr_desc'] = $role_info[0]->role_name;
 				$post['usr_id'] = $id;
-				$post['usr_sys_access'] = $role_info[0]->role_access;
+				$post['usr_sys_acc'] = $role_info[0]->role_access;
 				$post['usr_status'] = 1;
 			}
 		}

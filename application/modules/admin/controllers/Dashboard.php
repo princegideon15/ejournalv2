@@ -105,6 +105,7 @@ class Dashboard extends EJ_Controller {
 				$data['tables'] = $this->Library_model->get_tables();
 				$data['emails'] = $this->Email_model->get_contents();
 				$data['user_roles'] = $this->Email_model->get_email_user_roles();
+				$data['editorial_board_position'] = $this->Library_model->get_editorial_board_position();
 
 				$acoa_arr = explode(",& ", $this->Coauthor_model->get_author_coauthors_list());
 				sort($acoa_arr, SORT_STRING);

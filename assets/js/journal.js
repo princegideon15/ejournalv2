@@ -3377,8 +3377,13 @@ function edit_editorial(id) {
 						$('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/images/unavailable.jpg');
 					}
 					$.each(val, function (k, v) {
-						if (k != 'edt_photo')
-							$('#editorial_modal #' + k).val(v);
+						if (k != 'edt_photo'){
+							if(k == 'edt_position'){
+								$('#editorial_modal #' + k).val(v).trigger('change');
+							}else{
+								$('#editorial_modal #' + k).val(v)
+							}
+						};
 					});
 				});
 			}

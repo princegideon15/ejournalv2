@@ -2539,7 +2539,33 @@ class Manuscripts extends OPRS_Controller {
 		echo json_encode($output);
 	}
 
-	
+	public function technical_review_process(){
+		$oprs = $this->load->database('dboprs', TRUE);
+		// save as author
+		$tableName = 'tbltech_rev_score';
+		$result = $oprs->list_fields($tableName);
+		$post = array();
+		foreach ($result as $i => $field) {
+				$post[$field] = $this->input->post($field, true);
+			
+		}
+		$post['tr_processor_id'] = _UserIdFromSession();
+		$post['tr_date_reviewed'] = date('Y-m-d H:i:s');
+		$this->Review_model->save_tech_rev_score(array_filter($post));
+
+		//save tracking
+		$track['trk_man_id'] = $this->input->post('tr_man_id', TRUE);
+		$track['trk_processor'] = _UserIdFromSession();
+		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
+		$track['trk_source'] = '_op';
+		$this->Manuscript_model->tracking(array_filter($track));
+
+		if($this->input->post('tr_final') == 1){
+			// send email 3
+		}else{
+			// send email 2
+		}
+	}
 	
 
 }
