@@ -8,6 +8,7 @@ class Login_model extends CI_Model {
 	private $nonmembers = 'tblnonmembers';
 	private $attempts = 'tbllogin_attempts';
 	private $access_tokens = 'tbluser_access_tokens';
+	private $logs = 'tbllogs';
 	// skms
 	private $memberships = 'tblmembership_profiles';
 	private $profiles = 'tblpersonal_profiles';
@@ -235,5 +236,16 @@ class Login_model extends CI_Model {
 		$query = $oprs->get();
 		return $query->result();
 	}
+
+	public function get_last_visit_date($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('date_created');
+		$oprs->from($this->logs);
+		$oprs->where('log_user_id', $id);
+		$oprs->order_by('date_created', 'DESC');
+		$oprs->limit(1, 1);
+		$query = $oprs->get();
+		return $query->result();
+	  }
 
 }

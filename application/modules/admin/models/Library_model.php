@@ -66,6 +66,18 @@ class Library_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function update_guidelines($data){
+		$this->db->update('tblguidelines', $data);
+	}
+
+	public function get_guidelines_content(){
+		$this->db->select("gd_content");
+		$this->db->from('tblguidelines');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result[0]['gd_content'];
+	}
 }
 
 /* End of file Library_model.php */

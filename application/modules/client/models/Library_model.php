@@ -110,6 +110,15 @@ class Library_model extends CI_Model {
 		$result = $query->result_array();
 		return $result[0]['ep_file'];
 	}
+
+    
+	public function get_guidelines_content(){
+		$this->db->select("gd_content");
+		$this->db->from('tblguidelines');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result[0]['gd_content'];
+	}
 }
 
 /* End of file Library_model.php */

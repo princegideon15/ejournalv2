@@ -1012,23 +1012,30 @@
 						<h3>Manage Guidelines</h3>
 						<div class="row mt-3">
 							<?php if ($this->session->userdata('_prv_edt') == 1) {?>
-							<div class="col-6">
+							<div class="col-10">
 								<div class="form-group">
 									<form id="form_guidelines">
 										<div class="mb-3">
+											<!-- <label for="gd_content" class="form-label">Content</label> -->
+											<textarea rows="20" class="form-control" id="gd_content" name="gd_content"><?php echo $guidelines; ?></textarea>
+										</div>
+										<div class="mb-3">
+											<button type="submit" class="btn btn-primary" id="btn_save_guidelines" name="btn_save_guidelines"><span class="oi oi-check"></span> Save</button>
+										</div>
+										<!-- <div class="mb-3">
 											<label for="upload_guidelines" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF</span></label>
 											<input type="file" class="form-control" id="upload_guidelines" name="upload_guidelines" accept="application/pdf">
 										</div>
 										<div class="mb-3">
 											<button type="submit" class="btn btn-primary" id="btn_upload_guidelines" name="btn_upload_guidelines"><span class="oi oi-check"></span> Upload</button>
-										</div>
+										</div> -->
 									</form>
 								</div>
 							</div>
 							<?php }?>
-							<div class="col-6">
+							<!-- <div class="col-6">
 								<embed class="border border-secondary" WMODE="transparent" id="embed_guidelines" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_guidelines.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" width="100%" height="700px" type="application/pdf">
-							</div>
+							</div> -->
 						</div>
 						</div>
 					</div>

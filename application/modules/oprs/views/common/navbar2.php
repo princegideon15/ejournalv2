@@ -92,11 +92,11 @@
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user fa-fw me-1"></i>
+                <i class="fas fa-user fa-fw me-1"></i><?php echo $this->session->userdata('_oprs_username'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><h6 class="dropdown-header"><?php echo $this->session->userdata('_oprs_username'); ?></h6></li>
-                <li><h6 class="dropdown-header"><?php echo $this->session->userdata('_oprs_type'); ?></h6></li>
+                <li><h6 class="dropdown-header">Last visit: <?php echo $this->session->userdata('_oprs_last_visit'); ?></h6></li>
+                <li><h6 class="dropdown-header">Account: <?php echo $this->session->userdata('_oprs_type'); ?></h6></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#changePassModal">Change Password</a></li>
                 <li><a class="dropdown-item" href="javascript:void(0);" id="logout_oprs" onclick="logout()">Logout</a></li>

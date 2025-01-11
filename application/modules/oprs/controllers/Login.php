@@ -468,8 +468,17 @@ class Login extends OPRS_Controller {
 						}
 						
 						$this->session->set_userdata($priv_sess);
+
+						
+						$last_visit_date = $this->Login_model->get_last_visit_date($id);
+						$last_visit_date = new DateTime($last_visit_date[0]->date_created);
+						$last_visit_date = $last_visit_date->format('F j, Y');
+						
 						
 						if ($sys == 1) { // ejournal admin
+
+							
+
 							// login session
 							$sess = array('_oprs_logged_in' => true,
 								'_oprs_username' => $usr_name,
@@ -477,7 +486,8 @@ class Login extends OPRS_Controller {
 								'_oprs_type_num' => $type_num,
 								'_oprs_user_id' => $id,
 								'_oprs_user_dp' => $dp,
-								'sys_acc' => $sys);
+								'sys_acc' => $sys,
+								'_oprs_last_visit' => $last_visit_date);
 								
 							is_online($id);
 							$this->session->set_userdata($sess);
@@ -492,7 +502,8 @@ class Login extends OPRS_Controller {
 								'_oprs_type_num' => $type_num,
 								'_oprs_user_id' => $id,
 								'_oprs_user_dp' => $dp,
-								'sys_acc' => $sys);
+								'sys_acc' => $sys,
+								'_oprs_last_visit' => $last_visit_date);
 								
 							is_online($id);
 							$this->session->set_userdata('last_activity', time()); // Track the login time
@@ -511,7 +522,8 @@ class Login extends OPRS_Controller {
 								'_oprs_user_id' => $id,
 								'_oprs_user_dp' => $dp,
 								'_oprs_srce' => '_op',
-								'sys_acc' => $sys);
+								'sys_acc' => $sys,
+								'_oprs_last_visit' => $last_visit_date);
 
 							is_online($verifyOTP[0]->usr_id);
 							$this->session->set_userdata($sess);

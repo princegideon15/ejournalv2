@@ -48,7 +48,7 @@ $(document).ready(function () {
     $.validator.addMethod('filesize', function (value, element, param) {
         return this.optional(element) || (element.files[0].size <= param)
     }, `File size exceeds the allowed limit.`);
-	
+
 
 	 // get user access token
 	 accessToken = $.ajax({
@@ -360,19 +360,34 @@ $(document).ready(function () {
 	tinymce.init({
 		selector: '#enc_content',
 		forced_root_block: false,
-		height: "400"
+		height: "400",
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
+		menubar: false // Optional: Hide the menubar if not needed
 	});
 
 	tinymce.init({
 		selector: '#home_description',
 		forced_root_block: false,
-		height: "400"
+		height: "400",
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
+		menubar: false // Optional: Hide the menubar if not needed
 	});
 
 	tinymce.init({
 		selector: '#ep_content',
 		forced_root_block: false,
-		height: "900"
+		height: "900",
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
+		menubar: false // Optional: Hide the menubar if not needed,
+	});
+
+	tinymce.init({
+		selector: '#gd_content',
+		forced_root_block: false,
+		height: "900",
+		plugins: 'link',
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
+		menubar: false // Optional: Hide the menubar if not needed
 	});
 
 	$('#table-registry').DataTable();
@@ -2083,47 +2098,59 @@ $(document).ready(function () {
 		debug: true,
 		errorClass: 'text-danger',
 		rules: {
-			upload_guidelines: {
+			// upload_guidelines: {
+			// 	required: true,
+			// },
+			gd_content: {
 				required: true,
-			}
+			},
 		},
 		submitHandler: function () {
 
-			var form = $('#form_guidelines');
-			var formdata = false;
+			// var form = $('#form_guidelines');
+			// var formdata = false;
 
-			if (window.FormData) {
-				formdata = new FormData(form[0]);
-			}
+			// if (window.FormData) {
+			// 	formdata = new FormData(form[0]);
+			// }
 
-			var formAction = form.attr('action');
-			var file_size = $('#upload_guidelines')[0].files[0].size;
+			// var formAction = form.attr('action');
+			// var file_size = $('#upload_guidelines')[0].files[0].size;
 
-			// if file size of pdf is less than 20mb hide warning
-			if (file_size < '20000000') {
-				$('#upload_guidelines').next('.bg-danger').hide();
-			}
+			// // if file size of pdf is less than 20mb hide warning
+			// if (file_size < '20000000') {
+			// 	$('#upload_guidelines').next('.bg-danger').hide();
+			// }
 
-			// if file size of pdf is more than 20mb hide warning
-			if (file_size >= '20000000') {
-				$('#upload_guidelines').next('.bg-danger').hide();
-				$('#upload_guidelines').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-			} else {
+			// // if file size of pdf is more than 20mb hide warning
+			// if (file_size >= '20000000') {
+			// 	$('#upload_guidelines').next('.bg-danger').hide();
+			// 	$('#upload_guidelines').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+			// } else {
+
+			
+			var gd_content = tinyMCE.get('gd_content').getContent();
+
+
 				$.ajax({
 					url: base_url + "admin/dashboard/update_guidelines/",
-					data: formdata ? formdata : form.serialize(),
+					data: { content: gd_content },
+					// data: formdata ? formdata : form.serialize(),
 					cache: false,
-					contentType: false,
-					processData: false,
+					contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Use default content type for simple data
+					processData: true, // Allow jQuery to process the data
+					// contentType: false,
+					// processData: false,
 					type: 'POST',
 					success: function (data, textStatus, jqXHR) {
 
-						$('#form_guidelines')[0].reset();
+						// $('#form_guidelines')[0].reset();
 
 						let timerInterval;
 
 						Swal.fire({
-						title: "File uploaded successfully!",
+						// title: "File uploaded successfully!",
+						title: "Guidelines saved successfully!",
 						text: "Page reloading...",
 						icon: 'success',
 						// html: "I will close in <b></b> milliseconds.",
@@ -2161,7 +2188,7 @@ $(document).ready(function () {
 
 					}
 				});
-			}
+			// }
 		}
 	});
 

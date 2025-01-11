@@ -72,6 +72,7 @@ class Dashboard extends EJ_Controller {
 				$data['user_roles'] = $this->Email_model->get_email_user_roles();
 				$data['editorial_board_position'] = $this->Library_model->get_editorial_board_position();
 				$data['editorial_policy'] = $this->Library_model->get_editorial_policy_content();
+				$data['guidelines'] = $this->Library_model->get_guidelines_content();
 
 				$acoa_arr = explode(",& ", $this->Coauthor_model->get_author_coauthors_list());
 				sort($acoa_arr, SORT_STRING);
@@ -395,19 +396,31 @@ class Dashboard extends EJ_Controller {
 	public function update_guidelines() {
 
 		// upload guidelines
-		$config_pdf['upload_path'] = './assets/uploads/';
-		$config_pdf['allowed_types'] = 'pdf';
-		$config_pdf['overwrite'] = TRUE;
-		$config_pdf['file_name'] = 'DO_NOT_DELETE_guidelines';
+		// $config_pdf['upload_path'] = './assets/uploads/';
+		// $config_pdf['allowed_types'] = 'pdf';
+		// $config_pdf['overwrite'] = TRUE;
+		// $config_pdf['file_name'] = 'DO_NOT_DELETE_guidelines';
 
-		$this->load->library('upload', $config_pdf);
-		$this->upload->initialize($config_pdf);
+		// $this->load->library('upload', $config_pdf);
+		// $this->upload->initialize($config_pdf);
 
-		if (!$this->upload->do_upload('upload_guidelines')) {
-			$error = $this->upload->display_errors();
-		} else {
-			$data = $this->upload->data();
-		}
+		// if (!$this->upload->do_upload('upload_guidelines')) {
+		// 	$error = $this->upload->display_errors();
+		// } else {
+		// 	$data = $this->upload->data();
+		// }
+
+		
+		$content = $this->input->post('content', TRUE);
+
+		// save guidelines
+		$data = [
+			'gd_content' => $content,
+			'last_updated' => date('Y-m-d H:i:s')
+		];
+
+		$this->Library_model->update_guidelines($data);
+
 
 		save_log_ej(_UserIdFromSession(), 'Updated Author Guidelines.', '0', _UserRoleFromSession());
 	}
