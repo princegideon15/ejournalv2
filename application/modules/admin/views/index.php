@@ -207,7 +207,7 @@
 					<div class="card border border-dark">
 						<div class="card-body">
 						<h3>Create Journal</h3>
-						<p class="pt-2 text-primary"><span class="fa fa-info-circle text-primary me-1"></span>Upload Cover - 20 MB file size limit</p>
+						<p class="pt-2 text-primary"><span class="fa fa-info-circle text-primary me-1"></span>Upload Cover Photo - 2MB file size limit</p>
 						<p class="lead">Journal Information</p>
 						<form id="form_create_journal">
 							<div class="row">
@@ -254,7 +254,7 @@
 								</div>
 								<div class="col">
 									<div class="mb-3">
-										<label for="jor_cover" class="form-label">Upload Cover Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+										<label for="jor_cover" class="form-label">Upload Cover Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
 										<input type="file" class="form-control mb-3" id="jor_cover" name="jor_cover" accept="image/jpeg" />
 									</div>
 									<div class="mb-3">
@@ -272,7 +272,7 @@
 					<div class="card border-dark">
 						<div class="card-body">
 							<h3>Add Article</h3>
-							<p class="pt-2 text-primary mb-1"><span class="fa fa-info-circle text-primary me-1 "></span>PDF - 21 MB file size limit</span></p>
+							<p class="pt-2 text-primary mb-1"><span class="fa fa-info-circle text-primary me-1 "></span>PDF - 20 MB file size limit</span></p>
 							<p class="text-primary mb-1"><span class="fa fa-info-circle text-primary me-1 "></span>File Naming Format - Volume_issue_yyyy_PrimaryAuthorLastNameFirstName_concatenatedArticleTitle</p>
 							<p class="text-primary mb-3"><span class="fa fa-info-circle text-primary me-1 "></span>Please do not include special characters in file name except underscore (_)</p>
 							<p class="fs-6">Article Information</p>
@@ -825,113 +825,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="tab-pane fade" id="v-pills-guidelines" role="tabpanel" aria-labelledby="v-pills-guidelines-tab" tabindex="0">
-					<div class="card border-dark">
-						<div class="card-body">
-						<h3>Manage Guidelines</h3>
-						<div class="row mt-3">
-							<?php if ($this->session->userdata('_prv_edt') == 1) {?>
-							<div class="col-6">
-								<div class="form-group">
-									<form id="form_guidelines">
-										<div class="mb-3">
-											<label for="upload_guidelines" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF</span></label>
-											<input type="file" class="form-control" id="upload_guidelines" name="upload_guidelines" accept="application/pdf">
-										</div>
-										<div class="mb-3">
-											<button type="submit" class="btn btn-primary" id="btn_upload_guidelines" name="btn_upload_guidelines"><span class="oi oi-check"></span> Upload</button>
-										</div>
-									</form>
-								</div>
-							</div>
-							<?php }?>
-							<div class="col-6">
-								<embed class="border border-secondary" WMODE="transparent" id="embed_guidelines" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_guidelines.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" width="100%" height="700px" type="application/pdf">
-							</div>
-						</div>
-						</div>
-					</div>
-				</div>
-				<div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
-					<div class="card border-dark">
-						<div class="card-body">
-						<p class="h3">Manage Home</p>
-						<div class="row mt-3">
-							<?php if ($this->session->userdata('_prv_edt') == 1) {?>
-							<div class="col-6">
-								<form id="form_home">
-									<div class="mb-3">
-										<label for="upload_guidelines" class="form-label">Description</label>
-										<textarea rows="20" class="form-control" id="home_description" name="home_description"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></textarea>
-									</div>
-									<div class="mb-3">
-										<label for="upload_call_papers" class="form-label">Upload Call for Papers</label>
-										<select name="upload_call_papers" id="upload_call_papers" class="form-select">
-											<option value="">Select Type</option>
-											<option value="1">Image</option>
-											<option value="2">PDF</option>
-										</select>
-									</div>
-									<div class="mb-3">
-										<!-- <label class="rd_container float-right"><input type="radio" name="upload_only" id="upload_only"  value="1"><span class="checkmark"></span></label> -->
-										<div class="upload_cfpi d-none">
-											<label for="upload_cfpi" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
-											<input type="file" class="form-control" id="upload_cfpi" name="upload_cfpi" accept="application/pdf">
-										</div>
-
-										<div class="upload_cfp d-none">
-											<label for="upload_cfp" class="form-label">Upload File <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
-											<input type="file" class="form-control" id="upload_cfp" name="upload_cfp" accept="image/jpeg">
-										</div>			
-										<!-- <label class="rd_container float-right"><input type="radio" class="float-right" name="upload_only" id="upload_only" value="2" ><span class="checkmark"></span></label> -->
-
-									</div>
-									<!-- <p class="pt-2 text-danger">
-										<span class="badge badge-primary"><span class="fa fa-info-circle text-danger"></span></span> PDF - 20 MB file size limit
-										<br/><span class="badge badge-primary"><span class="fa fa-info-circle text-danger"></span></span> IMAGE - 2 MB file size limit
-									</p> -->
-									<!-- <div class="form-group">
-										<div class="row">
-											<div class="col">
-												<div class="card border-secondary" >
-													<div class="card-body">
-														<label class="rd_container float-right"><input type="radio" name="upload_only" id="upload_only"  value="1"><span class="checkmark"></span></label>
-														<h5 class="card-title">PDF </h5>
-														<input type="file" class="form-control-file" id="upload_cfp" name="upload_cfp" accept="application/pdf">
-													</div>
-												</div>
-											</div>
-											<div class="col">
-												<div class="card border-secondary" >
-													<div class="card-body">
-														<label class="rd_container float-right"><input type="radio" class="float-right" name="upload_only" id="upload_only" value="2" ><span class="checkmark"></span></label>
-														<h5 class="card-title">IMAGE <span class="badge badge-success">JPG</span></h5>
-														<input type="file" class="form-control-file" id="upload_cfpi" name="upload_cfpi" accept="image/jpeg">
-													</div>
-												</div>
-											</div>
-										</div>
-									</div> -->
-									<div class="mb-3">
-									<button type="submit" class="btn btn-primary" id="btn_save_home" name="btn_save_home"><span class="oi oi-check"></span> Save</button>
-									</div>
-								</form>
-							</div>
-							<?php }?>
-							<div class="col-6" style="height:600px">
-								<p class="form-label">Uploaded File</p>
-								<?php
-								$filename = 'assets/uploads/';
-								if (file_exists($filename . 'DO_NOT_DELETE_callforpapers.pdf')) {?>
-								<embed WMODE="transparent" class="border border-secondary" id="embed_cfp" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_callforpapers.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" type="application/pdf" width="100%" height="100%">
-								<?php } else {?>
-								<img class="border border-secondary" id="embed_cfp" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_callforpapers.jpg'); ?>" width="100%" height="auto" >
-								<?php }?>
-							</div>
-						</div>
-						</div>
-					</div>
-				</div>
 				<div class="tab-pane fade" id="v-pills-mail" role="tabpanel" aria-labelledby="v-pills-mail-tab" tabindex="0">
 					<div class="card border-dark">
 						<div class="card-body">
@@ -975,6 +868,168 @@
 									</tbody>
 								</table>
 							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="v-pills-policy" role="tabpanel" aria-labelledby="v-pills-policy-tab" tabindex="0">
+					<div class="card border-dark">
+						<div class="card-body">
+						<p class="h3">Manage Editorial Policy</p>
+						<div class="row mt-3">
+							<div class="col-6">
+								<form id="form_policy">
+									<div class="mb-3">
+										<!-- <div class="upload_cfp d-none"> -->
+											<label for="ep_file" class="form-label">Upload File <span class="badge rounded-pill bg-danger">PDF</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+											<input type="file" class="form-control" id="ep_file" name="ep_file" accept="application/pdf">
+										<!-- </div>	 -->
+										<!-- <label for="ep_content" class="form-label">Content</label> -->
+										<!-- <textarea rows="20" class="form-control" id="ep_content" name="ep_content"><?php echo $editorial_policy; ?></textarea> -->
+									</div>
+									
+									<div class="mb-5">
+									<button type="submit" class="btn btn-primary" id="btn_save_policy" name="btn_save_policy"><span class="oi oi-check"></span> Save</button>
+									</div>
+
+									<div class="mb-3">
+										<table class="table">
+											<thead class="text-muted fs-6">
+												<th>Archived File</th>
+												<th>Date</th>
+											</thead>
+											<tbody>
+												<?php if($editorial_policy) { ?>
+													<?php foreach($editorial_policy as $row): ?>
+														<?php if($row->ep_is_archive == 1) { ?>
+															<tr>
+																<td><a class="text-muted fs-6" href="<?php echo base_url('assets/uploads/editorial_policy/'.$row->ep_file.'.pdf');?>" target="_blank"><?php echo $row->ep_file;?>.pdf</a>
+																</td>
+																<td class="text-muted fs-6"><?php echo $row->created_at;?></td>
+														<?php } else { ?>
+															<?php $editorial_policy = $row->ep_file;?>
+														<?php } ?>
+													<?php endforeach ?>
+												<?php } else { ?>
+													<tr>
+														<td colspan="2">No archived yet.</td>
+													</tr>
+												<?php } ?>
+											</tbody>
+										</table>
+									</div>
+								</form>
+							</div>
+							<div class="col">
+								<embed WMODE="transparent" class="border border-secondary" id="ep_file" src="<?php echo base_url('assets/uploads/editorial_policy/'.$editorial_policy.'.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" type="application/pdf" width="100%" height="600px">
+							</div>
+						</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+					<div class="card border-dark">
+						<div class="card-body">
+						<p class="h3">Manage Home</p>
+						<div class="row mt-3">
+							<?php if ($this->session->userdata('_prv_edt') == 1) {?>
+							<div class="col-6">
+								<form id="form_home">
+									<div class="mb-3">
+										<label for="home_description" class="form-label">About Content</label>
+										<textarea rows="20" class="form-control" id="home_description" name="home_description"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></textarea>
+									</div>
+									<!-- <div class="mb-3">
+										<label for="upload_call_papers" class="form-label">Upload Call for Papers</label>
+										<select name="upload_call_papers" id="upload_call_papers" class="form-select">
+											<option value="">Select Type</option>
+											<option value="1">Image</option>
+											<option value="2">PDF</option>
+										</select>
+									</div> -->
+									<!-- <div class="mb-3"> -->
+										<!-- <label class="rd_container float-right"><input type="radio" name="upload_only" id="upload_only"  value="1"><span class="checkmark"></span></label> -->
+										<!-- <div class="upload_cfpi d-none">
+											<label for="upload_cfpi" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+											<input type="file" class="form-control" id="upload_cfpi" name="upload_cfpi" accept="application/pdf">
+										</div>
+
+										<div class="upload_cfp d-none">
+											<label for="upload_cfp" class="form-label">Upload File <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
+											<input type="file" class="form-control" id="upload_cfp" name="upload_cfp" accept="image/jpeg">
+										</div>			 -->
+										<!-- <label class="rd_container float-right"><input type="radio" class="float-right" name="upload_only" id="upload_only" value="2" ><span class="checkmark"></span></label> -->
+
+									<!-- </div> -->
+									<!-- <p class="pt-2 text-danger">
+										<span class="badge badge-primary"><span class="fa fa-info-circle text-danger"></span></span> PDF - 20 MB file size limit
+										<br/><span class="badge badge-primary"><span class="fa fa-info-circle text-danger"></span></span> IMAGE - 2 MB file size limit
+									</p> -->
+									<!-- <div class="form-group">
+										<div class="row">
+											<div class="col">
+												<div class="card border-secondary" >
+													<div class="card-body">
+														<label class="rd_container float-right"><input type="radio" name="upload_only" id="upload_only"  value="1"><span class="checkmark"></span></label>
+														<h5 class="card-title">PDF </h5>
+														<input type="file" class="form-control-file" id="upload_cfp" name="upload_cfp" accept="application/pdf">
+													</div>
+												</div>
+											</div>
+											<div class="col">
+												<div class="card border-secondary" >
+													<div class="card-body">
+														<label class="rd_container float-right"><input type="radio" class="float-right" name="upload_only" id="upload_only" value="2" ><span class="checkmark"></span></label>
+														<h5 class="card-title">IMAGE <span class="badge badge-success">JPG</span></h5>
+														<input type="file" class="form-control-file" id="upload_cfpi" name="upload_cfpi" accept="image/jpeg">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div> -->
+									<div class="mb-3">
+									<button type="submit" class="btn btn-primary" id="btn_save_home" name="btn_save_home"><span class="oi oi-check"></span> Save</button>
+									</div>
+								</form>
+							</div>
+							<?php }?>
+							<!-- <div class="col-6" style="height:600px">
+								<p class="form-label">Uploaded File</p>
+								<?php
+								$filename = 'assets/uploads/';
+								if (file_exists($filename . 'DO_NOT_DELETE_callforpapers.pdf')) {?>
+								<embed WMODE="transparent" class="border border-secondary" id="embed_cfp" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_callforpapers.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" type="application/pdf" width="100%" height="100%">
+								<?php } else {?>
+								<img class="border border-secondary" id="embed_cfp" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_callforpapers.jpg'); ?>" width="100%" height="auto" >
+								<?php }?>
+							</div> -->
+						</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="v-pills-guidelines" role="tabpanel" aria-labelledby="v-pills-guidelines-tab" tabindex="0">
+					<div class="card border-dark">
+						<div class="card-body">
+						<h3>Manage Guidelines</h3>
+						<div class="row mt-3">
+							<?php if ($this->session->userdata('_prv_edt') == 1) {?>
+							<div class="col-6">
+								<div class="form-group">
+									<form id="form_guidelines">
+										<div class="mb-3">
+											<label for="upload_guidelines" class="form-label">Upload File <span class="badge rounded-pill bg-success">PDF</span></label>
+											<input type="file" class="form-control" id="upload_guidelines" name="upload_guidelines" accept="application/pdf">
+										</div>
+										<div class="mb-3">
+											<button type="submit" class="btn btn-primary" id="btn_upload_guidelines" name="btn_upload_guidelines"><span class="oi oi-check"></span> Upload</button>
+										</div>
+									</form>
+								</div>
+							</div>
+							<?php }?>
+							<div class="col-6">
+								<embed class="border border-secondary" WMODE="transparent" id="embed_guidelines" src="<?php echo base_url('assets/uploads/DO_NOT_DELETE_guidelines.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" width="100%" height="700px" type="application/pdf">
+							</div>
+						</div>
 						</div>
 					</div>
 				</div>

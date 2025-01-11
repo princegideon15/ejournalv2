@@ -125,7 +125,7 @@
                     <div class="sb-sidenav-menu-heading">Library</div>
                     
                     <button class="nav-link" id="v-pills-mail-tab" data-bs-toggle="pill" data-bs-target="#v-pills-mail" type="button" role="tab" aria-controls="v-pills-mail" aria-selected="false"><i class="oi oi-envelope-open me-2" title="oi-mail" aria-hidden="true"></i>Email Notifications</button>      
-                    <button class="nav-link" id="v-pills-guidelines-tab" data-bs-toggle="pill" data-bs-target="#v-pills-guidelines" type="button" role="tab" aria-controls="v-pills-guidelines" aria-selected="false"><i class="oi oi-task me-2" title="oi-task" aria-hidden="true"></i>Editorial Policy</button>      
+                    <button class="nav-link" id="v-pills-policy-tab" data-bs-toggle="pill" data-bs-target="#v-pills-policy" type="button" role="tab" aria-controls="v-pills-policy" aria-selected="false"><i class="oi oi-task me-2" title="oi-task" aria-hidden="true"></i>Editorial Policy</button>      
                     <button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="false"><i class="oi oi-home me-2" title="oi-home" aria-hidden="true"></i>About</button>
                     <button class="nav-link" id="v-pills-guidelines-tab" data-bs-toggle="pill" data-bs-target="#v-pills-guidelines" type="button" role="tab" aria-controls="v-pills-guidelines" aria-selected="false"><i class="oi oi-task me-2" title="oi-task" aria-hidden="true"></i>Guidelines</button>
 

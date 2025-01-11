@@ -341,7 +341,7 @@
                         Email Notifcatiions
                         </a>
 
-                        <a class="nav-link" href="emails">
+                        <a class="nav-link" href="process">
                         <i class="fas fa-envelope-open me-1"></i>
                         Process Time Duration
                         </a>

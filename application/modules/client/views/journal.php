@@ -31,20 +31,10 @@ gtag('config', 'G-VDLLX3HKBL');
                         href="<?=base_url('/client/ejournal/advanced')?>">Advanced search</a></p>
             </div>
 
-            <h3>Aim and Scope</h3>
-            <p class="aim-scope">
-                The NRCP Research Journal publishes articles on topics across the thirteen (13) divisions of the
-                Council.
-                <br><br>
-                The journal aspires to become a valuable platform that nurtures cross-disciplinary research and
-                collaboration which may lead to understanding and solving of complex challenges society faces. The NRCP
-                Research Journal envisions itself to become a top-tier peer-reviewed open access multi-disciplinary
-                journal that publishes rigorous and valuable research that broadly spans the entire spectrum of life,
-                physical, earth, engineering, humanities, social and medical science, which contribute to basic,
-                conceptual and practical scientific advancements including the translation of research to public policy.
-            </p>
+            <!-- ABOUT CONTENT -->
+            <?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?>
 
-            <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p>
+            <!-- <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p> -->
 
             
             <div>

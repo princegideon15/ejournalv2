@@ -325,7 +325,7 @@ class Manuscripts extends OPRS_Controller {
 	 *
 	 * @return  void
 	 */
-	public function process($id) {
+	public function processx($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		// get manuscript info
 		$manus_info = $this->Manuscript_model->get_manus_for_email($id);
@@ -2575,6 +2575,7 @@ class Manuscripts extends OPRS_Controller {
 		$output = $this->Review_model->get_tech_rev_score($id);
 		echo json_encode($output);
 	}
+	
 	
 
 }

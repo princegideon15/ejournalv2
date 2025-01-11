@@ -31,6 +31,11 @@ class Journal extends EJ_Controller {
 		$this->load->model('Journal_model');
 	}
 	
+	//TODO: add logs
+	//TODO: display last logged in time
+	// save_log_ej($id, 'Submitted UI/UX feedback.',  $this->db->insert_id());
+
+
 	/**
 	 * this function get, save, update and remove an article
 	 *

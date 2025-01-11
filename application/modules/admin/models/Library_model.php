@@ -51,6 +51,21 @@ class Library_model extends CI_Model {
 		$query = $oprs->get();
 		return $query->result();
 	}
+
+	public function archive_editorial_policy($data, $where){
+		$this->db->update('tbleditorial_policy', $data, $where);
+	}
+
+	public function save_editorial_policy($data){
+		$this->db->insert('tbleditorial_policy', $data);
+	}
+
+	public function get_editorial_policy_content(){
+		$this->db->select("*");
+		$this->db->from('tbleditorial_policy');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
 
 /* End of file Library_model.php */

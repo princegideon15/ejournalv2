@@ -133,7 +133,7 @@ class Backup extends EJ_Controller {
             flush();
             readfile($backup_file_name);
             exec('rm ' . $backup_file_name); 
-            save_log_ej(_UserIdFromSession(), 'created backup of EJOURNAL database. ('.$backup_file_name.')', '');
+            save_log_ej(_UserIdFromSession(), 'Created backup of EJOURNAL database. ('.$backup_file_name.')', '');
         }
     }
 
@@ -176,7 +176,7 @@ class Backup extends EJ_Controller {
         }
         echo '1';
 
-		save_log_ej(_UserIdFromSession(), 'imported backup of EJOURNAL database. ('.$filename.')','');
+		save_log_ej(_UserIdFromSession(), 'Imported backup of EJOURNAL database. ('.$filename.')','');
     }
 
     public function export_clear_log(){

@@ -141,7 +141,7 @@
 					<?php }?>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 					<?php if ($this->session->userdata('_prv_edt') == 1) {?>
-					<button type="submit" class="btn btn-primary" name="update-article">Save changes</button>
+					<button type="submit" class="btn btn-primary" name="update-article">Apply Changes</button>
 					<?php }?>
 				</form>
 			</div>
@@ -216,7 +216,7 @@
 									</div>
 								</div>
 								<div class="mb-3">
-									<label for="jor_cover" class="form-label">Upload Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+									<label for="jor_cover" class="form-label">Upload Photo <span class=" badge rounded-pill bg-secondary">Optional</span> <span class="badge rounded-pill bg-success">JPG</span> <span class="badge rounded-pill bg-warning text-dark">2MB Limit</span></label>
 									<input type="file" class="form-control" id="jor_cover" name="jor_cover" accept="image/*">
 								</div>
 								<div class="mb-3">
@@ -231,9 +231,9 @@
 						</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-danger mr-auto" onclick="_remove('delete-journal')">Remove Journal</button>
+					<button type="button" class="btn btn-danger me-auto" onclick="_remove('delete-journal')">Remove Journal</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Save changes</button>
+					<button type="submit" class="btn btn-primary">Apply Changes</button>
 				</div>
 			</form>
 		</div>
@@ -363,7 +363,7 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger me-auto" onclick="_remove('delete-editorial')">Delete</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Save changes</button>
+					<button type="submit" class="btn btn-primary">Apply Changes</button>
 				</div>
 			</form>
 		</div>
@@ -507,7 +507,7 @@
 					<input type="file" class="form-control" id="set_d_p" name="acc_dp" accept='image/*' required>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-warning mr-auto" id="browse_dp">Browse</button>
+				<button type="button" class="btn btn-warning me-auto" id="browse_dp">Browse</button>
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 				<button type="submit" class="btn btn-primary">Save</button>
 			</form>
@@ -527,11 +527,11 @@
 			<div class="modal-body">
 				<form id="form_change_pass">
 				<div class="mb-3">
-					<label for="acc_password" class="form-label">New Password</label>
+					<label for="acc_password" class="form-label fw-bold">New Password</label>
 					<input type="password" class="form-control" id="new_password" name="acc_password" placeholder="Enter new password" >
 				</div>
 				<div class="mb-3">
-					<label for="repeat_password" class="form-label">Repeat Password</label>
+					<label for="repeat_password" class="form-label fw-bold">Repeat Password</label>
 					<input type="password" class="form-control" name="repeat_password" id="repeat_password" placeholder="Repeat password" >
 					<p id="match" class="mt-2"></p>
 				</div>
@@ -541,7 +541,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary">Save</button>
+				<button type="submit" class="btn btn-primary" id="change_password">Save</button>
 			</form>
 			</div>
 		</div>
@@ -865,7 +865,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="update_email_content_btn" class="btn btn-primary">Save changes</button>
+        <button type="button" id="update_email_content_btn" class="btn btn-primary">Apply Changes</button>
         </form>
       </div>
     </div>

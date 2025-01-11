@@ -91,6 +91,8 @@ class Ejournal extends EJ_Controller {
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['editorial_policy'] = $this->Library_model->get_editorial_policy_content('0');
+		
 		$this->_LoadPage('common/body', $data);
 	}
 

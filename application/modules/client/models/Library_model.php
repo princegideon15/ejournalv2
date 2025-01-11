@@ -102,6 +102,14 @@ class Library_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+    public function get_editorial_policy_content(){
+		$this->db->select("ep_file");
+		$this->db->from('tbleditorial_policy');
+        $this->db->where('ep_is_archive', '0');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result[0]['ep_file'];
+	}
 }
 
 /* End of file Library_model.php */

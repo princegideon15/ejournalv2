@@ -43,6 +43,12 @@ var recaptchaWidgetId_logout; // recaptcha widget
 
 $(document).ready(function () {
 
+	
+	// validate file size before uploading
+    $.validator.addMethod('filesize', function (value, element, param) {
+        return this.optional(element) || (element.files[0].size <= param)
+    }, `File size exceeds the allowed limit.`);
+	
 
 	 // get user access token
 	 accessToken = $.ajax({
@@ -250,7 +256,7 @@ $(document).ready(function () {
 					let timerInterval;
 					Swal.fire({
 						title: "Thank you for your feedback.",
-						html: "Logging out...",
+						text: "Logging out...",
 						icon: "success",
 						allowOutsideClick: false, // Prevent closing by clicking outside
 						allowEscapeKey: false,   // Prevent closing with the Escape key
@@ -361,6 +367,12 @@ $(document).ready(function () {
 		selector: '#home_description',
 		forced_root_block: false,
 		height: "400"
+	});
+
+	tinymce.init({
+		selector: '#ep_content',
+		forced_root_block: false,
+		height: "900"
 	});
 
 	$('#table-registry').DataTable();
@@ -1511,6 +1523,7 @@ $(document).ready(function () {
 
 					Swal.fire({
 					title: "Editorial board added successfully!",
+					text: 'Page reloading...',
 					icon: 'success',
 					// html: "I will close in <b></b> milliseconds.",
 					timer: 2000,
@@ -1605,6 +1618,7 @@ $(document).ready(function () {
 
 					Swal.fire({
 					title: "Editorial board updated successfully!",
+					text: 'Page reloading...',
 					icon: 'success',
 					// html: "I will close in <b></b> milliseconds.",
 					timer: 2000,
@@ -1662,6 +1676,18 @@ $(document).ready(function () {
 			jor_year: {
 				required: true,
 				minlength: 4,
+			},
+			jor_cover : {
+				extension: "jpg",
+				filesize : 2000000,
+			},
+		},
+		messages: {
+			jor_cover: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
 			}
 		},
 		submitHandler: function () {
@@ -1683,11 +1709,12 @@ $(document).ready(function () {
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 
-
+					$('#journal_modal button').prop('disabled', true);
 					let timerInterval;
 
 					Swal.fire({
 					title: "Journal updated successfully!",
+					text: "Page reloading...",
 					icon: 'success',
 					// html: "I will close in <b></b> milliseconds.",
 					timer: 2000,
@@ -1750,15 +1777,33 @@ $(document).ready(function () {
 			},
 			art_abstract_file: {
 				required: true,
+				extension: "pdf",
+				filesize : 20000000,
 			},
 			art_full_text_pdf: {
 				required: true,
+				extension: "pdf",
+				filesize : 20000000,
 			},
 			art_author: {
 				required: true,
 			},
 			art_affiliation: {
 				required: true,
+			}
+		},
+		messages: {
+			art_abstract_file: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
+			},
+			art_full_text_pdf: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
 			}
 		},
 		submitHandler: function () {
@@ -1784,6 +1829,7 @@ $(document).ready(function () {
 
 					Swal.fire({
 					title: "Article updated successfully!",
+					text: "Page reloading...",
 					icon: 'success',
 					// html: "I will close in <b></b> milliseconds.",
 					timer: 2000,
@@ -1900,6 +1946,7 @@ $(document).ready(function () {
 
 						Swal.fire({
 						title: "Saved successfully!",
+						text: "Page reloading...",
 						icon: 'success',
 						// html: "I will close in <b></b> milliseconds.",
 						timer: 2000,
@@ -1938,6 +1985,96 @@ $(document).ready(function () {
 					}
 				});
 			}
+		}
+	});
+
+	// update editor polcy content
+	$("#form_policy").validate({
+		debug: true,
+		errorClass: 'text-danger',
+		rules: {
+			// ep_content: {
+			// 	required: true,
+			// },
+			ep_file : {
+				extension: "pdf",
+				filesize : 20000000,
+			},
+		},
+		messages: {
+			ep_file: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
+			}
+		},
+		submitHandler: function () {
+
+			// var ep_content = tinyMCE.get('ep_content').getContent();
+
+			var form = $('#form_policy');
+			var formdata = false;
+
+			if (window.FormData) {
+				formdata = new FormData(form[0]);
+			}
+
+			$.ajax({
+				url: base_url + "admin/dashboard/update_policy/",
+				// data: { content: ep_content },
+				data: formdata ? formdata : form.serialize(),
+				cache: false,
+				contentType: false,
+				processData: false,
+				// contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Use default content type for simple data
+				// processData: true, // Allow jQuery to process the data
+				type: 'POST',
+				success: function (data, textStatus, jqXHR) {
+
+					let timerInterval;
+
+					Swal.fire({
+					title: "Editorial Policy saved successfully!",
+					text: "Page reloading...",
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
+					});
+
+					
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Saved successfully. Page will reload in 3 seconds'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
+
+				}
+			});
+			
 		}
 	});
 
@@ -1987,6 +2124,7 @@ $(document).ready(function () {
 
 						Swal.fire({
 						title: "File uploaded successfully!",
+						text: "Page reloading...",
 						icon: 'success',
 						// html: "I will close in <b></b> milliseconds.",
 						timer: 2000,
@@ -2027,6 +2165,7 @@ $(document).ready(function () {
 		}
 	});
 
+
 	//add journal with validations
 	$("#form_create_journal").validate({
 		debug: true,
@@ -2041,6 +2180,18 @@ $(document).ready(function () {
 			jor_year: {
 				required: true,
 				minlength: 4,
+			},
+			jor_cover : {
+				extension: "jpg",
+				filesize : 2000000,
+			},
+		},
+		messages: {
+			jor_cover: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
 			}
 		},
 		submitHandler: function (submittedForm, event) {
@@ -2059,7 +2210,7 @@ $(document).ready(function () {
 			if (file_size > '0') {
 				
 				// if file size of pdf is less than 20mb hide warning
-				if (file_size < '20000000') {
+				if (file_size < '2000000') {
 					$('#jor_cover').next('.bg-danger').hide();
 					$('#submit_journal').prop('disabled', false);
 
@@ -2080,6 +2231,7 @@ $(document).ready(function () {
 
 								Swal.fire({
 								title: res.msg,
+								text: 'Page reloading...',
 								icon: 'error',
 								// html: "I will close in <b></b> milliseconds.",
 								timer: 2000,
@@ -2116,6 +2268,7 @@ $(document).ready(function () {
 
 								Swal.fire({
 								title: res.msg,
+								text: 'Page reloading...',
 								icon: 'success',
 								// html: "I will close in <b></b> milliseconds.",
 								timer: 2000,
@@ -2158,10 +2311,10 @@ $(document).ready(function () {
 					
 				}
 				// if file size of pdf is less than 20mb show warning
-				else if (file_size >= '20000000') {
-					$('#jor_cover').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
-					$('#submit_journal').prop('disabled', false);
-				}
+				// else if (file_size >= '2000000') {
+				// 	$('#jor_cover').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
+				// 	$('#submit_journal').prop('disabled', false);
+				// }
 			} else {
 				$.ajax({
 					url: base_url + "admin/dashboard/journal/",
@@ -2180,6 +2333,7 @@ $(document).ready(function () {
 
 								Swal.fire({
 								title: res.msg,
+								text: 'Page reloading...',
 								icon: 'error',
 								// html: "I will close in <b></b> milliseconds.",
 								timer: 2000,
@@ -2216,6 +2370,7 @@ $(document).ready(function () {
 
 							Swal.fire({
 							title: res.msg,
+							text: 'Page reloading...',
 							icon: 'success',
 							// html: "I will close in <b></b> milliseconds.",
 							timer: 2000,
@@ -2283,9 +2438,13 @@ $(document).ready(function () {
 			},
 			art_abstract_file: {
 				required: true,
+				extension: "pdf",
+				filesize : 20000000,
 			},
 			art_full_text_pdf: {
 				required: true,
+				extension: "pdf",
+				filesize : 20000000,
 			},
 			art_author: {
 				required: true,
@@ -2295,6 +2454,20 @@ $(document).ready(function () {
 			},
 			art_email: {
 				required: true,
+			}
+		},
+		messages: {
+			art_abstract_file: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
+			},
+			art_full_text_pdf: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 30 MB`;
+				}
 			}
 		},
 		submitHandler: function (submittedForm, event) {
@@ -2307,13 +2480,13 @@ $(document).ready(function () {
 				formdata = new FormData(form[0]);
 			}
 
-			// var file_size = ($('#jor_cover').val() != '') ? $('#jor_cover')[0].files[0].size : '';
-			var file_size_abs = $('#art_abstract_file')[0].files[0].size;
-			// if ($('#art_full_text_pdf').val() != '')
-			var file_size_txt = $('#art_full_text_pdf')[0].files[0].size;
+			// // var file_size = ($('#jor_cover').val() != '') ? $('#jor_cover')[0].files[0].size : '';
+			// var file_size_abs = $('#art_abstract_file')[0].files[0].size;
+			// // if ($('#art_full_text_pdf').val() != '')
+			// var file_size_txt = $('#art_full_text_pdf')[0].files[0].size;
 
 
-			if (file_size_abs < '20000000' && file_size_txt < '20000000') {
+			// if (file_size_abs < '20000000' && file_size_txt < '20000000') {
 
 				$.ajax({
 					url: base_url + "admin/dashboard/article/",
@@ -2330,6 +2503,7 @@ $(document).ready(function () {
 
 						Swal.fire({
 						title: res.msg,
+						text: 'Page reloading...',
 						icon: 'success',
 						// html: "I will close in <b></b> milliseconds.",
 						timer: 2000,
@@ -2370,29 +2544,29 @@ $(document).ready(function () {
 				$('#form_add_article')[0].reset();
 				$('#submit_article').prop('disabled', false);
 
-			} else {
-				// if file size of pdf is less than 20mb hide warning
-				if (file_size_abs < '20000000') {
-					$('#badge_pdf').next('.bg-danger').hide();
-					$('#submit_article').prop('disabled', false);
-				}
-				// if file size of pdf is less than 20mb hide warning
-				else if (file_size_txt < '20000000') {
-					$('#badge_text').next('.bg-danger').hide();
-					$('#submit_article').prop('disabled', false);
-				}
-				// if file size of pdf is more than 20mb show warning
-				else if (file_size_abs >= '20000000') {
-					$('#badge_pdf').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-					$('#submit_article').prop('disabled', false);
-				}
-				// if file size of pdf is less than 20mb show warning
-				else if(file_size_txt >= '20000000') {
-					$('#badge_text').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-					$('#submit_article').prop('disabled', false);
-				}
-			}
-      event.preventDefault();
+			// } else {
+			// 	// if file size of pdf is less than 20mb hide warning
+			// 	if (file_size_abs < '20000000') {
+			// 		$('#badge_pdf').next('.bg-danger').hide();
+			// 		$('#submit_article').prop('disabled', false);
+			// 	}
+			// 	// if file size of pdf is less than 20mb hide warning
+			// 	else if (file_size_txt < '20000000') {
+			// 		$('#badge_text').next('.bg-danger').hide();
+			// 		$('#submit_article').prop('disabled', false);
+			// 	}
+			// 	// if file size of pdf is more than 20mb show warning
+			// 	else if (file_size_abs >= '20000000') {
+			// 		$('#badge_pdf').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+			// 		$('#submit_article').prop('disabled', false);
+			// 	}
+			// 	// if file size of pdf is less than 20mb show warning
+			// 	else if(file_size_txt >= '20000000') {
+			// 		$('#badge_text').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+			// 		$('#submit_article').prop('disabled', false);
+			// 	}
+			// }
+      		event.preventDefault();
 		}
 	});
 
@@ -2423,6 +2597,7 @@ $(document).ready(function () {
 			}
 		},
 		submitHandler: function () {
+			$('#change_password').prop('disabled', true);
 			$.ajax({
 				type: "POST",
 				url: base_url + "admin/dashboard/change_password/",
@@ -2436,7 +2611,7 @@ $(document).ready(function () {
 		}
 	});
 
-	// add user with validations for superadmin account
+	// add user with validations for superadmin account (unused)
 	$("#form_add_user").validate({
 		debug: true,
 		errorClass: 'text-danger',
@@ -2526,7 +2701,7 @@ $(document).ready(function () {
 		}
 	});
 
-	// show selected image for user display picture
+	// show selected image for user display picture (unused)
 	$('#set_d_p').change(function () {
 		readURL_dp(this);
 	});
@@ -2654,6 +2829,7 @@ $(document).ready(function () {
 
 		Swal.fire({
 		title: 'Editorial board deleted successfully!',
+		text: 'Page reloading...',
 		icon: 'success',
 		// html: "I will close in <b></b> milliseconds.",
 		timer: 2000,
@@ -2711,6 +2887,7 @@ $(document).ready(function () {
 
 		Swal.fire({
 		title: 'Journal deleted successfully!',
+		text: 'Page reloading...',
 		icon: 'success',
 		// html: "I will close in <b></b> milliseconds.",
 		timer: 2000,
@@ -2764,6 +2941,7 @@ $(document).ready(function () {
 
 		Swal.fire({
 		title: 'Article deleted successfully!',
+		text: 'Page reloading...',
 		icon: 'success',
 		// html: "I will close in <b></b> milliseconds.",
 		timer: 2000,
@@ -3237,7 +3415,38 @@ $(document).ready(function () {
 			data: formData,
 			cache: false,
 			crossDomain: true,
-			success: function (data) {}
+			success: function (data) {
+
+				$('#update_email_content_btn').attr('disabled', true);
+				$('#emailContentModal').modal('toggle');
+
+				let timerInterval;
+
+				Swal.fire({
+				title: "Email notification updated successfully!",
+				text: 'Page reloading...',
+				icon: 'success',
+				// html: "I will close in <b></b> milliseconds.",
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: () => {
+					Swal.showLoading();
+					const timer = Swal.getPopup().querySelector("b");
+					timerInterval = setInterval(() => {
+					timer.textContent = `${Swal.getTimerLeft()}`;
+					}, 100);
+				},
+				willClose: () => {
+					clearInterval(timerInterval);
+					location.reload();
+				}
+				}).then((result) => {
+				/* Read more about handling dismissals below */
+				if (result.dismiss === Swal.DismissReason.timer) {
+					console.log("I was closed by the timer");
+				}
+				});
+			}
 		});
 
 		location.reload();
@@ -3374,7 +3583,8 @@ function edit_editorial(id) {
 					if (val.edt_photo != '') {
 						$('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/uploads/editorial/' + val.edt_photo);
 					} else {
-						$('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/images/unavailable.jpg');
+						$('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/images/unavailable.png');
+						// $('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/images/unavailable.jpg');
 					}
 					$.each(val, function (k, v) {
 						if (k != 'edt_photo'){
@@ -4625,3 +4835,10 @@ function toggleSearch(){
 		$('#search').focus();
 	}, 100);
 }
+
+function disableOnSubmit(element, form, action){
+	$(element).prop('disabled' ,true);
+	$(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Saving');
+	$(form).submit();
+  }
+  

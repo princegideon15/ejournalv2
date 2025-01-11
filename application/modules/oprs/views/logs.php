@@ -18,8 +18,10 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>User</th>
-                    <th>Action</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Activity</th>
+                    <th>IP Address/Browser</th>
                     <th>Date</th>
                   </tr>
                 </thead>
@@ -29,7 +31,9 @@
                   <tr>
                     <td><?php echo $c++; ?></td>
                     <td><?php echo $user; ?></td>
+                    <td><?php echo $user; ?></td>
                     <td><?php echo $l->log_action; ?></td>
+                    <td><?php echo $l->log_ip . '/' . $l->log_browser; ?></td>
                     <td><?php echo date_format(new DateTime($l->date_created), 'F j, Y g:i a'); ?></td>
                   </tr>
                   <?php endforeach;?>
