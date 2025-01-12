@@ -633,7 +633,7 @@ $(document).ready(function() {
                     texFile: true, // Use the custom rule
                     filesize : 20000000,
                 },
-                man_category: {
+                man_type: {
                     required: true,
                 },
                 

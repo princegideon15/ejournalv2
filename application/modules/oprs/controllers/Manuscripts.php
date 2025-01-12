@@ -129,7 +129,7 @@ class Manuscripts extends OPRS_Controller {
 		$result = $oprs->list_fields($tableName);
 		$post = array();
 		$user_id = $this->input->post('man_usr_id', true);
-		$publication_type = "0" . $this->input->post('man_category'); 
+		$publication_type = "0" . $this->input->post('man_type'); 
 		$currentYear = date("Y"); // Get the current year
 		$totalEntries = $this->Manuscript_model->count_manus('total');
 		$newNumber = $totalEntries + 1; // Increment the count for the new entry

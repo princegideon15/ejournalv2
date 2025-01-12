@@ -338,7 +338,7 @@
 
                         <a class="nav-link" href="emails">
                         <i class="fas fa-envelope-open me-1"></i>
-                        Email Notifcatiions
+                        Email Notificatiions
                         </a>
 
                         <a class="nav-link" href="process">
