@@ -18,8 +18,14 @@ class Statistics_model extends CI_Model {
 	}
 
     public function get_submission_summary($from = null, $to = null){
+
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('p.id as pub_id, publication_desc, IFNULL(count(man_type), 0) as subm_count');
+		$oprs->select('p.id as pub_id, publication_desc, 
+		COALESCE(SUM(man_type), 0) as subm_count, 
+		COALESCE(SUM(CASE WHEN man_status = "rejected" THEN 1 ELSE 0 END),0) as rej_count,
+		COALESCE(SUM(CASE WHEN man_status = "passed" THEN 1 ELSE 0 END),0) as pass_count,
+		COALESCE(SUM(CASE WHEN man_status > 1 THEN 1 ELSE 0 END),0) as process_count,
+		COALESCE(SUM(CASE WHEN man_status = "published" THEN 1 ELSE 0 END),0) as publ_count');
 		$oprs->from($this->publication . ' p');
 
         if($from > 0 && $to > 0){
@@ -35,7 +41,11 @@ class Statistics_model extends CI_Model {
     
     public function get_submission_stats($from = null, $to = null){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('p.id as pub_id, publication_desc, IFNULL(count(man_type), 0) as subm_count');
+		$oprs->select('p.id as pub_id, publication_desc, COALESCE(SUM(man_type), 0) as subm_count,
+		COALESCE(SUM(CASE WHEN man_status = "rejected" THEN 1 ELSE 0 END),0) as rej_count,
+		COALESCE(SUM(CASE WHEN man_status = "passed" THEN 1 ELSE 0 END),0) as pass_count,
+		COALESCE(SUM(CASE WHEN man_status > 1 THEN 1 ELSE 0 END),0) as process_count,
+		COALESCE(SUM(CASE WHEN man_status = "published" THEN 1 ELSE 0 END),0) as publ_count');
 		$oprs->from($this->publication . ' p');
         
         if($from > 0 && $to > 0){

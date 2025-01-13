@@ -1,7 +1,7 @@
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
-    <?php if($this->session->userdata('csf_arta')){ echo $this->session->userdata('csf_arta'); } ?>
+    <?php if($logged_in && $this->session->userdata('csf_arta')){ echo $this->session->userdata('csf_arta'); } ?>
    
     <div class="card bg-light border-0">
         <div class="card-body">

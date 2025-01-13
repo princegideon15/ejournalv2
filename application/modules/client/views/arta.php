@@ -42,12 +42,12 @@
                     <div class="col col-4">
                         <div class="mb-3 row">
                             <label for="arta_sex" class="col-sm-2 col-form-label fw-bold">Sex:</label>
-                            <div class="col-sm-8">
-                                <div class="form-check form-check-inline ps-3 mt-2">
+                            <div class="col-sm-8 d-flex gap-1">
+                                <div class="form-check form-check-inline mt-2">
                                     <input class="form-check-input" type="checkbox" id="arta_male" name="arta_sex" value="1" <?= (set_value('arta_sex', $this->session->flashdata('arta_sex')) == 1) ? 'checked' : '' ?> onclick="checkOnlyOne(this)">
                                     <label class="form-check-label" for="arta_male">Male</label>
                                 </div>
-                                <div class="form-check form-check-inline">
+                                <div class="form-check form-check-inline mt-2">
                                     <input class="form-check-input" type="checkbox" id="arta_female" name="arta_sex" value="2" <?= (set_value('arta_sex', $this->session->flashdata('arta_sex')) == 2) ? 'checked' : '' ?> onclick="checkOnlyOne(this)">
                                     <label class="form-check-label" for="arta_female">Female</label>
                                 </div>

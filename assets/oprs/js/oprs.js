@@ -5373,11 +5373,12 @@ function unique(array) {
 // get all info of uploaded manuscript
 function view_manus(id, hide) {
 
-    $('#uploadModal .table-borderless > tbody').empty();
+    $('#uploadModal .table-bordered > tbody').empty();
 
     var coa = [];
     var html = '';
 
+ 
     $.ajax({
         type: "GET",
         url: base_url + "oprs/manuscripts/authors/get/" + id,
@@ -5389,75 +5390,92 @@ function view_manus(id, hide) {
                     coa.push(val.coa_name + ', ' + val.coa_affiliation + ', ' + val.coa_email + '<br/>');
                 });
             }
-        }
-    });
 
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/manuscript/" + id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
+            $.ajax({
+                type: "GET",
+                url: base_url + "oprs/manuscripts/manuscript/" + id,
+                dataType: "json",
+                crossDomain: true,
+                success: function(data) {
+                    $.each(data, function(key, val) {
 
-            $.each(data, function(key, val) {
+                        var vol = (val.man_volume != null) ? val.man_volume : 'N/a';
+                        var iss = (val.man_issue != null) ? val.man_issue : 'N/a';
+                        var iss = (iss >= 5) ? 'Special Issue No. ' + (iss - 4) : iss;
+                        var yer = (val.man_year != null) ? val.man_year : 'N/a';
+                        var rem = (val.man_remarks != null) ? val.man_remarks : 'N/a';
+                        var coas = (coa.length > 0) ? coa.join('') : 'N/a';
+                        var prim = (hide == 1) ? '<em>Undisclosed</em>' : val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
+                        var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
+                        var man_type = (val.man_type) ? val.publication_desc : 'N/a';
+                        var author_type = (val.man_author_type == 1) ? '(Main Author)' : ((val.man_author_type == 2) ? '(Co-author)' : '');
+                        var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/initial_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
 
-                var vol = (val.man_volume != null) ? val.man_volume : '-';
-                var iss = (val.man_issue != null) ? val.man_issue : '-';
-                var iss = (iss >= 5) ? 'Special Issue No. ' + (iss - 4) : iss;
-                var yer = (val.man_year != null) ? val.man_year : '-';
-                var rem = (val.man_remarks != null) ? val.man_remarks : '-';
-                var coas = (coa.length > 0) ? coa.join('') : '-';
-                var prim = (hide == 1) ? '<em>Undisclosed</em>' : val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
-                var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
+                        html += '<tr>' +
+                                    '<th>Title</th>' +
+                                    '<td>' + val.man_title + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>No. of Pages</th>' +
+                                    '<td>' + val.man_pages + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Type of Publication</th>'+
+                                    '<td>' + man_type + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Primary Author</th>' +
+                                    '<td>' + prim + ' ' + author_type + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Co-author(s)</th>' +
+                                    '<td>' + coas + '</td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Abstract</th>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/initial_abstracts_pdf/" + val.man_abs + '" target="_blank">PDF</a></td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Full Text Manuscript</th>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/initial_manuscripts_pdf/" + val.man_file + '" target="_blank">PDF</a> | <a href="' + base_url + "assets/oprs/uploads/initial_manuscripts_word/" + val.man_word + '" download>WORD</a></td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Latex</th>' +
+                                    '<td>' + latex + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Volume</th>' +
+                                    '<td>' + vol + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Issue</th>' +
+                                    '<td>' + iss + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Year</th>' +
+                                    '<td>' + yer + '</td>' +
+                                '</tr>' + 
+                                '<tr>' +
+                                    '<th>Remarks</th>' +
+                                    '<td>' + rem + '</td>' +
+                                '</tr>';
+                    });
 
-                html += '<tr>' +
-                    '<th>Title</th>' +
-                    '<td>' + val.man_title + '</td>' +
-                    '</tr>';
-
-                html += '<tr>' +
-                    '<th>Primary Author</th>' +
-                    '<td>' + prim + '</td>' +
-                    '</tr>';
-
-                html += '<tr>' +
-                    '<th>Co-authors</th>' +
-                    '<td>' + coas + '</td>' +
-                    '</tr>';
-
-                html += '<tr>' +
-                    '<th>Volume</th>' +
-                    '<td>' + vol + '</td>' +
-                    '</tr>';
-
-                html += '<tr>' +
-                    '<th>Issue</th>' +
-                    '<td>' + iss + '</td>' +
-                    '</tr>';
-
-                html += '<tr>' +
-                    '<th>Year</th>' +
-                    '<td>' + yer + '</td>' +
-                    '</tr>';
-
-                html += '<tr>' +
-                    '<th>Remarks</th>' +
-                    '<td>' + rem + '</td>' +
-                    '</tr>';
+                    if(html){
+                        $('#uploadModal .table-bordered > tbody').html(html);
+                        $('#uploadModal').modal('toggle');
+                        $('#man_file_div').hide();
+                        $('#man_abs_div').hide();
+                        $('#man_key_div').hide();
+                        $('#uploadModal .modal-footer .btn').hide();
+                        $('#manuscript_form').hide();
+                        $('.table-bordered').show();
+                    }
+                }
             });
-
-            if(html){
-                $('#uploadModal .table-borderless > tbody').append(html);
-                $('#uploadModal').modal('toggle');
-                $('#man_file_div').hide();
-                $('#man_abs_div').hide();
-                $('#man_key_div').hide();
-                $('#uploadModal .modal-footer .btn').hide();
-                $('#manuscript_form').hide();
-                $('.table-borderless').show();
-            }
         }
     });
+
 
 }
 
@@ -5473,7 +5491,7 @@ function show_hidden_manus() {
     $('#uploadModal .modal-footer #btn_save').show();
     $('#uploadModal .modal-footer .btn_close').hide();
     $('#manuscript_form').show();
-    $('.table-borderless').hide();
+    $('.table-bordered').hide();
     $('#author_status').text('');
 }
 
@@ -6132,7 +6150,7 @@ function load_editor_email_content(num = 1) {
 function approve_manus(id) {
     man_id = id;
 
-    $(' .table-borderless > tbody').empty();
+    $(' .table-bordered > tbody').empty();
     var coa = [];
 
     $.ajax({
@@ -6222,12 +6240,12 @@ function approve_manus(id) {
                     '</tr>';
             });
 
-            $(' .table-borderless > tbody').append(html);
+            $(' .table-bordered > tbody').append(html);
             $('#uploadModal').modal('toggle');
             $('#man_file_div').hide();
             $('#uploadModal .modal-footer .btn').hide();
             $('#manuscript_form').hide();
-            $('.table-borderless').show();
+            $('.table-bordered').show();
             $('#btn_approve').show();
             $('#btn_cancel').show();
         }

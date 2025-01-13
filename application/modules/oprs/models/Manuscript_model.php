@@ -89,18 +89,18 @@ class Manuscript_model extends CI_Model {
 		if($role_id == 1){ // author
 			$oprs->select('m.*, p.publication_desc');
 			$oprs->from($this->manus . ' m');
-			$oprs->join($this->publication . ' p', 'm.man_category = p.id');
+			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->where('man_user_id', _UserIdFromSession());
 		}else if ($role_id == 5){ // technical desk editor
 			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 			$oprs->from($this->manus . ' m');
-			$oprs->join($this->publication . ' p', 'm.man_category = p.id');
+			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->where('man_status', 1);
 		}else if ($role_id == 6){ // technical desk editor
 			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 			$oprs->from($this->manus . ' m');
-			$oprs->join($this->publication . ' p', 'm.man_category = p.id');
+			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->where('man_status', 2);
 		}else{ // super admin
@@ -140,7 +140,7 @@ class Manuscript_model extends CI_Model {
 		// } else { // author
 		// 	$oprs->select('m.*, p.publication_desc');
 		// 	$oprs->from($this->manus . ' m');
-		// 	$oprs->join($this->publication . ' p', 'm.man_category = p.id');
+		// 	$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 		// 	$oprs->where('man_user_id', _UserIdFromSession());
 		// 	// $oprs->where('man_source', $man_source);
 		// 	// $order_by = 'date_created';
@@ -160,6 +160,7 @@ class Manuscript_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
 		$oprs->from($this->manus);
+		$oprs->join($this->publication . ' p', 'man_type = p.id', 'left');
 		$oprs->where('row_id', $id);
 		$query = $oprs->get();
 		return $query->result();

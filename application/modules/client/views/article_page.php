@@ -73,7 +73,7 @@
                         <h5>Abstract</h5>
                         <hr>
 
-                        <embed class="mb-3" src="<?= base_url('assets/uploads/abstract/'.$article[0]->art_abstract_file) ?>" width="100%" height="700px" type="application/pdf">
+                        <embed class="mb-3" src="<?= base_url('assets/uploads/abstract/'.$article[0]->art_abstract_file) ?>#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="700px" type="application/pdf">
                         
                         <?php if($logged_in){
                             echo '<div class="d-flex gap-1 mb-3">
@@ -91,7 +91,7 @@
                             
                              <div class="input-group">
                                 <button class="btn btn-outline-dark" type="button" id="share_link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Copy to clipboard">Share <span class="oi oi-share ms-1"></span></button>
-                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="'. base_url('client/ejournal/artcile/'. $article[0]->art_id) . '" readonly>
+                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="'. base_url('client/ejournal/article/'. $article[0]->art_id) . '" readonly>
                             </div>';
                         }?>
 

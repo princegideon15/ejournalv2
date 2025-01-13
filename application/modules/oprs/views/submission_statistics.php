@@ -56,14 +56,14 @@
                             <td><?= $row->pub_id ?></td>
                             <td><?= $row->publication_desc ?></td>
                             <td><?= $row->subm_count ?></td>
-                            <td><?= $row->subm_count ?></td>
-                            <td><?= $row->subm_count ?></td>
-                            <td><?= $row->subm_count ?></td>
-                            <td><?= $row->subm_count ?></td>
-                            <td><?= $row->subm_count ?></td>
-                            <td><?= $row->subm_count ?></td>
-                            <td><?= $row->subm_count ?></td>
-                            <td><?= $row->subm_count ?></td>
+                            <td><?= $row->rej_count ?></td>
+                            <td><?= round ( ($row->rej_count / $row->subm_count) * 100, 2 ) ?>%</td>
+                            <td><?= $row->pass_count ?></td>
+                            <td><?= round ( ($row->pass_count / $row->subm_count) * 100, 2 ) ?>%</td>
+                            <td><?= $row->process_count ?></td>
+                            <td><?= round ( ($row->process_count / $row->subm_count) * 100, 2 ) ?>%</td>
+                            <td><?= $row->publ_count ?></td>
+                            <td><?= round ( ($row->publ_count / $row->subm_count) * 100, 2 ) ?>%</td>
                         </tr>
                         <?php endforeach;?>
                         </tbody>

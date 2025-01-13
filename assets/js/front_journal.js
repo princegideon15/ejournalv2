@@ -1486,7 +1486,7 @@ function get_coauthors(id)
  */
 function top_article(id, flag, file, modalTitle)
 {
-  $('#top_abstract_view').attr('src', base_url+('assets/uploads/abstract/'+file+'#toolbar=0&navpanes=0&scrollbar=0&menubar=0'));
+  $('#top_abstract_view').attr('src', base_url+('assets/uploads/abstract/'+file+'.pdf#toolbar=0&navpanes=0&scrollbar=0&menubar=0'));
   $('#top_download_pdf').attr('onClick', 'get_download_id('+id+')');
   $('#top_modal .modal-title').text(modalTitle);
   $('#top_modal').modal('toggle');

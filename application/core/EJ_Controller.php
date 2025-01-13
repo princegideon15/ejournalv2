@@ -86,7 +86,7 @@ class EJ_Controller extends MX_Controller {
 		}
 		
 		if($this->session->userdata('_ej_logged_in')){
-			$timeout = 15; // 20 minutes
+			$timeout = 1200; // 20 minutes
 			$current_time = time();
 
 			// Check if last activity is set in session

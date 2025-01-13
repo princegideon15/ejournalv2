@@ -346,10 +346,10 @@
                         Process Time Duration
                         </a>
 
-                        <a class="nav-link" href="emails">
+                        <!-- <a class="nav-link" href="emails">
                         <i class="fas fa-envelope-open me-1"></i>
                         Publication Committee
-                        </a>
+                        </a> -->
                         
                         <div class="sb-sidenav-menu-heading">Settings</div>
 
