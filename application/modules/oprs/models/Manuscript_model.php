@@ -247,6 +247,11 @@ class Manuscript_model extends CI_Model {
 		}
 	}
 
+	public function update_manuscript_status($post, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->manus, $post, $where);
+	}
+
 	/**
 	 * Save tracking
 	 *

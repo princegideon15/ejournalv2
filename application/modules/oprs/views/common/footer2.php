@@ -2169,13 +2169,17 @@
 									</tr>
 								</tbody>
 							</table>
+							<div>
+								<label for="tr_remarks" class="fw-bold form-label">Remarks</label>
+								<textarea class="form-control" id="tr_remarks" name="tr_remarks" placeholder="(Optional)"></textarea>
+							</div>
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
 				<div class="btn-group" role="group">
-					<button type="submit" class="btn btn-primary" id="submit_tech_rev_crit">Proceed</button>
+					<button type="submit" class="btn btn-primary" id="submit_tech_rev_crit">Submit Review</button>
 				</div>
 				</form>
 			</div>

@@ -199,6 +199,9 @@ $(document).ready(function() {
                 confirmButtonText: "Submit"
               }).then((result) => {
                 if (result.isConfirmed) {
+                    $('body').loading('start');
+                    $('#tedEdCriteriaModal').modal('toggle');
+                    $('#submit_tech_rev_crit').prop('disabled', true);
                     var formdata = new FormData($('#tech_rev_form')[0]);
                     $.ajax({
                         url: base_url + "oprs/manuscripts/technical_review_process",
@@ -209,6 +212,9 @@ $(document).ready(function() {
                         crossDomain: true,
                         type: 'POST',
                         success: function(data) {
+                            
+                            $('#tech_rev_form')[0].reset();
+                            $('body').loading('stop');
                             Swal.fire({
                             title: "Review submitted successfully!",
                             icon: 'success',
