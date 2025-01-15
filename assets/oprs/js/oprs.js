@@ -613,6 +613,10 @@ $(document).ready(function() {
             rules: {
                 man_title: {
                     required: true,
+                    remote: {
+                        url: base_url + "oprs/manuscripts/unique_title",
+                        type: "post"
+                    }
                 },
                 man_author: {
                     required: true,
@@ -654,6 +658,11 @@ $(document).ready(function() {
                 },
                 man_email: {
                     required: true,
+                }
+            },
+            messages: {
+                man_title: {
+                    remote: "Manuscript title already exist."
                 }
             },
             errorPlacement: function (error, element) {
@@ -714,7 +723,6 @@ $(document).ready(function() {
                             crossDomain: true,
                             type: 'POST',
                             success: function(data) {
-                                console.log(data);
                                 $('body').loading('stop');
                                 Swal.fire({
                                 title: "Manuscript submitted successfully!",
@@ -4674,8 +4682,10 @@ $(document).ready(function() {
         $('#coauthors').empty();
         if(val == 1){
             $('#add_coauthors').removeClass('d-none');
+            $('#add_main_author').addClass('d-none');
         }else{
             $('#add_coauthors').addClass('d-none');
+            $('#add_main_author').removeClass('d-none');
         }
 
         // $('#man_author').val('');
@@ -5150,8 +5160,8 @@ function edit_man(id) {
     
 }
 // show tracking modal
-function tracking(id, role, title, status) {
-    // console.log("🚀 ~ tracking ~ id, role, title, status:", id, role, title, status)
+// function tracking(id, role, title, status) {
+function tracking(id, role, status) {
     
     $('#trackingModal').modal('toggle');
 
@@ -5162,7 +5172,7 @@ function tracking(id, role, title, status) {
     }
 
 
-    var manuscript_title = decodeURIComponent(title);
+    // var manuscript_title = decodeURIComponent(title);
     man_id = id;
     $.ajax({
         type: "GET",
@@ -5173,7 +5183,8 @@ function tracking(id, role, title, status) {
             $('#track_list').empty();
             var html = '';
             var trk_c = 0;
-            if (data.length > 0) {
+            console.log(data);
+            // if (data.length > 0) {
 
                 $.each(data, function(key, val) {
                     trk_c++;
@@ -5244,18 +5255,18 @@ function tracking(id, role, title, status) {
                 $('#track_list .list-group-item-secondary').first().addClass('list-group-item-primary').removeClass('list-group-item-secondary');
 
 
-            } else {
+            // } else {
 
                 
 
-                html = '<li class="list-group-item list-group-item-secondary flex-column align-items-start">' +
-                    '<div class="d-flex w-100 justify-content-between">' +
-                    '<h6 class="mb-1 fw-bold">Pending action from Managing Editor</h6>' +
-                    '</div>' +
-                    '<small class="mb-1">You have just submitted manuscript.</small><br/>' +
-                    '</li>';
-                $('#track_list').append(html);
-            }
+            //     html = '<li class="list-group-item list-group-item-secondary flex-column align-items-start">' +
+            //         '<div class="d-flex w-100 justify-content-between">' +
+            //         '<h6 class="mb-1 fw-bold">Pending action from Technical Desk Editor</h6>' +
+            //         '</div>' +
+            //         '<small class="mb-1">You have just submitted manuscript.</small><br/>' +
+            //         '</li>';
+            //     $('#track_list').append(html);
+            // }
         }
     });
 }
@@ -5383,7 +5394,6 @@ function view_manus(id, hide) {
 
     var coa = [];
     var html = '';
-
  
     $.ajax({
         type: "GET",
@@ -5414,7 +5424,7 @@ function view_manus(id, hide) {
                         var prim = (hide == 1) ? '<em>Undisclosed</em>' : val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
                         var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
                         var man_type = (val.man_type) ? val.publication_desc : 'N/a';
-                        var author_type = (val.man_author_type == 1) ? '(Main Author)' : ((val.man_author_type == 2) ? '(Co-author)' : '');
+                        // var author_type = (val.man_author_type == 1) ? '(Main Author)' : ((val.man_author_type == 2) ? '(Co-author)' : '');
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/initial_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
 
                         html += '<tr>' +
@@ -5428,16 +5438,32 @@ function view_manus(id, hide) {
                                 '<tr>' +
                                     '<th>Type of Publication</th>'+
                                     '<td>' + man_type + '</td>' +
-                                '</tr>' +
-                                '<tr>' +
-                                    '<th>Primary Author</th>' +
-                                    '<td>' + prim + ' ' + author_type + '</td>' +
-                                '</tr>' +
-                                '<tr>' +
-                                    '<th>Co-author(s)</th>' +
-                                    '<td>' + coas + '</td>' +
-                                '</tr>' +
-                                '<tr>'+
+                                '</tr>';
+
+
+                                if(val.man_author_type == 1){
+                                    html += '<tr>' +
+                                            '<th>Corresponding Author</th>' +
+                                            '<td>' + prim + ' (Main Author)</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<th>Co-author(s)</th>' +
+                                            '<td>' + coas + '</td>' +
+                                        '</tr>';
+                                }
+                                
+                                if(val.man_author_type == 2){
+                                    html += '<tr>' +
+                                            '<th>Corresponding Author</th>' +
+                                            '<td>' + coas + ' (Co-author)</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<th>Main Author</th>' +
+                                            '<td>' + prim + '</td>' +
+                                        '</tr>';
+                                }
+
+                        html +=  '<tr>'+
                                     '<th>Abstract</th>' +
                                     '<td><a href="' + base_url + "assets/oprs/uploads/initial_abstracts_pdf/" + val.man_abs + '" target="_blank">PDF</a></td>' +
                                 '</tr>' +
@@ -5499,6 +5525,7 @@ function show_hidden_manus() {
     $('#manuscript_form').show();
     $('.table-bordered').hide();
     $('#author_status').text('');
+    $('#add_main_author').addClass('d-none');
 }
 
 // show all reviewers per manuscript

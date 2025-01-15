@@ -14,8 +14,10 @@ class User_model extends CI_Model {
 	private $personal = 'tblpersonal_profiles';
 	private $membership = 'tblmembers';
 	private $titles = 'tbltitles';
+	private $skms_aff = 'tblbusiness_address';
 	// ejournal
 	private $ejournal_users = 'tblusers';
+	private $profiles = 'tbluser_profiles';
 
 
 	public function __construct() {
@@ -379,8 +381,9 @@ class User_model extends CI_Model {
 	 */
 	public function get_member($id) {
 		$members = $this->load->database('members', true);
-		$members->select('*');
-		$members->from($this->personal);
+		$members->select('p.*, c.bus_name');
+		$members->from($this->personal . ' p');
+		$members->join($this->skms_aff . ' c', 'p.pp_usr_id = c.bus_usr_id');
 		$members->where('pp_usr_id', $id);
 		$query = $members->get();
 		return $query->result();
@@ -585,6 +588,16 @@ class User_model extends CI_Model {
 	public function update_user_type($post, $where){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->update($this->roles, $post, $where);
+	}
+
+	public function get_corresponding_author($id){
+		$this->db->select('p.*, u.usr_username');
+		$this->db->from($this->profiles . ' p');
+		$this->db->join('dboprs.tblusers u', 'p.user_id = u.usr_id');
+		$this->db->where('user_id', $id);
+		$query = $this->db->get();
+		return $query->result();
+
 	}
 
 

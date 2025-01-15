@@ -87,13 +87,18 @@
 												</td>
 												<td><?php echo $m->publication_desc;?></td>
 												<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y'); ?></td>
-												<td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->man_trk_no;?>,<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
+												<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
+												<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->man_trk_no;?>,<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
 												<td>
 													<div class="d-flex gap-2" role="group">
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"
 														data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
-														<button type="button" class="btn btn-outline-primary" rel="tooltip"
-														data-bs-placement="top" title="Upload Revision"><span class="fa fa-edit"></span></button>
+
+														<?php if($m->man_status != 1){ ?>
+															<button type="button" class="btn btn-outline-primary" rel="tooltip"
+															data-bs-placement="top" title="Upload Revision"><span class="fa fa-edit"></span></button>
+														<?php } ?>
+														
 													</div>
 												</td>
 											</tr>
@@ -145,7 +150,8 @@
 											<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
 											<td><?php echo $status;?></td>
-											<td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->man_trk_no;?>,<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
+											<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
+											<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
 											<td>
 												<div class="btn-group" role="group">
 													<!-- TECHNICAL DESK EDITOR -->

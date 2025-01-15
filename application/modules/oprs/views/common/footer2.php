@@ -546,8 +546,8 @@
 						<textarea class="form-control" id="man_title" name="man_title" placeholder=""></textarea>
 					</div>
 					<div class="mb-3">
-						<label for="man_category" class="fw-bold form-label">Type of Publcation</label>
-						<select class="form-select" name="man_category" id="man_category">
+						<label for="man_type" class="fw-bold form-label">Type of Publcation</label>
+						<select class="form-select" name="man_type" id="man_type">
 							<option value="">Select Type</option>
 							<?php foreach($publ_types as $row): ?>
 								<option value="<?php echo $row->id;?>"><?php echo $row->publication_desc;?></option>
@@ -557,22 +557,23 @@
 					<h6 class="text-uppercase text-muted fw-bold bg-light p-2" style="font-size:14px">Author Details</h6>
 					<div class="mb-1">
 						<div class="row">
-							<p class="fw-bold">Corresponding Author: <span id="author_status" class="text-primary"></span></p>
+							<p class="fw-bold">Corresponding Author: <span class="text-primary"><?php echo $author['author_type'] ?? ''?></span>
+							<input type="hidden" class="form-control" id="corr_usr_id" name="corr_usr_id" value="<?php echo $author['user_id'] ?? ''?>">
 							<div class="col">
 								<div class="autocomplete" style="width:100% !important">
-									<label class="fw-bold principal" for="man_author">Full Name</label>
-									<input type="text" class="form-control mt-2" id="man_author" name="man_author"
-										placeholder="First Name M.I. Last name">
+									<label class="fw-bold principal" for="corr_author">Full Name</label>
+									<input type="text" class="form-control mt-2 bg-light" id="corr_author" name="corr_author"
+										placeholder="First Name M.I. Last name" value="<?php echo $author['name'] ?? ''?>" readonly>
 								</div>
 							</div>
 							<div class="col">
-								<label for="man_affiliation" class="fw-bold form-label">Affiliation</label>
-								<input type="text" class="form-control" placeholder="Enter affiliation" id="man_affiliation"
-							name="man_affiliation">
+								<label for="corr_affiliation" class="fw-bold form-label">Affiliation</label>
+								<input type="text" class="form-control bg-light" placeholder="Enter affiliation" id="corr_affiliation"
+							name="corr_affiliation" value="<?php echo $author['affiliation'] ?? ''?>" readonly>
 							</div>
 							<div class="col">
-								<label for="man_email" class="fw-bold form-label">Email</label>
-								<input type="email" class="form-control" placeholder="Enter a valid email" id="man_email" name="man_email">
+								<label for="corr_email" class="fw-bold form-label">Email</label>
+								<input type="email" class="form-control bg-light" placeholder="Enter a valid email" id="corr_email" name="corr_email" value="<?php echo $author['email'] ?? ''?>" readonly>
 							</div>
 						</div>
 						<div class="form-check form-check-inline mb-3">
@@ -580,17 +581,36 @@
 							<label class="form-check-label mt-2" for="status1">Main Author</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="man_author_type" id="status2" value="option2">
+							<input class="form-check-input" type="radio" name="man_author_type" id="status2" value="2">
 							<label class="form-check-label mt-2" for="status2">Co-author</label>
 						</div>
 						<div class="form-check form-check-inline text-danger" id="author_type_error"></div>
 					</div>
+					<div class="row mb-3 d-none" id="add_main_author">
+							<p class="fw-bold">Main Author: <span id="author_status" class="text-primary"></span></p>
+							<input type="hidden" class="form-control" id="man_usr_id" name="man_usr_id">
+							<div class="col">
+								<div class="autocomplete" style="width:100% !important">
+									<label class="fw-bold principal" for="man_author">Full Name</label>
+									<input type="text" class="form-control mt-2 bg-light" id="man_author" name="man_author"
+										placeholder="First Name M.I. Last name">
+								</div>
+							</div>
+							<div class="col">
+								<label for="man_affiliation" class="fw-bold form-label">Affiliation</label>
+								<input type="text" class="form-control bg-light" placeholder="Enter affiliation" id="man_affiliation"
+							name="man_affiliation">
+							</div>
+							<div class="col">
+								<label for="man_email" class="fw-bold form-label">Email</label>
+								<input type="email" class="form-control bg-light" placeholder="Enter a valid email" id="man_email" name="man_email">
+							</div>
+						</div>
 					<div class="mb-3 d-none" id="add_coauthors">
 						<span id="coauthors"></span>
 						<button	button class="btn btn-outline-secondary mr-auto" type="button" id="btn_add_coa"><i
 						class="fa fa-plus"></i> Add Co-author</button>
 					</div>
-					<input type="hidden" class="form-control" id="man_usr_id" name="man_usr_id">
 
 
 					<h6 class="text-uppercase text-muted fw-bold bg-light p-2" style="font-size:14px">File Uploads</h6>

@@ -16,6 +16,7 @@ class Manuscript_model extends CI_Model {
 	private $editorials = 'tbleditorials';
 	private $status = 'tblstatus_types';
 	private $publication = 'tblpublication_types';
+	private $roles = 'tblroles';
 	// skms
 	private $skms_mem = 'tblpersonal_profiles';
 	private $skms_exp = 'tblmembership_profiles';
@@ -271,9 +272,12 @@ class Manuscript_model extends CI_Model {
 	 */
 	public function tracker($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('m.*');
+		// $oprs->select('m.*, t.*, role_name');
+		$oprs->select('t.*, role_name');
 		$oprs->from($this->track . ' t');
 		$oprs->join($this->manus . ' m', 'trk_man_id = m.row_id');
+		$oprs->join($this->user . ' u', 't.trk_processor = u.usr_id');
+		$oprs->join($this->roles . ' r', 'u.usr_role = r.role_id');
 		$oprs->where('man_trk_no', $id);
 		$oprs->order_by('trk_process_datetime', 'desc');
 		$query = $oprs->get();
@@ -1145,6 +1149,73 @@ class Manuscript_model extends CI_Model {
 		$query = $oprs->get();
 		return $query->result();
 
+	}
+
+	public function get_author_category($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('usr_category');
+		$oprs->from($this->user);
+		$oprs->where('usr_id',$id);
+		$query = $oprs->get();
+		$result = $query->result_array();
+		$category = $result[0]['usr_category']; 
+		return $category;
+	}
+	public function get_corresponding_author($id){
+		
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('usr_category');
+		$oprs->from($this->user);
+		$oprs->where('usr_id',$id);
+		$query = $oprs->get();
+		$result = $query->result_array();
+		$category = $result[0]['usr_category']; 
+
+		if($category == 1){ // nrcp member
+			$output = $this->User_model->get_member($id);
+
+			foreach($output as $row){
+				$data = [
+					    'user_id' => $row->pp_usr_id,
+						'name' => $row->pp_first_name . ' ' . $row->pp_last_name,
+						'affiliation' => $row->bus_name,
+						'email' => $row->pp_email,
+						'author_type' => 'Member'
+				];
+			}
+
+			return $data;
+		}else{ // non member
+			$output = $this->User_model->get_corresponding_author($id);
+
+			foreach($output as $row){
+				$data = [
+					    'user_id' => $row->user_id,
+						'name' => $row->first_name . ' ' . $row->last_name,
+						'affiliation' => $row->affiliation,
+						'email' => $row->usr_username,
+						'author_type' => 'Non-member'
+				];
+			}
+			
+			return $data;
+		}
+
+	}
+
+	public function unique_title($title){
+		
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->manus);
+		$oprs->where('man_title', $title);
+		$query = $oprs->get();
+		$rows = $query->num_rows();
+		if ($rows > 0) {
+			return 'false';
+		} else {
+			return 'true';
+		}
 	}
 }
 

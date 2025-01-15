@@ -58,6 +58,8 @@ class Manuscripts extends OPRS_Controller {
 				$data['arta_count'] = count($this->Arta_model->get_arta());
 				$data['feed_count'] = $this->Feedback_model->count_feedbacks();
 				// $data['existing'] = $this->Manuscript_model->get_manuscripts(99);
+				$data['author'] = $this->Manuscript_model->get_corresponding_author(_UserIdFromSession());
+				// var_dump($data['author']);exit;
 				$data['main_title'] = "OPRS";
 				$data['main_content'] = "oprs/manuscripts";
 				$this->_LoadPage('common/body', $data);
@@ -128,7 +130,7 @@ class Manuscripts extends OPRS_Controller {
 		$oprs = $this->load->database('dboprs', true);
 		$result = $oprs->list_fields($tableName);
 		$post = array();
-		$user_id = $this->input->post('man_usr_id', true);
+		$man_author_type = $this->input->post('man_author_type', TRUE);
 		$publication_type = "0" . $this->input->post('man_type'); 
 		$currentYear = date("Y"); // Get the current year
 		$totalEntries = $this->Manuscript_model->count_manus('total');
@@ -144,8 +146,20 @@ class Manuscripts extends OPRS_Controller {
 		// }
 
 		foreach ($result as $i => $field) {
+
 			$post[$field] = $this->input->post($field, true);
-			//full manuscript
+			if($man_author_type == 1){
+				$post['man_author'] = $this->input->post('corr_author', true);
+				$post['man_affiliation'] = $this->input->post('corr_affiliation', true);
+				$post['man_email'] = $this->input->post('corr_email', true);
+				$post['man_author_user_id'] = $this->input->post('corr_usr_id', true);
+				$user_id = $this->input->post('corr_usr_id', true);
+			}else{
+				$post['man_author_user_id'] = $this->input->post('man_usr_id', true);
+				$user_id = _UserIdFromSession();
+			}
+
+			// full manuscript
 			$file_string_man = str_replace(" ", "_", $_FILES['man_file']['name']);
 			$file_no_ext_man = preg_replace("/\.[^.	]+$/", "", $file_string_man);
 			$clean_file_man = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_man);
@@ -156,7 +170,7 @@ class Manuscripts extends OPRS_Controller {
 			$post['man_file'] = date('YmdHis') . '_' . $clean_file_man . '.' . $file_ext_man;
 			$upload_file_man = $post['man_file'];
 
-			//abstract
+			// abstract
 			$file_string_abs = str_replace(" ", "_", $_FILES['man_abs']['name']);
 			$file_no_ext_abs = preg_replace("/\.[^.]+$/", "", $file_string_abs);
 			$clean_file_abs = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_abs);
@@ -167,7 +181,7 @@ class Manuscripts extends OPRS_Controller {
 			$post['man_abs'] = date('YmdHis') . '_' . $clean_file_abs . '.' . $file_ext_abs;
 			$upload_file_abs = $post['man_abs'];
 
-			//word
+			// word
 			$file_string_word = str_replace(" ", "_", $_FILES['man_word']['name']);
 			$file_no_ext_word = preg_replace("/\.[^.]+$/", "", $file_string_word);
 			$clean_file_word = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_word);
@@ -178,7 +192,7 @@ class Manuscripts extends OPRS_Controller {
 			$post['man_word'] = date('YmdHis') . '_' . $clean_file_word . '.' . $file_ext_word;
 			$upload_file_word = $post['man_word'];
 
-			//latex
+			// latex
 			$file_string_latex = str_replace(" ", "_", $_FILES['man_latex']['name']);
 			$file_no_ext_latex = preg_replace("/\.[^.]+$/", "", $file_string_latex);
 			$clean_file_latex = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_latex);
@@ -191,33 +205,34 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		
-		$source = '_op'; // uploaded by managing editor
+		$source = '_op'; // uploaded in oprs
 
-		if($user_id > 0){
-			$user_id = $user_id;
+		$author_category = $this->Manuscript_model->get_author_category($user_id);
+
+		if($author_category == 1){
 			$user_info = $this->User_model->get_nrcp_member_info_by_id($user_id);
 			$post['man_author_title'] = $user_info[0]->title_name;
 			$post['man_author_sex'] = $user_info[0]->pp_sex;
 		}else{
-			$user_id = _UserIdFromSession();
-			$user_info = $this->User_model->get_user($user_id);
-			// $post['man_author_title'] = '';
-			$post['man_author_sex'] = $user_info['usr_sex'];;
+			$user_info = $this->User_model->get_corresponding_author($user_id);
+			$post['man_author_title'] = $user_info[0]->title;
+			$post['man_author_sex'] = $user_info[0]->usr_sex;
 		}
-		
+
+
 		$post['man_trk_no'] = sprintf("%s-%s-%05d", $currentYear, $publication_type, $newNumber); 	// Format the tracking number
 		$post['date_created'] = date('Y-m-d H:i:s');
 		$post['man_user_id'] = _UserIdFromSession();
-		$post['man_author_user_id'] = $user_id;
 		$post['man_status'] = 1;
+		// $post['man_author_type'] = $man_author_type;
 		$post['man_source'] = $source; 
 
-		//local
+		// local
 		$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
-		//server
+		// server
 		// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
 	
-		//upload full manuscript
+		// upload full manuscript
 		$config_man['upload_path'] = $dir_man;
 		$config_man['allowed_types'] = 'pdf';
 		$config_man['file_name'] = $upload_file_man;
@@ -231,12 +246,12 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 
-		//local
+		// local
 		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
-		//server
+		// server
 		//  $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
 	
-		//upload full manuscript
+		// upload full manuscript
 		$config_abs['upload_path'] = $dir_abs;
 		$config_abs['allowed_types'] = 'pdf';
 		$config_abs['file_name'] = $upload_file_abs;
@@ -250,12 +265,12 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 
-		//local
+		// local
 		$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
-		//server
+		// server
 		//  $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
 	
-		//upload full manuscript word
+		// upload full manuscript word
 		$config_word['upload_path'] = $dir_word;
 		$config_word['allowed_types'] = 'doc|docx';
 		$config_word['file_name'] = $upload_file_word;
@@ -269,12 +284,12 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 
-		//local
+		// local
 		$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_latex/';
-		//server
+		// server
 		//  $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/initial_latex/';
 	
-		//upload full manuscript latex
+		// upload full manuscript latex
 		$config_latex['upload_path'] = $dir_latex;
 		$config_latex['allowed_types'] = 'tex';
 		$config_latex['file_name'] = $upload_file_latex;
@@ -288,34 +303,44 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 
-
 		$output = $this->Manuscript_model->save_manuscript(array_filter($post));
 
-		//save tracking
+		// save tracking
 		$track['trk_man_id'] = $output;
-		$track['trk_processor'] = $user_id;
+		$track['trk_description'] = 'Uploaded new manuscript.';
+		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		$track['trk_source'] = $source;
 		$this->Manuscript_model->tracking(array_filter($track));
 
-		$coauthors = $this->input->post('coa_name', true);
-		$affiliations = $this->input->post('coa_affiliation', true);
-		$emails = $this->input->post('coa_email', true);
-		$coa = array();
 
-		if (!empty($coauthors)) {
-			for ($i = 0; $i < count($coauthors); $i++) {
-				$coa['coa_name'] = $coauthors[$i];
-				$coa['coa_affiliation'] = $affiliations[$i];
-				$coa['coa_email'] = $emails[$i];
-				$coa['coa_man_id'] = $output;
-				$coa['date_created'] = date('Y-m-d H:i:s');
-				$this->Manuscript_model->save_coauthors($coa);
+		if($man_author_type == 1){
+			$coauthors = $this->input->post('coa_name', true);
+			$affiliations = $this->input->post('coa_affiliation', true);
+			$emails = $this->input->post('coa_email', true);
+			$coa = array();
+	
+			if (!empty($coauthors)) {
+				for ($i = 0; $i < count($coauthors); $i++) {
+					$coa['coa_name'] = $coauthors[$i];
+					$coa['coa_affiliation'] = $affiliations[$i];
+					$coa['coa_email'] = $emails[$i];
+					$coa['coa_man_id'] = $output;
+					$coa['date_created'] = date('Y-m-d H:i:s');
+					$this->Manuscript_model->save_coauthors($coa);
+				}
 			}
+		}else{
+			$coa['coa_name'] = $this->input->post('corr_author', true);
+			$coa['coa_affiliation'] = $this->input->post('corr_affiliation', true);
+			$coa['coa_email'] = $this->input->post('corr_email', true);
+			$coa['coa_man_id'] = $output;
+			$coa['date_created'] = date('Y-m-d H:i:s');
+			$this->Manuscript_model->save_coauthors($coa);
 		}
 
 		//send email to author if submit successfull
-		// $this->send_email_author($user_id);
+		// $this->send_email_author(_UserIdFromSession());
 	}
 
 	/**
@@ -2698,7 +2723,11 @@ class Manuscripts extends OPRS_Controller {
 		$output = $this->Review_model->get_tech_rev_score($id);
 		echo json_encode($output);
 	}
-	
+
+	public function unique_title() {
+		$output = $this->Manuscript_model->unique_title($this->input->post('man_title', true));
+		echo $output;
+	}
 	
 
 }
