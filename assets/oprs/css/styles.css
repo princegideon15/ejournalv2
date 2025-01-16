@@ -11246,3 +11246,16 @@ body {
   overflow: auto !important;
 }
 
+.nav-tabs .nav-link {
+  color: black;
+}
+
+.nav-tabs .nav-link {
+  background-color: #e2e2e2;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  /* color: #006eb1 !important;
+  text-decoration: underline; */
+}

@@ -43,17 +43,10 @@ class Manuscripts extends OPRS_Controller {
 				$data['logs'] = $this->Log_model->count_logs();
 				$data['titles'] = $this->Library_model->get_titles();
 				$data['publ_types'] = $this->Library_model->get_publication_types(null);
-				// $data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
-				// $data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
-				// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
-				// $data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
-				// $data['completed'] = $this->Manuscript_model->get_completed_reviews();
-				// $data['editorial'] = $this->Manuscript_model->get_manuscripts(4);
-				// $data['man_final'] = $this->Manuscript_model->get_manuscripts(5);
-				// $data['man_for_p'] = $this->Manuscript_model->get_manuscripts(6);
-				// $data['man_lay'] = $this->Manuscript_model->get_manuscripts(7);	
-				// $data['publishables'] = $this->Manuscript_model->get_manuscripts(8);	
-				// $data['published'] = $this->Manuscript_model->get_manuscripts(9);		
+				$data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
+				$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
+				$data['man_rej'] = $this->Manuscript_model->get_manuscripts(15);
+						
 				$data['usr_count'] = $this->User_model->count_user();
 				$data['arta_count'] = count($this->Arta_model->get_arta());
 				$data['feed_count'] = $this->Feedback_model->count_feedbacks();
@@ -2581,11 +2574,6 @@ class Manuscripts extends OPRS_Controller {
 		$post['tr_processor_id'] = _UserIdFromSession();
 		$post['tr_date_reviewed'] = date('Y-m-d H:i:s');
 		$this->Review_model->save_tech_rev_score(array_filter($post));
-		
-		// update manuscript status
-		$manus['man_status'] = 2;
-		$where['row_id'] = $id;
-		$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
 
 
 		// save tracking
@@ -2619,8 +2607,18 @@ class Manuscripts extends OPRS_Controller {
 
 		if($this->input->post('tr_final') == 1){ // passed
 			// send email 3
+			// update manuscript status passed endorsed to EIC
+			$manus['man_status'] = 2;
+			$where['row_id'] = $id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+
 		}else{ // failed
+
 			// send email 2
+			// update manuscript status rejected or failed
+			$manus['man_status'] = 15;
+			$where['row_id'] = $id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
 			
 			$output = $this->Review_model->get_manus_author_info($id);
 

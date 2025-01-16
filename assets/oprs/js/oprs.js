@@ -88,6 +88,20 @@ $(document).ready(function() {
         }
     });
 
+    // process duration number
+
+    $(".duration").keyup(function() {
+        var minValue = 0; // Minimum allowed value
+        var maxValue = 365; // Maximum allowed value
+        var currentValue = parseInt($(this).val());
+
+        if (currentValue < minValue) {
+        $(this).val(minValue);
+        } else if (currentValue > maxValue) {
+        $(this).val(maxValue);
+        }
+    });
+
     // csf ui ux star rating
     var selectedRatingUI = 0;
     var selectedRatingUX = 0;
@@ -188,7 +202,6 @@ $(document).ready(function() {
     // tech rev criteria process
     $("#tech_rev_form").validate({
         submitHandler: function() {
-            
             Swal.fire({
                 title: "Are you sure?",
                 // text: "You won't be able to revert this!",
@@ -243,8 +256,6 @@ $(document).ready(function() {
                     });
                 }
             });
-            
-
         }
     });
 
@@ -872,6 +883,15 @@ $(document).ready(function() {
  
     utt.on( 'order.dt search.dt', function () {
         utt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // process time duration 
+    var pdt = $('#process_duration_table').DataTable();
+ 
+    pdt.on( 'order.dt search.dt', function () {
+        pdt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
         } );
     } ).draw();
@@ -1523,7 +1543,7 @@ $(document).ready(function() {
     
 
     // all manuscripts;
-    var amt = $('#dataTable').DataTable({
+    var amt = $('#all-manuscript').DataTable({
         "order": [[ 2, "desc" ]],
         "columnDefs" : [
             {"targets":2, "type":"date"},
@@ -7969,7 +7989,6 @@ function getCurrentOTP(refCode){
   }
 
   function eic_process(id) {
-  console.log("🚀 ~ eic_process ~ id:", id)
 
     tinyMCE.remove();
     
@@ -8023,6 +8042,63 @@ function getCurrentOTP(refCode){
                         $('#eic_table #' +k).addClass(status_class);
                     }
                 });
+            });
+        }
+    });
+}
+
+function update_process_time_duration(element,id){
+
+    var days = $(element).closest('tr').find('input').val();
+
+    var data = {
+        id: id,
+        days: days
+    };
+    
+    Swal.fire({
+        title: "Apply changes?",
+        // text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Submit"
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: base_url + "oprs/emails/update_process_time_duration",
+                data: data,
+                cache: false,
+                crossDomain: true,
+                type: "POST",
+                success: function(data) {
+                    Swal.fire({
+                    title: "Process time duration updated successfully!",
+                    icon: 'success',
+                    // html: "I will close in <b></b> milliseconds.",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                        location.reload();
+                    }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        location.reload();
+                    });
+                }
             });
         }
     });

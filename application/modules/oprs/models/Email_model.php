@@ -58,5 +58,16 @@ class Email_model extends CI_Model {
 		$oprs->update($this->emails, $post, $where);
 	}
 
+	public function get_process_time_duration(){
+		$oprs = $this->load->database('dboprs', TRUE);
+        $oprs->select('*,
+		(SELECT IFNULL(role_name,0) FROM tblroles where role_id LIKE enc_process_owner) as processor,
+		(SELECT IFNULL(role_name,0) FROM tblroles where role_id LIKE enc_target_user) as target');
+        $oprs->from($this->emails);
+        $oprs->order_by('row_id', 'asc');
+        $query = $oprs->get();
+		return $query->result();
+	}
+
 }
 ?>

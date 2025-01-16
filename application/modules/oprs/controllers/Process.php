@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
-class Emails extends OPRS_Controller {
+class Process extends OPRS_Controller {
 	public function __construct() {
 		parent::__construct();
 		if (!$this->session->userdata('_oprs_logged_in')) {
@@ -22,9 +22,9 @@ class Emails extends OPRS_Controller {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
 				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17) {
 					$data['main_title'] = "OPRS";
-					$data['main_content'] = "oprs/emails";
+					$data['main_content'] = "oprs/durations";
 					$data['user_roles'] = $this->Email_model->get_email_user_roles();
-					$data['emails'] = $this->Email_model->get_contents();
+					$data['emails'] = $this->Email_model->get_process_time_duration();
 					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
 					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
@@ -76,15 +76,6 @@ class Emails extends OPRS_Controller {
 		$post['last_updated'] = date('Y-m-d H:i:s');
 		$where['enc_process_id'] = $this->input->post('enc_process_id', true);
 		$output = $this->Email_model->update_email_content(array_filter($post), $where);
-		return $output;
-	}
-
-	public function update_process_time_duration(){
-		$post = array();
-		$post['enc_process_duration'] = $this->input->post('days', true);
-		$where['enc_process_id'] = $this->input->post('id', true);
-		$output = $this->Email_model->update_email_content(array_filter($post), $where);
-		save_log_oprs(_UserIdFromSession(), 'Updated Process time duration', 0, _UserRoleFromSession());
 		return $output;
 	}
 

@@ -867,7 +867,7 @@ class Manuscript_model extends CI_Model {
 		}
 
 		$query = $oprs->get();
-		return $query->result();
+		return $query->num_rows();
 	}
 	
 	/**

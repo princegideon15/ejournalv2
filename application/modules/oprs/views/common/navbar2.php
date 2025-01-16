@@ -246,7 +246,7 @@
                     
                     <div class="sb-sidenav-menu-heading">Main</div>
 
-                    <?php if ($role == 7 || $role == 17 || $role == 3) {?>
+                    <?php if ($role == 16 || $role == 17 || $role == 3 || $role == 5 || $role == 6) {?>
                         
                         <a class="nav-link" href="dashboard">
                         <i class="fas fa-fw fa-tachometer-alt pe-1"></i>
@@ -272,7 +272,7 @@
 
 
                     
-                    <?php if ($role == 7 || $role == 17) {?>
+                    <?php if ($role == 16 || $role == 17) {?>
                     
                     <div class="sb-sidenav-menu-heading">User Management</div>
                     
@@ -284,7 +284,7 @@
                     
                     
                     <?php }?>
-                    <?php if ($role == 17 || $role == 3) {?>
+                    <?php if ($role == 17 || $role == 3 || $role == 16 || $role == 5 || $role == 6) {?>
                         
                         <div class="sb-sidenav-menu-heading">Reports and Statisttics</div>
 
@@ -306,7 +306,8 @@
                         </a> -->
                     
                     <?php }?>
-                    <?php if ($role == 17) {?>
+
+                    <?php if ($role == 17 || $role == 5) {?>
                     
                     
                         <div class="sb-sidenav-menu-heading">Library</div>
@@ -350,6 +351,10 @@
                         <i class="fas fa-envelope-open me-1"></i>
                         Publication Committee
                         </a> -->
+
+                    <?php } ?>
+
+                    <?php if ($role == 17) {?>
                         
                         <div class="sb-sidenav-menu-heading">Settings</div>
 
@@ -362,8 +367,12 @@
                         <i class="fas fa-database me-1"></i>
                         <span>Database</span>
                         </a>
+
+                    <?php } ?>
                         
                         
+                    <?php if ($role == 17 || $role == 16 || $role == 5) {?>
+
                         <div class="sb-sidenav-menu-heading">Feedback</div>
                     
                         <a class="nav-link" href="feedbacks">
@@ -383,8 +392,6 @@
                         <i class="fas fa-fw fa-clipboard-list me-1"></i>
                         <span>Activity Logs</span>
                         </a>
-                    
-                    
                     
                     <?php }?>
                 </div>
