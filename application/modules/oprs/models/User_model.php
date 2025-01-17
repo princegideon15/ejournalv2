@@ -600,6 +600,26 @@ class User_model extends CI_Model {
 
 	}
 
+	public function get_processor_email_by_role($role){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('usr_username');
+		$oprs->from($this->oprs_users);
+		$oprs->where('usr_role', $role);
+		$oprs->where('usr_role', 1);
+		$query = $oprs->get();
+		$result = $query->result_array();
+		return $result[0]['usr_username'];
+	}
+
+	public function get_associate_editors(){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->oprs_users);
+		$oprs->where_in('usr_role', [7,8,9,10]);
+		$oprs->where('usr_status', 1);
+		$query = $oprs->get();
+		return $query->result();
+	}
 
 	
 }

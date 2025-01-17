@@ -2144,7 +2144,7 @@
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">NRCP Research Journal - Manuscript Review</h5>
+				<h5 class="modal-title" id="exampleModalLabel"><?php echo $this->session->userdata('_oprs_type'); ?> Review</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -2191,7 +2191,7 @@
 							</table>
 							<div>
 								<label for="tr_remarks" class="fw-bold form-label">Remarks</label>
-								<textarea class="form-control" id="tr_remarks" name="tr_remarks" placeholder="(Optional)"></textarea>
+								<textarea class="form-control" id="tr_remarks" name="tr_remarks" placeholder=""></textarea>
 							</div>
 					</div>
 				</div>
@@ -2209,17 +2209,17 @@
 <!-- /.Technical Desk Editor Criteria Status  -->
 
 <!-- Editor-in-Chief Process  -->
-<div class="modal fade" id="eicProcessModal" tabindex="-1" role="dialog" aria-labelledby="eicProcessModal" aria-hidden="true" style="z-index:9999">
+<div class="modal fade" id="eicProcessModal" tabindex="-1" role="dialog" aria-labelledby="eicProcessModal" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document" style="max-width:90%">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Process Manuscript</h5>
+        <h5 class="modal-title"><?php echo $this->session->userdata('_oprs_type'); ?> Review</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="eic_process_form" autocomplete="off">
-          <div class="row">
-            <div class="col-6">
+	  	<div class="row">
+			<div class="col-6">
+				<p>Technical Desk Editor Review Results:</p>
 				<table class="table table-hover table-bordered" id="eic_table">
 					<thead>
 						<tr>
@@ -2243,98 +2243,66 @@
 					</tbody>
 				</table>
 			</div>
-            <div class="col-6">
-				<div id="form_journal">
+			<div class="col-6">
+				<div class="row">
 					<ul class="nav nav-tabs" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
-							<button class="nav-link active" id="new-tab" data-bs-toggle="tab" data-bs-target="#new-tab-pane" type="button" role="tab" aria-controls="new-tab-pane" aria-selected="false"><span class="fa fa-book"></span> New Journal</button>
+							<button class="nav-item nav-link active" role="tab" id="submit-eic-review-tab" data-bs-toggle="tab" data-bs-target="#submit-eic-review-tab-pane" type="button" aria-controls="submit-eic-review-tab-pane" aria-selected="true"><span class="fa fa-check"></span> Submit Review</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="article-tab" data-bs-toggle="tab" data-bs-target="#article-tab-pane" type="button" role="tab" aria-controls="article-tab-pane" aria-selected="false"><span class="fa fa-plus-square"></span> Add Article</button>
+							<button class="nav-item nav-link" role="tab" id="select-associate-tab" data-bs-toggle="tab" data-bs-target="#select-associate-tab-pane" type="button" role="tab" aria-controls="select-associate-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Endorse to Associate Editor</button>
 						</li>
 					</ul>
+
 					<div class="tab-content p-3" id="myTabContent">
-						<div class="tab-pane fade show active" id="new-tab-pane" role="tabpanel" aria-labelledby="new-tab" tabindex="0">
+						<div class="tab-pane fade show active" role="tabpanel" id="submit-eic-review-tab-pane" role="tabpanel" aria-labelledby="submit-eic-review-tab" tabindex="0" >
 							<div class="mb-3">
-								<label class="fw-bold form-label" for="jor_volume">Volume No.</label>
-								<select class="form-select text-uppercase" id="jor_volume" name="jor_volume" placeholder="ex. X" style="background-mb-3or:white">
-								<?php foreach ($u_journal as $j): ?>
-								<?php echo '<option value=' . $j->jor_volume . '>' . $j->jor_volume . '</option>'; ?>
-								<?php endforeach;?>
-								</select>
+								<form id="eic_review_form">
+									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+										maxlength="255"></textarea>
+								</form>
+								<!-- <small class="text-muted float-right limit"></small> -->
 							</div>
-							<div class="mb-3">
-								<label class="fw-bold form-label" for="jor_issue">Issue No.</label>
-								<select class="form-select" id="jor_issue" name="jor_issue">
-									<option value="">Select Issue</option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">Special Issue No. 1</option>
-									<option value="6">Special Issue No. 2</option>
-									<option value="7">Special Issue No. 3</option>
-									<option value="8">Special Issue No. 4</option>
-								</select>
-							</div>
-							<div class="mb-3">
-								<label class="fw-bold form-label" for="jor_year">Year</label>
-								<input type="number" class="form-control" id="jor_year" name="jor_year" max="9999" min="1000" >
+							<label for="" class="form-label fw-bold">Action</label>
+							<div class="d-flex gap-3">
+								<button class="btn btn-outline-danger w-100" onclick="eic_action('reject')"><span class="fa fa-times-circle me-1"></span>Reject</button>
+								<button class="btn btn-outline-secondary w-100" onclick="eic_action('revise')"><span class="fa fa-refresh me-1"></span>Revise</button>
+								<button class="btn btn-success w-100" onclick="eic_action('accept')"><span class="fa fa-check-circle me-1"></span>Accept</button>
 							</div>
 						</div>
-						<div class="tab-pane fade" id="article-tab-pane" role="tabpanel" aria-labelledby="article-tab" tabindex="0">
-							<div class="mb-3">
-								<label for="jor_issue" class="fw-bold form-label">Year</label>
-								<select class="form-select" id="art_year" name="art_year">
-								<option value="">Select year</option>
-								<?php foreach ($u_year as $j): ?>
-								<?php echo '<option value=' . $j->jor_year . '>' . $j->jor_year . '</option>'; ?>
-								<?php endforeach;?>
-								</select>
-							</div>
-							<div class="mb-3">
-								<label for="art_issue" class="fw-bold form-label">Volume, Issue</label>
-								<select class="form-select" id="art_issue" name="art_issue">
-								<option value="">Select Volume, Issue</option>
-								</select>
-							</div>
+						
+						<div class="tab-pane fade" role="tabpanel" id="select-associate-tab-pane" role="tabpanel" aria-labelledby="select-associate-tab" tabindex="0">
+							<form id="endorse_associate_form">
+								<div class="mb-3">
+									<label for="associate_editor" class="form-label fw-bold">Associate Editor</label>
+									<select class="form-select" name="associate_editor" id="associate_editor">
+										<option value="">Select Associate Editor</option>
+										<?php foreach($associate as $row): ?>
+											<option value="<?php echo $row->usr_id;?>"><?php echo $row->usr_username;?></option>
+										<?php endforeach ?>
+									</select>
+								</div>
+								<div class="mb-3">
+									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+										maxlength="255"></textarea>
+									<!-- <small class="text-muted float-right limit"></small> -->
+								</div>
+								<div>
+									<button class="btn btn-primary" type="submit">Submit</button>
+								</div>
+							</form>
 						</div>
 					</div>
 				</div>
-
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-rev" role="tab" aria-controls="nav-rev" aria-selected="true"  id="btn_add_rev"><span class="fa fa-plus-square"></span> Add Reviewer</a>
-                  <!-- <a class="nav-item nav-link disabled" data-bs-toggle="tab" href="#nav-rev" role="tab" aria-controls="nav-rev" aria-selected="true"  id="btn_add_rev"><small>All reviewer emails will be Cc to <span class="text-info">exec_dir@gmail.com</span></small> </a> -->
-                </div>
-                <div class="tab-content p-3" id="nav-tabContent">
-					<div class="tab-pane fade show active" id="nav-rev" role="tabpanel">
-						<div class="mb-3 row">
-							<div class="col col-4">
-								<label for="" class="fw-bold form-label">Reviewer Type</label>
-								<select class="form-select" name="" id="">
-									<option value="">Select Type</option>
-									<option value="1">Cluster Editor</option>
-									<option value="2">Associate Editor</option>
-								</select>
-							</div>
-							<div class="col">
-								<label for="" class="fw-bold form-label">Reviewer</label>
-								<select class="form-select" name="" id="">
-									<option value="">Select Reviewer</option>
-								</select>
-							</div>
-						</div>
-					</div>
-                </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-      </div>
+			</div>
+		</div>
+	  </div>
+	  <div class="modal-footer">
+		<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+		<!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+	  </div>
     </div>
   </div>
 </div>

@@ -98,7 +98,7 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->where('man_status', 1);
-		}else if ($role_id == 6){ // technical desk editor
+		}else if ($role_id == 6){ // editor in chief
 			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 			$oprs->from($this->manus . ' m');
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
@@ -862,7 +862,11 @@ class Manuscript_model extends CI_Model {
 		$oprs->from($this->manus);
 
 		if($status > 0){
-			$oprs->where('man_status', $status);
+			if($status == 2){
+				$oprs->where_in('man_status', [2,3,4,5]);
+			}else{
+				$oprs->where('man_status', $status);
+			}
 			// $oprs->where('man_remarks IS NULL');
 		}
 
@@ -1161,6 +1165,7 @@ class Manuscript_model extends CI_Model {
 		$category = $result[0]['usr_category']; 
 		return $category;
 	}
+	
 	public function get_corresponding_author($id){
 		
 		$oprs = $this->load->database('dboprs', TRUE);

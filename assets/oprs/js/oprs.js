@@ -201,6 +201,17 @@ $(document).ready(function() {
 
     // tech rev criteria process
     $("#tech_rev_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            tr_remarks: {
+                required: {
+                    depends: function () {
+                        return $("#tr_final").val() === "2";
+                    }
+                }
+            }
+        },
         submitHandler: function() {
             Swal.fire({
                 title: "Are you sure?",
@@ -402,10 +413,6 @@ $(document).ready(function() {
           idleTime += 1;
           
           if (idleTime >= 1200) { // 20 minutes in seconds
-              // Trigger logout or other actions
-              clearInterval(timerInterval); // Stop the timer
-  
-              destroyUserSession();
   
               Swal.fire({
                 title: "Session Expired",
@@ -416,6 +423,10 @@ $(document).ready(function() {
               }).then(function () {
                 window.location = base_url + "oprs/login";
               });
+              
+              // Trigger logout or other actions
+              clearInterval(timerInterval); // Stop the timer
+              destroyUserSession();
           }
       }, 1000); // Check every 1 second
     }
@@ -7990,44 +8001,45 @@ function getCurrentOTP(refCode){
 
   function eic_process(id) {
 
-    tinyMCE.remove();
+    // tinyMCE.remove();
     
-    revIncr = 1;
-    $('#eic_process_form')[0].reset();
+    // revIncr = 1;
+    // $('#eic_process_form')[0].reset();
     
     man_id = id;
 
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/get_manuscript_by_id/"+id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            console.log("🚀 ~ eic_process ~ data:", data)
-            $.each(data, function(key, val) {
-                mail_title = val.man_title;
+    // $.ajax({
+    //     type: "GET",
+    //     url: base_url + "oprs/manuscripts/get_manuscript_by_id/"+id,
+    //     dataType: "json",
+    //     crossDomain: true,
+    //     success: function(data) {
+    //         // console.log("🚀 ~ eic_process ~ data:", data)
+    //         $.each(data, function(key, val) {
+    //             mail_title = val.man_title;
 
-                $('#eic_process_form #jor_volume').val(val.man_volume);
-                $('#eic_process_form #jor_issue').val(val.man_issue);
-                $('#eic_process_form #jor_year').val(val.man_year);
+    //             $('#eic_process_form #jor_volume').val(val.man_volume);
+    //             $('#eic_process_form #jor_issue').val(val.man_issue);
+    //             $('#eic_process_form #jor_year').val(val.man_year);
 
-                if(val.man_status > 1){
-                    localStorage.setItem('jor_vol', val.man_volume);
-                    localStorage.setItem('jor_issue', val.man_issue);
-                    localStorage.setItem('jor_year', val.man_year);
-                }
-            });
-        }
-    });   
+    //             if(val.man_status > 1){
+    //                 localStorage.setItem('jor_vol', val.man_volume);
+    //                 localStorage.setItem('jor_issue', val.man_issue);
+    //                 localStorage.setItem('jor_year', val.man_year);
+    //             }
+    //         });
+    //     }
+    // });   
 
-    $('#tr_crt_1').text('passed');
+    // $('#tr_crt_1').text('passed');
+
     $.ajax({
         type: "GET",
         url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            console.log("🚀 ~ eic_process ~ data:", data)
+
             $.each(data, function(key, val){
                 $.each(val, function(k, v){
                     var status_class = (v == 1) ? 'text-success' : 'text-danger';
@@ -8102,4 +8114,83 @@ function update_process_time_duration(element,id){
             });
         }
     });
+}
+
+function eic_action(action){
+
+    $("#eic_review_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            man_remarks: {
+                required: true,
+            },
+        
+        },
+        submitHandler: function() {
+          
+            Swal.fire({
+                title: "Submit review?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#eicProcessModal').modal('toggle');
+                    $('#eic_review_form').prop('disabled', true);
+                    $('#eic_review_form')[0].reset();
+                      
+                    var status = (action == 'accept') ? '3' : ((action == 'revise') ? '10' : '14');
+                    var data = {
+                        id: man_id,
+                        status: status,
+                        remarks: $('#eic_review_form #man_remarks').val()
+                    };
+                    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/eic_review_process",
+                        data: data,
+                        cache: false,
+                        crossDomain: true,
+                        type: "POST",
+                        success: function(data) {
+                            $('body').loading('stop');
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+
+        }
+    });
+
+    $("#eic_review_form").submit();
 }
