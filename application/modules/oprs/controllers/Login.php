@@ -319,6 +319,8 @@ class Login extends OPRS_Controller {
 	
 		$mail->AddAddress($email);
 
+		//remote before deployment
+		$mail->AddCC('gerard_balde@yahoo.com');
 
 		$date = date("F j, Y") . '<br/><br/>';
 
@@ -537,7 +539,7 @@ class Login extends OPRS_Controller {
 								save_log_oprs(_UserIdFromSession(), 'login', 0,  _UserRoleFromSession());
 								$this->create_access_token($id);
 
-								if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17) {
+								if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20) {
 									redirect('oprs/dashboard');
 								} else {
 									redirect('oprs/manuscripts');
@@ -941,7 +943,7 @@ class Login extends OPRS_Controller {
 	public function send_appreciation_msg($id, $rev_password, $role) {
 
 		$link = 'https://researchjournal.nrcp.dost.gov.ph/oprs/login';
-		$sender = 'eJournal Admin';
+		$sender = 'eJournal';
 		$sender_email = 'nrcp.ejournal@gmail.com';
 		$password = 'fpzskheyxltsbvtg';
 		
@@ -1189,7 +1191,7 @@ class Login extends OPRS_Controller {
 			}
 		}
 
-		$sender = 'eJournal Admin';
+		$sender = 'eJournal';
 		$sender_email = 'nrcp.ejournal@gmail.com';
 		$password = 'fpzskheyxltsbvtg';
 

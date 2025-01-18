@@ -22,7 +22,7 @@ class Dashboard extends OPRS_Controller {
 		
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if(_UserRoleFromSession() == 17 || _UserRoleFromSession() == 3){
+				if(_UserRoleFromSession() == 20 || _UserRoleFromSession() == 3){
 					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
 					$data['reviewers'] = $this->Manuscript_model->get_reviewers_reviewed();
 					$data['reviewed'] = $this->Manuscript_model->get_reviewed_manuscript();

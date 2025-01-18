@@ -218,7 +218,7 @@ $(document).ready(function() {
                 // text: "You won't be able to revert this!",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
+                confirmButtonColor: "#007bff",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Submit"
               }).then((result) => {
@@ -725,7 +725,7 @@ $(document).ready(function() {
                     // text: "You won't be able to revert this!",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
+                    confirmButtonColor: "#007bff",
                     cancelButtonColor: "#d33",
                     confirmButtonText: "Submit"
                   }).then((result) => {
@@ -2581,6 +2581,9 @@ $(document).ready(function() {
         debug: true,
         errorClass: 'text-danger',
         rules: {
+            usr_full_name: {
+                required: true,
+            },
             usr_password: {
                 required: true,
                 minlength: 8,
@@ -5192,7 +5195,8 @@ function edit_man(id) {
 }
 // show tracking modal
 // function tracking(id, role, title, status) {
-function tracking(id, role, status) {
+
+function tracking(id, role, title, status) {
     
     $('#trackingModal').modal('toggle');
 
@@ -7353,334 +7357,334 @@ function getCurrentOTP(refCode){
         }
       }
     });
-  }
+}
 
-  function startTimer() {
-    intervalId = setInterval(function() {
-        if (seconds === 0) {
-            minutes--;
-            seconds = 59;
-        } else {
-            seconds--;
-        }
-  
-        var minutesStr = minutes < 10 ? '0' + minutes : minutes;
-        var secondsStr = seconds < 10 ? '0' + seconds : seconds;
-
-        $('#resend_code').text('Resend Code (' + minutesStr + ':' + secondsStr + ')');
-        if (minutes === 0 && seconds === 0) {
-          clearInterval(intervalId);
-          // Perform action when countdown is finished
-          $('#resend_code').removeClass('disabled');
-          $('#verify_code').addClass('disabled');
-          $('#resend_code').text('Resend Code');
-  
-          var url = window.location.pathname; // Get the current path
-          var segments = url.split('/'); // Split the path by '/'
-          var secondToLastSegment = segments[segments.length - 2];
-  
-          refCode = url.split('/').pop();
-          if(secondToLastSegment == 'verify_otp'){ // login otp
-            $('#resend_code').attr('href', base_url + 'oprs/login/resend_login_code/' + refCode);
-          }
-        }
-    }, 1000);
-  }
-
-  function destroyUserSession(){
-  
-      $.ajax({
-        type: "POST",
-        url: base_url + "oprs/login/destroy_user_session" ,
-        data: { user_access_token : accessToken },
-        success: function(data) {
-          // console.log(data);
-        }
-      });
-  }
-
-  function onRecaptchaSuccess(token) {
-    console.log("reCAPTCHA validated!");
-    $(current_button_id).prop('disabled', false); // Enable submit button
-  }
-  
-  // Callback when reCAPTCHA expires
-  function onRecaptchaExpired() {
-    console.log("reCAPTCHA expired.");
-    $(current_button_id).prop('disabled', true);
-  }
-
-  function toggleSearch(){
-    $('#searchModal').modal('toggle');
-    setTimeout(function (){
-        $('#searchModal #search').focus();
-    }, 100);
-  }
-
-  function edit_user_type(id){
-    $('#editUserTypeModal').modal('toggle');
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/user/get_user_types/"+id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val) {
-                $.each(val, function(k, v){
-                    $('#form_edit_user_type #'+k).val(v);
-                });
-            });
-        }
-    });
-  }
-
-  function edit_status_type(id){
-    $('#editStatusTypeModal').modal('toggle');
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/status/get_status_types/"+id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val) {
-                $.each(val, function(k, v){
-                    $('#form_edit_status_type #'+k).val(v);
-                });
-            });
-        }
-    });
-  }
-
-  function edit_publication_type(id){
-    $('#editPublicationTypeModal').modal('toggle');
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/publication_types/get_publication_types/"+id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val) {
-                $.each(val, function(k, v){
-                    $('#form_edit_publication_type #'+k).val(v);
-                });
-            });
-        }
-    });
-  }
-
-  
-  function edit_criteria(id, criteria){
-    var url = '', form = '';
-
-    if(criteria == 1){ // tech rev criteria
-        $('#editTRCModal').modal('toggle');
-        url = base_url + "oprs/criterion/get_criteria/"+id+"/"+criteria;
-        form = '#form_edit_tech_rev_crit';
-    }else{ // peer rev criteria
-        $('#editPRCModal').modal('toggle');
-        url = base_url + "oprs/criterion/get_criteria/"+id+"/"+criteria;
-        form = '#form_edit_peer_rev_crit';
+function startTimer() {
+intervalId = setInterval(function() {
+    if (seconds === 0) {
+        minutes--;
+        seconds = 59;
+    } else {
+        seconds--;
     }
 
-    $.ajax({
-        type: "GET",
-        url: url,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
+    var minutesStr = minutes < 10 ? '0' + minutes : minutes;
+    var secondsStr = seconds < 10 ? '0' + seconds : seconds;
 
-            $.each(data, function(key, val) {
-                if(criteria == 1){ // tech rev criteria
-                    $(form + ' #crt_id').val(val.id);
-                    $(form + ' #crt_code').val(val.code);
-                    $(form + ' #crt_desc').val(val.desc);
-                }else{ // peer rev criteria
-                    $(form + ' #pcrt_id').val(val.id);
-                    $(form + ' #pcrt_code').val(val.code);
-                    $(form + ' #pcrt_desc').val(val.desc);
-                    $(form + ' #pcrt_score').val(val.score);
-                }
+    $('#resend_code').text('Resend Code (' + minutesStr + ':' + secondsStr + ')');
+    if (minutes === 0 && seconds === 0) {
+        clearInterval(intervalId);
+        // Perform action when countdown is finished
+        $('#resend_code').removeClass('disabled');
+        $('#verify_code').addClass('disabled');
+        $('#resend_code').text('Resend Code');
+
+        var url = window.location.pathname; // Get the current path
+        var segments = url.split('/'); // Split the path by '/'
+        var secondToLastSegment = segments[segments.length - 2];
+
+        refCode = url.split('/').pop();
+        if(secondToLastSegment == 'verify_otp'){ // login otp
+        $('#resend_code').attr('href', base_url + 'oprs/login/resend_login_code/' + refCode);
+        }
+    }
+}, 1000);
+}
+
+function destroyUserSession(){
+
+    $.ajax({
+    type: "POST",
+    url: base_url + "oprs/login/destroy_user_session" ,
+    data: { user_access_token : accessToken },
+    success: function(data) {
+        // console.log(data);
+    }
+    });
+}
+
+function onRecaptchaSuccess(token) {
+console.log("reCAPTCHA validated!");
+$(current_button_id).prop('disabled', false); // Enable submit button
+}
+
+// Callback when reCAPTCHA expires
+function onRecaptchaExpired() {
+console.log("reCAPTCHA expired.");
+$(current_button_id).prop('disabled', true);
+}
+
+function toggleSearch(){
+$('#searchModal').modal('toggle');
+setTimeout(function (){
+    $('#searchModal #search').focus();
+}, 100);
+}
+
+function edit_user_type(id){
+$('#editUserTypeModal').modal('toggle');
+$.ajax({
+    type: "GET",
+    url: base_url + "oprs/user/get_user_types/"+id,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+        $.each(data, function(key, val) {
+            $.each(val, function(k, v){
+                $('#form_edit_user_type #'+k).val(v);
             });
-        }
-    });
-  }
+        });
+    }
+});
+}
 
-  function filter_submission_summary(){
-    var from = $('#sub_sum #date_from').val();
-    var to = $('#sub_sum #date_to').val();
-    
-    var data = {
-        from: from,
-        to: to
-    };
+function edit_status_type(id){
+$('#editStatusTypeModal').modal('toggle');
+$.ajax({
+    type: "GET",
+    url: base_url + "oprs/status/get_status_types/"+id,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+        $.each(data, function(key, val) {
+            $.each(val, function(k, v){
+                $('#form_edit_status_type #'+k).val(v);
+            });
+        });
+    }
+});
+}
 
-    $.ajax({
-        url: base_url + "oprs/statistics/filter_sub_sum",
-        data: data,
-        cache: false,
-        crossDomain: true,
-        dataType: 'json',
-        type: "POST",
-        success: function(data) {
+function edit_publication_type(id){
+$('#editPublicationTypeModal').modal('toggle');
+$.ajax({
+    type: "GET",
+    url: base_url + "oprs/publication_types/get_publication_types/"+id,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+        $.each(data, function(key, val) {
+            $.each(val, function(k, v){
+                $('#form_edit_publication_type #'+k).val(v);
+            });
+        });
+    }
+});
+}
 
-            sst.clear();
-                $.each(data, function(key, val){
 
-                    sst.row.add([
-                        val.pub_id,
-                        val.publication_desc,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                    ]);
-                });
-            sst.draw();
-        }
-    });
-  }
-  
-  function filter_submission_statistics(){
-    var from = $('#sub_stat #date_from').val();
-    var to = $('#sub_stat #date_to').val();
-    
-    var data = {
-        from: from,
-        to: to
-    };
+function edit_criteria(id, criteria){
+var url = '', form = '';
 
-    $.ajax({
-        url: base_url + "oprs/statistics/filter_sub_stat",
-        data: data,
-        cache: false,
-        crossDomain: true,
-        dataType: 'json',
-        type: "POST",
-        success: function(data) {
+if(criteria == 1){ // tech rev criteria
+    $('#editTRCModal').modal('toggle');
+    url = base_url + "oprs/criterion/get_criteria/"+id+"/"+criteria;
+    form = '#form_edit_tech_rev_crit';
+}else{ // peer rev criteria
+    $('#editPRCModal').modal('toggle');
+    url = base_url + "oprs/criterion/get_criteria/"+id+"/"+criteria;
+    form = '#form_edit_peer_rev_crit';
+}
 
-            sstt.clear();
-                $.each(data, function(key, val){
+$.ajax({
+    type: "GET",
+    url: url,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
 
-                    sstt.row.add([
-                        val.pub_id,
-                        val.publication_desc,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                        val.subm_count,
-                    ]);
-                });
-            sstt.draw();
-        }
-    });
-  }
+        $.each(data, function(key, val) {
+            if(criteria == 1){ // tech rev criteria
+                $(form + ' #crt_id').val(val.id);
+                $(form + ' #crt_code').val(val.code);
+                $(form + ' #crt_desc').val(val.desc);
+            }else{ // peer rev criteria
+                $(form + ' #pcrt_id').val(val.id);
+                $(form + ' #pcrt_code').val(val.code);
+                $(form + ' #pcrt_desc').val(val.desc);
+                $(form + ' #pcrt_score').val(val.score);
+            }
+        });
+    }
+});
+}
 
-  function filter_author_by_sex(){
-    var from = $('#auth_sex #date_from').val();
-    var to = $('#auth_sex #date_to').val();
-    
-    var data = {
-        from: from,
-        to: to
-    };
+function filter_submission_summary(){
+var from = $('#sub_sum #date_from').val();
+var to = $('#sub_sum #date_to').val();
 
-    $.ajax({
-        url: base_url + "oprs/statistics/filter_auth_by_sex",
-        data: data,
-        cache: false,
-        crossDomain: true,
-        dataType: 'json',
-        type: "POST",
-        success: function(data) {
-            console.log(data);
-            abst.clear();
-            var total_auth = 0;
-            var total_coa = 0;
-            var author_row_array = [];
-            var coauthor_row_array = [];
+var data = {
+    from: from,
+    to: to
+};
 
-            author_row_array.push('Primary Author');
-                $.each(data['authors'], function(key, val){
-                    total_auth += parseInt(val.total);
-                    author_row_array.push(val.total);
-                });
-                author_row_array.push(total_auth);
-            abst.row.add(author_row_array);
-            
-            coauthor_row_array.push('Co-Authors');
-                $.each(data['coauthors'], function(key, val){
-                    total_coa += parseInt(val.total);
-                    coauthor_row_array.push(val.total);
-                });
-            coauthor_row_array.push(total_coa);
-            abst.row.add(coauthor_row_array);
+$.ajax({
+    url: base_url + "oprs/statistics/filter_sub_sum",
+    data: data,
+    cache: false,
+    crossDomain: true,
+    dataType: 'json',
+    type: "POST",
+    success: function(data) {
 
-            abst.draw();
-        }
-    });
-  }
-
-  function filter_uiux(){
-    var from = $('#uiux #date_from').val();
-    var to = $('#uiux #date_to').val();
-    
-    var data = {
-        from: from,
-        to: to
-    };
-
-    uiux_table.clear();
-
-    $.ajax({
-        url: base_url + "oprs/feedbacks/filter_uiux",
-        data: data,
-        cache: false,
-        crossDomain: true,
-        dataType: 'json',
-        type: "POST",
-        success: function(data) {
-            var i = 1;
+        sst.clear();
             $.each(data, function(key, val){
 
-                var ui_star = '', ux_star = '';
-                for(var x=0;x<val.csf_rate_ui;x++){
-                    ui_star += '<span class="text-warning fs-5 star-icon">★</span>';
-                }
-                for(var x=0;x<val.csf_rate_ux;x++){
-                    ux_star += '<span class="text-warning fs-5 star-icon">★</span>';
-                }
-
-                uiux_table.row.add([
-                    i++,
-                    val.email,
-                    ui_star,
-                    val.csf_ui_suggestions,
-                    ux_star,
-                    val.csf_ux_suggestions,
-                    val.csf_system,
-                    moment(val.csf_created_at).format('MMMM D, YYYY h:mm a')
+                sst.row.add([
+                    val.pub_id,
+                    val.publication_desc,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
                 ]);
             });
-            uiux_table.draw();
-        }
-    });
-  }
+        sst.draw();
+    }
+});
+}
 
-  function filter_uiux_sex(){
+function filter_submission_statistics(){
+var from = $('#sub_stat #date_from').val();
+var to = $('#sub_stat #date_to').val();
+
+var data = {
+    from: from,
+    to: to
+};
+
+$.ajax({
+    url: base_url + "oprs/statistics/filter_sub_stat",
+    data: data,
+    cache: false,
+    crossDomain: true,
+    dataType: 'json',
+    type: "POST",
+    success: function(data) {
+
+        sstt.clear();
+            $.each(data, function(key, val){
+
+                sstt.row.add([
+                    val.pub_id,
+                    val.publication_desc,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                    val.subm_count,
+                ]);
+            });
+        sstt.draw();
+    }
+});
+}
+
+function filter_author_by_sex(){
+var from = $('#auth_sex #date_from').val();
+var to = $('#auth_sex #date_to').val();
+
+var data = {
+    from: from,
+    to: to
+};
+
+$.ajax({
+    url: base_url + "oprs/statistics/filter_auth_by_sex",
+    data: data,
+    cache: false,
+    crossDomain: true,
+    dataType: 'json',
+    type: "POST",
+    success: function(data) {
+        console.log(data);
+        abst.clear();
+        var total_auth = 0;
+        var total_coa = 0;
+        var author_row_array = [];
+        var coauthor_row_array = [];
+
+        author_row_array.push('Primary Author');
+            $.each(data['authors'], function(key, val){
+                total_auth += parseInt(val.total);
+                author_row_array.push(val.total);
+            });
+            author_row_array.push(total_auth);
+        abst.row.add(author_row_array);
+        
+        coauthor_row_array.push('Co-Authors');
+            $.each(data['coauthors'], function(key, val){
+                total_coa += parseInt(val.total);
+                coauthor_row_array.push(val.total);
+            });
+        coauthor_row_array.push(total_coa);
+        abst.row.add(coauthor_row_array);
+
+        abst.draw();
+    }
+});
+}
+
+function filter_uiux(){
+var from = $('#uiux #date_from').val();
+var to = $('#uiux #date_to').val();
+
+var data = {
+    from: from,
+    to: to
+};
+
+uiux_table.clear();
+
+$.ajax({
+    url: base_url + "oprs/feedbacks/filter_uiux",
+    data: data,
+    cache: false,
+    crossDomain: true,
+    dataType: 'json',
+    type: "POST",
+    success: function(data) {
+        var i = 1;
+        $.each(data, function(key, val){
+
+            var ui_star = '', ux_star = '';
+            for(var x=0;x<val.csf_rate_ui;x++){
+                ui_star += '<span class="text-warning fs-5 star-icon">★</span>';
+            }
+            for(var x=0;x<val.csf_rate_ux;x++){
+                ux_star += '<span class="text-warning fs-5 star-icon">★</span>';
+            }
+
+            uiux_table.row.add([
+                i++,
+                val.email,
+                ui_star,
+                val.csf_ui_suggestions,
+                ux_star,
+                val.csf_ux_suggestions,
+                val.csf_system,
+                moment(val.csf_created_at).format('MMMM D, YYYY h:mm a')
+            ]);
+        });
+        uiux_table.draw();
+    }
+});
+}
+
+function filter_uiux_sex(){
     
     var from = $('#uiux-sex #date_from').val();
     var to = $('#uiux-sex #date_to').val();
@@ -7710,9 +7714,9 @@ function getCurrentOTP(refCode){
             uiux_sex_table.draw();
         }
     });
-  }
+}
 
-  function filter_arta(){
+function filter_arta(){
     
     var from = $('#arta-tab #date_from').val();
     var to = $('#arta-tab #date_to').val();
@@ -7768,9 +7772,9 @@ function getCurrentOTP(refCode){
             arta_table.draw();
         }
     });
-  }
+}
 
-  function filter_arta_age(){
+function filter_arta_age(){
     
     var from = $('#arta-age-tab #date_from').val();
     var to = $('#arta-age-tab #date_to').val();
@@ -7815,61 +7819,61 @@ function getCurrentOTP(refCode){
             arta_age_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
         }
     });
-  }
+}
 
-  function filter_arta_region(){
-    
-    var from = $('#arta-reg-tab #date_from').val();
-    var to = $('#arta-reg-tab #date_to').val();
-    
-    var data = {
-        from: from,
-        to: to
-    };
+function filter_arta_region(){
 
-    arta_reg_table.clear();
+var from = $('#arta-reg-tab #date_from').val();
+var to = $('#arta-reg-tab #date_to').val();
 
-    $.ajax({
-        url: base_url + "oprs/arta/filter_arta_region",
-        data: data,
-        cache: false,
-        crossDomain: true,
-        dataType: 'json',
-        type: "POST",
-        success: function(data) {
-            console.log(data);
-            var i = 1;
-            var total_male = 0, total_female = 0, total_per_region = 0, total_region = 0;
-            $.each(data, function(key, val){
-                total_male += parseInt(val.male);
-                total_female += parseInt(val.female);
-                total_per_region == parseInt(val.female) + parseInt(val.male);
-                total_region += parseInt(total_per_region);
-                arta_reg_table.row.add([
-                    i++,
-                    val.region_name,
-                    val.male,
-                    val.female,
-                    total_per_region
-                ]);
-            });
-            
+var data = {
+    from: from,
+    to: to
+};
+
+arta_reg_table.clear();
+
+$.ajax({
+    url: base_url + "oprs/arta/filter_arta_region",
+    data: data,
+    cache: false,
+    crossDomain: true,
+    dataType: 'json',
+    type: "POST",
+    success: function(data) {
+        console.log(data);
+        var i = 1;
+        var total_male = 0, total_female = 0, total_per_region = 0, total_region = 0;
+        $.each(data, function(key, val){
+            total_male += parseInt(val.male);
+            total_female += parseInt(val.female);
+            total_per_region == parseInt(val.female) + parseInt(val.male);
+            total_region += parseInt(total_per_region);
             arta_reg_table.row.add([
                 i++,
-                'Total',
-                total_male,
-                total_female,
-                total_region
+                val.region_name,
+                val.male,
+                val.female,
+                total_per_region
             ]);
+        });
+        
+        arta_reg_table.row.add([
+            i++,
+            'Total',
+            total_male,
+            total_female,
+            total_region
+        ]);
 
-            arta_reg_table.draw();
-            arta_reg_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
-            arta_reg_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
-        }
-    });
-  }
+        arta_reg_table.draw();
+        arta_reg_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+        arta_reg_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
+    }
+});
+}
 
-  function filter_arta_cc(){
+function filter_arta_cc(){
     
     var from = $('#arta-cc-tab #date_from').val();
     var to = $('#arta-cc-tab #date_to').val();
@@ -7905,9 +7909,9 @@ function getCurrentOTP(refCode){
             arta_cc_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
         }
     });
-  }
+}
 
-  function filter_arta_sqd(){
+function filter_arta_sqd(){
     
     var from = $('#arta-sqd-tab #date_from').val();
     var to = $('#arta-sqd-tab #date_to').val();
@@ -7962,44 +7966,44 @@ function getCurrentOTP(refCode){
             arta_sqd_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
         }
     });
-  }
+}
 
-  function getPasswordStrength(password) {
-    // Implement your password strength logic here
-    // For example, you can check for length, uppercase, lowercase, numbers, and special characters
-    var strength = 0;
-    if (password.length >= 8) {
-        strength+=10;
-    }
-    if (password.length >= 12) {
-      strength+=15;
-    }
-    if (password.length >= 16) {
-      strength+=20;
-    }
-    if (/[A-Z]/.test(password)) {
-        strength+=15;
-    }
-    if (/[a-z]/.test(password)) {
-        strength+=10;
-    }
-    if (/[0-9]/.test(password)) {
-        strength+=15;
-    }
-    if   
-    (/[^A-Za-z0-9]/.test(password)) {
-        strength+=15;
-    }
-    return strength;   
-  
-  }
+function getPasswordStrength(password) {
+// Implement your password strength logic here
+// For example, you can check for length, uppercase, lowercase, numbers, and special characters
+var strength = 0;
+if (password.length >= 8) {
+    strength+=10;
+}
+if (password.length >= 12) {
+    strength+=15;
+}
+if (password.length >= 16) {
+    strength+=20;
+}
+if (/[A-Z]/.test(password)) {
+    strength+=15;
+}
+if (/[a-z]/.test(password)) {
+    strength+=10;
+}
+if (/[0-9]/.test(password)) {
+    strength+=15;
+}
+if   
+(/[^A-Za-z0-9]/.test(password)) {
+    strength+=15;
+}
+return strength;   
 
-  function tech_rev_criterion(id, status){
-    $('#tedEdCriteriaModal').modal('toggle');
-    $('#tr_man_id').val(id);
-  }
+}
 
-  function eic_process(id) {
+function tech_rev_criterion(id, status){
+$('#tedEdCriteriaModal').modal('toggle');
+$('#tr_man_id').val(id);
+}
+
+function eic_process(id) {
 
     // tinyMCE.remove();
     
@@ -8054,6 +8058,9 @@ function getCurrentOTP(refCode){
                         $('#eic_table #' +k).addClass(status_class);
                     }
                 });
+
+                $('#eic_table #tr_remarks').text(val.tr_remarks ?? 'No remarks.');
+
             });
         }
     });
@@ -8073,10 +8080,10 @@ function update_process_time_duration(element,id){
         // text: "You won't be able to revert this!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: "#007bff",
         cancelButtonColor: "#d33",
         confirmButtonText: "Submit"
-      }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
 
             $.ajax({
@@ -8116,81 +8123,224 @@ function update_process_time_duration(element,id){
     });
 }
 
-function eic_action(action){
+function editor_action(action,editor_type){
 
-    $("#eic_review_form").validate({
-        debug: true,
-        errorClass: 'text-danger',
-        rules: {
-            man_remarks: {
-                required: true,
-            },
+    if(editor_type == 'eic'){
+        if(action == 'endorse'){
+
+            $("#endorse_associate_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    associate_editor: {
+                        required: true,
+                    },
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Endorse review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
         
-        },
-        submitHandler: function() {
-          
-            Swal.fire({
-                title: "Submit review?",
-                // text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Submit"
-            }).then((result) => {
-                if (result.isConfirmed) {
+                            $('body').loading('start');
+                            $('#eicProcessModal').modal('toggle');
+                            $('#endorse_associate_form').prop('disabled', true);
 
-                    $('body').loading('start');
-                    $('#eicProcessModal').modal('toggle');
-                    $('#eic_review_form').prop('disabled', true);
-                    $('#eic_review_form')[0].reset();
-                      
-                    var status = (action == 'accept') ? '3' : ((action == 'revise') ? '10' : '14');
-                    var data = {
-                        id: man_id,
-                        status: status,
-                        remarks: $('#eic_review_form #man_remarks').val()
-                    };
-                    
-                    $.ajax({
-                        url: base_url + "oprs/manuscripts/eic_review_process",
-                        data: data,
-                        cache: false,
-                        crossDomain: true,
-                        type: "POST",
-                        success: function(data) {
-                            $('body').loading('stop');
-                            Swal.fire({
-                            title: "Review submitted successfully!",
-                            icon: 'success',
-                            // html: "I will close in <b></b> milliseconds.",
-                            timer: 2000,
-                            timerProgressBar: true,
-                            didOpen: () => {
-                                Swal.showLoading();
-                                const timer = Swal.getPopup().querySelector("b");
-                                timerInterval = setInterval(() => {
-                                timer.textContent = `${Swal.getTimerLeft()}`;
-                                }, 100);
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval);
-                                location.reload();
-                            }
-                            }).then((result) => {
-                                /* Read more about handling dismissals below */
-                                if (result.dismiss === Swal.DismissReason.timer) {
-                                    console.log("I was closed by the timer");
+                            var status = 3;
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#endorse_associate_form #man_remarks').val(),
+                                associate_editor: $('#endorse_associate_form #associate_editor').val()
+                            };
+
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/eic_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    
+                                    $('body').loading('stop');
+                                    $('#endorse_associate_form')[0].reset();
+
+                                    Swal.fire({
+                                    title: "Associate editor review request submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
                                 }
-                                location.reload();
                             });
                         }
                     });
+        
                 }
             });
+        
+            $("#endorse_associate_form").submit();
+        }else{
+            $("#eic_review_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Submit review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#eicProcessModal').modal('toggle');
+                            $('#eic_review_form').prop('disabled', true);
+                            $('#eic_review_form')[0].reset();
+                            
+                            // 14-rejected
+                            var status = (action == 'accept') ? '15' : ((action == 'revise') ? '10' : '14');
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#eic_review_form #man_remarks').val()
+                            };
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/eic_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    Swal.fire({
+                                    title: "Review submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#eic_review_form").submit();
+        }
+    }else if(editor_type == 'assocEd'){
+        console.log('associate editor');
+//TODO:: associate editor action
+    }else{
 
+//TODO:: cluster editor action
+    }
+
+}
+
+
+function assoced_process(id) {
+
+    man_id = id;
+
+    // get technical desk editor review
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+
+            $.each(data, function(key, val){
+                $.each(val, function(k, v){
+                    var status_class = (v == 1) ? 'text-success' : 'text-danger';
+                    var status_bg_class = (v == 1) ? 'bg-success' : 'bg-danger';
+                    var status_text = (v == 1) ? 'Passed' : 'Failed';
+
+                    if(k == 'tr_final'){
+                        $('#eic_table #' +k).text(status_text);
+                        $('#eic_table #' +k).addClass(status_bg_class);
+                    }else{
+                        $('#eic_table #' +k).text(status_text);
+                        $('#eic_table #' +k).addClass(status_class);
+                    }
+                });
+
+                $('#eic_table #tr_remarks').text(val.tr_remarks ?? 'No remarks.');
+
+            });
         }
     });
 
-    $("#eic_review_form").submit();
+    // get editor in chief remarks
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_editors_review/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#eic_remarks').append(val.edit_remarks ?? 'No remarks.');
+            });
+        }
+    });
 }

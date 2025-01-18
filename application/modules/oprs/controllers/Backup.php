@@ -39,7 +39,7 @@ class Backup extends OPRS_Controller {
       
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 17) {
+				if (_UserRoleFromSession() == 20) {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/database";
 					$data['logs'] = $this->Log_model->count_logs();

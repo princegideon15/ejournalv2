@@ -30,7 +30,11 @@
               <div class="card-body">
                 <form id="form_add_user">
                   <div class="mb-3">
-                    <label for="usr_email" class="form-label">Email</label>
+                    <label for="usr_full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="usr_full_name" name="usr_full_name" placeholder="First name, Middle name, Last name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="usr_username" class="form-label">Email</label>
                     <input type="email" class="form-control" id="usr_username" name="usr_username" placeholder="Your email address">
                   </div>
                   <div class="mb-3">

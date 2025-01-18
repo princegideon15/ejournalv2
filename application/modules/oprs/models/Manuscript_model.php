@@ -8,7 +8,7 @@ class Manuscript_model extends CI_Model {
 	private $coauthors = 'tblcoauthors';
 	private $reviewers = 'tblreviewers';
 	private $editors = 'tbleditorials';
-	private $editorialrev = 'tbleditors_review';
+	private $editors_review = 'tbleditors_review';
 	private $scores = 'tblscores';
 	private $non = 'tblnonmembers';
 	private $committee = 'tblfinalreviews';
@@ -103,7 +103,16 @@ class Manuscript_model extends CI_Model {
 			$oprs->from($this->manus . ' m');
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
 			$oprs->where('man_status', 2);
+		}else if ($role_id >= 7 && $role_id <= 10 ){ // associate
+			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
+			$oprs->from($this->manus . ' m');
+			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
+			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
+			$oprs->where('man_status', 3);
+			$oprs->where('edit_usr_id', _UserIdFromSession());
 		}else{ // super admin
 			$oprs->select('m.*, status_class, status_desc as status, status_id');
 			$oprs->from($this->manus . ' m');
@@ -204,7 +213,7 @@ class Manuscript_model extends CI_Model {
 	 */
 	public function save_editorial_review($data) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->insert($this->editorialrev, $data);
+		$oprs->insert($this->editors_review, $data);
 		$output = $oprs->insert_id();
 		save_log_oprs(_UserIdFromSession(), 'editorial review', $output, _UserRoleFromSession());
 		return $output;

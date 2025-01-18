@@ -87,8 +87,8 @@
 												</td>
 												<td><?php echo $m->publication_desc;?></td>
 												<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y'); ?></td>
-												<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
-												<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->man_trk_no;?>,<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+												<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+												<td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->man_trk_no;?>,<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
 												<td>
 													<div class="d-flex gap-2" role="group">
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"
@@ -194,8 +194,8 @@
 														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
 														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
 														<td><?php echo $status;?></td>
-														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
-														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
 														<td>
 															<div class="btn-groupx d-flex gap-1" role="group">
 																<!-- TECHNICAL DESK EDITOR -->
@@ -408,11 +408,11 @@
 											<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
 											<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
 											<td><?php echo $status;?></td>
-											<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
-											<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+											<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+											<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td>
 											<td>
 												<div class="btn-groupx d-flex gap-1" role="group">
-													<!-- EDITOR IN CHIEF -->
+													<!-- EDITOR-IN-CHIEF EDITOR -->
 													<?php if (_UserRoleFromSession() == 6) { 
 														if($m->man_status == 2){ ?>
 															<!-- process manuscript -->
@@ -450,16 +450,19 @@
 													<?php } ?>
 
 													
-													<!-- EDITOR-IN-CHIEF -->
-													<!-- <?php if (_UserRoleFromSession() == 6) { ?>
-		
-														<button type="button" class="btn border border-1 btn-light text-success"
-															onclick="eic_process(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-															data-bs-toggle="modal" data-bs-target="#eicProcessModal" rel="tooltip"
-															data-bs-placement="top" title="Add Reviewers"><span
-																class="fas fa-user-plus"></span></button>
-
-													<?php } ?> -->
+													<!-- ASSOCIATE EDITOR -->
+													<?php if (_UserRoleFromSession() >= 7 && _UserRoleFromSession() <= 10) { ?>
+															<!-- process manuscript -->
+															<button type="button" class="btn btn-outline-primary"
+															onclick="assoced_process(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
+															data-bs-toggle="modal" data-bs-target="#assocEdProcessModal" rel="tooltip"
+															data-bs-placement="top" title="Process"><span
+																class="fas fa-gear"></span></button>
+														
+															<!-- view manuscript details -->
+															<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+															data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+													<?php } ?>
 
 													<!-- SUPERADMIN -->
 													<?php if (_UserRoleFromSession() == 20 ) { ?>

@@ -19,7 +19,7 @@ class Publication_types extends OPRS_Controller {
 	public function index(){
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 17) {
+				if (_UserRoleFromSession() == 20) {
 					$data['publ_types'] = $this->Library_model->get_publication_types(null);
 					$id = $this->session->userdata('_oprs_user_id');
 					$data['users'] = $this->User_model->get_user($id);

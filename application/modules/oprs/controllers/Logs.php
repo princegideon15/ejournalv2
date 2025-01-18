@@ -19,7 +19,7 @@ class Logs extends OPRS_Controller {
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17) {
+				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20) {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/logs";
 					$data['all_logs'] = $this->Log_model->get_logs(317);
@@ -69,7 +69,7 @@ class Logs extends OPRS_Controller {
 		if($flag == 0){
 			$output = $this->Log_model->get_logs(0);
 		}else{
-			if(_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17)
+			if(_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20)
 			$output = $this->Log_model->get_logs(317);
 		}
 		echo json_encode($output);

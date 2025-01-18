@@ -9,6 +9,7 @@ class Review_model extends CI_Model {
 	private $reviewers = 'tblreviewers';
 	private $non = 'tblnonmembers';
 	private $tech_rev_score = 'tbltech_rev_score';
+	private $editors_review = 'tbleditors_review';
 	// skms
 	private $business = 'tblbusiness_address';
 	private $specs = 'tblmembership_profiles';
@@ -257,6 +258,27 @@ class Review_model extends CI_Model {
 		$query = $oprs->get();
 		return $query->result();
 	}
+
+	public function save_initial_editor_data($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->editors_review, $data);
+	}
+
+	public function update_editor_data($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->editors_review, $data, $where);
+	}
+
+	public function get_editors_review($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->editors_review);
+		$oprs->where('edit_man_id', $id);
+		$oprs->where('edit_usr_id', _UserIdFromSession());
+		$query = $oprs->get();
+		return $query->result();
+	}
 }
+
 
 /* End of file Review_model.php */
