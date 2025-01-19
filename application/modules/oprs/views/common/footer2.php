@@ -403,7 +403,7 @@
                                 </select>
                               </div>
                               <div class="col autocomplete">
-                                <input type="text" class="form-control " id="trk_rev1" name="trk_rev[]" placeholder="Search by Name/Specialization/Non-member/Non-account">
+                                <input type="text" class="form-control " id="trk_rev1" name="trk_rev[]" placeholder="Search by Name or Specialization">
                               </div>
                             </div>
                             <div class="form-row mb-2">
@@ -876,7 +876,7 @@
 															<div class="col autocomplete">
 																<input autofocus type="text" class="form-control "
 																	id="trk_rev1" name="trk_rev[]"
-																	placeholder="Search by Name/Specialization/Non-member/Non-account">
+																	placeholder="Search by Name or Specialization">
 															</div>
 														</div>
 														<div class="form-row mb-2">
@@ -1138,7 +1138,7 @@
 															<div class="col autocomplete">
 																<input autofocus type="text" class="form-control "
 																	id="editor_rev1" name="editor_rev[]"
-																	placeholder="Search by Name/Specialization/Non-member/Non-account">
+																	placeholder="Search by Name or Specialization">
 															</div>
 														</div>
 														<div class="form-row mb-2">
@@ -2219,6 +2219,8 @@
       <div class="modal-body">
 	  	<div class="row">
 			<div class="col-6">
+				<p>Manuscript Title:</p>
+				<div class="fst-italic mb-3" id="man_title"></div>
 				<p>Technical Desk Editor Review Results:</p>
 				<table class="table table-hover table-bordered" id="eic_table">
 					<thead>
@@ -2268,9 +2270,9 @@
 							</div>
 							<label for="" class="form-label fw-bold">Action</label>
 							<div class="d-flex gap-3">
-								<button class="btn btn-outline-danger w-100" onclick="editor_action('reject','eic')"><span class="fa fa-times-circle me-1"></span>Reject</button>
-								<button class="btn btn-outline-secondary w-100" onclick="editor_action('revise','eic')"><span class="fa fa-refresh me-1"></span>Revise</button>
-								<button class="btn btn-success w-100" onclick="editor_action('accept','eic')"><span class="fa fa-check-circle me-1"></span>Accept</button>
+								<button class="btn btn-outline-danger w-100" onclick="editor_action('reject','editor_chief')"><span class="fa fa-times-circle me-1"></span>Reject</button>
+								<button class="btn btn-outline-secondary w-100" onclick="editor_action('revise','editor_chief')"><span class="fa fa-refresh me-1"></span>Revise</button>
+								<button class="btn btn-success w-100" onclick="editor_action('accept','editor_chief')"><span class="fa fa-check-circle me-1"></span>Accept</button>
 							</div>
 						</div>
 						
@@ -2293,7 +2295,7 @@
 								</div>
 							</form>
 								<div>
-									<button class="btn btn-primary" type="button" onclick="editor_action('endorse','eic')">Submit</button>
+									<button class="btn btn-primary" type="button" onclick="editor_action('endorse','editor_chief')">Submit</button>
 								</div>
 						</div>
 					</div>
@@ -2321,8 +2323,10 @@
       <div class="modal-body">
 	  	<div class="row">
 			<div class="col-6">
+				<p>Manuscript Title:</p>
+				<div class="fst-italic mb-3" id="man_title"></div>
 				<p>Technical Desk Editor Review Results:</p>
-				<table class="table table-hover table-bordered" id="eic_table">
+				<table class="table table-hover table-bordered" id="assoc_table">
 					<thead>
 						<tr>
 							<th width="15%">Criteria</th>
@@ -2355,17 +2359,17 @@
 				<div class="row">
 					<ul class="nav nav-tabs" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
-							<button class="nav-item nav-link active" role="tab" id="submit-eic-review-tab" data-bs-toggle="tab" data-bs-target="#submit-eic-review-tab-pane" type="button" aria-controls="submit-eic-review-tab-pane" aria-selected="true"><span class="fa fa-check"></span> Submit Review</button>
+							<button class="nav-item nav-link active" role="tab" id="submit-assoc-review-tab" data-bs-toggle="tab" data-bs-target="#submit-assoc-review-tab-pane" type="button" aria-controls="submit-assoc-review-tab-pane" aria-selected="true"><span class="fa fa-check"></span> Submit Review</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-item nav-link" role="tab" id="select-cluster-tab" data-bs-toggle="tab" data-bs-target="#select-cluster-tab-pane" type="button" role="tab" aria-controls="select-cluster-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Endorse to Cluster Editors</button>
+							<button class="nav-item nav-link" role="tab" id="select-cluster-tab" data-bs-toggle="tab" data-bs-target="#select-cluster-tab-pane" type="button" role="tab" aria-controls="select-cluster-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Endorse to Cluster Editor(s)</button>
 						</li>
 					</ul>
 
 					<div class="tab-content p-3" id="myTabContent">
-						<div class="tab-pane fade show active" role="tabpanel" id="submit-eic-review-tab-pane" role="tabpanel" aria-labelledby="submit-eic-review-tab" tabindex="0" >
+						<div class="tab-pane fade show active" role="tabpanel" id="submit-assoc-review-tab-pane" role="tabpanel" aria-labelledby="submit-assoc-review-tab" tabindex="0" >
 							<div class="mb-3">
-								<form id="eic_review_form">
+								<form id="assoc_review_form">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
 									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
 										maxlength="255"></textarea>
@@ -2374,17 +2378,26 @@
 							</div>
 							<label for="" class="form-label fw-bold">Action</label>
 							<div class="d-flex gap-3">
-								<button class="btn btn-outline-danger w-100" onclick="editor_action('reject','assocEd')"><span class="fa fa-times-circle me-1"></span>Reject</button>
-								<button class="btn btn-outline-secondary w-100" onclick="editor_action('revise','assocEd')"><span class="fa fa-refresh me-1"></span>Revise</button>
-								<button class="btn btn-success w-100" onclick="editor_action('accept','assocEd')"><span class="fa fa-check-circle me-1"></span>Accept</button>
+								<button class="btn btn-outline-danger w-100" onclick="editor_action('reject','associate')"><span class="fa fa-times-circle me-1"></span>Reject</button>
+								<button class="btn btn-outline-secondary w-100" onclick="editor_action('revise','associate')"><span class="fa fa-refresh me-1"></span>Revise</button>
+								<button class="btn btn-success w-100" onclick="editor_action('accept','associate')"><span class="fa fa-check-circle me-1"></span>Accept</button>
 							</div>
 						</div>
 						
 						<div class="tab-pane fade" role="tabpanel" id="select-cluster-tab-pane" role="tabpanel" aria-labelledby="select-cluster-tab" tabindex="0">
 							<form id="endorse_cluster_form">
 								<div class="mb-3">
-									<label for="cluster_editor" class="form-label fw-bold">Cluster Editor</label>
-									<span id="cluster_editors"></span>
+									<label for="cluster_editor" class="form-label fw-bold">Select Cluster Editor(s)</label>
+									<div id="cluster_editors" class="mb-1">
+										<?php foreach($cluster as $row): ?>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" value="<?php echo $row->usr_id;?>" id="flexCheckDefault<?php echo $row->usr_id;?>" name="cluster_editor[]">
+												<label class="form-check-label ms-1 mt-1" for="flexCheckDefault<?php echo $row->usr_id;?>">
+													<?php echo $row->usr_full_name . ' (' . $row->usr_username . ')'; ?>
+												</label>
+											</div>
+										<?php endforeach ?>
+									</div>
 								</div>
 								<div class="mb-3">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
@@ -2394,7 +2407,7 @@
 								</div>
 							</form>
 								<div>
-									<button class="btn btn-primary" type="button" onclick="editor_action('endorse','assocEd')">Submit</button>
+									<button class="btn btn-primary" type="button" onclick="editor_action('endorse','associate')">Submit</button>
 								</div>
 						</div>
 					</div>
@@ -2410,6 +2423,107 @@
   </div>
 </div>
 <!-- /.Associate Editor Process  -->
+
+<!-- Cluster Editor Process  -->
+<div class="modal fade" id="cluEdProcessModal" tabindex="-1" role="dialog" aria-labelledby="clueEdProcessModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document" style="max-width:90%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><?php echo $this->session->userdata('_oprs_type'); ?> Review</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+	  	<div class="row">
+			<div class="col-6">
+				<p>Manuscript Title:</p>
+				<div class="fst-italic mb-3" id="man_title"></div>
+				<p>Technical Desk Editor Review Results:</p>
+				<table class="table table-hover table-bordered" id="assoc_table">
+					<thead>
+						<tr>
+							<th width="15%">Criteria</th>
+							<th>Description</th>
+							<th width="20%" class="text-center">Status</th>
+						</tr>
+					</thead>
+					<tbody> 
+						<?php $i = 0; foreach ($tech_rev_critera as $row): ?>
+						<?php $i++;?>
+						<tr>
+							<td><?php echo $row->code; ?></td>
+							<td class="text-wrap"><?php echo $row->desc; ?></td>
+							<td class="text-center fw-bold" id="tr_crt_<?php echo $i;?>"></td>
+						</tr>
+						<?php endforeach ?>
+						<tr><td colspan="2" class="text-end">Overall</td>
+							<td class="text-center fw-bold text-white" id="tr_final"></td>
+						</tr>
+						<tr>
+							<td>Remarks</td>
+							<td colspan="2" id="tr_remarks"></td>
+						</tr>
+					</tbody>
+				</table>
+				<p>Associate Editor Remarks:</p>
+				<div class="fst-italic" id="assoc_remarks"></div>
+			</div>
+			<div class="col-6">
+				<div class="row">
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<button class="nav-item nav-link active" role="tab" id="submit-cluster-review-tab" data-bs-toggle="tab" data-bs-target="#submit-cluster-review-tab-pane" type="button" aria-controls="submit-cluster-review-tab-pane" aria-selected="true"><span class="fa fa-check"></span> Submit Review</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-item nav-link" role="tab" id="select-peer-tab" data-bs-toggle="tab" data-bs-target="#select-peer-tab-pane" type="button" role="tab" aria-controls="select-peer-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Suggest Peer Reviewer(s)</button>
+						</li>
+					</ul>
+
+					<div class="tab-content p-3" id="myTabContent">
+						<div class="tab-pane fade show active" role="tabpanel" id="submit-cluster-review-tab-pane" role="tabpanel" aria-labelledby="submit-cluster-review-tab" tabindex="0" >
+							<div class="mb-3">
+								<form id="cluster_review_form">
+									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+										maxlength="255"></textarea>
+								</form>
+								<!-- <small class="text-muted float-right limit"></small> -->
+							</div>
+							<label for="" class="form-label fw-bold">Action</label>
+							<div class="d-flex gap-3">
+								<button class="btn btn-outline-danger w-100" onclick="editor_action('reject','cluster')"><span class="fa fa-times-circle me-1"></span>Reject</button>
+								<button class="btn btn-outline-secondary w-100" onclick="editor_action('revise','cluster')"><span class="fa fa-refresh me-1"></span>Revise</button>
+								<button class="btn btn-success w-100" onclick="editor_action('accept','cluster')"><span class="fa fa-check-circle me-1"></span>Accept</button>
+							</div>
+						</div>
+						
+						<div class="tab-pane fade" role="tabpanel" id="select-peer-tab-pane" role="tabpanel" aria-labelledby="select-peer-tab" tabindex="0">
+							<div class="row mb-3">
+								<div class="col fw-bold">Name</div>
+								<div class="col fw-bold">Specialization</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col autocomplete">
+									<input type="text" class="form-control " id="suggested_peer_rev1" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">
+								</div>
+								<div class="col"><input type="text" class="form-control " id="suggested_peer_rev_spec1" name="suggested_peer_rev_spec[]"></div>
+								<input type="hidden" id="suggested_peer_rev_id1" name="suggested_peer_rev_id[]">
+							</div>
+							<span id="suggested_peers"></span>
+							<button class="btn btn-outline-secondary" onclick="suggest_peer()"><span class="fa fa-plus-square me-1"></span>Add Reviewer</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	  </div>
+	  <div class="modal-footer">
+		<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+		<!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+	  </div>
+    </div>
+  </div>
+</div>
+<!-- /.Cluster Editor Process  -->
 
 <script type="text/javascript" >
 var base_url = '<?php echo base_url(); ?>';

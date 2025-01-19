@@ -391,6 +391,7 @@
 										<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
 										<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
 										<?php $title = $m->man_title; ?>
+										<?php $mantitle = rawurlencode($m->man_title); ?>
 										<?php $authors = $m->man_author . $acoa; ?>
 										<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
 										<tr>
@@ -417,7 +418,7 @@
 														if($m->man_status == 2){ ?>
 															<!-- process manuscript -->
 															<button type="button" class="btn btn-outline-primary"
-															onclick="eic_process(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
+															onclick="eic_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>', <?php echo $m->man_status; ?>)"
 															data-bs-toggle="modal" data-bs-target="#eicProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
@@ -449,12 +450,11 @@
 														<?php } ?>
 													<?php } ?>
 
-													
 													<!-- ASSOCIATE EDITOR -->
 													<?php if (_UserRoleFromSession() >= 7 && _UserRoleFromSession() <= 10) { ?>
 															<!-- process manuscript -->
 															<button type="button" class="btn btn-outline-primary"
-															onclick="assoced_process(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
+															onclick="assoced_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
 															data-bs-toggle="modal" data-bs-target="#assocEdProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
@@ -463,7 +463,20 @@
 															<button type="button" class="btn btn-outline-secondary" rel="tooltip"
 															data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
 													<?php } ?>
-
+													
+													<!-- CLUSTER EDITOR -->
+													<?php if (_UserRoleFromSession() >= 11 && _UserRoleFromSession() <= 14) { ?>
+															<!-- process manuscript -->
+															<button type="button" class="btn btn-outline-primary"
+															onclick="clued_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
+															data-bs-toggle="modal" data-bs-target="#cluEdProcessModal" rel="tooltip"
+															data-bs-placement="top" title="Process"><span
+																class="fas fa-gear"></span></button>
+														
+															<!-- view manuscript details -->
+															<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+															data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+													<?php } ?>
 													<!-- SUPERADMIN -->
 													<?php if (_UserRoleFromSession() == 20 ) { ?>
 														<!-- view reviewers -->

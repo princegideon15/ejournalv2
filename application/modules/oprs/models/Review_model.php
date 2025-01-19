@@ -252,7 +252,7 @@ class Review_model extends CI_Model {
 
 	public function get_tech_rev_score($id){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('tr_crt_1, tr_crt_2, tr_crt_3, tr_crt_4, tr_crt_5, tr_crt_6, tr_final');
+		$oprs->select('tr_crt_1, tr_crt_2, tr_crt_3, tr_crt_4, tr_crt_5, tr_crt_6, tr_remarks, tr_final');
 		$oprs->from($this->tech_rev_score);
 		$oprs->where('tr_man_id', $id);
 		$query = $oprs->get();

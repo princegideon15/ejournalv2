@@ -37,6 +37,9 @@ current_button_id;    // button to enable/disable for catpcha
 
 var recaptchaWidgetId_logout; // recaptcha widget 
 
+var inpIncr = 0; // added peer reviewer count
+var suggIncr = 1; // added peer reviewer count
+
 $(document).ready(function() {
     
     // get user access token
@@ -2440,9 +2443,15 @@ $(document).ready(function() {
     // });
 
     // show member name on keyup
+    if ($('#suggested_peer_rev1').length){
+        autocomplete(document.getElementById("suggested_peer_rev1"), mem_exp, '#suggested_peer_rev_email1', '#suggested_peer_rev_num1', '#suggested_peer_rev_id1', '1', '#suggested_peer_rev_spec1', '#suggested_peer_rev_title1');
+    }
+
+    // show member name on keyup
     if ($('#trk_rev1').length){
         autocomplete(document.getElementById("trk_rev1"), mem_exp, '#trk_rev_email1', '#trk_rev_num1', '#trk_rev_id1', '1', '#trk_rev_spec1', '#trk_title1');
     }
+
     // show member name on keyup
     if ($('#editor_rev1').length){
         autocomplete_editor(document.getElementById("editor_rev1"), mem_exp, '#editor_rev_email1', '#editor_rev_num1', '#editor_rev_id1', '1', '#editor_rev_spec1', '#editor_title1');
@@ -3759,7 +3768,7 @@ $(document).ready(function() {
             '</select>' +
             '</div>' +
             '<div class="col autocomplete">' +
-            '<input type="text" class="form-control " id="trk_rev' + revIncr + '" name="trk_rev[]" placeholder="Search by Name/Specialization/Non-member/Non-account">' +
+            '<input type="text" class="form-control " id="trk_rev' + revIncr + '" name="trk_rev[]" placeholder="Search by Name or Specialization">' +
             '</div>' +
             '</div>' +
             '<div class="form-row mb-2">' +
@@ -5902,7 +5911,6 @@ function generate_email(rid, mid) {
         crossDomain: true,
         success: function(data) {
 
-            console.log(data);
             $.each(data, function(key, val) {
                 t = val.man_title;
                 a = val.man_author;
@@ -5925,7 +5933,6 @@ function generate_email(rid, mid) {
                     crossDomain: true,
                     success: function(data) {
 
-                        console.log(data);
                         $.each(data, function(key, val) {
 
                             var emp_pos = (val.emp_pos != null && (val.emp_pos).length > 0) ? val.emp_pos : '[POSITION]';
@@ -5971,9 +5978,6 @@ function generate_email(rid, mid) {
                             new_mail = new_mail.replace('[YEAR]', jor_year);
                         }
 
-                        
-                        console.log(new_mail);
-                        
                         tinymce.remove('tiny_mail' + mid);
                         tinymce.init({
                             selector: '#tiny_mail' + mid,
@@ -7841,7 +7845,6 @@ $.ajax({
     dataType: 'json',
     type: "POST",
     success: function(data) {
-        console.log(data);
         var i = 1;
         var total_male = 0, total_female = 0, total_per_region = 0, total_region = 0;
         $.each(data, function(key, val){
@@ -8005,37 +8008,10 @@ $('#tr_man_id').val(id);
 
 function eic_process(id) {
 
-    // tinyMCE.remove();
-    
-    // revIncr = 1;
-    // $('#eic_process_form')[0].reset();
-    
-    man_id = id;
+    var manuscript_title = decodeURIComponent(title);
+    $('#eicProcessModal #man_title').text('').text(manuscript_title);
 
-    // $.ajax({
-    //     type: "GET",
-    //     url: base_url + "oprs/manuscripts/get_manuscript_by_id/"+id,
-    //     dataType: "json",
-    //     crossDomain: true,
-    //     success: function(data) {
-    //         // console.log("🚀 ~ eic_process ~ data:", data)
-    //         $.each(data, function(key, val) {
-    //             mail_title = val.man_title;
-
-    //             $('#eic_process_form #jor_volume').val(val.man_volume);
-    //             $('#eic_process_form #jor_issue').val(val.man_issue);
-    //             $('#eic_process_form #jor_year').val(val.man_year);
-
-    //             if(val.man_status > 1){
-    //                 localStorage.setItem('jor_vol', val.man_volume);
-    //                 localStorage.setItem('jor_issue', val.man_issue);
-    //                 localStorage.setItem('jor_year', val.man_year);
-    //             }
-    //         });
-    //     }
-    // });   
-
-    // $('#tr_crt_1').text('passed');
+    $('#eic_table #tr_remarks').text('');
 
     $.ajax({
         type: "GET",
@@ -8125,7 +8101,7 @@ function update_process_time_duration(element,id){
 
 function editor_action(action,editor_type){
 
-    if(editor_type == 'eic'){
+    if(editor_type == 'editor_chief'){
         if(action == 'endorse'){
 
             $("#endorse_associate_form").validate({
@@ -8235,7 +8211,6 @@ function editor_action(action,editor_type){
                             $('body').loading('start');
                             $('#eicProcessModal').modal('toggle');
                             $('#eic_review_form').prop('disabled', true);
-                            $('#eic_review_form')[0].reset();
                             
                             // 14-rejected
                             var status = (action == 'accept') ? '15' : ((action == 'revise') ? '10' : '14');
@@ -8253,6 +8228,7 @@ function editor_action(action,editor_type){
                                 type: "POST",
                                 success: function(data) {
                                     $('body').loading('stop');
+                                    $('#eic_review_form')[0].reset();
                                     Swal.fire({
                                     title: "Review submitted successfully!",
                                     icon: 'success',
@@ -8287,21 +8263,386 @@ function editor_action(action,editor_type){
         
             $("#eic_review_form").submit();
         }
-    }else if(editor_type == 'assocEd'){
-        console.log('associate editor');
-//TODO:: associate editor action
-    }else{
+    }else if(editor_type == 'associate'){
+        if(action == 'endorse'){
 
-//TODO:: cluster editor action
+            // Add custom validation rule
+            $.validator.addMethod("atLeastOneChecked", function (value, element) {
+                return $('input[name="cluster_editor[]"]:checked').length > 0;
+            }, "Please select at least one cluster editor.");
+            
+            $("#endorse_cluster_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    "cluster_editor[]": {
+                        atLeastOneChecked: true
+                    },
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                messages: {
+                    "options[]": {
+                        atLeastOneChecked: "Please select at least one cluster editor."
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    // Place error message below the group of checkboxes
+                    if (element.attr("name") === "cluster_editor[]") {
+                        error.insertAfter("#cluster_editors");
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Endorse review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#assocEdProcessModal').modal('toggle');
+                            $('#endorse_cluster_form').prop('disabled', true);
+
+                            var cluster_editor = $('input[name="cluster_editor[]"]:checked')
+                            .map(function () {
+                                return $(this).val();
+                            })
+                            .get(); // Convert to an array
+
+                            var status = 4;
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#endorse_cluster_form #man_remarks').val(),
+                                cluster_editor: cluster_editor
+                            };
+
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/assoc_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    $('#endorse_cluster_form')[0].reset();
+
+                                    Swal.fire({
+                                    title: "Cluster editor review request submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#endorse_cluster_form").submit();
+        }else{
+            $("#assoc_review_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Submit review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#assocEdProcessModal').modal('toggle');
+                            $('#assoc_review_form').prop('disabled', true);
+                            
+                            // 14-rejected
+                            var status = (action == 'accept') ? '15' : ((action == 'revise') ? '10' : '14');
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#assoc_review_form #man_remarks').val()
+                            };
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/assoc_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    $('#assoc_review_form')[0].reset();
+                                    Swal.fire({
+                                    title: "Review submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#assoc_review_form").submit();
+        }
+    }else{ // cluster editor
+        if(action == 'endorse'){
+
+            // Add custom validation rule
+            $.validator.addMethod("atLeastOneChecked", function (value, element) {
+                return $('input[name="cluster_editor[]"]:checked').length > 0;
+            }, "Please select at least one cluster editor.");
+            
+            $("#endorse_cluster_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    "cluster_editor[]": {
+                        atLeastOneChecked: true
+                    },
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                messages: {
+                    "options[]": {
+                        atLeastOneChecked: "Please select at least one cluster editor."
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    // Place error message below the group of checkboxes
+                    if (element.attr("name") === "cluster_editor[]") {
+                        error.insertAfter("#cluster_editors");
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Endorse review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#assocEdProcessModal').modal('toggle');
+                            $('#endorse_cluster_form').prop('disabled', true);
+
+                            var cluster_editor = $('input[name="cluster_editor[]"]:checked')
+                            .map(function () {
+                                return $(this).val();
+                            })
+                            .get(); // Convert to an array
+
+                            var status = 4;
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#endorse_cluster_form #man_remarks').val(),
+                                cluster_editor: cluster_editor
+                            };
+
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/assoc_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    $('#endorse_cluster_form')[0].reset();
+
+                                    Swal.fire({
+                                    title: "Cluster editor review request submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#endorse_cluster_form").submit();
+        }else{
+            $("#cluster_review_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Submit review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#cluEdProcessModal').modal('toggle');
+                            $('#cluster_review_form').prop('disabled', true);
+                            
+                            // 14-rejected
+                            var status = (action == 'accept') ? '15' : ((action == 'revise') ? '10' : '14');
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#cluster_review_form #man_remarks').val()
+                            };
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/cluster_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    $('#cluster_review_form')[0].reset();
+                                    Swal.fire({
+                                    title: "Review submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#cluster_review_form").submit();
+        }
     }
 
 }
 
 
-function assoced_process(id) {
+function assoced_process(id, title) {
 
     man_id = id;
-
+    var manuscript_title = decodeURIComponent(title);
+    $('#assocEdProcessModal #man_title').text('').text(manuscript_title);
     // get technical desk editor review
     $.ajax({
         type: "GET",
@@ -8309,7 +8650,6 @@ function assoced_process(id) {
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-
             $.each(data, function(key, val){
                 $.each(val, function(k, v){
                     var status_class = (v == 1) ? 'text-success' : 'text-danger';
@@ -8317,20 +8657,22 @@ function assoced_process(id) {
                     var status_text = (v == 1) ? 'Passed' : 'Failed';
 
                     if(k == 'tr_final'){
-                        $('#eic_table #' +k).text(status_text);
-                        $('#eic_table #' +k).addClass(status_bg_class);
+                        $('#assoc_table #' +k).text(status_text);
+                        $('#assoc_table #' +k).addClass(status_bg_class);
+                    }else if(k == 'tr_remarks'){
+                        $('#assoc_table #' +k).text(v);
                     }else{
-                        $('#eic_table #' +k).text(status_text);
-                        $('#eic_table #' +k).addClass(status_class);
+                        $('#assoc_table #' +k).text(status_text);
+                        $('#assoc_table #' +k).addClass(status_class);
                     }
                 });
 
-                $('#eic_table #tr_remarks').text(val.tr_remarks ?? 'No remarks.');
 
             });
         }
     });
 
+    $('#eic_remarks').text('');
     // get editor in chief remarks
     $.ajax({
         type: "GET",
@@ -8343,4 +8685,72 @@ function assoced_process(id) {
             });
         }
     });
+}
+
+function clued_process(id, title) {
+
+    man_id = id;
+    var manuscript_title = decodeURIComponent(title);
+    $('#cluEdProcessModal #man_title').text('').text(manuscript_title);
+    // get technical desk editor review
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                $.each(val, function(k, v){
+                    var status_class = (v == 1) ? 'text-success' : 'text-danger';
+                    var status_bg_class = (v == 1) ? 'bg-success' : 'bg-danger';
+                    var status_text = (v == 1) ? 'Passed' : 'Failed';
+
+                    if(k == 'tr_final'){
+                        $('#assoc_table #' +k).text(status_text);
+                        $('#assoc_table #' +k).addClass(status_bg_class);
+                    }else if(k == 'tr_remarks'){
+                        $('#assoc_table #' +k).text(v);
+                    }else{
+                        $('#assoc_table #' +k).text(status_text);
+                        $('#assoc_table #' +k).addClass(status_class);
+                    }
+                });
+
+
+            });
+        }
+    });
+
+    $('#assoc_remarks').text('');
+    // get editor in chief remarks
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_editors_review/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#assoc_remarks').append(val.edit_remarks ?? 'No remarks.');
+            });
+        }
+    });
+}
+
+function suggest_peer(){
+
+    suggIncr++;
+
+    var html = '';
+
+    html = '<div class="row mb-3">'+
+                '<div class="col autocomplete">'+
+                    '<input type="text" class="form-control " id="suggested_peer_rev'+suggIncr+'" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">'+
+                '</div>'+
+                '<div class="col"><input type="text" class="form-control " id="suggested_peer_rev_spec'+suggIncr+'" name="suggested_peer_rev_spec[]"></div>'+
+                '<input type="hidden" id="suggested_peer_rev_id'+suggIncr+'" name="suggested_peer_rev_id[]">'+
+            '</div>';
+
+    $('#suggested_peers').append(html);
+    autocomplete(document.getElementById("suggested_peer_rev"+suggIncr), mem_exp, '#suggested_peer_rev_email'+suggIncr, '#suggested_peer_rev_num'+suggIncr, '#suggested_peer_rev_id'+suggIncr,  suggIncr , '#suggested_peer_rev_spec'+suggIncr, '#suggested_peer_rev_title'+suggIncr);
+
 }

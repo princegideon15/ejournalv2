@@ -113,6 +113,14 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
 			$oprs->where('man_status', 3);
 			$oprs->where('edit_usr_id', _UserIdFromSession());
+		}else if ($role_id >= 11 && $role_id <= 14 ){ // cluster
+			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
+			$oprs->from($this->manus . ' m');
+			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
+			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
+			// $oprs->where('man_status', 4);
+			$oprs->where('edit_usr_id', _UserIdFromSession());
 		}else{ // super admin
 			$oprs->select('m.*, status_class, status_desc as status, status_id');
 			$oprs->from($this->manus . ' m');
@@ -239,7 +247,7 @@ class Manuscript_model extends CI_Model {
 	 * Update processing of a manuscript
 	 *
 	 * @param [array] $post
-	 * @param [array] $where
+	 * @param [array] $wherefupdate_manuscript_status
 	 * @param [int] $flag
 	 * @return void
 	 */
@@ -260,6 +268,7 @@ class Manuscript_model extends CI_Model {
 	public function update_manuscript_status($post, $where){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->update($this->manus, $post, $where);
+		// return $oprs->last_query();
 	}
 
 	/**

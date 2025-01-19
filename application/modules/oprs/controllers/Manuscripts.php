@@ -54,6 +54,7 @@ class Manuscripts extends OPRS_Controller {
 				// $data['existing'] = $this->Manuscript_model->get_manuscripts(99);
 				$data['author'] = $this->Manuscript_model->get_corresponding_author(_UserIdFromSession());
 				$data['associate'] = $this->User_model->get_associate_editors();
+				$data['cluster'] = $this->User_model->get_cluster_editors(_UserRoleFromSession());
 				$data['main_title'] = "OPRS";
 				$data['main_content'] = "oprs/manuscripts";
 				$this->_LoadPage('common/body', $data);
@@ -482,9 +483,7 @@ class Manuscripts extends OPRS_Controller {
 			$user_group_emails = array();
 			foreach($email_user_group as $grp){
 				$username = $this->Email_model->get_user_group_emails($grp);
-				foreach($username as $uname){
-					array_push($user_group_emails, $uname);
-				}
+				array_push($user_group_emails, $username);
 			}
 		}
 
@@ -540,7 +539,7 @@ class Manuscripts extends OPRS_Controller {
 			// add existing as cc
 			if(count($user_group_emails) > 0){
 				foreach($user_group_emails as $grp){
-					$mail->AddCC($grp->usr_username);
+					$mail->AddCC($grp);
 				}
 			}
 		
@@ -727,9 +726,7 @@ class Manuscripts extends OPRS_Controller {
 			$user_group_emails = array();
 			foreach($email_user_group as $grp){
 				$username = $this->Email_model->get_user_group_emails($grp);
-				foreach($username as $uname){
-					array_push($user_group_emails, $uname);
-				}
+				array_push($user_group_emails, $username);
 			}
 		}
 
@@ -785,7 +782,7 @@ class Manuscripts extends OPRS_Controller {
 			// add existing as cc
 			if(count($user_group_emails) > 0){
 				foreach($user_group_emails as $grp){
-					$mail->AddCC($grp->usr_username);
+					$mail->AddCC($grp);
 				}
 			}
 			
@@ -990,9 +987,7 @@ class Manuscripts extends OPRS_Controller {
 			$user_group_emails = array();
 			foreach($email_user_group as $grp){
 				$username = $this->Email_model->get_user_group_emails($grp);
-				foreach($username as $uname){
-					array_push($user_group_emails, $uname);
-				}
+				array_push($user_group_emails, $username);
 			}
 		}
 
@@ -1052,7 +1047,7 @@ class Manuscripts extends OPRS_Controller {
 		// add existing as cc
 		if(count($user_group_emails) > 0){
 			foreach($user_group_emails as $grp){
-				$mail->AddCC($grp->usr_username);
+				$mail->AddCC($grp);
 			}
 		}
 
@@ -1944,9 +1939,7 @@ class Manuscripts extends OPRS_Controller {
 			$user_group_emails = array();
 			foreach($email_user_group as $grp){
 				$username = $this->Email_model->get_user_group_emails($grp);
-				foreach($username as $uname){
-					array_push($user_group_emails, $uname);
-				}
+				array_push($user_group_emails, $username);
 			}
 		}
 
@@ -1988,7 +1981,7 @@ class Manuscripts extends OPRS_Controller {
 		// add existing as cc
 		if(count($user_group_emails) > 0){
 			foreach($user_group_emails as $grp){
-				$mail->AddCC($grp->usr_username);
+				$mail->AddCC($grp);
 			}
 		}
 
@@ -2063,9 +2056,7 @@ class Manuscripts extends OPRS_Controller {
 			$user_group_emails = array();
 			foreach($email_user_group as $grp){
 				$username = $this->Email_model->get_user_group_emails($grp);
-				foreach($username as $uname){
-					array_push($user_group_emails, $uname);
-				}
+				array_push($user_group_emails, $username);
 			}
 		}
 
@@ -2107,7 +2098,7 @@ class Manuscripts extends OPRS_Controller {
 		// add existing as cc
 		if(count($user_group_emails) > 0){
 			foreach($user_group_emails as $grp){
-				$mail->AddCC($grp->usr_username);
+				$mail->AddCC($grp);
 			}
 		}
 
@@ -2448,9 +2439,7 @@ class Manuscripts extends OPRS_Controller {
 			$user_group_emails = array();
 			foreach($email_user_group as $grp){
 				$username = $this->Email_model->get_user_group_emails($grp);
-				foreach($username as $uname){
-					array_push($user_group_emails, $uname);
-				}
+				array_push($user_group_emails, $username);
 			}
 		}
 
@@ -2498,7 +2487,7 @@ class Manuscripts extends OPRS_Controller {
 		// add existing as cc
 		if(count($user_group_emails) > 0){
 			foreach($user_group_emails as $grp){
-				$mail->AddCC($grp->usr_username);
+				$mail->AddCC($grp);
 			}
 		}
 		// send email
@@ -2537,9 +2526,7 @@ class Manuscripts extends OPRS_Controller {
 			$user_group_emails = array();
 			foreach($email_user_group as $grp){
 				$username = $this->Email_model->get_user_group_emails($grp);
-				foreach($username as $uname){
-					array_push($user_group_emails, $uname);
-				}
+				array_push($user_group_emails, $username);
 			}
 			echo count($user_group_emails);
 			print_r($user_group_emails);
@@ -2740,9 +2727,7 @@ class Manuscripts extends OPRS_Controller {
 				$user_group_emails = array();
 				foreach($email_user_group as $grp){
 					$username = $this->Email_model->get_user_group_emails($grp);
-					foreach($username as $uname){
-						array_push($user_group_emails, $uname);
-					}
+					array_push($user_group_emails, $username);
 				}
 			}
 
@@ -2763,7 +2748,7 @@ class Manuscripts extends OPRS_Controller {
 			// add existing as cc
 			if(count($user_group_emails) > 0){
 				foreach($user_group_emails as $grp){
-					$mail->AddCC($grp->usr_username);
+					$mail->AddCC($grp);
 				}
 			}
 
@@ -2993,7 +2978,12 @@ class Manuscripts extends OPRS_Controller {
 			$emailBody = str_replace('[LINK]', $link, $email_contents);
 			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
 
-			$next_processor_email = $this->User_model->get_processor_email_by_role(5);
+			$next_processor_info = $this->User_model->get_processor_by_role(5);
+
+			foreach ($next_processor_info as $row) {
+				$next_processor_email = $row->usr_username;
+			}
+
 			$mail->AddAddress($next_processor_email);
 		}else{ // endorsed to associate ditor
 			$track['trk_remarks'] = $remarks;
@@ -3066,10 +3056,6 @@ class Manuscripts extends OPRS_Controller {
 
 			$mail->AddAddress($next_processor_email);
 
-				
-			// $next_processor_email = $this->User_model->get_processor_email_by_role(5);
-			// $next_processor_email = $this->User_model->get_processor_email_by_id();
-			// $mail->AddAddress($next_processor_email);
 		}
 
 		// update editors review data status
@@ -3082,7 +3068,7 @@ class Manuscripts extends OPRS_Controller {
 		$this->Review_model->update_editor_data($update_editorial_data, $where_editorial_data);
 
 		// save tracking
-		$track['trk_man_id'] = $id;
+		$track['trk_man_id'] = $man_id;
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		$track['trk_source'] = '_op';
@@ -3093,9 +3079,7 @@ class Manuscripts extends OPRS_Controller {
 			$user_group_emails = array();
 			foreach($email_user_group as $grp){
 				$username = $this->Email_model->get_user_group_emails($grp);
-				foreach($username as $uname){
-					array_push($user_group_emails, $uname);
-				}
+				array_push($user_group_emails, $username);
 			}
 		}
 
@@ -3117,7 +3101,7 @@ class Manuscripts extends OPRS_Controller {
 		// add existing as cc
 		if(count($user_group_emails) > 0){
 			foreach($user_group_emails as $grp){
-				$mail->AddCC($grp->usr_username);
+				$mail->AddCC($grp);
 			}
 		}
 
@@ -3139,6 +3123,801 @@ class Manuscripts extends OPRS_Controller {
 			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
 			exit;
 		}
+	}
+
+	public function assoc_review_process(){
+		
+		$man_id = $this->input->post('id', TRUE);
+		$remarks = $this->input->post('remarks', TRUE);
+		$status = $this->input->post('status', TRUE);
+		
+		// email config
+		// $dir = "https://skms.nrcp.dost.gov.ph/user/login";
+		$link_to = base_url() . 'oprs/login';
+		$sender = 'eReview';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+
+		if($status == 14){ // reject
+
+			$track['trk_remarks'] = $remarks;
+
+			// send email 4
+			// update manuscript status 
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+
+				
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(4);
+
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+			
+			$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
+			$emailBody = str_replace('[TITLE]', $title, $emailBody);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			$mail->AddAddress($email);
+
+		}else if($status == 10){ // revise
+
+			$track['trk_remarks'] = $remarks;
+
+			// send email 13
+			// update manuscript status
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+			
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(13);
+			
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
+			$emailBody = str_replace('[TITLE]', $title, $emailBody);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			$mail->AddAddress($email);
+		}else if($status == 15){ // accepted
+			$track['trk_remarks'] = $remarks;
+
+			// send email 24
+			// update manuscript status
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+			
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(24);
+			
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			$next_processor_info = $this->User_model->get_processor_by_role(5);
+
+			foreach ($next_processor_info as $row) {
+				$next_processor_email = $row->usr_username;
+			}
+
+			$mail->AddAddress($next_processor_email);
+		}else{ // endorsed to associate ditor
+			$track['trk_remarks'] = $remarks;
+
+			// send email 23
+			// update manuscript status
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$output = $this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+			// echo json_encode($output);exit;
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+			
+			$cluster_editors = $this->input->post('cluster_editor', TRUE);
+
+			foreach($cluster_editors as $row){
+				$next_processor_info = $this->User_model->get_processor_by_id($row);
+
+				foreach ($next_processor_info as $row) {
+					$next_processor_user_id = $row->usr_id;
+					$next_processor_email = $row->usr_username;
+				}
+
+				
+				// get email notification content
+				$email_contents = $this->Email_model->get_email_content(23);
+							
+				foreach($email_contents as $row){
+					$email_subject = $row->enc_subject;
+					$email_contents = $row->enc_content;
+
+					if( strpos($row->enc_cc, ',') !== false ) {
+						$email_cc = explode(',', $row->enc_cc);
+					}else{
+						$email_cc = array();
+						array_push($email_cc, $row->enc_cc);
+					}
+
+					if( strpos($row->enc_bcc, ',') !== false ) {
+						$email_bcc = explode(',', $row->enc_bcc);
+					}else{
+						$email_bcc = array();
+						array_push($email_bcc, $row->enc_bcc);
+					}
+
+					if( strpos($row->enc_user_group, ',') !== false ) {
+						$email_user_group = explode(',', $row->enc_user_group);
+					}else{
+						$email_user_group = array();
+						array_push($email_user_group, $row->enc_user_group);
+					}
+					
+				}
+
+				$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+				https://researchjournal.nrcp.dost.gov.ph</a>";
+				$emailBody = str_replace('[LINK]', $link, $email_contents);
+				$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+
+				// save initial data for EIC review for duration validation
+				$editorial_data['edit_man_id'] = $man_id;
+				$editorial_data['edit_usr_id'] = $next_processor_user_id;
+				$editorial_data['edit_remarks'] = $remarks;
+				$editorial_data['date_created'] = date('Y-m-d H:i:s');
+
+				$this->Review_model->save_initial_editor_data(array_filter($editorial_data));
+
+				$mail->AddAddress($next_processor_email);
+
+				// add exisiting email as cc
+				if(count($email_user_group) > 0){
+					$user_group_emails = array();
+					foreach($email_user_group as $grp){
+						$username = $this->Email_model->get_user_group_emails($grp);
+						array_push($user_group_emails, $username);
+					}
+				}
+		
+				// add cc if any
+				if(count($email_cc) > 0){
+					foreach($email_cc as $cc){
+						$mail->AddCC($cc);
+					}
+				}
+				
+				// add bcc if any
+				if(count($email_bcc) > 0){
+					foreach($email_bcc as $bcc){
+						$mail->AddBCC($bcc);
+					}
+				}
+		
+				// add existing as cc
+				if(count($user_group_emails) > 0){
+					foreach($user_group_emails as $grp){
+						$mail->AddCC($grp);
+					}
+				}
+		
+				// replace reserved words
+				
+				// send email
+				$mail->Subject = $email_subject;
+				$mail->Body = $emailBody;
+				$mail->IsHTML(true);
+				$mail->smtpConnect([
+					'ssl' => [
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true,
+					],
+				]);
+				if (!$mail->Send()) {
+					echo '</br></br>Message could not be sent.</br>';
+					echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+					exit;
+				}
+				$mail->ClearAllRecipients();
+			}
+		}
+
+		// update editors review data status
+		$where_editorial_data['edit_man_id'] = $man_id;
+		$where_editorial_data['edit_usr_id'] = _UserIdFromSession();
+		$update_editorial_data['edit_status'] = $status;
+		$update_editorial_data['edit_remarks'] = $remarks;
+        $update_editorial_data['last_updated'] = date('Y-m-d H:i:s');
+
+		$this->Review_model->update_editor_data($update_editorial_data, $where_editorial_data);
+
+		// save tracking
+		$track['trk_man_id'] = $man_id;
+		$track['trk_processor'] = _UserIdFromSession();
+		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
+		$track['trk_source'] = '_op';
+		$this->Manuscript_model->tracking(array_filter($track));
+
+		if($status > 4){ // accept/reject/revise action
+			// add exisiting email as cc
+			if(count($email_user_group) > 0){
+				$user_group_emails = array();
+				foreach($email_user_group as $grp){
+					$username = $this->Email_model->get_user_group_emails($grp);
+					array_push($user_group_emails, $username);
+				}
+			}
+	
+			// add cc if any
+			if(count($email_cc) > 0){
+				foreach($email_cc as $cc){
+					$mail->AddCC($cc);
+				}
+			}
+			
+			// add bcc if any
+			if(count($email_bcc) > 0){
+				foreach($email_bcc as $bcc){
+					$mail->AddBCC($bcc);
+				}
+			}
+	
+			// add existing as cc
+			if(count($user_group_emails) > 0){
+				foreach($user_group_emails as $grp){
+					$mail->AddCC($grp);
+				}
+			}
+			// replace reserved words
+			
+			// send email
+			$mail->Subject = $email_subject;
+			$mail->Body = $emailBody;
+			$mail->IsHTML(true);
+			$mail->smtpConnect([
+				'ssl' => [
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true,
+				],
+			]);
+			if (!$mail->Send()) {
+				echo '</br></br>Message could not be sent.</br>';
+				echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+				exit;
+			}
+		}
+	}
+
+	public function cluster_review_process(){
+		
+		$man_id = $this->input->post('id', TRUE);
+		$remarks = $this->input->post('remarks', TRUE);
+		$status = $this->input->post('status', TRUE);
+		
+		// email config
+		// $dir = "https://skms.nrcp.dost.gov.ph/user/login";
+		$link_to = base_url() . 'oprs/login';
+		$sender = 'eReview';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+
+		if($status == 14){ // reject
+
+			$track['trk_remarks'] = $remarks;
+
+			// send email 4
+			// update manuscript status 
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+
+				
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(4);
+
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+			
+			$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
+			$emailBody = str_replace('[TITLE]', $title, $emailBody);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			$mail->AddAddress($email);
+
+		}else if($status == 10){ // revise
+
+			$track['trk_remarks'] = $remarks;
+
+			// send email 13
+			// update manuscript status
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+			
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(13);
+			
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
+			$emailBody = str_replace('[TITLE]', $title, $emailBody);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			$mail->AddAddress($email);
+		}else if($status == 15){ // accepted
+			$track['trk_remarks'] = $remarks;
+
+			// send email 24
+			// update manuscript status
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+			
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(24);
+			
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			$next_processor_info = $this->User_model->get_processor_by_role(5);
+
+			foreach ($next_processor_info as $row) {
+				$next_processor_email = $row->usr_username;
+			}
+
+			$mail->AddAddress($next_processor_email);
+		}else{ // add peer reviwers
+			//TODO: tomorrow 
+			$track['trk_remarks'] = $remarks;
+
+			// send email 23
+			// update manuscript status
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$output = $this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+			// echo json_encode($output);exit;
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+			
+			$cluster_editors = $this->input->post('cluster_editor', TRUE);
+
+			foreach($cluster_editors as $row){
+				$next_processor_info = $this->User_model->get_processor_by_id($row);
+
+				foreach ($next_processor_info as $row) {
+					$next_processor_user_id = $row->usr_id;
+					$next_processor_email = $row->usr_username;
+				}
+
+				
+				// get email notification content
+				$email_contents = $this->Email_model->get_email_content(23);
+							
+				foreach($email_contents as $row){
+					$email_subject = $row->enc_subject;
+					$email_contents = $row->enc_content;
+
+					if( strpos($row->enc_cc, ',') !== false ) {
+						$email_cc = explode(',', $row->enc_cc);
+					}else{
+						$email_cc = array();
+						array_push($email_cc, $row->enc_cc);
+					}
+
+					if( strpos($row->enc_bcc, ',') !== false ) {
+						$email_bcc = explode(',', $row->enc_bcc);
+					}else{
+						$email_bcc = array();
+						array_push($email_bcc, $row->enc_bcc);
+					}
+
+					if( strpos($row->enc_user_group, ',') !== false ) {
+						$email_user_group = explode(',', $row->enc_user_group);
+					}else{
+						$email_user_group = array();
+						array_push($email_user_group, $row->enc_user_group);
+					}
+					
+				}
+
+				$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+				https://researchjournal.nrcp.dost.gov.ph</a>";
+				$emailBody = str_replace('[LINK]', $link, $email_contents);
+				$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+
+				// save initial data for EIC review for duration validation
+				$editorial_data['edit_man_id'] = $man_id;
+				$editorial_data['edit_usr_id'] = $next_processor_user_id;
+				$editorial_data['edit_remarks'] = $remarks;
+				$editorial_data['date_created'] = date('Y-m-d H:i:s');
+
+				$this->Review_model->save_initial_editor_data(array_filter($editorial_data));
+
+				$mail->AddAddress($next_processor_email);
+
+				// add exisiting email as cc
+				if(count($email_user_group) > 0){
+					$user_group_emails = array();
+					foreach($email_user_group as $grp){
+						$username = $this->Email_model->get_user_group_emails($grp);
+						array_push($user_group_emails, $username);
+					}
+				}
+		
+				// add cc if any
+				if(count($email_cc) > 0){
+					foreach($email_cc as $cc){
+						$mail->AddCC($cc);
+					}
+				}
+				
+				// add bcc if any
+				if(count($email_bcc) > 0){
+					foreach($email_bcc as $bcc){
+						$mail->AddBCC($bcc);
+					}
+				}
+		
+				// add existing as cc
+				if(count($user_group_emails) > 0){
+					foreach($user_group_emails as $grp){
+						$mail->AddCC($grp);
+					}
+				}
+		
+				// replace reserved words
+				
+				// send email
+				$mail->Subject = $email_subject;
+				$mail->Body = $emailBody;
+				$mail->IsHTML(true);
+				$mail->smtpConnect([
+					'ssl' => [
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true,
+					],
+				]);
+				if (!$mail->Send()) {
+					echo '</br></br>Message could not be sent.</br>';
+					echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+					exit;
+				}
+				$mail->ClearAllRecipients();
+			}
+		}
+
+		// update editors review data status
+		$where_editorial_data['edit_man_id'] = $man_id;
+		$where_editorial_data['edit_usr_id'] = _UserIdFromSession();
+		$update_editorial_data['edit_status'] = $status;
+		$update_editorial_data['edit_remarks'] = $remarks;
+        $update_editorial_data['last_updated'] = date('Y-m-d H:i:s');
+
+		$this->Review_model->update_editor_data($update_editorial_data, $where_editorial_data);
+
+		// save tracking
+		$track['trk_man_id'] = $man_id;
+		$track['trk_processor'] = _UserIdFromSession();
+		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
+		$track['trk_source'] = '_op';
+		$this->Manuscript_model->tracking(array_filter($track));
+
+		// if($status > 4){ // accept/reject/revise action
+			// add exisiting email as cc
+			if(count($email_user_group) > 0){
+				$user_group_emails = array();
+				foreach($email_user_group as $grp){
+					$username = $this->Email_model->get_user_group_emails($grp);
+					array_push($user_group_emails, $username);
+				}
+			}
+	
+			// add cc if any
+			if(count($email_cc) > 0){
+				foreach($email_cc as $cc){
+					$mail->AddCC($cc);
+				}
+			}
+			
+			// add bcc if any
+			if(count($email_bcc) > 0){
+				foreach($email_bcc as $bcc){
+					$mail->AddBCC($bcc);
+				}
+			}
+	
+			// add existing as cc
+			if(count($user_group_emails) > 0){
+				foreach($user_group_emails as $grp){
+					$mail->AddCC($grp);
+				}
+			}
+			// replace reserved words
+			
+			// send email
+			$mail->Subject = $email_subject;
+			$mail->Body = $emailBody;
+			$mail->IsHTML(true);
+			$mail->smtpConnect([
+				'ssl' => [
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true,
+				],
+			]);
+			if (!$mail->Send()) {
+				echo '</br></br>Message could not be sent.</br>';
+				echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+				exit;
+			}
+		// }
 	}
 
 	public function get_editors_review($id){

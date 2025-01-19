@@ -629,6 +629,24 @@ class User_model extends CI_Model {
 		return $query->result();
 	}
 
+	public function get_cluster_editors($role){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->oprs_users);
+		if($role == 7){ // associate editor for cluster 1 editors
+			$oprs->where('usr_role', 11); 
+		}else if($role == 8){ // associate editor for cluster 2 editors
+			$oprs->where('usr_role', 12);
+		}else if($role == 9){ // associate editor for cluster 13 editors
+			$oprs->where('usr_role', 13);
+		}else{ // associate editor for cluster 4 editors
+			$oprs->where('usr_role', 14);
+		}
+		$oprs->where('usr_status', 1);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
 	
 }
 
