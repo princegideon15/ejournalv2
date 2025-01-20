@@ -1340,6 +1340,7 @@ class Ejournal extends EJ_Controller {
 		// $data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['guidelines'] = $this->Library_model->get_guidelines_content();
 
 		if($create_author_account){
 			$data['titles'] = $this->Client_journal_model->getTitles();

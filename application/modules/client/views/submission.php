@@ -11,7 +11,7 @@
 						<!-- <div class="row mt-5">
 							<div class="col"> -->
                                 
-                        <h3>Submit Manuscript</h3>
+                        <h3 class="text-uppercase">Submit Manuscript</h3>
                         <div class="mt-3">
                             <!-- <h6 class="fw-bold">NRCP Non-Member</h6> -->
                             <p>To submit manuscript, and to check the status of your submission,
@@ -40,6 +40,12 @@
 							<!-- </div>
 						</div> -->
 
+						<div class="row">
+							<div class="col">
+								<?php echo $guidelines;?>
+							</div>
+						</div>
+						
 						<div class="mt-5">
 							<a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank"><img
 									alt="Creative Commons License" style="border-width:0"

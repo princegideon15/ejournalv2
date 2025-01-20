@@ -10,6 +10,7 @@ class Review_model extends CI_Model {
 	private $non = 'tblnonmembers';
 	private $tech_rev_score = 'tbltech_rev_score';
 	private $editors_review = 'tbleditors_review';
+	private $suggested_peer = 'tblsuggested_peer';
 	// skms
 	private $business = 'tblbusiness_address';
 	private $specs = 'tblmembership_profiles';
@@ -277,6 +278,11 @@ class Review_model extends CI_Model {
 		$oprs->where('edit_usr_id', _UserIdFromSession());
 		$query = $oprs->get();
 		return $query->result();
+	}
+
+	public function save_peer_reviewers($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->suggested_peer, $data);
 	}
 }
 

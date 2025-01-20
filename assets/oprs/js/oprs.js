@@ -3751,17 +3751,17 @@ $(document).ready(function() {
         var html = '';
 
         html = '<div class="card" id="added_rev">' +
-            '<div class="card-header p-0" id="heading' + revIncr + '"  data-toggle="collapse" data-target="#collapse' + revIncr + '">' +
+            '<div class="card-header d-flex align-items-center p-0" id="heading' + revIncr + '"  data-toggle="collapse" data-target="#collapse' + revIncr + '">' +
             '<h5 class="mb-0">' +
-            '<button class="btn btn-link" type="button">' +
+            '<button class="btn btn-link text-decoration-none" type="button">' +
             '<span class="fa fa-address-card"></span> Reviewer ' + revIncr + ' : <span id="rev_header' + revIncr + '"></span>' +
             '</button>' +
-            '<button type="button" class="btn btn-link float-right text-danger"><span class="fa fa-trash" id="' + revIncr + '"></span></button>' +
             '</h5>' +
+            '<button type="button" class="btn btn-link ms-auto text-danger"><span class="fa fa-trash" id="' + revIncr + '"></span></button>' +
             '</div>' +
             '<div id="collapse' + revIncr + '" class="collapse show" data-parent="#rev_acc">' +
             '<div class="card-body">' +
-            '<div class="form-row mb-2">' +
+            '<div class="row mb-3">' +
             '<div class="col-3">' +
             '<select class="form-control" id="trk_title' + revIncr + '" name="trk_title[]" placeholder="Title">' +
             select +
@@ -3772,10 +3772,10 @@ $(document).ready(function() {
             '</div>' +
             '</div>' +
             '<div class="form-row mb-2">' +
-            '<div class="col">' +
+            '<div class="col mb-3">' +
             '<input type="text" class="form-control" placeholder="Email" id="trk_rev_email' + revIncr + '" name="trk_rev_email[]">' +
             '</div>' +
-            '<div class="col">' +
+            '<div class="col mb-3">' +
             '<input type="text" class="form-control" placeholder="Contact" id="trk_rev_num' + revIncr + '" name="trk_rev_num[]">' +
             '</div>' +
             '<input type="hidden" id="trk_rev_id' + revIncr + '" name="trk_rev_id[]">' +
@@ -5113,6 +5113,7 @@ function countChar(val) {
 // add many reviewers
 function process_man(id) {
 
+    //TODO: get suggested reviewers
     tinyMCE.remove();
     
     revIncr = 1;
@@ -8450,36 +8451,16 @@ function editor_action(action,editor_type){
         }
     }else{ // cluster editor
         if(action == 'endorse'){
-
-            // Add custom validation rule
-            $.validator.addMethod("atLeastOneChecked", function (value, element) {
-                return $('input[name="cluster_editor[]"]:checked').length > 0;
-            }, "Please select at least one cluster editor.");
-            
-            $("#endorse_cluster_form").validate({
+            $("#suggest_peer_form").validate({
                 debug: true,
                 errorClass: 'text-danger',
                 rules: {
-                    "cluster_editor[]": {
-                        atLeastOneChecked: true
+                    "suggested_peer_rev[]": {
+                        required: true,
                     },
                     man_remarks: {
                         required: true,
                     },
-                
-                },
-                messages: {
-                    "options[]": {
-                        atLeastOneChecked: "Please select at least one cluster editor."
-                    }
-                },
-                errorPlacement: function (error, element) {
-                    // Place error message below the group of checkboxes
-                    if (element.attr("name") === "cluster_editor[]") {
-                        error.insertAfter("#cluster_editors");
-                    } else {
-                        error.insertAfter(element);
-                    }
                 },
                 submitHandler: function() {
                 
@@ -8495,35 +8476,35 @@ function editor_action(action,editor_type){
                         if (result.isConfirmed) {
         
                             $('body').loading('start');
-                            $('#assocEdProcessModal').modal('toggle');
-                            $('#endorse_cluster_form').prop('disabled', true);
+                            $('#cluEdProcessModal').modal('toggle');
+                            $('#suggest_peer_form').prop('disabled', true);
 
-                            var cluster_editor = $('input[name="cluster_editor[]"]:checked')
+                            var suggested_peer = $('input[name="suggested_peer_rev_id[]"]')
                             .map(function () {
                                 return $(this).val();
                             })
                             .get(); // Convert to an array
 
-                            var status = 4;
+                            var status = '0';
                             var data = {
                                 id: man_id,
                                 status: status,
-                                remarks: $('#endorse_cluster_form #man_remarks').val(),
-                                cluster_editor: cluster_editor
+                                remarks: $('#suggest_peer_form #man_remarks').val(),
+                                suggested_peer: suggested_peer
                             };
-
+                            
                             $.ajax({
-                                url: base_url + "oprs/manuscripts/assoc_review_process",
+                                url: base_url + "oprs/manuscripts/cluster_review_process",
                                 data: data,
                                 cache: false,
                                 crossDomain: true,
                                 type: "POST",
                                 success: function(data) {
                                     $('body').loading('stop');
-                                    $('#endorse_cluster_form')[0].reset();
+                                    $('#suggest_peer_form')[0].reset();
 
                                     Swal.fire({
-                                    title: "Cluster editor review request submitted successfully!",
+                                    title: "Suggested peer reviewers submitted successfully!",
                                     icon: 'success',
                                     // html: "I will close in <b></b> milliseconds.",
                                     timer: 2000,
@@ -8554,7 +8535,7 @@ function editor_action(action,editor_type){
                 }
             });
         
-            $("#endorse_cluster_form").submit();
+            $("#suggest_peer_form").submit();
         }else{
             $("#cluster_review_form").validate({
                 debug: true,
@@ -8644,33 +8625,33 @@ function assoced_process(id, title) {
     var manuscript_title = decodeURIComponent(title);
     $('#assocEdProcessModal #man_title').text('').text(manuscript_title);
     // get technical desk editor review
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val){
-                $.each(val, function(k, v){
-                    var status_class = (v == 1) ? 'text-success' : 'text-danger';
-                    var status_bg_class = (v == 1) ? 'bg-success' : 'bg-danger';
-                    var status_text = (v == 1) ? 'Passed' : 'Failed';
+    // $.ajax({
+    //     type: "GET",
+    //     url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
+    //     dataType: "json",
+    //     crossDomain: true,
+    //     success: function(data) {
+    //         $.each(data, function(key, val){
+    //             $.each(val, function(k, v){
+    //                 var status_class = (v == 1) ? 'text-success' : 'text-danger';
+    //                 var status_bg_class = (v == 1) ? 'bg-success' : 'bg-danger';
+    //                 var status_text = (v == 1) ? 'Passed' : 'Failed';
 
-                    if(k == 'tr_final'){
-                        $('#assoc_table #' +k).text(status_text);
-                        $('#assoc_table #' +k).addClass(status_bg_class);
-                    }else if(k == 'tr_remarks'){
-                        $('#assoc_table #' +k).text(v);
-                    }else{
-                        $('#assoc_table #' +k).text(status_text);
-                        $('#assoc_table #' +k).addClass(status_class);
-                    }
-                });
+    //                 if(k == 'tr_final'){
+    //                     $('#assoc_table #' +k).text(status_text);
+    //                     $('#assoc_table #' +k).addClass(status_bg_class);
+    //                 }else if(k == 'tr_remarks'){
+    //                     $('#assoc_table #' +k).text(v);
+    //                 }else{
+    //                     $('#assoc_table #' +k).text(status_text);
+    //                     $('#assoc_table #' +k).addClass(status_class);
+    //                 }
+    //             });
 
 
-            });
-        }
-    });
+    //         });
+    //     }
+    // });
 
     $('#eic_remarks').text('');
     // get editor in chief remarks
@@ -8693,33 +8674,33 @@ function clued_process(id, title) {
     var manuscript_title = decodeURIComponent(title);
     $('#cluEdProcessModal #man_title').text('').text(manuscript_title);
     // get technical desk editor review
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val){
-                $.each(val, function(k, v){
-                    var status_class = (v == 1) ? 'text-success' : 'text-danger';
-                    var status_bg_class = (v == 1) ? 'bg-success' : 'bg-danger';
-                    var status_text = (v == 1) ? 'Passed' : 'Failed';
+    // $.ajax({
+    //     type: "GET",
+    //     url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
+    //     dataType: "json",
+    //     crossDomain: true,
+    //     success: function(data) {
+    //         $.each(data, function(key, val){
+    //             $.each(val, function(k, v){
+    //                 var status_class = (v == 1) ? 'text-success' : 'text-danger';
+    //                 var status_bg_class = (v == 1) ? 'bg-success' : 'bg-danger';
+    //                 var status_text = (v == 1) ? 'Passed' : 'Failed';
 
-                    if(k == 'tr_final'){
-                        $('#assoc_table #' +k).text(status_text);
-                        $('#assoc_table #' +k).addClass(status_bg_class);
-                    }else if(k == 'tr_remarks'){
-                        $('#assoc_table #' +k).text(v);
-                    }else{
-                        $('#assoc_table #' +k).text(status_text);
-                        $('#assoc_table #' +k).addClass(status_class);
-                    }
-                });
+    //                 if(k == 'tr_final'){
+    //                     $('#assoc_table #' +k).text(status_text);
+    //                     $('#assoc_table #' +k).addClass(status_bg_class);
+    //                 }else if(k == 'tr_remarks'){
+    //                     $('#assoc_table #' +k).text(v);
+    //                 }else{
+    //                     $('#assoc_table #' +k).text(status_text);
+    //                     $('#assoc_table #' +k).addClass(status_class);
+    //                 }
+    //             });
 
 
-            });
-        }
-    });
+    //         });
+    //     }
+    // });
 
     $('#assoc_remarks').text('');
     // get editor in chief remarks
@@ -8738,19 +8719,19 @@ function clued_process(id, title) {
 
 function suggest_peer(){
 
-    suggIncr++;
-
-    var html = '';
-
-    html = '<div class="row mb-3">'+
-                '<div class="col autocomplete">'+
-                    '<input type="text" class="form-control " id="suggested_peer_rev'+suggIncr+'" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">'+
-                '</div>'+
-                '<div class="col"><input type="text" class="form-control " id="suggested_peer_rev_spec'+suggIncr+'" name="suggested_peer_rev_spec[]"></div>'+
-                '<input type="hidden" id="suggested_peer_rev_id'+suggIncr+'" name="suggested_peer_rev_id[]">'+
-            '</div>';
-
-    $('#suggested_peers').append(html);
-    autocomplete(document.getElementById("suggested_peer_rev"+suggIncr), mem_exp, '#suggested_peer_rev_email'+suggIncr, '#suggested_peer_rev_num'+suggIncr, '#suggested_peer_rev_id'+suggIncr,  suggIncr , '#suggested_peer_rev_spec'+suggIncr, '#suggested_peer_rev_title'+suggIncr);
-
+    // if(suggIncr <= 4){
+        suggIncr++;
+    
+        var html = '';
+    
+        html = '<div class="row mb-3">'+
+                    '<div class="col autocomplete">'+
+                        '<input type="text" class="form-control " id="suggested_peer_rev'+suggIncr+'" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">'+
+                    '</div>'+
+                    '<input type="hidden" id="suggested_peer_rev_id'+suggIncr+'" name="suggested_peer_rev_id[]">'+
+                '</div>';
+    
+        $('#suggested_peers').append(html);
+        autocomplete(document.getElementById("suggested_peer_rev"+suggIncr), mem_exp, '#suggested_peer_rev_email'+suggIncr, '#suggested_peer_rev_num'+suggIncr, '#suggested_peer_rev_id'+suggIncr,  suggIncr , '#suggested_peer_rev_spec'+suggIncr, '#suggested_peer_rev_title'+suggIncr);
+    // }
 }

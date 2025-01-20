@@ -97,7 +97,7 @@ class Manuscript_model extends CI_Model {
 			$oprs->from($this->manus . ' m');
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
-			$oprs->where('man_status', 1);
+			$oprs->where_in('man_status', [1,15]);
 		}else if ($role_id == 6){ // editor in chief
 			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 			$oprs->from($this->manus . ' m');

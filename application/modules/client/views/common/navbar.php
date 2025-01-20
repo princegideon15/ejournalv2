@@ -59,21 +59,24 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link text-dark" id="nav_home" href="<?php echo base_url();?>">Home</a>
+          <a class="nav-link text-dark fw-bolder" id="nav_home" href="<?php echo base_url();?>">Home</a>
         </li>
         <!-- <li class="nav-item">
-          <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/about');?>">About<span class="sr-only">(current)</span></a>
+          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/about');?>">About<span class="sr-only">(current)</span></a>
         </li> -->
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/guidelines');?>">Guidelines</a>
-        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/guidelines');?>">Guidelines</a>
+        </li> -->
         <!-- <li class="nav-item">
           <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/articles');?>">Articles</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/submission');?>">Submit manuscript</a>
+          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/submission');?>">Submissions</a>
           <!-- <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a> -->
         </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/submission');?>">Research Integrity</a>
+        </li> -->
         <?php if($logged_in) {
           echo '<li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,7 +94,7 @@
                 </li>';
         }else{
           echo '<li class="nav-item">
-                  <a class="nav-link text-dark" id="logout" href="'.base_url('/client/login').'">Login</a>
+                  <a class="nav-link text-dark fw-bolder" id="logout" href="'.base_url('/client/login').'">Account</a>
                 </li>';
         } ?>
 

@@ -3725,15 +3725,15 @@ class Manuscripts extends OPRS_Controller {
 
 			$mail->AddAddress($next_processor_email);
 		}else{ // add peer reviwers
-			//TODO: tomorrow 
 			$track['trk_remarks'] = $remarks;
 
 			// send email 23
 			// update manuscript status
+			$status = 15;
 			$manus['man_status'] = $status;
 			$where['row_id'] = $man_id;
 			$output = $this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
-			// echo json_encode($output);exit;
+			
 			$output = $this->Review_model->get_manus_author_info($man_id);
 
 			foreach ($output as $key => $value) {
@@ -3742,115 +3742,63 @@ class Manuscripts extends OPRS_Controller {
 				$author = $value->man_author;
 				$email = $value->man_email;
 			}
+			
+			$suggested_peer = $this->input->post('suggested_peer', TRUE);
+
+			foreach($suggested_peer as $row){
+				$data = [
+					'peer_usr_id' => $row,
+					'peer_man_id' => $man_id,
+					'peer_clued_usr_id' => _UserIdFromSession(),
+					'date_created' => date('Y-m-d H:i:s')
+				];
+
+				$this->Review_model->save_peer_reviewers(array_filter($data));
+			}
+			
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(24);
+
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+						
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
 
 			
-			$cluster_editors = $this->input->post('cluster_editor', TRUE);
+			$next_processor_info = $this->User_model->get_processor_by_role(5);
 
-			foreach($cluster_editors as $row){
-				$next_processor_info = $this->User_model->get_processor_by_id($row);
-
-				foreach ($next_processor_info as $row) {
-					$next_processor_user_id = $row->usr_id;
-					$next_processor_email = $row->usr_username;
-				}
-
-				
-				// get email notification content
-				$email_contents = $this->Email_model->get_email_content(23);
-							
-				foreach($email_contents as $row){
-					$email_subject = $row->enc_subject;
-					$email_contents = $row->enc_content;
-
-					if( strpos($row->enc_cc, ',') !== false ) {
-						$email_cc = explode(',', $row->enc_cc);
-					}else{
-						$email_cc = array();
-						array_push($email_cc, $row->enc_cc);
-					}
-
-					if( strpos($row->enc_bcc, ',') !== false ) {
-						$email_bcc = explode(',', $row->enc_bcc);
-					}else{
-						$email_bcc = array();
-						array_push($email_bcc, $row->enc_bcc);
-					}
-
-					if( strpos($row->enc_user_group, ',') !== false ) {
-						$email_user_group = explode(',', $row->enc_user_group);
-					}else{
-						$email_user_group = array();
-						array_push($email_user_group, $row->enc_user_group);
-					}
-					
-				}
-
-				$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
-				https://researchjournal.nrcp.dost.gov.ph</a>";
-				$emailBody = str_replace('[LINK]', $link, $email_contents);
-				$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
-
-
-				// save initial data for EIC review for duration validation
-				$editorial_data['edit_man_id'] = $man_id;
-				$editorial_data['edit_usr_id'] = $next_processor_user_id;
-				$editorial_data['edit_remarks'] = $remarks;
-				$editorial_data['date_created'] = date('Y-m-d H:i:s');
-
-				$this->Review_model->save_initial_editor_data(array_filter($editorial_data));
-
-				$mail->AddAddress($next_processor_email);
-
-				// add exisiting email as cc
-				if(count($email_user_group) > 0){
-					$user_group_emails = array();
-					foreach($email_user_group as $grp){
-						$username = $this->Email_model->get_user_group_emails($grp);
-						array_push($user_group_emails, $username);
-					}
-				}
-		
-				// add cc if any
-				if(count($email_cc) > 0){
-					foreach($email_cc as $cc){
-						$mail->AddCC($cc);
-					}
-				}
-				
-				// add bcc if any
-				if(count($email_bcc) > 0){
-					foreach($email_bcc as $bcc){
-						$mail->AddBCC($bcc);
-					}
-				}
-		
-				// add existing as cc
-				if(count($user_group_emails) > 0){
-					foreach($user_group_emails as $grp){
-						$mail->AddCC($grp);
-					}
-				}
-		
-				// replace reserved words
-				
-				// send email
-				$mail->Subject = $email_subject;
-				$mail->Body = $emailBody;
-				$mail->IsHTML(true);
-				$mail->smtpConnect([
-					'ssl' => [
-						'verify_peer' => false,
-						'verify_peer_name' => false,
-						'allow_self_signed' => true,
-					],
-				]);
-				if (!$mail->Send()) {
-					echo '</br></br>Message could not be sent.</br>';
-					echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
-					exit;
-				}
-				$mail->ClearAllRecipients();
+			foreach ($next_processor_info as $row) {
+				$next_processor_email = $row->usr_username;
 			}
+
+			$mail->AddAddress($next_processor_email);
 		}
 
 		// update editors review data status
