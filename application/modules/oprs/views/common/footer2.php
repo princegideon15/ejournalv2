@@ -301,10 +301,10 @@
                 </ul>
                 <div class="tab-content p-3" id="myTabContent">
                   <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new-tab">
-                    <div class="form-row">
+                    <div class="row">
                       <div class="col mb-3">
                         <label class="fw-bold form-label" for="jor_volume">Volume No.</label>
-                        <select class="form-select text-uppercase" id="jor_volume" name="jor_volume" placeholder="Select existing or Enter new entry" style="background-color:white">
+                        <select class="form-select" id="jor_volume" name="jor_volume" placeholder="Select existing or Type new Volume no." style="background-color:white">
                           <?php foreach ($u_journal as $j): ?>
                           <?php echo '<option value=' . $j->jor_volume . '>' . $j->jor_volume . '</option>'; ?>
                           <?php endforeach;?>
@@ -331,7 +331,7 @@
                     </div>
                   </div>
                   <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
-                    <div class="form-row">
+                    <div class="row">
                       <div class="col">
                         <div class="col mb-3">
                           <label for="jor_issue" class="form-label fw-bold">Year</label>
@@ -357,57 +357,66 @@
                 <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                   <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-rev" role="tab" aria-controls="nav-rev" aria-selected="true">Reviewers</a>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-suggested-peer" role="tab" aria-controls="nav-suggested-peer" aria-selected="true">Suggested Peer Reviewers</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-suggested-peer" role="tab" aria-controls="nav-suggested-peer" aria-selected="true">Suggested Peer Reviewers
+					<span class="badge rounded-pill bg-primary d-none" id="suggested_peer_count"></span>
+				  </a>
                 </div>
                 </nav>
                 <div class="tab-content p-3" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-rev" role="tabpanel">
-                  <div class="form-group mb-3">
-                    <div id="rev_acc">
-                      <div class="card">
-                        <div class="card-header p-0" id="heading1"  data-bs-toggle="collapse" data-bs-target="#collapse1">
-                          <h5 class="mb-0">
-                          <button class="btn btn-link text-decoration-none" type="button">
-                          <span class="fa fa-address-card"></span> Reviewer 1 : <span id="rev_header1"></span>
-                          </button>
-                          </h5>
-                        </div>
-                        <div id="collapse1" class="collapse show" data-parent="#rev_acc">
-                          <div class="card-body">
-                            <div class="row mb-3">
-                              <div class="col-3">
-                                <select class="form-select" id="trk_title1" name="trk_title[]" placeholder="Title">
-                                  <?php foreach ($titles as $t): ?>
-                                  <?php echo '<option value=' . $t->title_name . '>' . $t->title_name . '</option>'; ?>
-                                  <?php endforeach;?>
-                                </select>
-                              </div>
-                              <div class="col autocomplete">
-                                <input type="text" class="form-control " id="trk_rev1" name="trk_rev[]" placeholder="Search by Name or Specialization">
-                              </div>
-                            </div>
-                            <div class="form-row">
-                              <div class="col mb-3">
-                                <input type="text" class="form-control" placeholder="Email" id="trk_rev_email1" name="trk_rev_email[]">
-                              </div>
-                              <div class="col mb-3">
-                                <input type="text" class="form-control" placeholder="Contact" id="trk_rev_num1" name="trk_rev_num[]">
-                              </div>
-                              <input type="hidden" id="trk_rev_id1" name="trk_rev_id[]">
-                            </div>
-                            <div class="form-row">
-                              <div class="col">
-                                <input type="text" class="form-control" placeholder="Specialization" id="trk_rev_spec1" name="trk_rev_spec[]">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-				  
-				  <button class="btn btn-outline-secondary" id="btn_add_rev" type="button"><span class="fa fa-plus-square"></span> Add Reviewer</button>
-                </div>
+					<div class="tab-pane fade show active" id="nav-rev" role="tabpanel">
+						<div class="form-group mb-3">
+							<div id="rev_acc">
+							<div class="card">
+								<div class="card-header p-0" id="heading1"  data-bs-toggle="collapse" data-bs-target="#collapse1">
+								<h5 class="mb-0">
+								<button class="btn btn-link text-decoration-none" type="button">
+								<span class="fa fa-address-card"></span> Reviewer 1 : <span id="rev_header1"></span>
+								</button>
+								</h5>
+								</div>
+								<div id="collapse1" class="collapse show" data-parent="#rev_acc">
+								<div class="card-body">
+									<div class="row mb-3">
+										<div class="col-3">
+											<select class="form-select" id="trk_title1" name="trk_title[]" placeholder="Title">
+												<option value="">Select Title</option>
+												<?php foreach ($titles as $t): ?>
+												<?php echo '<option value=' . $t->title_name . '>' . $t->title_name . '</option>'; ?>
+												<?php endforeach;?>
+											</select>
+										</div>
+										<div class="col autocomplete">
+											<input type="text" class="form-control " id="trk_rev1" name="trk_rev[]" placeholder="Search by Name or Specialization">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<input type="text" class="form-control" placeholder="Email" id="trk_rev_email1" name="trk_rev_email[]">
+										</div>
+										<div class="col mb-3">
+											<input type="text" class="form-control" placeholder="Contact" id="trk_rev_num1" name="trk_rev_num[]">
+										</div>
+										<input type="hidden" id="trk_rev_id1" name="trk_rev_id[]">
+									</div>
+									<div class="row">
+										<div class="col">
+											<input type="text" class="form-control" placeholder="Specialization" id="trk_rev_spec1" name="trk_rev_spec[]">
+										</div>
+									</div>
+								</div>
+								</div>
+							</div>
+							</div>
+						</div>
+						
+						<button class="btn btn-outline-secondary" id="btn_add_rev" type="button"><span class="fa fa-plus-square"></span> Add Reviewer</button>
+					</div>
+
+					<div class="tab-pane fade" id="nav-suggested-peer" role="tabpanel">
+						<div class="overflow-auto" style="max-height:500px" id="suggested_peers">
+						</div>
+					</div>
+					
                 </div>
                 <!-- <nav>
                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -744,7 +753,7 @@
 			</div>
 			<div class="modal-body">
 				<form id="edit_manuscript_form" autocomplete="off">
-					<div class="form-row">
+					<div class="row">
 						<div class="col-6">
 							<div class="mb-3">
 								<ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -756,10 +765,10 @@
 								<div class="tab-content p-3" id="myTabContent">
 									<div class="tab-pane fade show active" id="new" role="tabpanel"
 										aria-labelledby="new-tab">
-										<div class="form-row">
+										<div class="row">
 											<div class="col">
 												<label class="fw-bold" for="jor_volume">Volume No.</label>
-												<select class="form-select text-uppercase" id="jor_volume"
+												<select class="form-select" id="jor_volume"
 													name="jor_volume" placeholder="Select existing or Enter new entry"
 													style="background-color:white">
 													<?php foreach ($u_journal as $j): ?>
@@ -821,7 +830,7 @@
 												</div>
 												<div id="collapse1" class="collapse show" data-parent="#editor_acc">
 													<div class="card-body">
-														<div class="form-row mb-2">
+														<div class="row mb-2">
 															<div class="col-3">
 																<select class="form-select" id="editor_title1"
 																	name="editor_title[]" placeholder="Title">
@@ -836,7 +845,7 @@
 																	placeholder="Search by Name or Specialization">
 															</div>
 														</div>
-														<div class="form-row mb-2">
+														<div class="row mb-2">
 															<div class="col">
 																<input type="text" class="form-control"
 																	placeholder="Email" id="editor_rev_email1"
@@ -850,7 +859,7 @@
 															<input type="hidden" id="editor_rev_id1"
 																name="editor_rev_id[]">
 														</div>
-														<div class="form-row">
+														<div class="row">
 															<div class="col">
 																<input type="text" class="form-control"
 																	placeholder="Specialization" id="editor_rev_spec1"
@@ -2057,7 +2066,7 @@
 							<button class="nav-item nav-link active" role="tab" id="submit-assoc-review-tab" data-bs-toggle="tab" data-bs-target="#submit-assoc-review-tab-pane" type="button" aria-controls="submit-assoc-review-tab-pane" aria-selected="true"><span class="fa fa-check"></span> Submit Review</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-item nav-link" role="tab" id="select-cluster-tab" data-bs-toggle="tab" data-bs-target="#select-cluster-tab-pane" type="button" role="tab" aria-controls="select-cluster-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Endorse to Cluster Editor(s)</button>
+							<button class="nav-item nav-link" role="tab" id="select-cluster-tab" data-bs-toggle="tab" data-bs-target="#select-cluster-tab-pane" type="button" role="tab" aria-controls="select-cluster-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Endorse to Cluster Editors</button>
 						</li>
 					</ul>
 
@@ -2082,7 +2091,7 @@
 						<div class="tab-pane fade" role="tabpanel" id="select-cluster-tab-pane" role="tabpanel" aria-labelledby="select-cluster-tab" tabindex="0">
 							<form id="endorse_cluster_form">
 								<div class="mb-3">
-									<label for="cluster_editor" class="form-label fw-bold">Select Cluster Editor(s)</label>
+									<label for="cluster_editor" class="form-label fw-bold">Select Cluster Editors</label>
 									<div id="cluster_editors" class="mb-1">
 										<?php foreach($cluster as $row): ?>
 											<div class="form-check">
@@ -2122,7 +2131,7 @@
 <!-- Cluster Editor Process  -->
 <div class="modal fade" id="cluEdProcessModal" tabindex="-1" role="dialog" aria-labelledby="clueEdProcessModal" aria-hidden="true">
   <!-- <div class="modal-dialog modal-lg" role="document" style="max-width:90%"> -->
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"><?php echo $this->session->userdata('_oprs_type'); ?> Review</h5>
@@ -2141,7 +2150,7 @@
 							<button class="nav-item nav-link active" role="tab" id="submit-cluster-review-tab" data-bs-toggle="tab" data-bs-target="#submit-cluster-review-tab-pane" type="button" aria-controls="submit-cluster-review-tab-pane" aria-selected="true"><span class="fa fa-check"></span> Submit Review</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-item nav-link" role="tab" id="select-peer-tab" data-bs-toggle="tab" data-bs-target="#select-peer-tab-pane" type="button" role="tab" aria-controls="select-peer-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Suggest Peer Reviewer(s)</button>
+							<button class="nav-item nav-link" role="tab" id="select-peer-tab" data-bs-toggle="tab" data-bs-target="#select-peer-tab-pane" type="button" role="tab" aria-controls="select-peer-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Suggest Peer Reviewers</button>
 						</li>
 					</ul>
 
@@ -2165,17 +2174,47 @@
 						
 						<div class="tab-pane fade" role="tabpanel" id="select-peer-tab-pane" role="tabpanel" aria-labelledby="select-peer-tab" tabindex="0">
 							<form id="suggest_peer_form">
-								<!-- <div class="row mb-3">
-									<div class="col fw-bold">Name</div>
-								</div> -->
-								<div class="row mb-3">
-									<div class="col autocomplete">
-										<input type="text" class="form-control " id="suggested_peer_rev1" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">
+
+								<div class="accordion mb-3" id="suggest_peer_accordion">
+									<div class="accordion-item">
+										<h2 class="accordion-header" id="headingOne">
+										<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+											Peer Reviewer 1
+										</button>
+										</h2>
+										<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+											<div class="accordion-body">
+												<div class="row mb-3">
+													<div class="col-3">
+														<select class="form-select" id="suggested_peer_rev_title1" name="suggested_peer_rev_title[]" placeholder="Title">
+															<option value="">Select Title</option>
+															<?php foreach ($titles as $t): ?>
+															<?php echo '<option value=' . $t->title_name . '>' . $t->title_name . '</option>'; ?>
+															<?php endforeach;?>
+														</select>
+													</div>
+													<div class="col autocomplete">
+													<input type="text" class="form-control " id="suggested_peer_rev1" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">
+													</div>
+												</div>
+												<div class="row">
+													<div class="col mb-3">
+														<input type="text" class="form-control" placeholder="Email" id="suggested_peer_rev_email1" name="suggested_peer_rev_email[]">
+													</div>
+													<div class="col mb-3">
+														<input type="text" class="form-control" placeholder="Contact" id="suggested_peer_rev_num1" name="suggested_peer_rev_num[]">
+													</div>
+													<input type="hidden" id="suggested_peer_rev_id1" name="suggested_peer_rev_id[]">
+												</div>
+												<div class="row">
+													<div class="col">
+														<input type="text" class="form-control" placeholder="Specialization" id="suggested_peer_rev_spec1" name="suggested_peer_rev_spec[]">
+													</div>
+												</div>
+											</div>
+										</div>
 									</div>
-									<input type="hidden" id="suggested_peer_rev_id1" name="suggested_peer_rev_id[]">
-								</div>	
-							
-								<span id="suggested_peers"></span>
+								</div>
 
 								<div class="mb-3">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>

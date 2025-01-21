@@ -319,7 +319,7 @@ class Login extends OPRS_Controller {
 	
 		$mail->AddAddress($email);
 
-		//remote before deployment
+		//remove before deployment
 		$mail->AddCC('gerard_balde@yahoo.com');
 
 		$date = date("F j, Y") . '<br/><br/>';

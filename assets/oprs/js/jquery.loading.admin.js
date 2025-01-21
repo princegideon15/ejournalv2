@@ -70,7 +70,7 @@
      * Message to be rendered on the overlay content
      * Has no effect if a custom overlay is defined
      */
-    message: 'Submission in progress, Please wait.',
+    message: 'Loading...',
 
     /**
      * Theme to be applied on the loading element

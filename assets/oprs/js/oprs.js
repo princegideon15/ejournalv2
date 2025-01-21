@@ -2395,9 +2395,10 @@ $(document).ready(function() {
     });
 
     // slide effect of initial reviewer title
-    $('#trk_title1, #editor_title1').editableSelect({
+    $('#suggested_peer_rev_title1, #trk_title1, #editor_title1').editableSelect({
         effects: 'slide'
     });
+    
 
     // slide effect of journal volume
     $('#process_manuscript_form #jor_volume, #edit_manuscript_form #jor_volume').editableSelect({
@@ -3170,7 +3171,7 @@ $(document).ready(function() {
     //     submitHandler: function() {
 
     //         var form = $('#manuscript_form');
-    //         var fromdata = false;
+    //         var formdata = false;
 
     //         if (window.FormData) {
     //             formdata = new FormData(form[0]);
@@ -3430,7 +3431,7 @@ $(document).ready(function() {
             $('#committeeModal .modal-footer button').addClass('disabled');
 
             var form = $('#final_review_form');
-            var fromdata = false;
+            var formdata = false;
             if (window.FormData) {
                 formdata = new FormData(form[0]);
             }
@@ -3540,7 +3541,7 @@ $(document).ready(function() {
         $('body').loading('start');
 
         var form = $('#process_manuscript_form');
-        var fromdata = false;
+        var formdata = false;
         if (window.FormData) {
             formdata = new FormData(form[0]);
         }
@@ -3569,7 +3570,7 @@ $(document).ready(function() {
         $('body').loading('start');
 
         var form = $('#edit_manuscript_form');
-        var fromdata = false;
+        var formdata = false;
         if (window.FormData) {
             formdata = new FormData(form[0]);
         }
@@ -3618,7 +3619,7 @@ $(document).ready(function() {
         submitHandler: function() {
 
             var form = $('#final_manuscript_form');
-            var fromdata = false;
+            var formdata = false;
 
             if (window.FormData) {
                 formdata = new FormData(form[0]);
@@ -3771,7 +3772,7 @@ $(document).ready(function() {
             '<input type="text" class="form-control " id="trk_rev' + revIncr + '" name="trk_rev[]" placeholder="Search by Name or Specialization">' +
             '</div>' +
             '</div>' +
-            '<div class="form-row mb-2">' +
+            '<div class="row mb-2">' +
             '<div class="col mb-3">' +
             '<input type="text" class="form-control" placeholder="Email" id="trk_rev_email' + revIncr + '" name="trk_rev_email[]">' +
             '</div>' +
@@ -3780,7 +3781,7 @@ $(document).ready(function() {
             '</div>' +
             '<input type="hidden" id="trk_rev_id' + revIncr + '" name="trk_rev_id[]">' +
             '</div>' +
-            '<div class="form-row">' +
+            '<div class="row">' +
             '<div class="col">' +
             '<input type="text" class="form-control" placeholder="Specialization" id="trk_rev_spec' + revIncr + '" name="trk_rev_spec[]">' +
             '</div>' +
@@ -3953,7 +3954,7 @@ $(document).ready(function() {
             $('body').loading('start');
 
             var form = $('#submit_review_form');
-            var fromdata = false;
+            var formdata = false;
             if (window.FormData) {
                 formdata = new FormData(form[0]);
             }
@@ -4677,7 +4678,7 @@ $(document).ready(function() {
             $('body').loading('start');
 
             var form = $('#import_backup_form');
-            var fromdata = false;
+            var formdata = false;
             if (window.FormData) {
                 formdata = new FormData(form[0]);
             }
@@ -5113,7 +5114,6 @@ function countChar(val) {
 // add many reviewers
 function process_man(id) {
 
-    //TODO: get suggested reviewers
     tinyMCE.remove();
     
     revIncr = 1;
@@ -5146,6 +5146,35 @@ function process_man(id) {
            
             });
 
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_suggested_peer/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            if(data.length > 0){
+                $('#suggested_peer_count').removeClass('d-none');
+                $('#suggested_peer_count').text(data.length);
+
+                var html = '<ol class="list-group list-group-numbered list-group-flush">';
+                
+                $.each(data, function(key, val) {
+                    
+                    html += `<li class="list-group-item"><b>${val.peer_name}</b> (<em>${val.peer_specialization}</em>)</li>`;
+                    
+                });
+
+                html += '</ol>';
+
+                $('#suggested_peers').append(html);
+            }else{
+                $('#suggested_peer_count').addClass('d-none');
+                $('#suggested_peer_count').text('');
+                $('#suggested_peers').append('No suggested peer reviewer.');
+            }
         }
     });
 
@@ -5492,7 +5521,7 @@ function view_manus(id, hide) {
                                             '<td>' + prim + ' (Main Author)</td>' +
                                         '</tr>' +
                                         '<tr>' +
-                                            '<th>Co-author(s)</th>' +
+                                            '<th>Co-authors</th>' +
                                             '<td>' + coas + '</td>' +
                                         '</tr>';
                                 }
@@ -6476,7 +6505,7 @@ function publish_articles(c, id)
                         <input type="file" class="form-control upload_file" id="man_file'+val['id']+'" name="man_file['+val['id']+']" accept="application/pdf"> \
                         </div> \
                         <div class="form-group"> \
-                        <label>Page(s)</label>\
+                        <label>Pages</label>\
                         <input type="number" class="form-control  col-3 upload_page" id="man_page_position'+val['id']+'" name="man_page_position['+val['id']+'] min="1" placeholder="ex. 1-3"> \
                         </div> \
                      </li>';
@@ -8455,12 +8484,21 @@ function editor_action(action,editor_type){
                 debug: true,
                 errorClass: 'text-danger',
                 rules: {
+                    "suggested_peer_rev_title[]": {
+                        required: true,
+                    },
                     "suggested_peer_rev[]": {
                         required: true,
                     },
-                    man_remarks: {
+                    "suggested_peer_rev_email[]": {
                         required: true,
                     },
+                    "suggested_peer_rev_spec[]": {
+                        required: true,
+                    },
+                    // man_remarks: {
+                    //     required: true,
+                    // },
                 },
                 submitHandler: function() {
                 
@@ -8479,19 +8517,17 @@ function editor_action(action,editor_type){
                             $('#cluEdProcessModal').modal('toggle');
                             $('#suggest_peer_form').prop('disabled', true);
 
-                            var suggested_peer = $('input[name="suggested_peer_rev_id[]"]')
-                            .map(function () {
-                                return $(this).val();
-                            })
-                            .get(); // Convert to an array
+                            // Serialize the form data
+                            var formData = $('#suggest_peer_form').serialize();
 
                             var status = '0';
                             var data = {
                                 id: man_id,
                                 status: status,
                                 remarks: $('#suggest_peer_form #man_remarks').val(),
-                                suggested_peer: suggested_peer
+                                suggested_peer: formData
                             };
+
                             
                             $.ajax({
                                 url: base_url + "oprs/manuscripts/cluster_review_process",
@@ -8500,6 +8536,7 @@ function editor_action(action,editor_type){
                                 crossDomain: true,
                                 type: "POST",
                                 success: function(data) {
+                                    
                                     $('body').loading('stop');
                                     $('#suggest_peer_form')[0].reset();
 
@@ -8719,19 +8756,70 @@ function clued_process(id, title) {
 
 function suggest_peer(){
 
+    var select;
+    $.each(array_prf, function(key, val) {
+        select += '<option value="' + val + '">' + val + '</option>';
+    });
+    
+
     // if(suggIncr <= 4){
         suggIncr++;
     
         var html = '';
     
-        html = '<div class="row mb-3">'+
-                    '<div class="col autocomplete">'+
-                        '<input type="text" class="form-control " id="suggested_peer_rev'+suggIncr+'" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">'+
-                    '</div>'+
-                    '<input type="hidden" id="suggested_peer_rev_id'+suggIncr+'" name="suggested_peer_rev_id[]">'+
-                '</div>';
+        html = `<div class="accordion-item">
+                    <h2 class="accordion-header" id="heading${suggIncr}">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${suggIncr}" aria-expanded="true" aria-controls="collapse${suggIncr}">
+                        Peer Reviewer ${suggIncr}
+                    </button>
+                    </h2>
+                    <div id="collapse${suggIncr}" class="accordion-collapse collapse show" aria-labelledby="heading${suggIncr}" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <select class="form-select" id="suggested_peer_rev_title${suggIncr}" name="suggested_peer_rev_title[]" placeholder="Title">
+                                        <option value="">Select Title</option>
+                                        ${select}
+                                    </select>
+                                </div>
+                                <div class="col autocomplete">
+                                <input type="text" class="form-control " id="suggested_peer_rev${suggIncr}" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <input type="text" class="form-control" placeholder="Email" id="suggested_peer_rev_email${suggIncr}" name="suggested_peer_rev_email[]">
+                                </div>
+                                <div class="col mb-3">
+                                    <input type="text" class="form-control" placeholder="Contact" id="suggested_peer_rev_num${suggIncr}" name="suggested_peer_rev_num[]">
+                                </div>
+                                <input type="hidden" id="suggested_peer_rev_id${suggIncr}" name="suggested_peer_rev_id[]">
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Specialization" id="suggested_peer_rev_spec${suggIncr}" name="suggested_peer_rev_spec[]">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-outline-danger w-100" onclick="remove_suggest_peer(${suggIncr})"><span class="fa fa-minus me-1"></span>Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
     
-        $('#suggested_peers').append(html);
+        $('#suggest_peer_accordion').append(html);
+
+        
+        $('#suggested_peer_rev_title' + suggIncr).editableSelect({
+            effects: 'slide'
+        });
+
         autocomplete(document.getElementById("suggested_peer_rev"+suggIncr), mem_exp, '#suggested_peer_rev_email'+suggIncr, '#suggested_peer_rev_num'+suggIncr, '#suggested_peer_rev_id'+suggIncr,  suggIncr , '#suggested_peer_rev_spec'+suggIncr, '#suggested_peer_rev_title'+suggIncr);
     // }
+}
+
+function remove_suggest_peer(id){
+    $('#heading'+id).closest('div').remove();
 }

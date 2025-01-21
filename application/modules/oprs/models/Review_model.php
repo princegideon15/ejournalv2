@@ -284,6 +284,15 @@ class Review_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->insert($this->suggested_peer, $data);
 	}
+
+	public function get_suggested_peer($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->suggested_peer);
+		$oprs->where('peer_man_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
 }
 
 

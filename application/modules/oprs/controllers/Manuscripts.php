@@ -3742,20 +3742,37 @@ class Manuscripts extends OPRS_Controller {
 				$author = $value->man_author;
 				$email = $value->man_email;
 			}
+
+
+			$serializedData = $this->input->post('suggested_peer', true);
+
+			// Parse the serialized form data into an associative array
+			$suggestedPeer = [];
+			parse_str($serializedData, $suggestedPeer);
 			
-			$suggested_peer = $this->input->post('suggested_peer', TRUE);
-
-			foreach($suggested_peer as $row){
-				$data = [
-					'peer_usr_id' => $row,
-					'peer_man_id' => $man_id,
-					'peer_clued_usr_id' => _UserIdFromSession(),
-					'date_created' => date('Y-m-d H:i:s')
-				];
-
-				$this->Review_model->save_peer_reviewers(array_filter($data));
+			$peer_title = $suggestedPeer['suggested_peer_rev_title'];
+			$peer_rev = $suggestedPeer['suggested_peer_rev'];
+			$peer_email = $suggestedPeer['suggested_peer_rev_email'];
+			$peer_num = $suggestedPeer['suggested_peer_rev_num'];
+			$peer_spec = $suggestedPeer['suggested_peer_rev_spec'];
+			$peer_id = $suggestedPeer['suggested_peer_rev_id'];
+	
+			$peers = array();
+	
+			for ($i = 0; $i < count($peer_rev); $i++) {
+				$peers['peer_title'] = $peer_title[$i];
+				$peers['peer_name'] = $peer_rev[$i];
+				$peers['peer_email'] = $peer_email[$i];
+				$peers['peer_contact'] = $peer_num[$i];
+				$peers['peer_specialization'] = $peer_spec[$i];
+				$peers['peer_usr_id'] = $peer_id[$i];
+				$peers['peer_type'] = $peer_id[$i] ? 'Member' : 'Non-member';
+				$peers['peer_man_id'] = $man_id;
+				$peers['peer_clued_usr_id'] = _UserIdFromSession();
+				$peers['date_created'] = date('Y-m-d H:i:s');
+				$this->Review_model->save_peer_reviewers(array_filter($peers));
 			}
-			
+
 			// get email notification content
 			$email_contents = $this->Email_model->get_email_content(24);
 
@@ -3870,6 +3887,11 @@ class Manuscripts extends OPRS_Controller {
 
 	public function get_editors_review($id){
 		$output = $this->Review_model->get_editors_review($id);
+		echo json_encode($output);
+	}
+
+	public function get_suggested_peer($id){
+		$output = $this->Review_model->get_suggested_peer($id);
 		echo json_encode($output);
 	}
 	

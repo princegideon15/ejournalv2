@@ -1193,7 +1193,8 @@ class Manuscript_model extends CI_Model {
 		$query = $oprs->get();
 		$result = $query->result_array();
 		$category = $result[0]['usr_category']; 
-
+		$data = array();
+		
 		if($category == 1){ // nrcp member
 			$output = $this->User_model->get_member($id);
 
