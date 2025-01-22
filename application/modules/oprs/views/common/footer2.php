@@ -409,7 +409,34 @@
 							</div>
 						</div>
 						
-						<button class="btn btn-outline-secondary" id="btn_add_rev" type="button"><span class="fa fa-plus-square"></span> Add Reviewer</button>
+						<button class="btn btn-outline-secondary mb-3" id="btn_add_rev" type="button"><span class="fa fa-plus-square"></span> Add Reviewer</button>
+
+						<nav>
+							<div class="nav nav-tabs" id="nav-tab" role="tablist">
+								<a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab" href="#nav-timeframe" role="tab" aria-controls="nav-timeframe" aria-selected="true"><span class="fas fa-check-square"></span> Optional</a>
+							</div>
+						</nav>
+						<div class="tab-content p-3" id="nav-tabContent">
+							<div class="tab-pane fade show active" id="nav-timeframe" role="tabpanel" aria-labelledby="nav-timeframe-tab">
+								<div class="form-group text-left">
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" value="1" id="rev_hide_auth" name="rev_hide_auth">
+									<label class="form-check-label pt-1" for="rev_hide_auth"> Hide Authors to Reviewers <small>(Names, affiliations and emails are hidden)</small></label>
+								</div>
+								</div>
+								<div class="form-group mb-3 text-left">
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" value="1" id="rev_hide_rev" name="rev_hide_rev">
+									<label class="form-check-label pt-1" for="rev_hide_rev"> Hide Reviewers to Authors <small>(Names, affiliations and emails are hidden)</small></label>
+								</div>
+								</div>
+								<div class="form-group">
+								<label class="fw-bold" for="man_remarks">Remarks</label>
+								<textarea class="form-control" id="trk_remarks" name="trk_remarks" placeholder="Type your remarks here" onkeydown="countChar(this)"></textarea>
+								<small class="text-muted float-right limit"></small>
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<div class="tab-pane fade" id="nav-suggested-peer" role="tabpanel">
@@ -440,31 +467,6 @@
                     </div>
                   </div>
                 </div> -->
-                <nav>
-                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab" href="#nav-timeframe" role="tab" aria-controls="nav-timeframe" aria-selected="true"><span class="fas fa-check-square"></span> Optional</a>  </div>
-                </nav>
-                <div class="tab-content p-3" id="nav-tabContent">
-                  <div class="tab-pane fade show active" id="nav-timeframe" role="tabpanel" aria-labelledby="nav-timeframe-tab">
-                    <div class="form-group text-left">
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" value="1" id="rev_hide_auth" name="rev_hide_auth">
-                        <label class="custom-control-label pt-1" for="rev_hide_auth"> Hide Authors to Reviewers <small>(Names, affiliations and emails are hidden)</small></label>
-                      </div>
-                    </div>
-                    <div class="form-group mb-3 text-left">
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" value="1" id="rev_hide_rev" name="rev_hide_rev">
-                        <label class="custom-control-label pt-1" for="rev_hide_rev"> Hide Reviewers to Authors <small>(Names, affiliations and emails are hidden)</small></label>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="fw-bold" for="man_remarks">Remarks</label>
-                      <textarea class="form-control" id="trk_remarks" name="trk_remarks" placeholder="Type your remarks here" onkeydown="countChar(this)"></textarea>
-                      <small class="text-muted float-right limit"></small>
-                    </div>
-                  </div>
-                </div>
                 </div>
             <div class="col-6">
               <div class="accordion" id="rev_acc_mail">
@@ -1960,6 +1962,9 @@
 						<li class="nav-item" role="presentation">
 							<button class="nav-item nav-link" role="tab" id="select-associate-tab" data-bs-toggle="tab" data-bs-target="#select-associate-tab-pane" type="button" role="tab" aria-controls="select-associate-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Endorse to Associate Editor</button>
 						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-item nav-link" role="tab" id="eic-suggest-peer-tab" data-bs-toggle="tab" data-bs-target="#eic-suggest-peer-tab-pane" type="button" role="tab" aria-controls="eic-suggest-peer-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Suggest Peer Reviewers</button>
+						</li>
 					</ul>
 
 					<div class="tab-content p-3" id="myTabContent">
@@ -2002,6 +2007,60 @@
 									<button class="btn btn-primary" type="button" onclick="editor_action('endorse','editor_chief')">Submit</button>
 								</div>
 						</div>
+						
+						<div class="tab-pane fade" role="tabpanel" id="eic-suggest-peer-tab-pane" role="tabpanel" aria-labelledby="eic-suggest-peer-tab-pane" tabindex="0">
+							<form id="suggest_peer_form">
+
+								<div class="accordion mb-3" id="suggest_peer_accordion">
+									<div class="accordion-item">
+										<h2 class="accordion-header" id="headingOne">
+										<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+											Peer Reviewer 1
+										</button>
+										</h2>
+										<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+											<div class="accordion-body">
+												<div class="row mb-3">
+													<div class="col-3">
+														<select class="form-select" id="eic_suggested_peer_rev_title1" name="suggested_peer_rev_title[]" placeholder="Title">
+															<option value="">Select Title</option>
+															<?php foreach ($titles as $t): ?>
+															<?php echo '<option value=' . $t->title_name . '>' . $t->title_name . '</option>'; ?>
+															<?php endforeach;?>
+														</select>
+													</div>
+													<div class="col autocomplete">
+													<input type="text" class="form-control " id="eic_suggested_peer_rev1" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">
+													</div>
+												</div>
+												<div class="row">
+													<div class="col mb-3">
+														<input type="text" class="form-control" placeholder="Email" id="eic_suggested_peer_rev_email1" name="suggested_peer_rev_email[]">
+													</div>
+													<div class="col mb-3">
+														<input type="text" class="form-control" placeholder="Contact" id="eic_suggested_peer_rev_num1" name="suggested_peer_rev_num[]">
+													</div>
+													<input type="hidden" id="eic_suggested_peer_rev_id1" name="suggested_peer_rev_id[]">
+												</div>
+												<div class="row">
+													<div class="col">
+														<input type="text" class="form-control" placeholder="Specialization" id="eic_suggested_peer_rev_spec1" name="suggested_peer_rev_spec[]">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+											maxlength="255"></textarea>
+								</div>	
+							</form>
+							<button class="btn btn-outline-secondary" onclick="suggest_peer('editor_chief')"><span class="fa fa-plus-square me-1"></span>Add Reviewer</button>
+							<button class="btn btn-primary" onclick="editor_action('suggest','editor_chief')">Submit</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -2018,7 +2077,7 @@
 
 <!-- Associate Editor Process  -->
 <div class="modal fade" id="assocEdProcessModal" tabindex="-1" role="dialog" aria-labelledby="assocEdProcessModal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"><?php echo $this->session->userdata('_oprs_type'); ?> Review</h5>
@@ -2068,6 +2127,9 @@
 						<li class="nav-item" role="presentation">
 							<button class="nav-item nav-link" role="tab" id="select-cluster-tab" data-bs-toggle="tab" data-bs-target="#select-cluster-tab-pane" type="button" role="tab" aria-controls="select-cluster-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Endorse to Cluster Editors</button>
 						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-item nav-link" role="tab" id="assoc-suggest-peer-tab" data-bs-toggle="tab" data-bs-target="#assoc-suggest-peer-tab-pane" type="button" role="tab" aria-controls="assoc-suggest-peer-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Suggest Peer Reviewers</button>
+						</li>
 					</ul>
 
 					<div class="tab-content p-3" id="myTabContent">
@@ -2113,6 +2175,60 @@
 								<div>
 									<button class="btn btn-primary" type="button" onclick="editor_action('endorse','associate')">Submit</button>
 								</div>
+						</div>
+						
+						<div class="tab-pane fade" role="tabpanel" id="assoc-suggest-peer-tab-pane" role="tabpanel" aria-labelledby="assoc-suggest-peer-tab-pane" tabindex="0">
+							<form id="suggest_peer_form">
+
+								<div class="accordion mb-3" id="suggest_peer_accordion">
+									<div class="accordion-item">
+										<h2 class="accordion-header" id="headingOne">
+										<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+											Peer Reviewer 1
+										</button>
+										</h2>
+										<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+											<div class="accordion-body">
+												<div class="row mb-3">
+													<div class="col-3">
+														<select class="form-select" id="assoc_suggested_peer_rev_title1" name="suggested_peer_rev_title[]" placeholder="Title">
+															<option value="">Select Title</option>
+															<?php foreach ($titles as $t): ?>
+															<?php echo '<option value=' . $t->title_name . '>' . $t->title_name . '</option>'; ?>
+															<?php endforeach;?>
+														</select>
+													</div>
+													<div class="col autocomplete">
+													<input type="text" class="form-control " id="assoc_suggested_peer_rev1" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">
+													</div>
+												</div>
+												<div class="row">
+													<div class="col mb-3">
+														<input type="text" class="form-control" placeholder="Email" id="assoc_suggested_peer_rev_email1" name="suggested_peer_rev_email[]">
+													</div>
+													<div class="col mb-3">
+														<input type="text" class="form-control" placeholder="Contact" id="assoc_suggested_peer_rev_num1" name="suggested_peer_rev_num[]">
+													</div>
+													<input type="hidden" id="assoc_suggested_peer_rev_id1" name="suggested_peer_rev_id[]">
+												</div>
+												<div class="row">
+													<div class="col">
+														<input type="text" class="form-control" placeholder="Specialization" id="assoc_suggested_peer_rev_spec1" name="suggested_peer_rev_spec[]">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+											maxlength="255"></textarea>
+								</div>	
+							</form>
+							<button class="btn btn-outline-secondary" onclick="suggest_peer('associate')"><span class="fa fa-plus-square me-1"></span>Add Reviewer</button>
+							<button class="btn btn-primary" onclick="editor_action('suggest','associate')">Submit</button>
 						</div>
 					</div>
 				</div>
@@ -2222,7 +2338,7 @@
 											maxlength="255"></textarea>
 								</div>	
 							</form>
-							<button class="btn btn-outline-secondary" onclick="suggest_peer()"><span class="fa fa-plus-square me-1"></span>Add Reviewer</button>
+							<button class="btn btn-outline-secondary" onclick="suggest_peer('#clueEdProcessModal')"><span class="fa fa-plus-square me-1"></span>Add Reviewer</button>
 							<button class="btn btn-primary" onclick="editor_action('endorse','cluster')">Submit</button>
 						</div>
 					</div>

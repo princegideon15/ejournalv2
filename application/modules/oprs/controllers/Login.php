@@ -730,7 +730,6 @@ class Login extends OPRS_Controller {
 			redirect('oprs/login');
 			$this->session->unset_userdata('_oprs_login_msg');
 		} else {
-		
 			if ($action == 1) {
 				// accept
 				// get info reviewer
@@ -1142,17 +1141,17 @@ class Login extends OPRS_Controller {
 			$rev_email = $val->rev_email;
 		}
 
-		$output = $this->Manuscript_model->get_reviewer_by_id($rev_id);
+		// $output = $this->Manuscript_model->get_reviewer_by_id($rev_id);
 
-		foreach($output as $row){
-			$email = $row->rev_email;
-			$name = $row->rev_name;
-			$man_id = $row->rev_man_id;
-			$title = $row->rev_title;
-		}
+		// foreach($output as $row){
+		// 	$email = $row->rev_email;
+		// 	$name = $row->rev_name;
+		// 	$man_id = $row->rev_man_id;
+		// 	$title = $row->rev_title;
+		// }
 
 		// get email notification content
-		$email_contents = $this->Email_model->get_email_content(4);
+		$email_contents = $this->Email_model->get_email_content(6);
 
 		// add cc/bcc
 		foreach($email_contents as $row){
@@ -1233,8 +1232,8 @@ class Login extends OPRS_Controller {
 		}
 		
 		// replace reserved words
-		$emailBody = str_replace('[FULL NAME]', $name, $email_contents);
-		$emailBody = str_replace('[TITLE]', $title, $emailBody);
+		// $emailBody = str_replace('[FULL NAME]', $name, $email_contents);
+		$emailBody = str_replace('[MANUSCRIPT]', $man_title, $email_contents);
 
 		// send email
 		$mail->Subject = $email_subject;

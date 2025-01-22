@@ -215,20 +215,21 @@
 																			data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
 																			data-bs-placement="top" title="Add Reviewers"><span
 																				class="fas fa-user-plus"></span></button>
+																		<?php }else if($m->man_status == 5){ ?>
 																		<!-- view reviewers -->
-																		<!-- <button type="button" class="btn border border-1 btn-light text-info"
+																		<button type="button" class="btn border border-1 btn-light text-info"
 																			onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
 																			data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
 																			data-bs-placement="top" title="View Reviewers"><span
-																				class="fas fa-users"></span></button> -->
+																				class="fas fa-users"></span></button>
 																		<?php }else if($m->man_status == 8){ ?>
-																		<!-- publish to ejournal -->
-																		<!-- <button type="button" class="btn border border-1 btn-light text-success"
+																			<!-- publish to ejournal -->
+																			<!-- <button type="button" class="btn border border-1 btn-light text-success"
 																			onclick="publish_to_ejournal('<?php echo $m->row_id; ?>')"
 																			data-bs-toggle="modal" data-bs-target="#publishModal" rel="tooltip"
 																			data-bs-placement="top" title="Publish to eJournal"><span
 																				class="fas fa-paper-plane"></span></button> -->
-																	<?php } ?>
+																		<?php } ?>
 
 																	
 																		<!-- view manuscript details -->

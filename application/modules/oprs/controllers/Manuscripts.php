@@ -345,7 +345,7 @@ class Manuscripts extends OPRS_Controller {
 	 *
 	 * @return  void
 	 */
-	public function processx($id) {
+	public function process($id) {
 		$oprs = $this->load->database('dboprs', TRUE);
 		// get manuscript info
 		$manus_info = $this->Manuscript_model->get_manus_for_email($id);
@@ -357,7 +357,7 @@ class Manuscripts extends OPRS_Controller {
 			$author_mail = $row->man_email;
 			$status = $row->man_status;
 			$date_avail = date_format(new DateTime($row->man_date_available), 'F j, Y, g:i a');
-			$post['man_status'] = ($row->man_status == 3) ? 3 : 2;
+			$post['man_status'] = 5;
 		}
 
 		if($status == 1){
@@ -389,8 +389,8 @@ class Manuscripts extends OPRS_Controller {
 			if ($field != 'row_id') {
 				$track[$field] = $this->input->post($field, true);
 				$remarks = $this->input->post('trk_remarks', true);
-				$timeframe = $this->input->post('trk_timeframe', true);
-				$rev_timer = $this->input->post('trk_request_timer', true);
+				$timeframe = $this->input->post('trk_timeframe', true) ?? 30;
+				$rev_timer = $this->input->post('trk_request_timer', true) ?? 3;
 				$req_day_week = $this->input->post('trk_req_day_week');
 				$rev_day_week = $this->input->post('trk_rev_day_week');
 			}
@@ -449,7 +449,7 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// get email notification content
-		$email_contents = $this->Email_model->get_email_content(2);
+		$email_contents = $this->Email_model->get_email_content(5);
 
 		// add cc/bcc
 		foreach($email_contents as $row){
@@ -2985,7 +2985,7 @@ class Manuscripts extends OPRS_Controller {
 			}
 
 			$mail->AddAddress($next_processor_email);
-		}else{ // endorsed to associate ditor
+		}else if($status == 3){ // endorsed to associate ditor
 			$track['trk_remarks'] = $remarks;
 
 			// send email 22
@@ -3056,6 +3056,98 @@ class Manuscripts extends OPRS_Controller {
 
 			$mail->AddAddress($next_processor_email);
 
+		}else{ // add peer reviwers
+			$track['trk_remarks'] = $remarks;
+
+			// send email 23
+			// update manuscript status
+			$status = 15;
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$output = $this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+			
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+
+			$serializedData = $this->input->post('suggested_peer', true);
+
+			// Parse the serialized form data into an associative array
+			$suggestedPeer = [];
+			parse_str($serializedData, $suggestedPeer);
+			
+			$peer_title = $suggestedPeer['suggested_peer_rev_title'];
+			$peer_rev = $suggestedPeer['suggested_peer_rev'];
+			$peer_email = $suggestedPeer['suggested_peer_rev_email'];
+			$peer_num = $suggestedPeer['suggested_peer_rev_num'];
+			$peer_spec = $suggestedPeer['suggested_peer_rev_spec'];
+			$peer_id = $suggestedPeer['suggested_peer_rev_id'];
+	
+			$peers = array();
+	
+			for ($i = 0; $i < count($peer_rev); $i++) {
+				$peers['peer_title'] = $peer_title[$i];
+				$peers['peer_name'] = $peer_rev[$i];
+				$peers['peer_email'] = $peer_email[$i];
+				$peers['peer_contact'] = $peer_num[$i];
+				$peers['peer_specialization'] = $peer_spec[$i];
+				$peers['peer_usr_id'] = $peer_id[$i];
+				$peers['peer_type'] = $peer_id[$i] ? 'Member' : 'Non-member';
+				$peers['peer_man_id'] = $man_id;
+				$peers['peer_clued_usr_id'] = _UserIdFromSession();
+				$peers['date_created'] = date('Y-m-d H:i:s');
+				$this->Review_model->save_peer_reviewers(array_filter($peers));
+			}
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(24);
+
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+						
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			
+			$next_processor_info = $this->User_model->get_processor_by_role(5);
+
+			foreach ($next_processor_info as $row) {
+				$next_processor_email = $row->usr_username;
+			}
+
+			$mail->AddAddress($next_processor_email);
 		}
 
 		// update editors review data status
@@ -3327,7 +3419,7 @@ class Manuscripts extends OPRS_Controller {
 			}
 
 			$mail->AddAddress($next_processor_email);
-		}else{ // endorsed to associate ditor
+		}else if($status == 4){ // endorsed to associate ditor
 			$track['trk_remarks'] = $remarks;
 
 			// send email 23
@@ -3453,6 +3545,98 @@ class Manuscripts extends OPRS_Controller {
 				}
 				$mail->ClearAllRecipients();
 			}
+		}else{ // add peer reviwers
+			$track['trk_remarks'] = $remarks;
+
+			// send email 23
+			// update manuscript status
+			$status = 15;
+			$manus['man_status'] = $status;
+			$where['row_id'] = $man_id;
+			$output = $this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+			
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+
+
+			$serializedData = $this->input->post('suggested_peer', true);
+
+			// Parse the serialized form data into an associative array
+			$suggestedPeer = [];
+			parse_str($serializedData, $suggestedPeer);
+			
+			$peer_title = $suggestedPeer['suggested_peer_rev_title'];
+			$peer_rev = $suggestedPeer['suggested_peer_rev'];
+			$peer_email = $suggestedPeer['suggested_peer_rev_email'];
+			$peer_num = $suggestedPeer['suggested_peer_rev_num'];
+			$peer_spec = $suggestedPeer['suggested_peer_rev_spec'];
+			$peer_id = $suggestedPeer['suggested_peer_rev_id'];
+	
+			$peers = array();
+	
+			for ($i = 0; $i < count($peer_rev); $i++) {
+				$peers['peer_title'] = $peer_title[$i];
+				$peers['peer_name'] = $peer_rev[$i];
+				$peers['peer_email'] = $peer_email[$i];
+				$peers['peer_contact'] = $peer_num[$i];
+				$peers['peer_specialization'] = $peer_spec[$i];
+				$peers['peer_usr_id'] = $peer_id[$i];
+				$peers['peer_type'] = $peer_id[$i] ? 'Member' : 'Non-member';
+				$peers['peer_man_id'] = $man_id;
+				$peers['peer_clued_usr_id'] = _UserIdFromSession();
+				$peers['date_created'] = date('Y-m-d H:i:s');
+				$this->Review_model->save_peer_reviewers(array_filter($peers));
+			}
+
+			// get email notification content
+			$email_contents = $this->Email_model->get_email_content(24);
+
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+						
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			
+			$next_processor_info = $this->User_model->get_processor_by_role(5);
+
+			foreach ($next_processor_info as $row) {
+				$next_processor_email = $row->usr_username;
+			}
+
+			$mail->AddAddress($next_processor_email);
 		}
 
 		// update editors review data status

@@ -92,13 +92,15 @@ class Manuscript_model extends CI_Model {
 			$oprs->from($this->manus . ' m');
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->where('man_user_id', _UserIdFromSession());
-		}else if ($role_id == 5){ // technical desk editor
-			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
-			$oprs->from($this->manus . ' m');
-			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
-			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
-			$oprs->where_in('man_status', [1,15]);
-		}else if ($role_id == 6){ // editor in chief
+		}
+		// else if ($role_id == 5){ // technical desk editor
+		// 	$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
+		// 	$oprs->from($this->manus . ' m');
+		// 	$oprs->join($this->publication . ' p', 'm.man_type = p.id');
+		// 	$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+		// 	$oprs->where_in('man_status', [1,15]);
+		// }
+		else if ($role_id == 6){ // editor in chief
 			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 			$oprs->from($this->manus . ' m');
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
@@ -122,9 +124,10 @@ class Manuscript_model extends CI_Model {
 			// $oprs->where('man_status', 4);
 			$oprs->where('edit_usr_id', _UserIdFromSession());
 		}else{ // super admin
-			$oprs->select('m.*, status_class, status_desc as status, status_id');
-			$oprs->from($this->manus . ' m');
-			$oprs->join($this->status . ' s', 'man_status = status_id');
+				$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
+				$oprs->from($this->manus . ' m');
+				$oprs->join($this->publication . ' p', 'm.man_type = p.id');
+				$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 		}
 
 		// if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 17 || _UserRoleFromSession() == 7 || _UserRoleFromSession() == 6 ) {
@@ -1154,7 +1157,7 @@ class Manuscript_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('m.*, GROUP_CONCAT(c.coa_name SEPARATOR ", ") AS coas');
 		$oprs->from($this->manus . ' m');
-		$oprs->join($this->coauthors . ' c', 'm.row_id = c.coa_man_id');
+		$oprs->join($this->coauthors . ' c', 'm.row_id = c.coa_man_id', 'left');
 
 		if($filter == 1){ // keyword
 			$oprs->like('man_keywords', $search);
