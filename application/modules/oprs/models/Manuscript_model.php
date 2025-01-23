@@ -123,6 +123,14 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
 			// $oprs->where('man_status', 4);
 			$oprs->where('edit_usr_id', _UserIdFromSession());
+		}else if($role_id == 16){ // peer reviwer
+				$oprs->select('m.*,s.scr_status, s.date_reviewed, r.rev_hide_auth, scr_nda');
+				$oprs->from($this->scores . ' s');
+				$oprs->join($this->reviewers . ' r', 's.scr_man_rev_id = r.rev_id');
+				$oprs->join($this->manus . ' m', 'm.row_id = s.scr_man_id');
+				$oprs->where('r.rev_id', _UserIdFromSession());
+				$oprs->where('r.rev_status', 1);
+				$oprs->group_by('m.row_id');
 		}else{ // super admin
 				$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 				$oprs->from($this->manus . ' m');

@@ -38,7 +38,7 @@ class Manuscripts extends OPRS_Controller {
 				$data['publish'] = $this->Dashboard_model->get_publishables();
 				$data['u_journal'] = $this->Manuscript_model->get_unique_journal();
 				$data['u_year'] = $this->Manuscript_model->get_unique_journal_year();
-				// $data['criteria'] = $this->Review_model->get_criterias();
+				$data['criteria'] = $this->Review_model->get_criterias();
 				$data['tech_rev_critera'] = $this->Library_model->get_criteria(null,1);
 				$data['logs'] = $this->Log_model->count_logs();
 				$data['titles'] = $this->Library_model->get_titles();

@@ -361,6 +361,7 @@ class Login extends OPRS_Controller {
 			echo '</br></br>Message could not be sent.</br>';
 			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
 			exit;
+			// fa fa exclamation warning. no internet connection. check your connection and try again.
 		}
 
 		$this->session->set_flashdata('otp', '
@@ -738,7 +739,7 @@ class Login extends OPRS_Controller {
 					$rev_username = $row->rev_email;
 					$rev_man_id = $row->rev_man_id;
 				}
-				if ($this->Login_model->authenticate_user($rev_username, 5)) {
+				if ($this->Login_model->authenticate_user($rev_username, 16)) {
 					$array_msg = array('icon' => 'fa fa-check-square', 'class' => 'alert-success', 'msg' => 'Thank you for accepting the review request. <br/><br/>
 					You already have a temporary account. Please use your
 					existing username and password to begin the review. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
@@ -757,13 +758,14 @@ class Login extends OPRS_Controller {
 					$temp['usr_username'] = $rev_username;
 					$temp['usr_password'] = $rev_password_hash;
 					$temp['usr_password_copy'] = $rev_password;
-					$temp['usr_desc'] = 'Reviewer';
-					$temp['usr_role'] = 5;
+					$temp['usr_desc'] = 'Peer Reviewer';
+					$temp['usr_role'] = 16;
 					$temp['usr_sys_acc'] = 2;
+					$temp['usr_status'] = 1;
 					$temp['date_created'] = date('Y-m-d H:i:s');
 					$temp['usr_id'] = $id;
 					$this->User_model->create_temp_reviewer(array_filter($temp));
-					save_log_oprs($id, 'accepted review request for', $rev_man_id, 5);
+					save_log_oprs($id, 'accepted review request for', $rev_man_id, 16);
 					$array_msg = array('icon' => 'fa fa-check-square', 'class' => 'alert-success', 'msg' => 'Thank you for accepting the review request. <br/><br/>
 					To begin with review, please login to your temporary account
 					with this username and password. <br/></br>
@@ -784,7 +786,7 @@ class Login extends OPRS_Controller {
 				$this->Manuscript_model->update_reviewer(array_filter($revs), $where);
 
 				// send toke for apprection mail to reviewer
-				$this->send_appreciation_msg($id, $rev_password, 5);
+				$this->send_appreciation_msg($id, $rev_password, 16);
 				// $this->send_appreciation_msg($rev_username);
 
 				// add flag to tblscores
@@ -963,7 +965,7 @@ class Login extends OPRS_Controller {
 		$mail->From = $sender_email;
 		$mail->FromName = $sender;
 
-		if($role == 12){
+		if($role == 16){
 			// reviewer
 
 			$output = $this->Manuscript_model->get_reviewer_by_id($id);
@@ -977,7 +979,7 @@ class Login extends OPRS_Controller {
 	
 			
 			// get email notification content
-			$email_contents = $this->Email_model->get_email_content(5);
+			$email_contents = $this->Email_model->get_email_content(7);
 
 			// get manuscript info
 			$manus_info = $this->Manuscript_model->get_manus_for_email($man_id);
@@ -986,12 +988,12 @@ class Login extends OPRS_Controller {
 				$man_word = $val->man_word;
 			}
 
-			$nda = '/var/www/html/ejournal/assets/oprs/uploads/SAMPLE_NDA_NRCP.doc';
-			$mail->addAttachment($nda);
-			$word = '/var/www/html/ejournal/assets/oprs/uploads/manuscriptsdoc/' . $man_word;
-			$mail->addAttachment($word);
-			$pdf = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/' . $man_pdf;
-			$mail->addAttachment($pdf);
+			// $nda = '/var/www/html/ejournal/assets/oprs/uploads/SAMPLE_NDA_NRCP.doc';
+			// $mail->addAttachment($nda);
+			// $word = '/var/www/html/ejournal/assets/oprs/uploads/manuscriptsdoc/' . $man_word;
+			// $mail->addAttachment($word);
+			// $pdf = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/' . $man_pdf;
+			// $mail->addAttachment($pdf);
 		}else{
 			// editor
 
@@ -1076,12 +1078,12 @@ class Login extends OPRS_Controller {
 			}
 		}
 		
-		$dir = 'Click <a href="' . $link .'" target="_blank">' . $link .'</a> to login.';
+		// $dir = 'Click <a href="' . $link .'" target="_blank">' . $link .'</a> to login.';
 		$emailBody = str_replace('[FULL NAME]', $name, $email_contents);
 		$emailBody = str_replace('[TITLE]', $title, $emailBody);
 		$emailBody = str_replace('[EMAIL]', $email, $emailBody);
 		$emailBody = str_replace('[PASSWORD]', $rev_password, $emailBody);
-		$emailBody = str_replace('[LINK]', $dir, $emailBody);
+		$emailBody = str_replace('[LINK]', $link, $emailBody);
 		
 		// send email
 		$mail->Subject = $email_subject;

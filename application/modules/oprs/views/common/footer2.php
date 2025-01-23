@@ -687,13 +687,13 @@
           </div> -->
 					<div class="mb-3" id="man_word_div">
 						<label class="fw-bold" for="man_word">Upload Final Manuscript</label>
-						<span class="badge badge-primary" id="badge_word">WORD</span>
+						<span class="badge bg-primary" id="badge_word">WORD</span>
 						<input type="file" class="form-control" id="man_word" name="man_word"
 							accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
 					</div>
 					<div class="mb-3" id="man_abs_div">
 						<label for="man_abs">Upload Abstract</label>
-						<span class="badge badge-danger" id="badge_pdf">PDF</span>
+						<span class="badge bg-danger" id="badge_pdf">PDF</span>
 						<input type="file" class="form-control" id="man_abs" name="man_abs" accept="application/pdf">
 					</div>
 					<div class="mb-3" id="man_key_div">
@@ -1157,16 +1157,21 @@
 						</div>
 						<div class="col-6">
 							<form id="submit_review_form">
-								<table class="table table-hover table-borderless" style="font-size:14px;">
-									<thead>
-										<tr>
-											<th>TITLE</th>
-											<th colspan="4" id="rev_title"></th>
-										</tr>
-										<tr>
-											<th>AUTHOR</th>
-											<th colspan="4" id="rev_author"></th>
-										</tr>
+								
+								<table class="table table-borderless mb-1" style="font-size:14px;">
+										<thead >
+											<tr>
+												<th>TITLE</th>
+												<th class="fw-light" colspan="4" id="rev_title"></th>
+											</tr>
+											<tr>
+												<th>AUTHOR</th>
+												<th class="fw-light" colspan="4" id="rev_author"></th>
+											</tr>
+								</table>
+								<hr>
+								<table class="table table-borderless mt-1" style="font-size:14px;">
+									<thead class="table-light">
 										<tr>
 											<th scope="col">CRITERIA</th>
 											<th scope="col">DESCRIPTION</th>
@@ -1179,9 +1184,9 @@
                                         $x = 1;
                                         foreach ($criteria as $key => $c): ?>
 										<tr>
-											<td><?php echo $c->crt_subject; ?></td>
+											<td class="bg-light"><?php echo $c->crt_subject; ?></td>
 											<td><?php echo $c->crt_description; ?></td>
-											<td><?php echo $c->crt_weight; ?></td>
+											<td class="text-center"><?php echo $c->crt_weight; ?></td>
 											<?php if ($c->crt_type == 'text') { ?>
 											<td><input type="text" class="form-control border border-danger crt_score"
 													maxlength="2" id="scr_crt_<?php echo $x; ?>"
@@ -1199,14 +1204,15 @@
 										<tr>
 											<?php $y++;}?>
 											<?php endforeach;?>
-											<td colspan="3" class="fw-bold">TOTAL SCORE</td>
+											<td colspan="3" class="fw-bold text-end align-middle">TOTAL SCORE</td>
 											<td><input type="text" id="crt_total" name="scr_total"
 													class="form-control border border-dark" readonly=""></td>
 										</tr>
+										<tr><td class="fw-bold">Result:</td><td id="overall_rating"></td></tr>
 										<tr>
 											<td colspan="4">
 												<div class="mb-3">
-													<label for="scr_remarks">General Remarks</label>
+													<label for="scr_remarks" class="fw-bold form-label">General Remarks</label>
 													<textarea class="form-control form-control-sm" id="scr_remarks"
 														name="scr_remarks" placeholder="(Required)"></textarea>
 												</div>
@@ -1215,10 +1221,10 @@
 										<tr>
 											<td colspan="4">
 												<div class="mb-3">
-													<label class="fw-bold" for="scr_file">You may upload your
+													<label class="fw-bold form-label" for="scr_file">You may upload your
 														commented manuscript here (If any)</label>
-													<span class="badge badge-primary mr-1">WORD</span><span
-														class="badge badge-danger">PDF</span>
+													<span class="badge rounded-pill bg-primary me-1">WORD</span><span
+														class="badge rounded-pill bg-danger">PDF</span>
 													<input type="file" class="form-control" id="scr_file"
 														name="scr_file" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf">
 												</div>
@@ -1227,16 +1233,16 @@
 										<tr>
 											<td colspan="4">
 												<div class="mb-3">
-													<label class="fw-bold" for="scr_nda">Non-Disclosure
+													<label class="fw-bold form-label" for="scr_nda">Non-Disclosure
 														Agreement</label>
-													<span class="badge badge-primary mr-1">WORD</span><span
-														class="badge badge-danger">PDF</span>
+													<span class="badge rounded-pill bg-primary me-1">WORD</span><span
+														class="badge rounded-pill bg-danger">PDF</span>
 													<input type="file" class="form-control" id="scr_nda" name="scr_nda"
 														accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf">
 												</div>
 											</td>
 										</tr>
-										<tr>
+										<!-- <tr>
 											<td colspan="4">
 												<p class="fw-bold">Recommendation</p>
 												<div class="custom-control custom-radio">
@@ -1264,7 +1270,7 @@
 														recommended</label>
 												</div>
 											</td>
-										</tr>
+										</tr> -->
 									</tbody>
 								</table>
 						</div>
@@ -1646,14 +1652,14 @@
 								<td id="man_year"></td>
 							</tr>
 							<tr>
-								<th scope="row">Upload Final Abstract <span class="badge badge-danger">PDF</span></th>
+								<th scope="row">Upload Final Abstract <span class="badge bg-danger">PDF</span></th>
 								<td>
 									<input type="file" class="form-control-file" id="man_abs" name="man_abs"
 										accept="application/pdf" required></td>
 							</tr>
 							</tr>
 							<tr>
-								<th scope="row">Upload Final Manuscript <span class="badge badge-danger">PDF</span></th>
+								<th scope="row">Upload Final Manuscript <span class="badge bg-danger">PDF</span></th>
 								<td>
 									<input type="file" class="form-control-file" id="man_file" name="man_file"
 										accept="application/pdf" required>

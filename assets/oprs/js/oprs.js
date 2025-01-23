@@ -3911,6 +3911,12 @@ $(document).ready(function() {
         });
 
         $("#crt_total").val(sum);
+
+        if(sum <= 75){
+            $('#overall_rating').empty().append('<span class="fw-bold text-white bg-danger p-2">FAILED</span>');
+        }else{
+            $('#overall_rating').empty().append('<span class="fw-bold text-white bg-success p-2">PASSED</span>');
+        }
     });
 
     // validate review of manuscript
@@ -4000,6 +4006,7 @@ $(document).ready(function() {
                 success: function(data, textStatus, jqXHR) {
                     location.reload();
                     // console.log(data);
+                    //TODO: add alert
                 }
             });
     });
@@ -4976,6 +4983,7 @@ $(document).ready(function() {
             processData: false,
             success: function(response) {
                 window.location.reload();
+                //TODO::add alert
             }
         });
     });

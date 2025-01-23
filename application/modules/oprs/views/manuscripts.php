@@ -369,6 +369,67 @@
 										</div>
 									</div>
 								</div>
+							<?php } else if(_UserRoleFromSession() == 16) { ?> 
+							<!-- PEER REVIEWER -->
+							<table class="table table-hover" id="dataTable_rev" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Title</th>
+										<th>Date Submitted</th>
+										<th>Date Reviewed</th>
+										<th>Status</th>
+										<th>Action</th>
+										<th>Upload NDA</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php $c = 1;foreach ($manus as $m): ?>
+									<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
+									<?php $mantitle = rawurlencode($m->man_title); ?>
+									<?php $action = (($m->scr_status == '4') ? '<span class="badge rounded-pill badge-success">Recommended as submitted</span>' 
+										: ((($m->scr_status == '5') ? '<span class="badge rounded-pill badge-warning">Recommended with minor revisions</span>' 
+										: ((($m->scr_status == '6') ? '<span class="badge rounded-pill badge-warning">Recommended with major revisions</span>'  
+										: ((($m->scr_status == '7') ? '<span class="badge rounded-pill badge-danger">Not recommended</span>' 
+										: ''))))))
+											);?>
+									<?php $i = $m->man_issue;
+											$issue = (($i == 5) ? 'Special Issue No. 1' 
+													: (($i == 6) ? 'Special Issue No. 2' 
+													: (($i == 7) ? 'Special Issue No. 3' 
+													: (($i == 8) ? 'Special Issue No. 4' 
+													: 'Issue ' . $i))));
+											?>
+									<tr>
+										<td></td>
+										<td>
+											<?php echo $m->man_title; ?>
+										</td>
+										<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+										<td><?php echo $drev; ?></td>
+										<td>status here</td>
+										<td>
+											<button type="button" class="btn btn-outline-success"  data-bs-toggle="modal" rel="tooltip" data-bs-placement="top" title="Start Review" data-bs-target="#startReviewModal" onclick="start_review('<?php echo $m->man_file;?>','<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>','<?php echo $m->man_author; ?>','<?php echo $m->rev_hide_auth; ?>')"><span class="fa fa-play-circle" ></span></button>
+											<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+											data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>)"><span class="fa fa-eye"></span></button>
+										</td>
+										<td>
+											<?php if($m->scr_nda == NULL){ ?>
+											<form id="submit_nda" method="POST" enctype="multipart/form-data">
+												<input type="hidden" id="scr_man_id" name="scr_man_id"
+													value="<?php echo $m->row_id;?>">
+												<div class="input-group">
+													<input type="file" class="form-control" id="scr_nda" name="scr_nda" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf" required>
+													<button class="btn btn-outline-secondary" type="submit">Submit</button>
+												</div>
+											</form>
+											<?php }else{ echo $m->scr_nda;} ?>
+										</td>
+									</tr>
+									<?php endforeach;?>
+
+								</tbody>
+							</table>
 							<?php } else { ?>
 
 								<table class="table table-hover" id="all-manuscript" width="100%" cellspacing="0">
@@ -483,6 +544,9 @@
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"
 														data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
 													<?php } ?>
+
+
+
 													<!-- SUPERADMIN -->
 													<?php if (_UserRoleFromSession() == 20 ) { ?>
 														<!-- view reviewers -->
