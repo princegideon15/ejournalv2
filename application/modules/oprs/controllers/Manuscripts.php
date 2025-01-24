@@ -575,9 +575,6 @@ class Manuscripts extends OPRS_Controller {
 			// 	$emailBody = str_replace($affiliation, '<em>Undisclosed</em>', $emailBody);
 			// }
 			
-
-			//todo tom
-
 			
 			// send email
 			$mail->Subject = $email_subject;
@@ -843,6 +840,11 @@ class Manuscripts extends OPRS_Controller {
 		foreach ($result as $i => $field) {
 			if ($field != 'row_id') {
 				$post[$field] = $this->input->post($field, true);
+
+				$total_score = $this->input->post('scr_total', true);
+
+				// 4-passed 7-failed
+				$post['scr_status'] = ($total_score <= 75) ? 7 : 4;
 			}
 		}
 		
@@ -894,7 +896,6 @@ class Manuscripts extends OPRS_Controller {
 			}
 		}
 
-
 		$post['date_reviewed'] = date('Y-m-d H:i:s');
 		$where_rev['scr_man_rev_id'] = _UserIdFromSession();
 		$where_rev['scr_man_id'] = $id;
@@ -917,11 +918,138 @@ class Manuscripts extends OPRS_Controller {
 			$track['trk_source'] = '_sk_r';
 		}
 		$this->Manuscript_model->tracking(array_filter($track));
-		$man['man_status'] = 3;
-		$man['last_updated'] = date('Y-m-d H:i:s');
-		$where['row_id'] = $id;
-		$this->Manuscript_model->process_manuscript(array_filter($man), $where);
+		// $man['man_status'] = 3;
+		// $man['last_updated'] = date('Y-m-d H:i:s');
+		// $where['row_id'] = $id;
+		// $this->Manuscript_model->process_manuscript(array_filter($man), $where);
 
+		// send email to technical desk editor 
+
+		// email config
+		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
+		$link_to = base_url() . 'oprs/login';
+		$sender = 'eReview';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+		$email_contents = $this->Email_model->get_email_content(11);
+			
+		foreach($email_contents as $row){
+			$email_subject = $row->enc_subject;
+			$email_contents = $row->enc_content;
+
+			if( strpos($row->enc_cc, ',') !== false ) {
+				$email_cc = explode(',', $row->enc_cc);
+			}else{
+				$email_cc = array();
+				array_push($email_cc, $row->enc_cc);
+			}
+
+			if( strpos($row->enc_bcc, ',') !== false ) {
+				$email_bcc = explode(',', $row->enc_bcc);
+			}else{
+				$email_bcc = array();
+				array_push($email_bcc, $row->enc_bcc);
+			}
+
+			if( strpos($row->enc_user_group, ',') !== false ) {
+				$email_user_group = explode(',', $row->enc_user_group);
+			}else{
+				$email_user_group = array();
+				array_push($email_user_group, $row->enc_user_group);
+			}
+			
+		}
+
+		$output = $this->Review_model->get_manus_author_info($id);
+
+		foreach ($output as $key => $value) {
+			$manuscript = $value->man_title;
+			$title = $value->man_author_title;
+			$author = $value->man_author;
+			$email = $value->man_email;
+		}
+
+		$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+		https://researchjournal.nrcp.dost.gov.ph</a>";
+		$emailBody = str_replace('[LINK]', $link, $email_contents);
+		$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+		$next_processor_info = $this->User_model->get_processor_by_role(5);
+
+		foreach ($next_processor_info as $row) {
+			$next_processor_email = $row->usr_username;
+		}
+
+		$mail->AddAddress($next_processor_email);
+
+		// add exisiting email as cc
+		if(count($email_user_group) > 0){
+			$user_group_emails = array();
+			foreach($email_user_group as $grp){
+				$username = $this->Email_model->get_user_group_emails($grp);
+				array_push($user_group_emails, $username);
+			}
+		}
+
+
+		// add cc if any
+		if(count($email_cc) > 0){
+			foreach($email_cc as $cc){
+				$mail->AddCC($cc);
+			}
+		}
+
+		// add bcc if any
+		if(count($email_bcc) > 0){
+			foreach($email_bcc as $bcc){
+				$mail->AddBCC($bcc);
+			}
+		}
+
+		// add existing as cc
+		if(count($user_group_emails) > 0){
+			foreach($user_group_emails as $grp){
+				$mail->AddCC($grp);
+			}
+		}
+
+		// replace reserved words
+
+		// send email
+		$mail->Subject = $email_subject;
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
+
+		// send certification
 		$this->send_certification(_UserIdFromSession(), $id);
 	
 	}
@@ -952,7 +1080,7 @@ class Manuscripts extends OPRS_Controller {
 
 
 		// get email notification content
-		$email_contents = $this->Email_model->get_email_content(18);
+		$email_contents = $this->Email_model->get_email_content(21);
 
 		// add cc/bcc
 		foreach($email_contents as $row){
@@ -2563,7 +2691,7 @@ class Manuscripts extends OPRS_Controller {
 		$this->Review_model->save_tech_rev_score(array_filter($post));
 
 		// email config
-		// $dir = "https://skms.nrcp.dost.gov.ph/user/login";
+		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
 		$sender_email = 'nrcp.ejournal@gmail.com';
@@ -2790,7 +2918,7 @@ class Manuscripts extends OPRS_Controller {
 		$status = $this->input->post('status', TRUE);
 
 		// email config
-		// $dir = "https://skms.nrcp.dost.gov.ph/user/login";
+		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
 		$sender_email = 'nrcp.ejournal@gmail.com';
@@ -3224,7 +3352,7 @@ class Manuscripts extends OPRS_Controller {
 		$status = $this->input->post('status', TRUE);
 		
 		// email config
-		// $dir = "https://skms.nrcp.dost.gov.ph/user/login";
+		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
 		$sender_email = 'nrcp.ejournal@gmail.com';
@@ -3713,7 +3841,7 @@ class Manuscripts extends OPRS_Controller {
 		$status = $this->input->post('status', TRUE);
 		
 		// email config
-		// $dir = "https://skms.nrcp.dost.gov.ph/user/login";
+		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
 		$sender_email = 'nrcp.ejournal@gmail.com';

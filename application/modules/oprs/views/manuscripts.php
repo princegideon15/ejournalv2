@@ -222,6 +222,11 @@
 																			data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
 																			data-bs-placement="top" title="View Reviewers"><span
 																				class="fas fa-users"></span></button>
+																		<!-- <button type="button" class="btn btn-light btn-sm"
+																			onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo rawurlencode($title); ?>')"
+																			data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
+																			title="View Reviews"><span class="fa fa-eye"></span> View Reviews
+																		</button> -->
 																		<?php }else if($m->man_status == 8){ ?>
 																			<!-- publish to ejournal -->
 																			<!-- <button type="button" class="btn border border-1 btn-light text-success"
@@ -387,12 +392,9 @@
 									<?php $c = 1;foreach ($manus as $m): ?>
 									<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
 									<?php $mantitle = rawurlencode($m->man_title); ?>
-									<?php $action = (($m->scr_status == '4') ? '<span class="badge rounded-pill badge-success">Recommended as submitted</span>' 
-										: ((($m->scr_status == '5') ? '<span class="badge rounded-pill badge-warning">Recommended with minor revisions</span>' 
-										: ((($m->scr_status == '6') ? '<span class="badge rounded-pill badge-warning">Recommended with major revisions</span>'  
-										: ((($m->scr_status == '7') ? '<span class="badge rounded-pill badge-danger">Not recommended</span>' 
-										: ''))))))
-											);?>
+									<?php $action = ($m->scr_status == '4') ? '<span class="badge rounded-pill bg-success">PASSED</span>' : '<span class="badge rounded-pill bg-danger">FAILED</span>';?>
+
+											
 									<?php $i = $m->man_issue;
 											$issue = (($i == 5) ? 'Special Issue No. 1' 
 													: (($i == 6) ? 'Special Issue No. 2' 
@@ -407,9 +409,11 @@
 										</td>
 										<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
 										<td><?php echo $drev; ?></td>
-										<td>status here</td>
+										<td><?php echo $action;?></td>
 										<td>
+										<?php if($m->scr_status < 2){ ?>
 											<button type="button" class="btn btn-outline-success"  data-bs-toggle="modal" rel="tooltip" data-bs-placement="top" title="Start Review" data-bs-target="#startReviewModal" onclick="start_review('<?php echo $m->man_file;?>','<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>','<?php echo $m->man_author; ?>','<?php echo $m->rev_hide_auth; ?>')"><span class="fa fa-play-circle" ></span></button>
+										<?php } ?>
 											<button type="button" class="btn btn-outline-secondary" rel="tooltip"
 											data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>)"><span class="fa fa-eye"></span></button>
 										</td>
@@ -545,8 +549,6 @@
 														data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
 													<?php } ?>
 
-
-
 													<!-- SUPERADMIN -->
 													<?php if (_UserRoleFromSession() == 20 ) { ?>
 														<!-- view reviewers -->
@@ -636,10 +638,10 @@
 								<?php $c = 1;foreach ($manus as $m): ?>
 								<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
 								<?php $mantitle = rawurlencode($m->man_title); ?>
-								<?php $action = (($m->scr_status == '4') ? '<span class="badge rounded-pill badge-success">Recommended as submitted</span>' 
+								<?php $action = (($m->scr_status == '4') ? '<span class="badge rounded-pill bg-success">Recommended as submitted</span>' 
 									: ((($m->scr_status == '5') ? '<span class="badge rounded-pill badge-warning">Recommended with minor revisions</span>' 
 									: ((($m->scr_status == '6') ? '<span class="badge rounded-pill badge-warning">Recommended with major revisions</span>'  
-									: ((($m->scr_status == '7') ? '<span class="badge rounded-pill badge-danger">Not recommended</span>' 
+									: ((($m->scr_status == '7') ? '<span class="badge rounded-pill bg-danger">Not recommended</span>' 
 									: '<button type="button" class="btn btn-light text-success btn-sm"  data-bs-toggle="modal" rel="tooltip" data-bs-placement="top" title="View Tracking" data-bs-target="#startReviewModal" onclick="start_review(\'' . $m->man_file . '\',\'' . $m->row_id . '\',\'' . $mantitle . '\',\'' . $m->man_author . '\',\'' . $m->rev_hide_auth . '\')"><span class="fa fa-chevron-circle-right" ></span> Start Review</button>'))))))
 										);?>
 								<?php $i = $m->man_issue;

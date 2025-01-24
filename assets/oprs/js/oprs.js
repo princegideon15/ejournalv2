@@ -1571,6 +1571,20 @@ $(document).ready(function() {
         } );
     } ).draw();
 
+    // peer reviewer table
+    var prt = $('#dataTable_rev').DataTable({
+        "order": [[ 2, "desc" ]],
+        "columnDefs" : [
+            {"targets":2, "type":"date"},
+        ]
+    });
+ 
+    prt.on( 'order.dt search.dt', function () {
+        prt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
     
     $('#collapse_new_table').DataTable({
         columnDefs: [
@@ -3940,9 +3954,9 @@ $(document).ready(function() {
                 required: true,
                 max: parseInt($('#scr_crt_4').closest('td').prev('td').text()),
             },
-            scr_status: {
-                required: true,
-            },
+            // scr_status: {
+            //     required: true,
+            // },
             scr_rem_1: {
                 required: true,
             },
@@ -3978,38 +3992,93 @@ $(document).ready(function() {
         },
         submitHandler: function() {
 
-            $('#confirmSubmitReviewModal').modal('toggle');
+            // $('#confirmSubmitReviewModal').modal('toggle');
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    $('body').loading('start');
+                    $('#startReviewModal').modal('toggle');
+                    $('#submit_peer_review').prop('disabled', true);
+                    var formdata = new FormData($('#submit_review_form')[0]);
+        
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/review/" + man_id,
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        type: 'POST',
+                        crossDomain: true,
+                        success: function(data, textStatus, jqXHR) {
+                            $('#submit_review_form')[0].reset();
+                            $('body').loading('stop');
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
         }
     });
 
     // submit review manuscript
-    $('#submit_review_manuscript').click(function(){
-        $('#confirmSubmitReviewModal').modal('toggle');
-        $('#startReviewModal').modal('toggle');
-            $('body').loading('start');
+    // $('#submit_review_manuscript').click(function(){
+    //     $('#confirmSubmitReviewModal').modal('toggle');
+    //     $('#startReviewModal').modal('toggle');
+    //         $('body').loading('start');
 
-            var form = $('#submit_review_form');
-            var formdata = false;
-            if (window.FormData) {
-                formdata = new FormData(form[0]);
-            }
-            var formAction = form.attr('action');
+    //         var form = $('#submit_review_form');
+    //         var formdata = false;
+    //         if (window.FormData) {
+    //             formdata = new FormData(form[0]);
+    //         }
+    //         var formAction = form.attr('action');
 
-            $.ajax({
-                url: base_url + "oprs/manuscripts/review/" + man_id,
-                data: formdata ? formdata : form.serialize(),
-                cache: false,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                crossDomain: true,
-                success: function(data, textStatus, jqXHR) {
-                    location.reload();
-                    // console.log(data);
-                    //TODO: add alert
-                }
-            });
-    });
+    //         $.ajax({
+    //             url: base_url + "oprs/manuscripts/review/" + man_id,
+    //             data: formdata ? formdata : form.serialize(),
+    //             cache: false,
+    //             contentType: false,
+    //             processData: false,
+    //             type: 'POST',
+    //             crossDomain: true,
+    //             success: function(data, textStatus, jqXHR) {
+    //                 location.reload();
+    //                 // console.log(data);
+    //                 //TODO: add alert
+    //             }
+    //         });
+    // });
 
     $(document).on('hide.bs.modal', '#reviewerModal', function() {
         for (i = 0; i < 100; i++) {
@@ -5642,6 +5711,8 @@ function show_hidden_manus() {
 
 // show all reviewers per manuscript
 function view_reviewers(id, time, title, status) {
+    
+    $('#view_review_results').attr('onclick', "view_reviews(" + id + ",'" + title + "')");
 
     var manuscript_title = decodeURIComponent(title);
     // if(status == 5 || status == 4 || status == 6){ $('#new_rev').hide(); }else{ $('#new_rev').show(); }
@@ -5689,10 +5760,10 @@ function view_reviewers(id, time, title, status) {
 
                     var stat = get_review_status(val.rev_id);
 
-                    var label = ((stat == 4) ? '<span class="badge rounded-pill  bg-success">Recommended as submitted</span>' :
+                    var label = ((stat == 4) ? '<span class="badge rounded-pill bg-success">PASSED</span>' :
                         ((stat == 5) ? '<span class="badge rounded-pill bg-warning">Recommended with minor revisions</span>' :
                         ((stat == 6) ? '<span class="badge rounded-pill bg-warning">Recommended with major revisions</span>' :
-                        ((stat == 7) ? '<span class="badge rounded-pill bg-danger">Not recommended</span>' :
+                        ((stat == 7) ? '<span class="badge rounded-pill bg-danger">FAILED</span>' :
                         ((stat == 3) ? '<span class="badge rounded-pill bg-danger">LAPSED REVIEW</span>' :
                         ((stat == 2) ? '<span class="badge rounded-pill bg-secondary">PENDING REVIEW</span>' :
                         '-'))))));
@@ -5823,6 +5894,8 @@ function view_editors(id, title) {
 // show all reviewers per manuscript
 function view_reviews(id, title) {
 
+    $('#reviewsModal').modal('toggle');
+
     var manuscript_title = decodeURIComponent(title);
 
     $('#reviewsModal p').text('TITLE : ' + manuscript_title);
@@ -5850,10 +5923,7 @@ function view_reviews(id, title) {
                 var rem = (val.scr_remarks == '' || val.scr_remarks == null) ? '-' : val.scr_remarks;
                 var file = (val.scr_file == null || val.scr_file == '') ? 'N/A' : '<a class="text-primary" href="' + base_url + "assets/oprs/uploads/reviewersdoc/" + val.scr_file + '" target="_blank" download>Downlod</a>';
 
-                var reco = ((status == 4) ? '<span class="badge rounded-pill  bg-success">Recommended as submitted</span>' :
-                    ((status == 5) ? '<span class="badge rounded-pill  bg-warning">Recommended with minor revisions</span>' :
-                    ((status == 6) ? '<span class="badge rounded-pill  bg-warning">Recommended with major revisions</span>' :
-                        '<span class="badge rounded-pill  bg-danger">Not recommended</span>')));
+                var reco = (status == 4) ? '<span class="badge rounded-pill bg-success">SUCCESS</span>' : '<span class="badge rounded-pill bg-danger">FAILED</span>';
                 
                 $('#reviews_table tbody').append('<tr><td>' + i +'</td> \
                                                 <td>' + name + '</td> \

@@ -238,45 +238,6 @@
   </div>
 </div>
 
-<!-- Reviewers -->
-<div class="modal fade" id="reviewerModal" tabindex="-1" role="dialog" aria-labelledby="reviewerModal" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Reviewers</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p class="fw-bold"></p>
-        <div class="table-responsive">
-          <table class="table table-hover" id="table-reviewers" width="100%" cellspacing="0" style="font-size:14px">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Reviewer</th>
-                <th>Email</th>
-                <th>Contact</th>
-                <th>Request Status</th>
-                <th>Review Status</th>
-                <th>Date Responded</th>
-                <th>Time Remaining</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <div class="mr-auto">
-          <span class="fa fa-user-secret"></span> - Reviewers hidden to Authors
-          <span class="fas fa-user-alt-slash ml-2"></span> - Authors hidden to Reviewers
-        </div>
-        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Process Manuscript-->
 <div class="modal fade" id="processModal" tabindex="-1" role="dialog" aria-labelledby="processModal" aria-hidden="true" style="z-index:9999">
@@ -1057,9 +1018,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Reviewers</h5>
-				<button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<p class="fw-bold"></p>
@@ -1084,10 +1043,10 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<div class="mr-auto">
-					( <span class="fa fa-user-secret"></span> ) <span class="text-danger">Reviewers hidden to
+				<div class="me-auto">
+					( <span class="fa fa-user-secret"></span> ) <span class="text-primary">Reviewers hidden to
 						Authors</span>
-					( <span class="fas fa-user-alt-slash ml-2"></span> ) <span class="text-danger">Authors hidden to
+					( <span class="fas fa-user-alt-slash ml-2"></span> ) <span class="text-primary">Authors hidden to
 						Reviewers</span>
 				</div>
 				<?php if(_UserRoleFromSession() != 8) { ?>
@@ -1095,6 +1054,7 @@
                     class="btn btn-primary"><span class="fa fa-search"></span> Find new reviewer</a> -->
 				<?php } ?>
 				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+				<button class="btn btn-primary" type="button" id="view_review_results">View Review Results</button>
 			</div>
 		</div>
 	</div>
@@ -1107,9 +1067,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Reviews</h5>
-				<button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<p class="fw-bold"></p>
@@ -1141,7 +1099,7 @@
 
 <!-- Start Review -->
 <div class="modal fade" id="startReviewModal" tabindex="-1" role="dialog" aria-labelledby="startReviewModal"
-	aria-hidden="true" style="z-index:1499">
+	aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="max-width:90%">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -1280,7 +1238,7 @@
 			<div class="modal-footer">
 				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
 				<div class="btn-group" role="group">
-					<button type="submit" class="btn btn-success">Proceed</button>
+					<button type="submit" id="submit_peer_review" class="btn btn-primary">Submit</button>
 				</div>
 				</form>
 			</div>
