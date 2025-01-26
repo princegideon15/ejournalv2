@@ -1571,6 +1571,20 @@ $(document).ready(function() {
         } );
     } ).draw();
 
+    // author table manuscripts;
+    var aut = $('#author_table').DataTable({
+        "order": [[ 2, "desc" ]],
+        "columnDefs" : [
+            {"targets":2, "type":"date"},
+        ]
+    });
+ 
+    aut.on( 'order.dt search.dt', function () {
+        aut.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
     // peer reviewer table
     var prt = $('#dataTable_rev').DataTable({
         "order": [[ 2, "desc" ]],
@@ -5101,39 +5115,181 @@ $(document).ready(function() {
     });
 
 
-    $("#submit_editorial_review_form").validate({
+    $("#submit_consolidation_form").validate({
         debug: true,
         errorClass: 'text-danger',
         rules: {
-            edit_file: {
+            cons_file: {
+                required: true,
+                // extension: "doc|docx|pdf",
+                extension: "pdf",
+            },
+            cons_remarks: {
+                required: true,
+            },
+            cons_revise: {
                 required: true,
             },
         },
-        messages: {},
-        errorElement : 'div',
-        errorLabelContainer: '.errorTxt',
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "cons_revise") {
+                error.insertAfter("#cons_revise");
+            } else {
+                error.insertAfter(element);
+            }
+        },
         submitHandler: function() {
 
-            var form = $('#submit_editorial_review_form');
-            var formdata = false;
-    
-            if(window.FormData)
-            {
-                formdata = new FormData(form[0]);
-            }
-    
-            $.ajax({
-                type: "POST",
-                url: base_url + 'oprs/manuscripts/editorial_review',
-                data : formdata ? formdata :form.serialize(),
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    location.reload();
-                }
-            });
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
 
-            $('#editorialModal').modal('toggle');
+                    $('body').loading('start');
+                    $('#consolidationModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_consolidation_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/consolidation_review",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_consolidation_form')[0].reset();
+                            Swal.fire({
+                            title: "Consolidated reviews submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#manuscript_revision_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            man_matrix : {
+                required: true,
+                extension: "pdf|doc|docx",
+                filesize : 20000000,
+            },
+            man_abs : {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_file: {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_word: {
+                required: true,
+                extension: "doc|docx",
+                filesize : 20000000,
+            },
+            man_latex: {
+                texFile: true, // Use the custom rule
+                filesize : 20000000,
+            },
+            man_pages: {
+                required: true,
+            }
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#uploadRevisionModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#manuscript_revision_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/author_revision",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#manuscript_revision_form')[0].reset();
+                            Swal.fire({
+                            title: "Revision submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
         }
     });
 
@@ -5571,7 +5727,7 @@ function unique(array) {
 // get all info of uploaded manuscript
 function view_manus(id, hide) {
 
-    $('#uploadModal .table-bordered > tbody').empty();
+    $('#manuscriptModal .table-bordered > tbody').empty();
 
     var coa = [];
     var html = '';
@@ -5604,9 +5760,10 @@ function view_manus(id, hide) {
                         var coas = (coa.length > 0) ? coa.join('') : 'N/a';
                         var prim = (hide == 1) ? '<em>Undisclosed</em>' : val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
                         var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
-                        var man_type = (val.man_type) ? val.publication_desc : 'N/a';
-                        // var author_type = (val.man_author_type == 1) ? '(Main Author)' : ((val.man_author_type == 2) ? '(Co-author)' : '');
-                        var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/initial_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
+                        var man_type = (val.man_type) ? val.publication_desc : 'N/a'; 
+                        var dir = (val.man_status == 1) ? 'initial' : ((val.man_status == 6) ? 'revised' : 'final');
+                        var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
+                       
 
                         html += '<tr>' +
                                     '<th>Title</th>' +
@@ -5646,11 +5803,11 @@ function view_manus(id, hide) {
 
                         html +=  '<tr>'+
                                     '<th>Abstract</th>' +
-                                    '<td><a href="' + base_url + "assets/oprs/uploads/initial_abstracts_pdf/" + val.man_abs + '" target="_blank">PDF</a></td>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/" + dir + "_abstracts_pdf/" + val.man_abs + '" target="_blank">PDF</a></td>' +
                                 '</tr>' +
                                 '<tr>'+
                                     '<th>Full Text Manuscript</th>' +
-                                    '<td><a href="' + base_url + "assets/oprs/uploads/initial_manuscripts_pdf/" + val.man_file + '" target="_blank">PDF</a> | <a href="' + base_url + "assets/oprs/uploads/initial_manuscripts_word/" + val.man_word + '" download>WORD</a></td>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/" + dir + "_manuscripts_pdf/" + val.man_file + '" target="_blank">PDF</a> | <a href="' + base_url + "assets/oprs/uploads/" + dir + "_manuscripts_word/" + val.man_word + '" download>WORD</a></td>' +
                                 '</tr>' +
                                 '<tr>'+
                                     '<th>Latex</th>' +
@@ -5674,21 +5831,12 @@ function view_manus(id, hide) {
                                 '</tr>';
                     });
 
-                    if(html){
-                        $('#uploadModal .table-bordered > tbody').html(html);
-                        $('#uploadModal').modal('toggle');
-                        $('#man_file_div').hide();
-                        $('#man_abs_div').hide();
-                        $('#man_key_div').hide();
-                        $('#uploadModal .modal-footer .btn').hide();
-                        $('#manuscript_form').hide();
-                        $('.table-bordered').show();
-                    }
+                    $('#manuscriptModal .table-bordered > tbody').html(html);
+                    $('#manuscriptModal').modal('toggle');
                 }
             });
         }
     });
-
 
 }
 
@@ -5696,17 +5844,17 @@ function view_manus(id, hide) {
 function show_hidden_manus() {
     $('#manuscript_form')[0].reset();
     $('#coauthors').empty();
-    $('#man_file_div').show();
-    $('#man_abs_div').show();
-    $('#man_word_div').show();
-    $('#uploadModal .modal-footer #btn_add_coa').show();
-    $('#uploadModal .modal-footer .btn_cancel').show();
-    $('#uploadModal .modal-footer #btn_save').show();
-    $('#uploadModal .modal-footer .btn_close').hide();
-    $('#manuscript_form').show();
-    $('.table-bordered').hide();
-    $('#author_status').text('');
-    $('#add_main_author').addClass('d-none');
+    // $('#man_file_div').show();
+    // $('#man_abs_div').show();
+    // $('#man_word_div').show();
+    // $('#uploadModal .modal-footer #btn_add_coa').show();
+    // $('#uploadModal .modal-footer .btn_cancel').show();
+    // $('#uploadModal .modal-footer #btn_save').show();
+    // $('#uploadModal .modal-footer .btn_close').hide();
+    // $('#manuscript_form').show();
+    // $('.table-bordered').hide();
+    // $('#author_status').text('');
+    // $('#add_main_author').addClass('d-none');
 }
 
 // show all reviewers per manuscript
@@ -5895,6 +6043,7 @@ function view_editors(id, title) {
 function view_reviews(id, title) {
 
     $('#reviewsModal').modal('toggle');
+    $('#reviewerModal').modal('toggle');
 
     var manuscript_title = decodeURIComponent(title);
 
@@ -5909,7 +6058,6 @@ function view_reviews(id, title) {
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-
             if ($.fn.DataTable.isDataTable("#reviews_table")) {
                 $('#reviews_table ').DataTable().clear().destroy();
             }
@@ -5922,12 +6070,12 @@ function view_reviews(id, title) {
                 var status = val.scr_status;
                 var rem = (val.scr_remarks == '' || val.scr_remarks == null) ? '-' : val.scr_remarks;
                 var file = (val.scr_file == null || val.scr_file == '') ? 'N/A' : '<a class="text-primary" href="' + base_url + "assets/oprs/uploads/reviewersdoc/" + val.scr_file + '" target="_blank" download>Downlod</a>';
-
                 var reco = (status == 4) ? '<span class="badge rounded-pill bg-success">SUCCESS</span>' : '<span class="badge rounded-pill bg-danger">FAILED</span>';
-                
+ 
+
                 $('#reviews_table tbody').append('<tr><td>' + i +'</td> \
                                                 <td>' + name + '</td> \
-                                                <td>' + score + '</td> \
+                                                <td><a href="javascript:void(0);" onclick="view_score(\'' + val.rev_id + '\',\'' + man_id + '\',\'' + val.rev_name + '\')">' + score + '</a></td> \
                                                 <td>' + reco + ' \
                                                 <td>' + file +'</td> \
                                                 <td>' + rem +'</td></tr>');
@@ -6460,6 +6608,8 @@ function approve_manus(id) {
 
 // show score from tracking when score is clicked
 function view_score(id, manus_id, reviewer) {
+
+    $('#scoreModal').modal('toggle');
 
     $.ajax({
         type: "GET",
@@ -9066,4 +9216,42 @@ function suggest_peer(editor){
 
 function remove_suggest_peer(id){
     $('#heading'+id).closest('div').remove();
+}
+
+function submit_consolidation(){
+    $('#consolidationModal').modal('toggle');
+    $('#reviewsModal').modal('toggle');
+    $('#cons_man_id').val(man_id);
+}
+
+function checkOnlyOne(checkbox) {
+    let name = $(checkbox).attr('name');
+    const checkboxes = document.querySelectorAll('input[name="' + name + '"]');
+    checkboxes.forEach((cb) => {
+      if (cb !== checkbox) cb.checked = false;
+    });
+}
+
+function upload_revision(man_id){
+
+    $('#uploadRevisionModal').modal('toggle');
+    $('#revision_consolidations').empty();
+    $('#revision_remarks').text('');
+    $('#manuscript_revision_form #man_id').val(man_id);
+    
+    //get consolidation
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_consolidation/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){    
+                $('#revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'">Download</a>');
+                $('#revision_remarks').text(val.cons_remarks);
+            });
+        }
+    });
+
+    //TODO:upload revision
 }

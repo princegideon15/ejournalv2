@@ -22,7 +22,8 @@ class Statistics extends OPRS_Controller {
 
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 20) {
+				// 3-managing editor 20-superadmin 5-technical desk editor
+				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20 || _UserRoleFromSession() == 5) {
 					$id = $this->session->userdata('_oprs_user_id');
 					$data['users'] = $this->User_model->get_user($id);
 					$data['logs'] = $this->Log_model->count_logs();

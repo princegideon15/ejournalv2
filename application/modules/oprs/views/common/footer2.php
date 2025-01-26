@@ -372,6 +372,31 @@
 						
 						<button class="btn btn-outline-secondary mb-3" id="btn_add_rev" type="button"><span class="fa fa-plus-square"></span> Add Reviewer</button>
 
+						
+						<nav>
+							<div class="nav nav-tabs" id="nav-tab" role="tablist">
+								<a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab" href="#nav-timeframe" role="tab" aria-controls="nav-timeframe" aria-selected="true"><span class="fas fa-stopwatch"></span> Timeframes</a> 
+							</div>
+						</nav>
+						<div class="tab-content p-3" id="nav-tabContent">
+							<div class="tab-pane fade show active" id="nav-timeframe" role="tabpanel" aria-labelledby="nav-timeframe-tab">
+								<p class="fw-bold">Accept Review</p>
+								<div class="input-group mb-3">
+								<input type="number" placeholder="0" id="trk_request_timer" name="trk_request_timer" style="width:70px !important;" min="1" value="5">
+								<div class="input-group-append">
+									<span class="input-group-text">Days to accept/decline the review request.</span>
+								</div>
+								</div>
+								<p class="fw-bold">Review Request</p>
+								<div class="input-group mb-3">
+								<input type="number" placeholder="0" id="trk_timeframe" name="trk_timeframe" style="width:70px !important;" min="1" value="30">
+								<div class="input-group-append">
+									<span class="input-group-text">Days to finish the review task</span>
+								</div>
+								</div>
+							</div>
+						</div>
+
 						<nav>
 							<div class="nav nav-tabs" id="nav-tab" role="tablist">
 								<a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab" href="#nav-timeframe" role="tab" aria-controls="nav-timeframe" aria-selected="true"><span class="fas fa-check-square"></span> Optional</a>
@@ -406,29 +431,7 @@
 					</div>
 					
                 </div>
-                <!-- <nav>
-                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab" href="#nav-timeframe" role="tab" aria-controls="nav-timeframe" aria-selected="true"><span class="fas fa-stopwatch"></span> Timeframes</a>  </div>
-                </nav>
-                <div class="tab-content p-3" id="nav-tabContent">
-                  <div class="tab-pane fade show active" id="nav-timeframe" role="tabpanel" aria-labelledby="nav-timeframe-tab">
-                    <p class="fw-bold">Accept Review</p>
-                    <div class="input-group mb-3">
-                      <input type="number" placeholder="0" id="trk_request_timer" name="trk_request_timer" style="width:70px !important;" min="1">
-                      <div class="input-group-append">
-                        <span class="input-group-text">Days to accept/decline the review request.</span>
-                      </div>
-                    </div>
-                    <p class="fw-bold">Review Request</p>
-                    <div class="input-group mb-3">
-                      <input type="number" placeholder="0" id="trk_timeframe" name="trk_timeframe" style="width:70px !important;" min="1">
-                      <div class="input-group-append">
-                        <span class="input-group-text">Days to finish the review task</span>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-                </div>
+			</div>
             <div class="col-6">
               <div class="accordion" id="rev_acc_mail">
                 <h6 class="fw-bold">Request for Manuscript Review Email</h6>
@@ -489,12 +492,8 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<table class="table table-bordered">
-					<tbody>
-					</tbody>
-				</table>
 				<form id="manuscript_form">
-					<h6 class="text-uppercase text-muted fw-bold bg-light p-2" style="font-size:14px">Upload Manuscript</h6>
+					<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>Upload Manuscript</h6>
 					<div class="mb-3">
 						<label class="fw-bold form-label" for="man_title">Title</label>
 						<textarea class="form-control" id="man_title" name="man_title" placeholder=""></textarea>
@@ -508,7 +507,7 @@
 							<?php endforeach ?>
 						</select>
 					</div>
-					<h6 class="text-uppercase text-muted fw-bold bg-light p-2" style="font-size:14px">Author Details</h6>
+					<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>Author Details</h6>
 					<div class="mb-1">
 						<div class="row">
 							<p class="fw-bold">Corresponding Author: <span class="text-primary"><?php echo $author['author_type'] ?? ''?></span>
@@ -567,7 +566,7 @@
 					</div>
 
 
-					<h6 class="text-uppercase text-muted fw-bold bg-light p-2" style="font-size:14px">File Uploads</h6>
+					<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>File Uploads</h6>
 					<div class="mb-3" id="man_abs_div">
 						<label class="fw-bold form-label" for="man_abs">Abstract</label>
 						<span class="badge rounded-pill bg-danger" id="badge_abs">PDF</span>
@@ -576,13 +575,13 @@
 					</div>
 					<div class="mb-3" id="man_file_div">
 						<label class="fw-bold form-label" for="man_file">Full Manuscript</label>
-						<span class="badge rounded-pill bg-danger" id="badge_pdf">PDF</span>
+						<span class="badge rounded-pill bg-danger">PDF</span>
 						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
 						<input type="file" class="form-control" id="man_file" name="man_file" accept="application/pdf">
 					</div>
 					<div class="mb-3" id="man_word_div">
 						<label class="fw-bold form-label" for="man_word">Full Manuscript</label>
-						<span class="badge rounded-pill bg-primary" id="badge_word">WORD</span>
+						<span class="badge rounded-pill bg-primary">WORD</span>
 						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
 						<input type="file" class="form-control" id="man_word" name="man_word"
 							accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
@@ -599,15 +598,104 @@
 					</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-outline-secondary btn_cancel" type="button" data-bs-dismiss="modal">Cancel</button>
-				<button class="btn btn-outline-secondary btn_close" type="button" data-bs-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary" id="btn_save">Submit</button>
+				<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
 <!-- /.Upload Manuscript-->
+
+<!-- Manuscript Details-->
+<div class="modal fade" id="manuscriptModal" tabindex="-1" role="dialog" aria-labelledby="uploadModal" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Manuscript Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table class="table table-bordered">
+					<tbody></tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.Manuscript Details-->
+
+
+<!-- Upload Manuscript Revision-->
+<div class="modal fade" id="uploadRevisionModal" tabindex="-1" role="dialog" aria-labelledby="uploadRevisionModal" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Manuscript Revision</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="manuscript_revision_form">
+					<input type="hidden" id="man_id" name="man_id">
+				<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>REVISION DOCUMENTS/REMARKS</h6>
+					<table class="table">
+						<tbody>
+							<tr><td class="fw-bold bg-light">Consolidated Review/Remarks</td><td id="revision_consolidations"></td></tr>
+							<tr><td class="fw-bold bg-light">Remarks</td><td id="revision_remarks"></td></tr>
+							<tr><td class="fw-bold bg-light">Revision Matrix Template</td><td><a href="<?php echo base_url("assets/oprs/uploads/REVISION_MATRIX_TEMPLATE.docx");?>" download>Download</a></td></tr>
+						</tbody>
+					</table>
+					<h6 class="text-uppercase text-muted fw-bold border border-2 bg-light p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span> Upload Revisions</h6>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="man_matrix">Revision Matrix</label>
+						<span class="badge rounded-pill bg-primary">WORD</span>
+						<span class="badge rounded-pill bg-danger">PDF</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_matrix" name="man_matrix" accept="application/pdf">
+					</div>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="man_abs">Abstract</label>
+						<span class="badge rounded-pill bg-danger">PDF</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_abs" name="man_abs" accept="application/pdf">
+					</div>
+					<div class="mb-3" id="man_file_div">
+						<label class="fw-bold form-label" for="man_file">Full Manuscript</label>
+						<span class="badge rounded-pill bg-danger">PDF</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_file" name="man_file" accept="application/pdf">
+					</div>
+					<div class="mb-3" id="man_word_div">
+						<label class="fw-bold form-label" for="man_word">Full Manuscript</label>
+						<span class="badge rounded-pill bg-primary">WORD</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_word" name="man_word"
+							accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+					</div>
+					<div class="mb-3" id="man_latex_div">
+						<label class="fw-bold form-label" for="man_latex">LaTex Format</label>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_latex" name="man_latex">
+					</div>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="man_pages">Number of pages</label>
+						<input type="number" class="form-control w-25" placeholder="0" id="man_pages" name="man_pages"
+							min="1">
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.Upload Manuscript Revision-->
 
 <!-- Confirm Upload Manuscript -->
 <div class="modal fade" id="confirmUploadModal" tabindex="-1">
@@ -643,18 +731,18 @@
 				<form id="final_manuscript_form">
 					<!-- <div class="mb-3" id="man_file_div">
             <label for="man_file">Upload Final Manuscript</label>
-            <span class="badge badge-warning" id="badge_pdf">PDF</span>
+            <span class="badge badge-warning">PDF</span>
             <input type="file" class="form-control" id="man_file" name="man_file" accept="application/pdf">
           </div> -->
 					<div class="mb-3" id="man_word_div">
 						<label class="fw-bold" for="man_word">Upload Final Manuscript</label>
-						<span class="badge bg-primary" id="badge_word">WORD</span>
+						<span class="badge bg-primary">WORD</span>
 						<input type="file" class="form-control" id="man_word" name="man_word"
 							accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
 					</div>
 					<div class="mb-3" id="man_abs_div">
 						<label for="man_abs">Upload Abstract</label>
-						<span class="badge bg-danger" id="badge_pdf">PDF</span>
+						<span class="badge bg-danger">PDF</span>
 						<input type="file" class="form-control" id="man_abs" name="man_abs" accept="application/pdf">
 					</div>
 					<div class="mb-3" id="man_key_div">
@@ -1079,7 +1167,7 @@
 								<th>#</th>
 								<th>Reviewer</th>
 								<th>Score</th>
-								<th>Recommendation</th>
+								<th>Review Status</th>
 								<th>File</th>
 								<th>Remarks</th>
 							</tr>
@@ -1090,7 +1178,9 @@
 				</div>
 			</div>
 			<div class="modal-footer">
+				<button class="btn btn-outline-secondary me-auto" type="button" data-bs-toggle="modal" data-bs-target="#reviewerModal">Back to Reviewers</button>
 				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" onclick="submit_consolidation()">Submit Consolidation</button>
 			</div>
 		</div>
 	</div>
@@ -1247,36 +1337,49 @@
 </div>
 <!-- /.Start Review -->
 
-<!-- Editorial Review -->
-<div class="modal fade" id="editorialModal">
+<!-- Technicak Desk Editor Consolidation -->
+<div class="modal fade" id="consolidationModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Editorial Review</h5>
+				<h5 class="modal-title" id="exampleModalLabel">Manuscript Reviews Consolidation</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="submit_editorial_review_form" method="POST" enctype="multipart/form-data">
+				<!-- <form id="submit_consolidation_form" method="POST" enctype="multipart/form-data"> -->
+				<form id="submit_consolidation_form">
 					<div class="mb-3">
-						<input type="hidden" id="edit_man_id" name="edit_man_id">
-						<label class="fw-bold">Upload file</label>
-						<div class="input-group is-invalid">
-							<div class="custom-file">
-								<input type="file" class="custom-file-input " id="edit_file" name="edit_file"
-									accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf" required>
-								<label class="custom-file-label edit_file" for="edit_file">Choose
-									file...</label>
+						<input type="hidden" id="cons_man_id" name="cons_man_id">
+						<div class="mb-3">
+							<label for="cons_file" class="form-label fw-bold">Consolidated reviews/remarks 
+								<!-- <span class="badge rounded-pill bg-primary">WORD</span> -->
+								<span class="badge rounded-pill bg-danger">PDF</span>
+							</label>
+							<!-- <input class="form-control" type="file" id="cons_file" name="cons_file" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"> -->
+							<input class="form-control" type="file" id="cons_file" name="cons_file" accept="application/pdf">
+						</div>
+					</div>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="cons_remarks">Remarks</label>
+						<textarea class="form-control form-control-sm" id="cons_remarks" name="cons_remarks"
+							placeholder="(Type N/A if no remarks)"></textarea>
+					</div>
+					<div>
+						<label for="cons_action" class="fw-bold form-label">Need Revision?</label>
+						<div class="d-flex gap-1" id="cons_revise">
+							<div class="form-check form-check-inline mt-2">
+								<input class="form-check-input" type="checkbox" id="cons_revise_yes" name="cons_revise" value="1" onclick="checkOnlyOne(this)">
+								<label class="form-check-label pt-1" for="cons_revise_yes">Yes</label>
+							</div>
+							<div class="form-check form-check-inline mt-2">
+								<input class="form-check-input" type="checkbox" id="cons_revise_no" name="cons_revise" value="2" onclick="checkOnlyOne(this)">
+								<label class="form-check-label pt-1" for="cons_revise_no">No</label>
 							</div>
 						</div>
-						<div class="errorTxt"></div>
-					</div>
-					<div class="mb-3 pt-3">
-						<label class="fw-bold" for="edit_remarks">Remarks</label>
-						<textarea class="form-control form-control-sm" id="edit_remarks" name="edit_remarks"
-							placeholder="(Optional)"></textarea>
 					</div>
 			</div>
 			<div class="modal-footer">
+				<button class="btn btn-outline-secondary me-auto" type="button" data-bs-toggle="modal" data-bs-target="#reviewsModal">Back to Reviews</button>
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 				<button type="submit" class="btn btn-primary">Submit</button>
 				</form>
@@ -1318,8 +1421,8 @@
 						<tr>
 							<td><?php echo $c->crt_subject; ?></td>
 							<td><?php echo $c->crt_description; ?></td>
-							<td><?php echo $c->crt_weight; ?></td>
-							<td id="<?php echo $c->crt_input_name; ?>" class="text-primary"></td>
+							<td class="text-center"><?php echo $c->crt_weight; ?></td>
+							<td id="<?php echo $c->crt_input_name; ?>" class="text-primary text-center"></td>
 							<?php if ($c->crt_type == 'text') {?>
 							<td id="scr_rem_<?php echo $x;
                             $x++; ?>" class="text-primary"></td>
@@ -1329,7 +1432,6 @@
 						<tr>
 							<td colspan="3" class="fw-bold">TOTAL SCORE</td>
 							<td colspan="2" id="scr_total" class="text-primary"></td>
-							<td></td>
 						</tr>
 						<tr>
 							<td class="fw-bold">GENERAL REMARKS</td>

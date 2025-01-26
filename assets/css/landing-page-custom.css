@@ -121,11 +121,16 @@ div.sticky{
     background-color: #003a5d;
 }
 
-.nav-link:hover {
+
+.custom-nav .nav-link:hover {
     text-decoration: none;
     background-color: #003a5d;
     color: white !important;
     padding:10px;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
 }
 
 .custom-input-search {

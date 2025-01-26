@@ -21,7 +21,8 @@ class Criterion extends OPRS_Controller {
 
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 20) {
+				// 3-managing editor 20-superadmin 5-technical desk editor
+				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20 || _UserRoleFromSession() == 5) {
 					$data['criteria'] = $this->Library_model->get_criteria(null, $criterion);
 					$data['crit_cat'] = $criterion;
 					$data['crit_name'] = $criterion == 1 ? 'Technical Review Criterion' : 'Peer Review Criterion';

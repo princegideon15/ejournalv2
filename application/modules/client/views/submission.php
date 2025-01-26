@@ -22,9 +22,9 @@
                                 <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/ejournal/submission/create_account');?>" target="_blank">Sign up here.</a></p>
                              <?php } ?> 
                             <!-- <a role="button" href="http://researchjournal.nrcp.dost.gov.ph/oprs/login" target="_blank" class="btn main-btn">Start Submission</a> -->
-                            <a role="button" href="<?php echo base_url('/oprs/login');?>" target="_blank" class="btn main-btn">Start Submission</a>
+                            <a role="button" href="<?php echo base_url('/oprs/login');?>" target="_blank" class="btn btn-lg main-btn text-decoration-none">Start Submission</a>
                         </div>
-                        <hr class="my-3">
+                        <hr class="my-5">
                         <!-- <div>
                             <h6 class="fw-bold">NRCP Member</h6>
                             <p>To submit manuscript, and to check the status of your submission,

@@ -20,7 +20,8 @@ class Process extends OPRS_Controller {
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20) {
+				// 3-managing editor 20-superadmin 5-technical desk editor
+				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20 || _UserRoleFromSession() == 5) {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/durations";
 					$data['user_roles'] = $this->Email_model->get_email_user_roles();

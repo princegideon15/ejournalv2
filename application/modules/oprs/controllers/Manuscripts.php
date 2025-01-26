@@ -131,15 +131,6 @@ class Manuscripts extends OPRS_Controller {
 		$totalEntries = $this->Manuscript_model->count_manus('total');
 		$newNumber = $totalEntries + 1; // Increment the count for the new entry
 
-		
-		// if($uploader_id == ''){
-		// 	$user_id = _UserIdFromSession();
-		// 	$source = '_me'; // uploaded by managing editor
-		// }else{
-		// 	$user_id = $this->input->post('man_usr_id', true);
-		// 	$source = '_sk_r'; 
-		// }
-
 		foreach ($result as $i => $field) {
 
 			$post[$field] = $this->input->post($field, true);
@@ -187,19 +178,20 @@ class Manuscripts extends OPRS_Controller {
 			$post['man_word'] = date('YmdHis') . '_' . $clean_file_word . '.' . $file_ext_word;
 			$upload_file_word = $post['man_word'];
 
-			// latex
-			$file_string_latex = str_replace(" ", "_", $_FILES['man_latex']['name']);
-			$file_no_ext_latex = preg_replace("/\.[^.]+$/", "", $file_string_latex);
-			$clean_file_latex = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_latex);
-
-			$filename_latex = $_FILES["man_latex"]["name"];
-			$file_ext_latex = pathinfo($filename_latex, PATHINFO_EXTENSION);
-
-			$post['man_latex'] = date('YmdHis') . '_' . $clean_file_latex . '.' . $file_ext_latex;
-			$upload_file_latex = $post['man_latex'];
+			if(isset($_FILES['man_latex']['name'])){
+				// latex
+				$file_string_latex = str_replace(" ", "_", $_FILES['man_latex']['name']);
+				$file_no_ext_latex = preg_replace("/\.[^.]+$/", "", $file_string_latex);
+				$clean_file_latex = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_latex);
+	
+				$filename_latex = $_FILES["man_latex"]["name"];
+				$file_ext_latex = pathinfo($filename_latex, PATHINFO_EXTENSION);
+	
+				$post['man_latex'] = date('YmdHis') . '_' . $clean_file_latex . '.' . $file_ext_latex;
+				$upload_file_latex = $post['man_latex'];
+			}
 		}
 
-		
 		$source = '_op'; // uploaded in oprs
 
 		$author_category = $this->Manuscript_model->get_author_category($user_id);
@@ -279,23 +271,25 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 
-		// local
-		$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_latex/';
-		// server
-		//  $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/initial_latex/';
+		if(isset($upload_file_latex)){
+			// local
+			$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_latex/';
+			// server
+			//  $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/initial_latex/';
+		
+			// upload full manuscript latex
+			$config_latex['upload_path'] = $dir_latex;
+			$config_latex['allowed_types'] = 'tex';
+			$config_latex['file_name'] = $upload_file_latex;
 	
-		// upload full manuscript latex
-		$config_latex['upload_path'] = $dir_latex;
-		$config_latex['allowed_types'] = 'tex';
-		$config_latex['file_name'] = $upload_file_latex;
-
-		$this->load->library('upload', $config_latex);
-		$this->upload->initialize($config_latex);
-
-		if (!$this->upload->do_upload('man_latex')) {
-			$error = $this->upload->display_errors(); 
-		} else {
-			$data = $this->upload->data();
+			$this->load->library('upload', $config_latex);
+			$this->upload->initialize($config_latex);
+	
+			if (!$this->upload->do_upload('man_latex')) {
+				$error = $this->upload->display_errors(); 
+			} else {
+				$data = $this->upload->data();
+			}
 		}
 
 		$output = $this->Manuscript_model->save_manuscript(array_filter($post));
@@ -334,8 +328,8 @@ class Manuscripts extends OPRS_Controller {
 			$this->Manuscript_model->save_coauthors($coa);
 		}
 
-		//send email to author if submit successfull
-		// $this->send_email_author(_UserIdFromSession());
+		//send email to author if submit successfull/acknowledgement email
+		$this->send_email_author();
 	}
 
 	/**
@@ -1727,62 +1721,204 @@ class Manuscripts extends OPRS_Controller {
 	// }
 
 	/**
-	 * Save final review of editorial board/publication committee
+	 * Technical desk editor submits consolidation to EIC if no revision, to author if for revision
 	 *
 	 * @return void
 	 */
-	public function editorial_review(){
-		
+	public function consolidation_review(){
+			
+		$man_id = $this->input->post('cons_man_id', true);
+		$status = $this->input->post('cons_revise', TRUE);
 
-		$man_id = $this->input->post('edit_man_id', true);
-
-		$post['edit_man_id'] = $man_id; 
-		$post['edit_usr_id'] = _UserIdFromSession(); 
-		$post['edit_remarks'] = $this->input->post('edit_remarks', true);
-		$post['edit_file'] = $this->input->post('edit_file', true);
+		$post['cons_man_id'] = $man_id; 
+		$post['cons_usr_id'] = _UserIdFromSession(); 
+		$post['cons_remarks'] = $this->input->post('cons_remarks', true);
+		$post['cons_file'] = $this->input->post('cons_file', true);
+		$post['cons_status'] = $status;
 		$post['date_created'] = date('Y-m-d H:i:s');
 
-	
-        $file_string = str_replace(" ", "_", $_FILES['edit_file']['name']);
+        $file_string = str_replace(" ", "_", $_FILES['cons_file']['name']);
 		$file_no_ext = preg_replace("/\.[^.]+$/", "", $file_string);
 		$clean_file = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext);
-		$filename = $_FILES["edit_file"]["name"];
+		$filename = $_FILES["cons_file"]["name"];
 		$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
-		$post['edit_file'] = date('YmdHis') . '_' . $clean_file . '.' . $file_ext;
-		$upload_file = $post['edit_file'];
+		$post['cons_file'] = date('YmdHis') . '_' . $clean_file . '.' . $file_ext;
+		$upload_file = $post['cons_file'];
 
-		if ($post['edit_file'] != '') {
-			$config['upload_path'] = './assets/oprs/uploads/editorial/';
+		if ($post['cons_file'] != '') {
+			$config['upload_path'] = './assets/oprs/uploads/consolidations/';
 		    $config['allowed_types'] = '*';
 			$config['file_name'] = $upload_file;
 			$this->load->library('upload', $config);
 			$this->upload->initialize($config);
-			if (!$this->upload->do_upload('edit_file')) {
+			if (!$this->upload->do_upload('cons_file')) {
 				$error = $this->upload->display_errors();
 			} else {
 				$data = $this->upload->data();
 			}
 		}
 
+		$this->Review_model->save_consolidations(array_filter($post));
 
-		$this->Manuscript_model->save_editorial_review(array_filter($post));
+		// email config
+		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
+		$link_to = base_url() . 'oprs/login';
+		$sender = 'eReview';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
 
-		$man['man_status'] = 5;
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+		
+		// get manuscript info
+		$output = $this->Review_model->get_manus_author_info($man_id);
+
+		foreach ($output as $key => $value) {
+			$manuscript = $value->man_title;
+			$title = $value->man_author_title;
+			$author = $value->man_author;
+			$email = $value->man_email;
+		}
+		
+		// email notification condition
+		if($status == 1){ // for revision
+			$man['man_status'] = 10;
+			$track['trk_description'] = 'For Revision';
+			$email_contents = $this->Email_model->get_email_content(13);
+
+			$mail->AddAddress($email);
+		}else{ // no revision
+			$man['man_status'] = 7;
+			$track['trk_description'] = 'For Proofread';
+			$email_contents = $this->Email_model->get_email_content(12);
+
+			$next_processor_info = $this->User_model->get_processor_by_role(17);
+
+			foreach ($next_processor_info as $row) {
+				$next_processor_user_id = $row->usr_id;
+				$next_processor_email = $row->usr_username;
+			}
+
+			$mail->AddAddress($next_processor_email);
+		}
+
+		// update manuscript status
 		$man['last_updated'] = date('Y-m-d H:i:s');
 		$where['row_id'] = $man_id;
+		$this->Manuscript_model->update_manuscript_status(array_filter($man), $where);;
 
-		$this->Manuscript_model->process_manuscript(array_filter($man), $where);
-
+		// save tracking
 		$track['trk_man_id'] = $man_id;
 		$track['trk_processor'] = _UserIdFromSession();
-		$track['trk_description'] = 'FINAL';
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
-		
 		$this->Manuscript_model->tracking(array_filter($track));
 
-		
+
+		// email config
+		foreach($email_contents as $row){
+			$email_subject = $row->enc_subject;
+			$email_contents = $row->enc_content;
+
+			if( strpos($row->enc_cc, ',') !== false ) {
+				$email_cc = explode(',', $row->enc_cc);
+			}else{
+				$email_cc = array();
+				array_push($email_cc, $row->enc_cc);
+			}
+
+			if( strpos($row->enc_bcc, ',') !== false ) {
+				$email_bcc = explode(',', $row->enc_bcc);
+			}else{
+				$email_bcc = array();
+				array_push($email_bcc, $row->enc_bcc);
+			}
+
+			if( strpos($row->enc_user_group, ',') !== false ) {
+				$email_user_group = explode(',', $row->enc_user_group);
+			}else{
+				$email_user_group = array();
+				array_push($email_user_group, $row->enc_user_group);
+			}
+			
+		}
+
+		// add exisiting email as cc
+		if(count($email_user_group) > 0){
+			$user_group_emails = array();
+			foreach($email_user_group as $grp){
+				$username = $this->Email_model->get_user_group_emails($grp);
+				array_push($user_group_emails, $username);
+			}
+		}
+
+		// add cc if any
+		if(count($email_cc) > 0){
+			foreach($email_cc as $cc){
+				$mail->AddCC($cc);
+			}
+		}
+
+		// add bcc if any
+		if(count($email_bcc) > 0){
+			foreach($email_bcc as $bcc){
+				$mail->AddBCC($bcc);
+			}
+		}
+
+		// add existing as cc
+		if(count($user_group_emails) > 0){
+			foreach($user_group_emails as $grp){
+				$mail->AddCC($grp);
+			}
+		}
+
+		if($status == 1){ // for revision
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[FULL NAME]', $author, $emailBody);
+			$emailBody = str_replace('[TITLE]', $title, $emailBody);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+			
+
+		}else{ // no revision
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+		}
+		// send email
+		$mail->Subject = $email_subject;
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
+
 		// send email on-review
-		$this->notify_author_on_editor_review($man_id, 13);
+		// $this->notify_author_on_editor_review($man_id, 13);
 	}
 
 	/**
@@ -2319,14 +2455,13 @@ class Manuscripts extends OPRS_Controller {
 	 * @param [type] $id
 	 * @return void
 	 */
-	public function send_email_author($id){
+	public function send_email_author(){
 
-		$output = $this->Manuscript_model->get_member_info($id);
-        // echo json_encode($output);
-
-		foreach ($output as $key => $row) {
-			$dear = 'Dear ' . $row->TITLE. ' ' . $row->NAME . '<br/><br/>';
-			$email = $row->pp_email;
+		$user_info = $this->User_model->get_corresponding_author(_UserIdFromSession());
+		foreach ($user_info as $key => $row) {
+			$title =  $row->title;
+			$name = $row->first_name . ' ' . $row->last_name;
+			$email = $row->usr_username;
 		}
 		
 		$nameuser = 'eJournal Admin';
@@ -2348,24 +2483,55 @@ class Manuscripts extends OPRS_Controller {
 		$mail->From = $usergmail;
 		$mail->FromName = $nameuser;
 		$mail->AddAddress($email);
-		$dir = "https://skms.nrcp.dost.gov.ph/user/login";
-		$htmlBody = date("F j, Y") . '<br/><br/>' .
-			$dear .
-			'Your manuscript has been uploaded to the NRCP Research Journal for review. This will be processed and subjected to the next step - eReview.' .
-			'<br/><br/>' . 
 
-			'Thank you' . 
-			'<br/><br/>' . 
+		$email_contents = $this->Email_model->get_email_content(1);
 
-			'NRCP Research Journal' .
-			'<br/><br/>' .
+		// add cc/bcc
+		foreach($email_contents as $row){
+			$email_body = $row->enc_content;
+			$email_subject = $row->enc_subject;
 
+			if( strpos($row->enc_cc, ',') !== false ) {
+				$email_cc = explode(',', $row->enc_cc);
+		    }else{
+				$email_cc = array();
+				array_push($email_cc, $row->enc_cc);
+			}
+
+			if( strpos($row->enc_bcc, ',') !== false ) {
+				$email_bcc = explode(',', $row->enc_bcc);
+		    }else{
+				$email_bcc = array();
+				array_push($email_bcc, $row->enc_bcc);
+			}
+
+			if( strpos($row->enc_user_group, ',') !== false ) {
+				$email_user_group = explode(',', $row->enc_user_group);
+		    }else{
+				$email_user_group = array();
+				array_push($email_user_group, $row->enc_user_group);
+			}
 			
-			'** THIS IS AN AUTOMATED MESSAGE PLEASE DO NOT REPLY **';
+		}
+
+		// add exisiting email as cc 
+		if(count($email_user_group) > 0){
+			$user_group_emails = array();
+			foreach($email_user_group as $grp){
+				$username = $this->Email_model->get_user_group_emails($grp);
+				array_push($user_group_emails, $username);
+			}
+		}
+		
+		// replace reserved words
+		$emailBody = str_replace('[TITLE]', $title, $email_body);
+		$emailBody = str_replace('[FULL NAME]', $name, $emailBody);
+		$emailBody = $emailBody;
+
 	
 		// email content
-		$mail->Subject = "NRCP Journal Publication : Manuscript uploaded successfully";
-		$mail->Body = $htmlBody;
+		$mail->Subject = $email_subject;
+		$mail->Body = $emailBody;
 		$mail->IsHTML(true);
 		$mail->smtpConnect([
 			'ssl' => [
@@ -2850,54 +3016,52 @@ class Manuscripts extends OPRS_Controller {
 		$track['trk_source'] = '_op';
 		$this->Manuscript_model->tracking(array_filter($track));
 
-			// add exisiting email as cc
-			if(count($email_user_group) > 0){
-				$user_group_emails = array();
-				foreach($email_user_group as $grp){
-					$username = $this->Email_model->get_user_group_emails($grp);
-					array_push($user_group_emails, $username);
-				}
+		// add exisiting email as cc
+		if(count($email_user_group) > 0){
+			$user_group_emails = array();
+			foreach($email_user_group as $grp){
+				$username = $this->Email_model->get_user_group_emails($grp);
+				array_push($user_group_emails, $username);
 			}
+		}
 
+		// add cc if any
+		if(count($email_cc) > 0){
+			foreach($email_cc as $cc){
+				$mail->AddCC($cc);
+			}
+		}
 
-			// add cc if any
-			if(count($email_cc) > 0){
-				foreach($email_cc as $cc){
-					$mail->AddCC($cc);
-				}
+		// add bcc if any
+		if(count($email_bcc) > 0){
+			foreach($email_bcc as $bcc){
+				$mail->AddBCC($bcc);
 			}
-			// add bcc if any
-			if(count($email_bcc) > 0){
-				foreach($email_bcc as $bcc){
-					$mail->AddBCC($bcc);
-				}
-			}
+		}
 
-			// add existing as cc
-			if(count($user_group_emails) > 0){
-				foreach($user_group_emails as $grp){
-					$mail->AddCC($grp);
-				}
+		// add existing as cc
+		if(count($user_group_emails) > 0){
+			foreach($user_group_emails as $grp){
+				$mail->AddCC($grp);
 			}
+		}
 
-			// replace reserved words
-			
-			// send email
-			$mail->Subject = $email_subject;
-			$mail->Body = $emailBody;
-			$mail->IsHTML(true);
-			$mail->smtpConnect([
-				'ssl' => [
-					'verify_peer' => false,
-					'verify_peer_name' => false,
-					'allow_self_signed' => true,
-				],
-			]);
-			if (!$mail->Send()) {
-				echo '</br></br>Message could not be sent.</br>';
-				echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
-				exit;
-			}
+		// send email
+		$mail->Subject = $email_subject;
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
 	}
 
 	public function get_tech_rev_score($id){
@@ -4207,6 +4371,309 @@ class Manuscripts extends OPRS_Controller {
 		echo json_encode($output);
 	}
 	
+	public function get_consolidation($man_id){
+		$output = $this->Review_model->get_consolidation($man_id);
+		echo json_encode($output);
+	}
+
+	public function author_revision(){
+		$man_id = $this->input->post('man_id', TRUE);
+		$man_pages = $this->input->post('man_pages', TRUE);
+
+		// udpate manuscript, status
+		$post = array();
+		$post['man_pages'] = $man_pages;
+		$post['man_status'] = 6;
+
+		// full manuscript
+		$file_string_man = str_replace(" ", "_", $_FILES['man_file']['name']);
+		$file_no_ext_man = preg_replace("/\.[^.	]+$/", "", $file_string_man);
+		$clean_file_man = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_man);
+
+		$filename_man = $_FILES["man_file"]["name"];
+		$file_ext_man = pathinfo($filename_man, PATHINFO_EXTENSION);
+
+		$post['man_file'] = date('YmdHis') . '_' . $clean_file_man . '.' . $file_ext_man;
+		$upload_file_man = $post['man_file'];
+
+		// abstract
+		$file_string_abs = str_replace(" ", "_", $_FILES['man_abs']['name']);
+		$file_no_ext_abs = preg_replace("/\.[^.]+$/", "", $file_string_abs);
+		$clean_file_abs = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_abs);
+
+		$filename_abs = $_FILES["man_abs"]["name"];
+		$file_ext_abs = pathinfo($filename_abs, PATHINFO_EXTENSION);
+
+		$post['man_abs'] = date('YmdHis') . '_' . $clean_file_abs . '.' . $file_ext_abs;
+		$upload_file_abs = $post['man_abs'];
+
+		// word
+		$file_string_word = str_replace(" ", "_", $_FILES['man_word']['name']);
+		$file_no_ext_word = preg_replace("/\.[^.]+$/", "", $file_string_word);
+		$clean_file_word = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_word);
+
+		$filename_word = $_FILES["man_word"]["name"];
+		$file_ext_word = pathinfo($filename_word, PATHINFO_EXTENSION);
+
+		$post['man_word'] = date('YmdHis') . '_' . $clean_file_word . '.' . $file_ext_word;
+		$upload_file_word = $post['man_word'];
+
+		// latex
+		$file_string_latex = str_replace(" ", "_", $_FILES['man_latex']['name']);
+		$file_no_ext_latex = preg_replace("/\.[^.]+$/", "", $file_string_latex);
+		$clean_file_latex = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_latex);
+
+		$filename_latex = $_FILES["man_latex"]["name"];
+		$file_ext_latex = pathinfo($filename_latex, PATHINFO_EXTENSION);
+
+		$post['man_latex'] = date('YmdHis') . '_' . $clean_file_latex . '.' . $file_ext_latex;
+		$upload_file_latex = $post['man_latex'];
+
+		$post['last_updated'] = date('Y-m-d H:i:s');
+		$where['row_id'] = $man_id;
+		$this->Manuscript_model->update_manuscript_status(array_filter($post), $where);;
+
+		$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
+		// server
+		// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
+	
+		// upload full manuscript
+		$config_man['upload_path'] = $dir_man;
+		$config_man['allowed_types'] = 'pdf';
+		$config_man['file_name'] = $upload_file_man;
+
+		$this->load->library('upload', $config_man);
+		$this->upload->initialize($config_man);
+
+		if (!$this->upload->do_upload('man_file')) {
+			$error = $this->upload->display_errors();
+		} else {
+			$data = $this->upload->data();
+		}
+
+		// local
+		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
+		// server
+		//  $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
+	
+		// upload full manuscript
+		$config_abs['upload_path'] = $dir_abs;
+		$config_abs['allowed_types'] = 'pdf';
+		$config_abs['file_name'] = $upload_file_abs;
+
+		$this->load->library('upload', $config_abs);
+		$this->upload->initialize($config_abs);
+
+		if (!$this->upload->do_upload('man_abs')) {
+			$error = $this->upload->display_errors();
+		} else {
+			$data = $this->upload->data();
+		}
+
+		// local
+		$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
+		// server
+		//  $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
+	
+		// upload full manuscript word
+		$config_word['upload_path'] = $dir_word;
+		$config_word['allowed_types'] = 'doc|docx';
+		$config_word['file_name'] = $upload_file_word;
+
+		$this->load->library('upload', $config_word);
+		$this->upload->initialize($config_word);
+
+		if (!$this->upload->do_upload('man_word')) {
+			$error = $this->upload->display_errors(); 
+		} else {
+			$data = $this->upload->data();
+		}
+
+		// local
+		$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_latex/';
+		// server
+		//  $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/revised_latex/';
+	
+		// upload full manuscript latex
+		$config_latex['upload_path'] = $dir_latex;
+		$config_latex['allowed_types'] = 'tex';
+		$config_latex['file_name'] = $upload_file_latex;
+
+		$this->load->library('upload', $config_latex);
+		$this->upload->initialize($config_latex);
+
+		if (!$this->upload->do_upload('man_latex')) {
+			$error = $this->upload->display_errors(); 
+		} else {
+			$data = $this->upload->data();
+		}
+
+		// add uploaded matrix
+		$post = array();
+
+		// revision matrix
+		$file_string_mtx = str_replace(" ", "_", $_FILES['man_matrix']['name']);
+		$file_no_ext_mtx = preg_replace("/\.[^.]+$/", "", $file_string_mtx);
+		$clean_file_mtx = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_mtx);
+
+		$filename_mtx = $_FILES["man_matrix"]["name"];
+		$file_ext_mtx = pathinfo($filename_mtx, PATHINFO_EXTENSION);
+
+		$post['mtx_file'] = date('YmdHis') . '_' . $clean_file_mtx . '.' . $file_ext_mtx;
+		$upload_file_mtx = $post['mtx_file'];
+
+		$dir_mtx = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revision_matrix/';
+		// server
+		// $dir_mtx = '/var/www/html/ejournal/assets/oprs/uploads/revision_matrix/';
+	
+		// upload full mtxuscript
+		$config_mtx['upload_path'] = $dir_mtx;
+		$config_mtx['allowed_types'] = 'pdf';
+		$config_mtx['file_name'] = $upload_file_mtx;
+
+		$this->load->library('upload', $config_mtx);
+		$this->upload->initialize($config_mtx);
+
+		if (!$this->upload->do_upload('man_matrix')) {
+			$error = $this->upload->display_errors();
+		} else {
+			$data = $this->upload->data();
+		}
+
+		$post['mtx_man_id'] = $man_id;
+		$post['mtx_usr_id'] = _UserIdFromSession();
+		$post['date_created'] = date('Y-m-d H:i:s');
+		$this->Review_model->save_revision_matrix(array_filter($post));
+
+		// save tracking
+		$track['trk_man_id'] = $man_id;
+		$track['trk_description'] = 'Uploaded revision';
+		$track['trk_processor'] = _UserIdFromSession();
+		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
+		$this->Manuscript_model->tracking(array_filter($track));
+
+		// email config
+		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
+		$link_to = base_url() . 'oprs/login';
+		$sender = 'eReview';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+		
+		$next_processor_info = $this->User_model->get_processor_by_role(5);
+
+		foreach ($next_processor_info as $row) {
+			$next_processor_email = $row->usr_username;
+		}
+
+		$mail->AddAddress($next_processor_email);
+
+		$output = $this->Review_model->get_manus_author_info($man_id);
+
+		foreach ($output as $key => $value) {
+			$manuscript = $value->man_title;
+			$title = $value->man_author_title;
+			$author = $value->man_author;
+			$email = $value->man_email;
+		}
+
+		// get email notification content
+		$email_contents = $this->Email_model->get_email_content(14);
+
+		foreach($email_contents as $row){
+			$email_subject = $row->enc_subject;
+			$email_contents = $row->enc_content;
+
+			if( strpos($row->enc_cc, ',') !== false ) {
+				$email_cc = explode(',', $row->enc_cc);
+			}else{
+				$email_cc = array();
+				array_push($email_cc, $row->enc_cc);
+			}
+
+			if( strpos($row->enc_bcc, ',') !== false ) {
+				$email_bcc = explode(',', $row->enc_bcc);
+			}else{
+				$email_bcc = array();
+				array_push($email_bcc, $row->enc_bcc);
+			}
+
+			if( strpos($row->enc_user_group, ',') !== false ) {
+				$email_user_group = explode(',', $row->enc_user_group);
+			}else{
+				$email_user_group = array();
+				array_push($email_user_group, $row->enc_user_group);
+			}
+			
+		}
+		
+		$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+		https://researchjournal.nrcp.dost.gov.ph</a>";
+		$emailBody = str_replace('[LINK]', $link, $email_contents);
+		$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+		// add exisiting email as cc
+		if(count($email_user_group) > 0){
+			$user_group_emails = array();
+			foreach($email_user_group as $grp){
+				$username = $this->Email_model->get_user_group_emails($grp);
+				array_push($user_group_emails, $username);
+			}
+		}
+
+		// add cc if any
+		if(count($email_cc) > 0){
+			foreach($email_cc as $cc){
+				$mail->AddCC($cc);
+			}
+		}
+
+		// add bcc if any
+		if(count($email_bcc) > 0){
+			foreach($email_bcc as $bcc){
+				$mail->AddBCC($bcc);
+			}
+		}
+
+		// add existing as cc
+		if(count($user_group_emails) > 0){
+			foreach($user_group_emails as $grp){
+				$mail->AddCC($grp);
+			}
+		}
+
+		// send email
+		$mail->Subject = $email_subject;
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
+	}
 
 }
 

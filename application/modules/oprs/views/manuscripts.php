@@ -28,14 +28,14 @@
 									<ol>
 										<li>Submission of a paper to the NRCP Research Journal implies that the work has not been published, and is not under consideration for publication in other journals. If the manuscript is accepted for publication, the authors agree that the article will not be published elsewhere.</li>
 										<li>The manuscript/article (PDF format) to be submitted MUST NOT contain any traces of identity of author (i.e. Name of author, co-authors, email address and affiliation). The information, however, should be inputted in the upload forms (Word format).</li>
-										<li>Submission Process:
+										<!-- <li>Submission Process:
 											<ol type="a" class="ms-3 mt-1">
 												<li>Corresponding Author → check from SKMS database of the membership status (if member or non-member) → show the membership status.</li>
 												<li>Provide the corresponding author with radio-button option [O Main Author | O Co-Author</li>
 												<li>If the corresponding author is the main author → type/input the name(s) of the co-author(s). Each name should be checked with the SKMS DB for the status of membership. Display the membership status after the name, e.g. Dela Cruz, Juan A. (Non-Member), Manalo, Jose (Member)</li>
 												<li>If the corresponding author is a co-author → type/input the name of the primary author. Check the name with the SKMS DB for the status of membership. Display the membership status after the name, e.g. San Juan, Pedro (Member)</li>
 											</ol>
-										</li>
+										</li> -->
 									</ol>
 									<!-- The manuscript/article to be submitted must not contain any traces of identity of author (i.e. Name
 									of author, co-authors, email address and affiliation). <br />
@@ -46,7 +46,7 @@
 								</div>
 
 								<div class="table-responsive">
-									<table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
+									<table class="table table-hover" id="author_table" width="100%" cellspacing="0">
 										<thead>
 											<tr>
 												<th>#</th>
@@ -94,9 +94,9 @@
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"
 														data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
 
-														<?php if($m->man_status != 1){ ?>
+														<?php if($m->man_status == 10){ ?>
 															<button type="button" class="btn btn-outline-primary" rel="tooltip"
-															data-bs-placement="top" title="Upload Revision"><span class="fa fa-edit"></span></button>
+															data-bs-placement="top" title="Upload Revision" onclick="upload_revision(<?php echo $m->row_id; ?>)"><span class="fa fa-edit"></span></button>
 														<?php } ?>
 														
 													</div>

@@ -11,6 +11,8 @@ class Review_model extends CI_Model {
 	private $tech_rev_score = 'tbltech_rev_score';
 	private $editors_review = 'tbleditors_review';
 	private $suggested_peer = 'tblsuggested_peer';
+	private $consolidations = 'tblconsolidations';
+	private $revision_matrix = 'tblrevision_matrix';
 	// skms
 	private $business = 'tblbusiness_address';
 	private $specs = 'tblmembership_profiles';
@@ -292,6 +294,25 @@ class Review_model extends CI_Model {
 		$oprs->where('peer_man_id', $id);
 		$query = $oprs->get();
 		return $query->result();
+	}
+
+	public function save_consolidations($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->suggested_peer, $data);
+	}
+
+	public function get_consolidation($man_id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->consolidations);
+		$oprs->where('cons_man_id', $man_id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function save_revision_matrix($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->revision_matrix, $data);
 	}
 }
 

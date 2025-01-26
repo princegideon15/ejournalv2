@@ -57,7 +57,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto">
+      <ul class="navbar-nav me-auto custom-nav">
         <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" id="nav_home" href="<?php echo base_url();?>">Home</a>
         </li>
