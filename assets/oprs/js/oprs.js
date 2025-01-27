@@ -5199,6 +5199,86 @@ $(document).ready(function() {
               });
         }
     });
+    
+    $("#submit_revision_endorsement_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            cons_remarks: {
+                required: true,
+            },
+            cons_check_revise: {
+                required: true,
+            },
+        },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "cons_check_revise") {
+                error.insertAfter("#cons_check_revise");
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#checkRevisionModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_revision_endorsement_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/check_revision",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_revision_endorsement_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
 
     $("#manuscript_revision_form").validate({
         debug: true,
@@ -5725,7 +5805,7 @@ function unique(array) {
 }
 
 // get all info of uploaded manuscript
-function view_manus(id, hide) {
+function view_manus(id, hide, file) {
 
     $('#manuscriptModal .table-bordered > tbody').empty();
 
@@ -5761,7 +5841,13 @@ function view_manus(id, hide) {
                         var prim = (hide == 1) ? '<em>Undisclosed</em>' : val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
                         var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
                         var man_type = (val.man_type) ? val.publication_desc : 'N/a'; 
-                        var dir = (val.man_status == 1) ? 'initial' : ((val.man_status == 6) ? 'revised' : 'final');
+
+                        if(file){
+                            var dir = (file) ? 'revised' : 'initial';
+                        }else{
+                            var dir = (val.man_status == 1) ? 'initial' : ((val.man_status == 6) ? 'revised' : (val.man_status == 13) ? 'final' : '');
+                        }
+                        
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
                        
 
@@ -9255,6 +9341,8 @@ function upload_revision(man_id){
 }
 
 function endorse_coped(man_id){
+
+    $('#submit_revision_endorsement_form #cons_man_id').val(man_id);
       //get revision matrix
       $.ajax({
         type: "GET",

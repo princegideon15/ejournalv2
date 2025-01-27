@@ -17,6 +17,7 @@ class Manuscript_model extends CI_Model {
 	private $status = 'tblstatus_types';
 	private $publication = 'tblpublication_types';
 	private $roles = 'tblroles';
+	private $matrix = 'tblrevision_matrix';
 	// skms
 	private $skms_mem = 'tblpersonal_profiles';
 	private $skms_exp = 'tblmembership_profiles';
@@ -125,12 +126,17 @@ class Manuscript_model extends CI_Model {
 			$oprs->where('edit_usr_id', _UserIdFromSession());
 		}else if($role_id == 16){ // peer reviwer
 				$oprs->select('m.*,s.scr_status, s.date_reviewed, r.rev_hide_auth, scr_nda');
-				$oprs->from($this->scores . ' s');
-				$oprs->join($this->reviewers . ' r', 's.scr_man_rev_id = r.rev_id');
 				$oprs->join($this->manus . ' m', 'm.row_id = s.scr_man_id');
 				$oprs->where('r.rev_id', _UserIdFromSession());
 				$oprs->where('r.rev_status', 1);
 				$oprs->group_by('m.row_id');
+		}else if($role_id == 17){ // copy editor
+			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class, IFNULL(x.mtx_file,"") as file');
+			$oprs->from($this->manus . ' m');
+			$oprs->join($this->matrix . ' x', 'm.row_id = x.mtx_man_id', 'left');
+			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
+			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+			$oprs->where('man_status', 7);
 		}else{ // super admin
 				$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 				$oprs->from($this->manus . ' m');

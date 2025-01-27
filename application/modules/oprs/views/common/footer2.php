@@ -621,8 +621,7 @@
 				</table>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Submit</button>
+				<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
@@ -2447,20 +2446,19 @@
 					</div>
 					<div>
 						<label for="cons_action" class="fw-bold form-label">Need Revision?</label>
-						<div class="d-flex gap-1" id="cons_revise">
+						<div class="d-flex gap-1" id="cons_check_revise">
 							<div class="form-check form-check-inline mt-2">
-								<input class="form-check-input" type="checkbox" id="cons_revise_yes" name="cons_revise" value="1" onclick="checkOnlyOne(this)">
+								<input class="form-check-input" type="checkbox" id="cons_revise_yes" name="cons_check_revise" value="1" onclick="checkOnlyOne(this)">
 								<label class="form-check-label pt-1" for="cons_revise_yes">Yes</label>
 							</div>
 							<div class="form-check form-check-inline mt-2">
-								<input class="form-check-input" type="checkbox" id="cons_revise_no" name="cons_revise" value="2" onclick="checkOnlyOne(this)">
+								<input class="form-check-input" type="checkbox" id="cons_revise_no" name="cons_check_revise" value="2" onclick="checkOnlyOne(this)">
 								<label class="form-check-label pt-1" for="cons_revise_no">No</label>
 							</div>
 						</div>
 					</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-outline-secondary me-auto" type="button" data-bs-toggle="modal" data-bs-target="#reviewsModal">Back to Reviews</button>
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 				<button type="submit" class="btn btn-primary">Submit</button>
 				</form>

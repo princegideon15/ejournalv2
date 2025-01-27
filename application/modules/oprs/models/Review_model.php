@@ -323,6 +323,11 @@ class Review_model extends CI_Model {
 		$query = $oprs->get();
 		return $query->result();
 	}
+
+	public function update_consolidations($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->consolidations, $data, $where);
+	}
 }
 
 

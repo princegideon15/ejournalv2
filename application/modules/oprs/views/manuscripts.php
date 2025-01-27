@@ -581,6 +581,18 @@
 																class="fa fa-trash"></span></button>
 													<?php } ?>
 
+													<!-- COPY EDITOR -->
+													<?php if (_UserRoleFromSession() == 17 ) { ?>	<!-- view manuscript details -->
+														
+														<button type="button" class="btn btn-outline-primary"
+															onclick="clued_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
+															data-bs-toggle="modal" data-bs-target="#copEdModal" rel="tooltip"
+															data-bs-placement="top" title="Process"><span
+																class="fas fa-gear"></span></button>
+														<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+															data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>,'0','<?php echo $m->file; ?>');"><span class="fa fa-eye"></span></button>
+													<?php } ?>
+
 													<!-- approve manuscript -->
 													<?php if (_UserRoleFromSession() == 9 && $rev_act >= 3 ) { ?>
 													<!-- <button type="button" class="btn btn-light text-success btn" rel="tooltip"
