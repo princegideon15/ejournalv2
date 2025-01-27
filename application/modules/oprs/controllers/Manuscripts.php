@@ -4675,6 +4675,11 @@ class Manuscripts extends OPRS_Controller {
 		}
 	}
 
+	public function get_revision_matrix($id){
+		$output = $this->Review_model->get_revision_matrix($id);
+		echo json_encode($output);
+	}
+
 }
 
 /* End of file Manuscripts.php */

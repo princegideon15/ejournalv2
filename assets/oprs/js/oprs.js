@@ -9252,6 +9252,19 @@ function upload_revision(man_id){
             });
         }
     });
+}
 
-    //TODO:upload revision
+function endorse_coped(man_id){
+      //get revision matrix
+      $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_revision_matrix/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){    
+                $('#uploaded_revision_matrix').append('<a href="'+ base_url + 'assets/oprs/uploads/revision_matrix/' + val.mtx_file +'" download>Download</a>');
+            });
+        }
+    });
 }

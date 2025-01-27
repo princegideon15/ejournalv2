@@ -227,6 +227,12 @@
 																			data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
 																			title="View Reviews"><span class="fa fa-eye"></span> View Reviews
 																		</button> -->
+																		<?php }else if($m->man_status == 6){ ?>
+																			<button type="button" class="btn btn-outline-primary"
+																			onclick="endorse_coped('<?php echo $m->row_id; ?>')"
+																			data-bs-toggle="modal" data-bs-target="#checkRevisionModal" rel="tooltip"
+																			data-bs-placement="top" title="Endorse to Copy Editor"><span
+																				class="fas fa-gear"></span></button>
 																		<?php }else if($m->man_status == 8){ ?>
 																			<!-- publish to ejournal -->
 																			<!-- <button type="button" class="btn border border-1 btn-light text-success"

@@ -314,6 +314,15 @@ class Review_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->insert($this->revision_matrix, $data);
 	}
+	
+	public function get_revision_matrix($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->revision_matrix);
+		$oprs->where('mtx_man_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
 }
 
 

@@ -2421,6 +2421,56 @@
 </div>
 <!-- /.Cluster Editor Process  -->
 
+<!-- Technical Desk Editor on Revision - Copy Editor -->
+<div class="modal fade" id="checkRevisionModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Manuscript Revision Matrix</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- <form id="submit_consolidation_form" method="POST" enctype="multipart/form-data"> -->
+				<form id="submit_revision_endorsement_form">
+					<div class="mb-3">
+						<input type="hidden" id="cons_man_id" name="cons_man_id">
+						<div class="mb-3">
+							<label for="cons_file" class="form-label fw-bold">Uploaded Revision Matrix
+							</label>
+							<p id="uploaded_revision_matrix"></p>
+						</div>
+					</div>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="cons_remarks">Remarks</label>
+						<textarea class="form-control form-control-sm" id="cons_remarks" name="cons_remarks"
+							placeholder="(Type N/A if no remarks)"></textarea>
+					</div>
+					<div>
+						<label for="cons_action" class="fw-bold form-label">Need Revision?</label>
+						<div class="d-flex gap-1" id="cons_revise">
+							<div class="form-check form-check-inline mt-2">
+								<input class="form-check-input" type="checkbox" id="cons_revise_yes" name="cons_revise" value="1" onclick="checkOnlyOne(this)">
+								<label class="form-check-label pt-1" for="cons_revise_yes">Yes</label>
+							</div>
+							<div class="form-check form-check-inline mt-2">
+								<input class="form-check-input" type="checkbox" id="cons_revise_no" name="cons_revise" value="2" onclick="checkOnlyOne(this)">
+								<label class="form-check-label pt-1" for="cons_revise_no">No</label>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-outline-secondary me-auto" type="button" data-bs-toggle="modal" data-bs-target="#reviewsModal">Back to Reviews</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.Technical Desk Editor on Revision - Copy Editor -->
+
+
 <script type="text/javascript" >
 var base_url = '<?php echo base_url(); ?>';
 var prv_add = <?php echo (!empty($this->session->userdata('_prv_add'))) ? $this->session->userdata('_prv_add') : '0'; ?>;
