@@ -496,32 +496,26 @@
 															data-bs-toggle="modal" data-bs-target="#eicProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
-														
-															<!-- view manuscript details -->
-															<button type="button" class="btn btn-outline-secondary" rel="tooltip"
-															data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
-
-															<?php }else if($m->man_status <= 3){ ?>
-															<!-- process manuscript -->
-															<button type="button" class="btn border border-1 btn-light text-success"
-																onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
-																data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
-																data-bs-placement="top" title="Add Reviewers"><span
-																	class="fas fa-user-plus"></span></button>
-															<!-- view reviewers -->
-															<button type="button" class="btn border border-1 btn-light text-info"
-																onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
-																data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
-																data-bs-placement="top" title="View Reviewers"><span
-																	class="fas fa-users"></span></button>
 															<?php }else if($m->man_status == 8){ ?>
+															<!-- process manuscript -->
+															<button type="button" class="btn btn-outline-primary"
+																onclick="final_review(<?php echo $m->row_id; ?>)"
+																data-bs-toggle="modal" data-bs-target="#finalReviewModal" rel="tooltip"
+																data-bs-placement="top" title="Process"><span
+																	class="fas fa-gear"></span></button>
+															<?php }else if($m->man_status == 12){ ?>
 															<!-- publish to ejournal -->
-															<button type="button" class="btn border border-1 btn-light text-success"
+															<button type="button" class="btn btn-outline-primary"
 																onclick="publish_to_ejournal('<?php echo $m->row_id; ?>')"
 																data-bs-toggle="modal" data-bs-target="#publishModal" rel="tooltip"
 																data-bs-placement="top" title="Publish to eJournal"><span
 																	class="fas fa-paper-plane"></span></button>
 														<?php } ?>
+														
+														
+														<!-- view manuscript details -->
+														<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+														data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
 													<?php } ?>
 
 													<!-- ASSOCIATE EDITOR -->
@@ -585,8 +579,8 @@
 													<?php if (_UserRoleFromSession() == 17 ) { ?>	<!-- view manuscript details -->
 														
 														<button type="button" class="btn btn-outline-primary"
-															onclick="clued_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
-															data-bs-toggle="modal" data-bs-target="#copEdModal" rel="tooltip"
+															onclick="coped_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
+															data-bs-toggle="modal" data-bs-target="#copEdProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"

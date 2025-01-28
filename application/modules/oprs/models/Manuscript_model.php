@@ -107,7 +107,8 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
-			$oprs->where('man_status', 2);
+			$oprs->where_in('man_status', [2,8,12,13]);
+			$oprs->group_by('man_trk_no');
 		}else if ($role_id >= 7 && $role_id <= 10 ){ // associate
 			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 			$oprs->from($this->manus . ' m');

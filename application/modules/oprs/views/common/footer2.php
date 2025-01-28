@@ -640,16 +640,17 @@
 			<div class="modal-body">
 				<form id="manuscript_revision_form">
 					<input type="hidden" id="man_id" name="man_id">
+					<input type="hidden" id="revision_status" name="revision_status">
 				<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>REVISION DOCUMENTS/REMARKS</h6>
 					<table class="table">
 						<tbody>
 							<tr><td class="fw-bold bg-light">Consolidated Review/Remarks</td><td id="revision_consolidations"></td></tr>
 							<tr><td class="fw-bold bg-light">Remarks</td><td id="revision_remarks"></td></tr>
-							<tr><td class="fw-bold bg-light">Revision Matrix Template</td><td><a href="<?php echo base_url("assets/oprs/uploads/REVISION_MATRIX_TEMPLATE.docx");?>" download>Download</a></td></tr>
+							<tr id="revision_matrix_template"><td class="fw-bold bg-light">Revision Matrix Template</td><td><a href="<?php echo base_url("assets/oprs/uploads/REVISION_MATRIX_TEMPLATE.docx");?>" download>Download</a></td></tr>
 						</tbody>
 					</table>
 					<h6 class="text-uppercase text-muted fw-bold border border-2 bg-light p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span> Upload Revisions</h6>
-					<div class="mb-3">
+					<div class="mb-3" id="div_man_matrix">
 						<label class="fw-bold form-label" for="man_matrix">Revision Matrix</label>
 						<span class="badge rounded-pill bg-primary">WORD</span>
 						<span class="badge rounded-pill bg-danger">PDF</span>
@@ -2468,6 +2469,71 @@
 </div>
 <!-- /.Technical Desk Editor on Revision - Copy Editor -->
 
+<!-- Copy Editor Process -->
+<div class="modal fade" id="copEdProcessModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Manuscript Proofreading</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- <form id="submit_consolidation_form" method="POST" enctype="multipart/form-data"> -->
+				<form id="submit_coped_process_form">
+					<input type="hidden" id="coped_man_id" name="coped_man_id">
+					<div class="mb-3">
+						<label for="coped_file" class="form-label fw-bold">Upload reviews/remarks 
+							<!-- <span class="badge rounded-pill bg-primary">WORD</span> -->
+							<span class="badge rounded-pill bg-danger">PDF</span>
+						</label>
+						<!-- <input class="form-control" type="file" id="cons_file" name="cons_file" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"> -->
+						<input class="form-control" type="file" id="coped_file" name="coped_file" accept="application/pdf">
+					</div>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="coped_remarks">Remarks</label>
+						<textarea class="form-control form-control-sm" id="coped_remarks" name="coped_remarks"
+							placeholder="(Type N/A if no remarks)"></textarea>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.Copy Editor Process -->
+
+<!-- EIC Final Review -->
+<div class="modal fade" id="finalReviewModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Final Review and decision to publish</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- <form id="submit_consolidation_form" method="POST" enctype="multipart/form-data"> -->
+				<form id="submit_final_review_form">
+					<input type="hidden" id="final_man_id" name="final_man_id">
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="final_remarks">Remarks</label>
+						<textarea class="form-control form-control-sm" id="final_remarks" name="final_remarks"
+							placeholder="(Type N/A if no remarks)"></textarea>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.EIC Final Review -->
+
+                                                                                                                                                             
 
 <script type="text/javascript" >
 var base_url = '<?php echo base_url(); ?>';

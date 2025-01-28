@@ -298,7 +298,7 @@ class Review_model extends CI_Model {
 
 	public function save_consolidations($data){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->insert($this->suggested_peer, $data);
+		$oprs->insert($this->consolidations, $data);
 	}
 
 	public function get_consolidation($man_id){
@@ -306,7 +306,7 @@ class Review_model extends CI_Model {
 		$oprs->select('*');
 		$oprs->from($this->consolidations);
 		$oprs->where('cons_man_id', $man_id);
-		$query = $oprs->get();
+		$query = $oprs->order_by('id','desc')->limit(1)->get();
 		return $query->result();
 	}
 

@@ -5114,7 +5114,6 @@ $(document).ready(function() {
         });
     });
 
-
     $("#submit_consolidation_form").validate({
         debug: true,
         errorClass: 'text-danger',
@@ -5249,6 +5248,148 @@ $(document).ready(function() {
                         success: function(data) {
                             $('body').loading('stop');
                             $('#submit_revision_endorsement_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#submit_coped_process_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            coped_file: {
+                // required: true,
+                extension: "pdf",
+            },
+            coped_remarks: {
+                required: true,
+            },
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#copEdProcessModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_coped_process_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_coped_process",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_coped_process_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#submit_final_review_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            final_remarks: {
+                required: true,
+            },
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#finalReviewModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_final_review_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_final_review",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_final_review_form')[0].reset();
                             Swal.fire({
                             title: "Review submitted successfully!",
                             icon: 'success',
@@ -5845,7 +5986,7 @@ function view_manus(id, hide, file) {
                         if(file){
                             var dir = (file) ? 'revised' : 'initial';
                         }else{
-                            var dir = (val.man_status == 1) ? 'initial' : ((val.man_status == 6) ? 'revised' : (val.man_status == 13) ? 'final' : '');
+                            var dir = (val.man_status == 1) ? 'initial' : ((val.man_status == 6) ? 'revised' : (val.man_status == 8) ? 'final' : 'final');
                         }
                         
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
@@ -7067,23 +7208,23 @@ function notifications2()
 }
 
 // for final review of editor (for finalization)
-function final_review(id){
-    $('#committeeModal').modal('toggle');
+// function final_review(id){
+//     $('#committeeModal').modal('toggle');
     
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/get_manuscript_by_id/" + id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val){
-                $('#manus_title').val(val.man_title);
-                $('#manus_author').val(val.man_author);
-                $('#com_man_id').val(id);
-            });
-        }
-    });
-}
+//     $.ajax({
+//         type: "GET",
+//         url: base_url + "oprs/manuscripts/get_manuscript_by_id/" + id,
+//         dataType: "json",
+//         crossDomain: true,
+//         success: function(data) {
+//             $.each(data, function(key, val){
+//                 $('#manus_title').val(val.man_title);
+//                 $('#manus_author').val(val.man_author);
+//                 $('#com_man_id').val(id);
+//             });
+//         }
+//     });
+// }
 
 // show publication committee review in tracking (for finalization)
 function com_review(id, trk){
@@ -9214,9 +9355,9 @@ function clued_process(id, title) {
 
     man_id = id;
     var manuscript_title = decodeURIComponent(title);
-    $('#cluEdProcessModal #man_title').text('').text(manuscript_title);
+    $('#copEdProcessModal #man_title').text('').text(manuscript_title);
 
-    $('#assoc_remarks').text('');
+    // $('#assoc_remarks').text('');
     // get editor in chief remarks
     $.ajax({
         type: "GET",
@@ -9332,18 +9473,26 @@ function upload_revision(man_id){
         dataType: "json",
         crossDomain: true,
         success: function(data) {
+            console.log(data);
             $.each(data, function(key, val){    
+                // technical desk editor consolidate peer review results
                 $('#revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'">Download</a>');
                 $('#revision_remarks').text(val.cons_remarks);
+                $('#revision_status').text(val.cons_status);
+
+                if(val.cons_status == 3){
+                    $('#revision_matrix_template').hide();
+                    $("#div_man_matrix").hide();
+                }
             });
         }
     });
 }
 
-function endorse_coped(man_id){
+function coped_process(man_id){
 
-    $('#submit_revision_endorsement_form #cons_man_id').val(man_id);
-      //get revision matrix
+    $('#submit_coped_process_form #coped_man_id').val(man_id);
+      //get remarks of previous processor
       $.ajax({
         type: "GET",
         url: base_url + "oprs/manuscripts/get_revision_matrix/" + man_id,
@@ -9355,4 +9504,8 @@ function endorse_coped(man_id){
             });
         }
     });
+}
+
+function final_review(man_id){
+    $('#submit_final_review_form #final_man_id').val(man_id);
 }
