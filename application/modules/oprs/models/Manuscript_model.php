@@ -138,6 +138,13 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->where('man_status', 7);
+		}else if($role_id == 15){ // layout artist
+			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class, IFNULL(x.mtx_file,"") as file');
+			$oprs->from($this->manus . ' m');
+			$oprs->join($this->matrix . ' x', 'm.row_id = x.mtx_man_id', 'left');
+			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
+			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+			$oprs->where('man_status', 11);
 		}else{ // super admin
 				$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 				$oprs->from($this->manus . ' m');

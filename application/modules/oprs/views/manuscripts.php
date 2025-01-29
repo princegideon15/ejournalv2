@@ -94,9 +94,16 @@
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"
 														data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
 
-														<?php if($m->man_status == 10){ ?>
+														<?php if($m->man_status == 10){ ?> 
+															<!-- for revision -->
 															<button type="button" class="btn btn-outline-primary" rel="tooltip"
 															data-bs-placement="top" title="Upload Revision" onclick="upload_revision(<?php echo $m->row_id; ?>)"><span class="fa fa-edit"></span></button>
+														<?php } ?>
+
+														<?php if($m->man_status == 9){ ?>
+															<!-- for proofread / revision -->
+															<button type="button" class="btn btn-outline-primary" rel="tooltip"
+															data-bs-placement="top" title="Upload Revision" onclick="upload_proofread_revision(<?php echo $m->row_id; ?>)"><span class="fa fa-edit"></span></button>
 														<?php } ?>
 														
 													</div>
@@ -581,6 +588,18 @@
 														<button type="button" class="btn btn-outline-primary"
 															onclick="coped_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
 															data-bs-toggle="modal" data-bs-target="#copEdProcessModal" rel="tooltip"
+															data-bs-placement="top" title="Process"><span
+																class="fas fa-gear"></span></button>
+														<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+															data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>,'0','<?php echo $m->file; ?>');"><span class="fa fa-eye"></span></button>
+													<?php } ?>
+
+													<!-- LAYOUT ARTIST -->
+													<?php if (_UserRoleFromSession() == 15 ) { ?>	
+														
+														<button type="button" class="btn btn-outline-primary"
+															onclick="layout_process(<?php echo $m->row_id; ?>)"
+															data-bs-toggle="modal" data-bs-target="#layoutProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"

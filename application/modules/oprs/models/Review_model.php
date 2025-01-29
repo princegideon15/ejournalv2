@@ -13,6 +13,7 @@ class Review_model extends CI_Model {
 	private $suggested_peer = 'tblsuggested_peer';
 	private $consolidations = 'tblconsolidations';
 	private $revision_matrix = 'tblrevision_matrix';
+	private $layouts = 'tbllayouts';
 	// skms
 	private $business = 'tblbusiness_address';
 	private $specs = 'tblmembership_profiles';
@@ -327,6 +328,20 @@ class Review_model extends CI_Model {
 	public function update_consolidations($data, $where){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->update($this->consolidations, $data, $where);
+	}
+
+	public function save_layouts($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->layouts, $data);
+	}
+
+	public function get_layout($man_id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->layouts);
+		$oprs->where('lay_man_id', $man_id);
+		$query = $oprs->get();
+		return $query->result();
 	}
 }
 

@@ -5421,6 +5421,79 @@ $(document).ready(function() {
         }
     });
 
+    $("#submit_layout_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            lay_file: {
+                required: true,
+                extension: "pdf",
+            },
+            lay_remarks: {
+                required: true,
+            },
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#layoutProcessModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_layout_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_layout",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_layout_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
     $("#manuscript_revision_form").validate({
         debug: true,
         errorClass: 'text-danger',
@@ -5986,7 +6059,7 @@ function view_manus(id, hide, file) {
                         if(file){
                             var dir = (file) ? 'revised' : 'initial';
                         }else{
-                            var dir = (val.man_status == 1) ? 'initial' : ((val.man_status == 6) ? 'revised' : (val.man_status == 8) ? 'final' : 'final');
+                            var dir = (val.man_status >= 1) ? 'initial' : ((val.man_status >= 6) ? 'revised' : (val.man_status >= 8) ? 'final' : 'final');
                         }
                         
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
@@ -9489,6 +9562,29 @@ function upload_revision(man_id){
     });
 }
 
+function upload_proofread_revision(man_id){
+
+    $('#uploadProofreadRevisionModal').modal('toggle');
+    $('#layout_file').empty();
+    $('#layout_remarks').text('');
+    $('#submit_proofread_revision_form #man_id').val(man_id);
+    
+    //get layout
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_layout/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){    
+                // technical desk editor consolidate peer review results
+                $('#layout_file').append('<a href="'+ base_url + 'assets/oprs/uploads/layouts/' + val.lay_file +'">Download</a>');
+                $('#layout_remarks').text(val.lay_remarks);
+            });
+        }
+    });
+}
+
 function coped_process(man_id){
 
     $('#submit_coped_process_form #coped_man_id').val(man_id);
@@ -9508,4 +9604,8 @@ function coped_process(man_id){
 
 function final_review(man_id){
     $('#submit_final_review_form #final_man_id').val(man_id);
+}
+
+function layout_process(man_id){
+    $('#submit_layout_form #lay_man_id').val(man_id);
 }

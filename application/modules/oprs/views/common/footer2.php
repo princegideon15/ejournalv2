@@ -697,6 +697,65 @@
 </div>
 <!-- /.Upload Manuscript Revision-->
 
+<!-- Upload Proofread/Revision Manuscript-->
+<div class="modal fade" id="uploadProofreadRevisionModal" tabindex="-1" role="dialog" aria-labelledby="uploadProofreadRevisionModal" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Manuscript Proofread/Revision</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="submit_proofread_revision_form">
+					<input type="hidden" id="man_id" name="man_id">
+				<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>LAYOUT DOCUMENTS/REMARKS</h6>
+					<table class="table">
+						<tbody>
+							<tr><td class="fw-bold bg-light">Uploaded Layout and Format</td><td id="layout_file"></td></tr>
+							<tr><td class="fw-bold bg-light">Remarks</td><td id="layout_remarks"></td></tr>
+						</tbody>
+					</table>
+					<h6 class="text-uppercase text-muted fw-bold border border-2 bg-light p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span> Upload Final Revisions</h6>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="man_abs">Abstract</label>
+						<span class="badge rounded-pill bg-danger">PDF</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_abs" name="man_abs" accept="application/pdf">
+					</div>
+					<div class="mb-3" id="man_file_div">
+						<label class="fw-bold form-label" for="man_file">Full Manuscript</label>
+						<span class="badge rounded-pill bg-danger">PDF</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_file" name="man_file" accept="application/pdf">
+					</div>
+					<div class="mb-3" id="man_word_div">
+						<label class="fw-bold form-label" for="man_word">Full Manuscript</label>
+						<span class="badge rounded-pill bg-primary">WORD</span>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_word" name="man_word"
+							accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+					</div>
+					<div class="mb-3" id="man_latex_div">
+						<label class="fw-bold form-label" for="man_latex">LaTex Format</label>
+						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+						<input type="file" class="form-control" id="man_latex" name="man_latex">
+					</div>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="man_pages">Number of pages</label>
+						<input type="number" class="form-control w-25" placeholder="0" id="man_pages" name="man_pages"
+							min="1">
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.Upload Manuscript Revision-->
+
 <!-- Confirm Upload Manuscript -->
 <div class="modal fade" id="confirmUploadModal" tabindex="-1">
 	<div class="modal-dialog modal-sm">
@@ -2533,6 +2592,40 @@
 </div>
 <!-- /.EIC Final Review -->
 
+<!-- Layout Arist Formatting -->
+<div class="modal fade" id="layoutProcessModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Layout and Formatting</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="submit_layout_form">
+					<div class="mb-3">
+						<input type="hidden" id="lay_man_id" name="lay_man_id">
+						<div class="mb-3">
+							<label for="lay_file" class="form-label fw-bold">Upload Layout and Formatting
+								<!-- <span class="badge rounded-pill bg-primary">WORD</span> -->
+								<span class="badge rounded-pill bg-danger">PDF</span>
+							</label><input class="form-control" type="file" id="lay_file" name="lay_file" accept="application/pdf">
+						</div>
+					</div>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="lay_remarks">Remarks</label>
+						<textarea class="form-control form-control-sm" id="lay_remarks" name="lay_remarks"
+							placeholder="(Type N/A if no remarks)"></textarea>
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.Layout Arist Formatting -->
                                                                                                                                                              
 
 <script type="text/javascript" >
