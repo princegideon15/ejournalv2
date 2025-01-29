@@ -123,7 +123,7 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
-			// $oprs->where('man_status', 4);
+			$oprs->where('edit_status', NULL);
 			$oprs->where('edit_usr_id', _UserIdFromSession());
 		}else if($role_id == 16){ // peer reviwer
 				$oprs->select('m.*,s.scr_status, s.date_reviewed, r.rev_hide_auth, scr_nda');
@@ -319,9 +319,10 @@ class Manuscript_model extends CI_Model {
 		$oprs->select('t.*, role_name');
 		$oprs->from($this->track . ' t');
 		$oprs->join($this->manus . ' m', 'trk_man_id = m.row_id');
-		$oprs->join($this->user . ' u', 't.trk_processor = u.usr_id');
-		$oprs->join($this->roles . ' r', 'u.usr_role = r.role_id');
-		$oprs->where('man_trk_no', $id);
+		$oprs->join($this->user . ' u', 't.trk_processor = u.usr_id', 'left');
+		$oprs->join($this->roles . ' r', 'u.usr_role = r.role_id', 'left');
+		// $oprs->where('man_trk_no', $id);
+		$oprs->where('m.row_id', $id);
 		$oprs->order_by('trk_process_datetime', 'desc');
 		$query = $oprs->get();
 		return $query->result();

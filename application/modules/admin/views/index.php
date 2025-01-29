@@ -737,7 +737,7 @@
 											</select>
 										</div>
 										<div class="mb-3">
-											<label for="edt_affiliation" class="form-label">Specialization</label>
+											<label for="edt_specialization" class="form-label">Specialization</label>
 											<span class="badge rounded-pill bg-secondary">Separate in comma</span>
 											<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
 										</div>

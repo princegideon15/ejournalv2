@@ -240,7 +240,7 @@
 
 
 <!-- Process Manuscript-->
-<div class="modal fade" id="processModal" tabindex="-1" role="dialog" aria-labelledby="processModal" aria-hidden="true" style="z-index:9999">
+<div class="modal fade" id="processModal" tabindex="-1" role="dialog" aria-labelledby="processModal">
   <div class="modal-dialog modal-lg" role="document" style="max-width:90%">
     <div class="modal-content">
       <div class="modal-header">
@@ -417,8 +417,8 @@
 								</div>
 								</div>
 								<div class="form-group">
-								<label class="fw-bold" for="man_remarks">Remarks</label>
-								<textarea class="form-control" id="trk_remarks" name="trk_remarks" placeholder="Type your remarks here" onkeydown="countChar(this)"></textarea>
+								<label class="fw-bold form-label" for="trk_remarks">Remarks</label>
+								<textarea class="form-control" id="trk_remarks" name="trk_remarks" placeholder="(Type N/A if no remarks)" onkeydown="countChar(this)"></textarea>
 								<small class="text-muted float-right limit"></small>
 								</div>
 							</div>
@@ -435,6 +435,9 @@
             <div class="col-6">
               <div class="accordion" id="rev_acc_mail">
                 <h6 class="fw-bold">Request for Manuscript Review Email</h6>
+				<div class="alert alert-warning" role="alert">
+                  <span class="fas fa-exclamation-triangle"></span> Do not change or remove words with square brackets. <b>[EXAMPLE]</b>
+                </div>
                 <div class="card">
                   <div class="card-header p-0" id="heading1" data-bs-toggle="collapse" data-bs-target="#collapse_mail1">
                     <h5 class="mb-0">
@@ -506,6 +509,10 @@
 								<option value="<?php echo $row->id;?>"><?php echo $row->publication_desc;?></option>
 							<?php endforeach ?>
 						</select>
+					</div>
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="man_keywords">Keywords</label>
+						<input type="text" class="form-control" id="man_keywords" name="man_keywords" placeholder="ex. science, community, etc.">
 					</div>
 					<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>Author Details</h6>
 					<div class="mb-1">
@@ -849,223 +856,6 @@
 </div>
 <!--/. Submit successful -->
 
-
-<!-- Edit Manuscript-->
-<div class="modal fade" id="editorModal" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog"
-	aria-labelledby="editorModal" aria-hidden="true" style="z-index:9999">
-	<div class="modal-dialog modal-lg" role="document" style="max-width:90%">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Process Manuscript</h5>
-				<button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<form id="edit_manuscript_form" autocomplete="off">
-					<div class="row">
-						<div class="col-6">
-							<div class="mb-3">
-								<ul class="nav nav-tabs" id="myTab" role="tablist">
-									<li class="nav-item">
-										<a class="nav-link active"><span class="fa fa-book"></span>
-											Details</a>
-									</li>
-								</ul>
-								<div class="tab-content p-3" id="myTabContent">
-									<div class="tab-pane fade show active" id="new" role="tabpanel"
-										aria-labelledby="new-tab">
-										<div class="row">
-											<div class="col">
-												<label class="fw-bold" for="jor_volume">Volume No.</label>
-												<select class="form-select" id="jor_volume"
-													name="jor_volume" placeholder="Select existing or Enter new entry"
-													style="background-color:white">
-													<?php foreach ($u_journal as $j): ?>
-													<?php echo '<option value=' . $j->jor_volume . '>' . $j->jor_volume . '</option>'; ?>
-													<?php endforeach;?>
-												</select>
-											</div>
-											<div class="col">
-												<label class="fw-bold" for="jor_issue">Issue No.</label>
-												<select class="form-select" id="jor_issue" name="jor_issue">
-													<option value="">Select Issue no.</option>
-													<option value="1">1</option>
-													<option value="2">2</option>
-													<option value="3">3</option>
-													<option value="4">4</option>
-													<option value="5">Special Issue No. 1</option>
-													<option value="6">Special Issue No. 2</option>
-													<option value="7">Special Issue No. 3</option>
-													<option value="8">Special Issue No. 4</option>
-												</select>
-											</div>
-											<div class="col">
-												<label class="fw-bold" for="jor_year">Year</label>
-												<input type="number" class="form-control" id="jor_year" name="jor_year"
-													max="9999" min="1000">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<nav>
-								<div class="nav nav-tabs" id="nav-editor-tab" role="tablist">
-									<!-- <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-editor" role="tab"
-                                        aria-controls="nav-editor" aria-selected="true" id="btn_add_editor"><button
-                                            class="btn btn-primary btn-sm"><span class="fa fa-plus-square"></span> Add
-                                            Editor-in-chief</button></a>
-                                    <a class="nav-item nav-link disabled" data-bs-toggle="tab" href="#nav-editor" role="tab"
-                                        aria-controls="nav-editor" aria-selected="true" id="btn_add_editor">
-                                    </a> -->
-									<li class="nav-item">
-										<a class="nav-link active"><span class="fa fa-book"></span>
-											Editor-in-chief</a>
-									</li>
-								</div>
-							</nav>
-							<div class="tab-content p-3" id="nav-tabContent">
-								<div class="tab-pane fade show active" id="nav-editor" role="tabpanel">
-									<div class="mb-3">
-										<div id="editor_acc">
-											<div class="card">
-												<div class="card-header p-0" id="heading1" data-bs-toggle="collapse"
-													data-bs-target="#collapse1">
-													<h5 class="mb-0">
-														<button class="btn btn-link" type="button">
-															<span class="fa fa-address-card"></span> Editor 1 : <span
-																id="editor_header1"></span>
-														</button>
-													</h5>
-												</div>
-												<div id="collapse1" class="collapse show" data-parent="#editor_acc">
-													<div class="card-body">
-														<div class="row mb-2">
-															<div class="col-3">
-																<select class="form-select" id="editor_title1"
-																	name="editor_title[]" placeholder="Title">
-																	<?php foreach ($titles as $t): ?>
-																	<?php echo '<option value=' . $t->title_name . '>' . $t->title_name . '</option>'; ?>
-																	<?php endforeach;?>
-																</select>
-															</div>
-															<div class="col autocomplete">
-																<input autofocus type="text" class="form-control "
-																	id="editor_rev1" name="editor_rev[]"
-																	placeholder="Search by Name or Specialization">
-															</div>
-														</div>
-														<div class="row mb-2">
-															<div class="col">
-																<input type="text" class="form-control"
-																	placeholder="Email" id="editor_rev_email1"
-																	name="editor_rev_email[]">
-															</div>
-															<div class="col">
-																<input type="text" class="form-control"
-																	placeholder="Contact" id="editor_rev_num1"
-																	name="editor_rev_num[]">
-															</div>
-															<input type="hidden" id="editor_rev_id1"
-																name="editor_rev_id[]">
-														</div>
-														<div class="row">
-															<div class="col">
-																<input type="text" class="form-control"
-																	placeholder="Specialization" id="editor_rev_spec1"
-																	name="editor_rev_spec[]" autofocus>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<nav>
-								<div class="nav nav-tabs" id="nav-tab" role="tablist">
-									<a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab"
-										href="#nav-timeframe" role="tab" aria-controls="nav-timeframe"
-										aria-selected="true"><span class="fas fa-stopwatch"></span> Time frames
-										<small>(optional)</small></a>
-								</div>
-							</nav>
-							<div class="tab-content p-3" id="nav-tabContent">
-								<div class="tab-pane fade show active" id="nav-timeframe" role="tabpanel"
-									aria-labelledby="nav-timeframe-tab">
-
-									<p class="fw-bold">Review Request
-										<br /><small>Days/weeks to finish the review task</small>
-									</p>
-
-									<div class="input-group mb-3">
-										<input type="number" placeholder="0" style="width:75px !important"
-											id="editor_timeframe" name="editor_timeframe" style="width:50px !important;"
-											min="1">
-										<div class="input-group-append">
-											<select class="custom-select" id="editor_rev_day_week"
-												name="editor_rev_day_week">
-												<option value="1" selected>Days</option>
-												<option value="2">Week/s</option>
-											</select>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="mb-3">
-								<label class="fw-bold" for="man_remarks">Remarks</label>
-								<textarea class="form-control" id="editor_remarks" name="editor_remarks"
-									placeholder="Type your remarks here" onkeydown="countChar(this)"></textarea>
-								<small class="text-muted float-right limit"></small>
-							</div>
-						</div>
-						<div class="col-6">
-							<div class="accordion" id="editor_acc_mail">
-								<h6 class="fw-bold">Request for Manuscript Review Email</h6>
-								<div class="alert alert-warning" role="alert">
-									<span class="fas fa-exclamation-triangle"></span> Do not change or remove words with
-									square brackets. [EXAMPLE]
-								</div>
-								<div class="card">
-									<div class="card-header p-0" id="heading1" data-bs-toggle="collapse"
-										data-bs-target="#collapse_editor_mail1">
-										<h5 class="mb-0">
-											<button class="btn btn-link" type="button">
-												<span class="fa fa-envelope"></span> Editor 1 : <span
-													id="editor_header_mail1"></span>
-											</button>
-										</h5>
-									</div>
-									<div id="collapse_editor_mail1" class="collapse show"
-										data-parent="#editor_acc_mail">
-										<div class="card-body p-0">
-											<textarea type="text" id="editor_tiny_mail1" name="editor_tiny_mail[]"
-												style="height:500px"></textarea>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="alert alert-warning mt-3" role="alert">
-								<span class="fas fa-exclamation-triangle"></span> Do not change or remove words with
-								square brackets. [EXAMPLE]
-							</div>
-						</div>
-					</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Submit</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-</div>
-</div>
-<!--/. Edit Manuscript-->
-
 <!-- Process Status-->
 <div class="modal fade" id="trackingModal" tabindex="-1" role="dialog" aria-labelledby="trackingModal"
 	aria-hidden="true">
@@ -1120,7 +910,7 @@
 <!-- /.View Manuscript -->
 
 <!-- Editors -->
-<div class="modal fade" id="editorialReviewModal" tabindex="-1" role="dialog" aria-labelledby="processModal"
+<div class="modal fade" id="editorialReviewModal" tabindex="-1" role="dialog" aria-labelledby="editorialReviewModal"
 	aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
@@ -1159,7 +949,7 @@
 <!-- /.Editors -->
 
 <!-- Reviewers -->
-<div class="modal fade" id="reviewerModal" tabindex="-1" role="dialog" aria-labelledby="processModal"
+<div class="modal fade" id="reviewerModal" tabindex="-1" role="dialog" aria-labelledby="reviewerModal"
 	aria-hidden="true">
 	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">
@@ -1209,7 +999,7 @@
 <!-- /.Reviewers -->
 
 <!-- Reviews -->
-<div class="modal fade" id="reviewsModal" tabindex="-1" role="dialog" aria-labelledby="processModal" aria-hidden="true">
+<div class="modal fade" id="reviewsModal" tabindex="-1" role="dialog" aria-labelledby="reviewsModal" aria-hidden="true">
 	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -1511,7 +1301,7 @@
 </div>
 <!--./. View Score -->
 
-<!-- Review inputs before process -->
+<!-- Review inputs before process (UNUSED)-->
 <div class="modal fade" id="processReviewModal" tabindex="-1" role="dialog" aria-labelledby="processReviewModal"
 	aria-hidden="true" style="z-index:999999">
 	<div class="modal-dialog modal-sm" role="document">
@@ -2022,7 +1812,7 @@
 							</table>
 							<div>
 								<label for="tr_remarks" class="fw-bold form-label">Remarks</label>
-								<textarea class="form-control" id="tr_remarks" name="tr_remarks" placeholder=""></textarea>
+								<textarea class="form-control" id="tr_remarks" name="tr_remarks" placeholder="(Type N/A if no remarks)"></textarea>
 							</div>
 					</div>
 				</div>
@@ -2050,9 +1840,9 @@
       <div class="modal-body">
 	  	<div class="row">
 			<div class="col-6">
-				<p>Manuscript Title:</p>
+				<p class="fw-bold">Manuscript Title:</p>
 				<div class="fst-italic mb-3" id="man_title"></div>
-				<p>Technical Desk Editor Review Results:</p>
+				<p clas="fw-bold">Technical Desk Editor Review Results:</p>
 				<table class="table table-hover table-bordered" id="eic_table">
 					<thead>
 						<tr>
@@ -2097,7 +1887,7 @@
 							<div class="mb-3">
 								<form id="eic_review_form">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
-									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder="(Type N/A if no remarks)"
 										maxlength="255"></textarea>
 								</form>
 								<!-- <small class="text-muted float-right limit"></small> -->
@@ -2123,7 +1913,7 @@
 								</div>
 								<div class="mb-3">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
-									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder="(Type N/A if no remarks)"
 										maxlength="255"></textarea>
 									<!-- <small class="text-muted float-right limit"></small> -->
 								</div>
@@ -2179,7 +1969,7 @@
 
 								<div class="mb-3">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
-									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder="(Type N/A if no remarks)"
 											maxlength="255"></textarea>
 								</div>	
 							</form>
@@ -2262,7 +2052,7 @@
 							<div class="mb-3">
 								<form id="assoc_review_form">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
-									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder="(Type N/A if no remarks)"
 										maxlength="255"></textarea>
 								</form>
 								<!-- <small class="text-muted float-right limit"></small> -->
@@ -2292,7 +2082,7 @@
 								</div>
 								<div class="mb-3">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
-									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder="(Type N/A if no remarks)"
 										maxlength="255"></textarea>
 									<!-- <small class="text-muted float-right limit"></small> -->
 								</div>
@@ -2348,7 +2138,7 @@
 
 								<div class="mb-3">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
-									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder="(Type N/A if no remarks)"
 											maxlength="255"></textarea>
 								</div>	
 							</form>
@@ -2400,7 +2190,7 @@
 							<div class="mb-3">
 								<form id="cluster_review_form">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
-									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder="(Type N/A if no remarks)"
 										maxlength="255"></textarea>
 								</form>
 								<!-- <small class="text-muted float-right limit"></small> -->
@@ -2459,7 +2249,7 @@
 
 								<div class="mb-3">
 									<label for="man_remarks" class="form-label fw-bold">Remarks</label>
-									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder=""
+									<textarea class="form-control" id="man_remarks" name="man_remarks" placeholder="(Type N/A if no remarks)"
 											maxlength="255"></textarea>
 								</div>	
 							</form>

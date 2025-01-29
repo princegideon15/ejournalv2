@@ -684,6 +684,9 @@ $(document).ready(function() {
                 },
                 man_email: {
                     required: true,
+                },
+                man_keywords: {
+                    required: true,
                 }
             },
             messages: {
@@ -3259,6 +3262,9 @@ $(document).ready(function() {
             trk_request_timer: {
                 required: true,
             },
+            trk_remarks: {
+                required: true,
+            },
             jor_volume: {
                 required: true,
             },
@@ -3311,7 +3317,59 @@ $(document).ready(function() {
             }
 
             if (req.length == 0) {
-                $('#processReviewModal').modal('toggle');
+                // $('#processReviewModal').modal('toggle');
+                
+                Swal.fire({
+                    title: "Are you sure?",
+                    // text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#007bff",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Submit"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('body').loading('start');
+                        $('#processModal').modal('toggle');
+                        var formdata = new FormData($('#process_manuscript_form')[0]);
+                        
+                        $.ajax({
+                            url: base_url + "oprs/manuscripts/process/" + man_id,
+                            data: formdata,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            type: 'POST',
+                            crossDomain: true,
+                            success: function(data, textStatus, jqXHR) {
+                                Swal.fire({
+                                    title: "Manuscript review request submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                            }
+                        });
+                    }
+                });
             } else {
 
                 var alert = '	<div class="alert alert-danger" role="alert"><h6 class="alert-heading"><span class="fa fa-times-circle"></span> Please enter missing information:</h6>';
@@ -3568,7 +3626,7 @@ $(document).ready(function() {
         }
     });
 
-    // send to reviewers and send email
+    // send to reviewers and send email (UNUSED)
     $('#submit_final_process').click(function() {
 
         $('.modal').modal('hide');
@@ -5587,6 +5645,94 @@ $(document).ready(function() {
         }
     });
 
+    $("#submit_proofread_revision_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            man_abs : {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_file: {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_word: {
+                required: true,
+                extension: "doc|docx",
+                filesize : 20000000,
+            },
+            man_latex: {
+                texFile: true, // Use the custom rule
+                filesize : 20000000,
+            },
+            man_pages: {
+                required: true,
+            }
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#uploadProofreadRevisionModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_proofread_revision_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_final_revision",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_proofread_revision_form')[0].reset();
+                            Swal.fire({
+                            title: "Revision submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
     // submit to layout manager
     $("#publication_form").validate({
         debug: true,
@@ -5796,11 +5942,11 @@ function tracking(id, role, title, status) {
     
     $('#trackingModal').modal('toggle');
 
-    if(status == 1){
-        $('#trackingModal .dropdown').show();
-    }else{
-        $('#trackingModal .dropdown').hide();
-    }
+    // if(status == 1){
+    //     $('#trackingModal .dropdown').show();
+    // }else{
+    //     $('#trackingModal .dropdown').hide();
+    // }
 
 
     // var manuscript_title = decodeURIComponent(title);
@@ -5870,11 +6016,12 @@ function tracking(id, role, title, status) {
 
                     html = '<li class="list-group-item list-group-item-secondary flex-column align-items-start">' +
                         '<div class="d-flex w-100 justify-content-between">' +
-                        '<h6 class="mb-1 fw-bold">' + user + ' (' + user_role + ')</h6>' +
+                        // '<h6 class="mb-1 fw-bold">' + user + ' (' + user_role + ')</h6>' +
+                        '<h6 class="mb-1 fw-bold">' + val.role_name + '</h6>' +
                         '<small>' + moment(val.trk_process_datetime, 'YYYY-MM-DD HH:mm').format("MMMM D, h:mm a") + '</small>' +
                         '</div>' +
-                        '<small class="mb-1">' + user_action + '</small><br/>' +
-                        '<span class="usr' + trk_c + '"></span>' +
+                        '<small class="mb-1">' + val.trk_description + '</small><br/>' +
+                        // '<span class="usr' + trk_c + '"></span>' +
                         '</li>';
 
                     $('#track_list').append(html);
@@ -6056,14 +6203,14 @@ function view_manus(id, hide, file) {
                         var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
                         var man_type = (val.man_type) ? val.publication_desc : 'N/a'; 
 
-                        if(file){
+                        if(file != ''){
                             var dir = (file) ? 'revised' : 'initial';
                         }else{
                             var dir = (val.man_status >= 1) ? 'initial' : ((val.man_status >= 6) ? 'revised' : (val.man_status >= 8) ? 'final' : 'final');
                         }
                         
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
-                       
+                        var keywords = val.man_keywords ?? 'N/A';
 
                         html += '<tr>' +
                                     '<th>Title</th>' +
@@ -6076,6 +6223,10 @@ function view_manus(id, hide, file) {
                                 '<tr>' +
                                     '<th>Type of Publication</th>'+
                                     '<td>' + man_type + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Keywords</th>'+
+                                    '<td>' + keywords + '</td>' +
                                 '</tr>';
 
 
@@ -8690,7 +8841,6 @@ function editor_action(action,editor_type){
 
     if(editor_type == 'editor_chief'){
         if(action == 'endorse'){
-
             $("#endorse_associate_form").validate({
                 debug: true,
                 errorClass: 'text-danger',
@@ -8790,9 +8940,9 @@ function editor_action(action,editor_type){
                     "suggested_peer_rev_spec[]": {
                         required: true,
                     },
-                    // man_remarks: {
-                    //     required: true,
-                    // },
+                    man_remarks: {
+                        required: true,
+                    },
                 },
                 submitHandler: function() {
                 
@@ -9243,9 +9393,9 @@ function editor_action(action,editor_type){
                     "suggested_peer_rev_spec[]": {
                         required: true,
                     },
-                    // man_remarks: {
-                    //     required: true,
-                    // },
+                    man_remarks: {
+                        required: true,
+                    },
                 },
                 submitHandler: function() {
                 
@@ -9328,7 +9478,6 @@ function editor_action(action,editor_type){
                     man_remarks: {
                         required: true,
                     },
-                
                 },
                 submitHandler: function() {
                 
@@ -9428,7 +9577,7 @@ function clued_process(id, title) {
 
     man_id = id;
     var manuscript_title = decodeURIComponent(title);
-    $('#copEdProcessModal #man_title').text('').text(manuscript_title);
+    $('#cluEdProcessModal #man_title').text('').text(manuscript_title);
 
     // $('#assoc_remarks').text('');
     // get editor in chief remarks
