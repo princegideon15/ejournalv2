@@ -273,6 +273,72 @@ $(document).ready(function() {
         }
     });
 
+    // eic publish to ejournal
+    $("#pub_to_e_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            man_page_position: {
+                required: true
+            }
+        },
+        submitHandler: function() {
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    $('body').loading('start');
+                    $('#publishModal').modal('toggle');
+                    var formdata = new FormData($('#pub_to_e_form')[0]);
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/publish",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            
+                            $('#pub_to_e_form')[0].reset();
+                            $('body').loading('stop');
+                            Swal.fire({
+                            title: "Published to eJournal successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+
     $('#submit_feedback').on('click', function(){
         if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
 
@@ -5774,31 +5840,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // publish to ejournal 
-    $('#pub_to_e_form').on('submit', function(e){
-        var form = $('#pub_to_e_form');
-        var formdata = false;
-
-        if(window.FormData)
-        {
-            formdata = new FormData(form[0]);
-        }
-
-        $.ajax({
-            type: "POST",
-            url: base_url + 'oprs/manuscripts/publish',
-            data : formdata ? formdata :form.serialize(),
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                // window.location.reload();
-                console.log(response);
-            }
-        });
-    });
-
-
 });
 
 // count character for limited input in remarks
@@ -5960,7 +6001,6 @@ function tracking(id, role, title, status) {
             $('#track_list').empty();
             var html = '';
             var trk_c = 0;
-            console.log(data);
             // if (data.length > 0) {
 
                 $.each(data, function(key, val) {
@@ -6203,12 +6243,8 @@ function view_manus(id, hide, file) {
                         var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
                         var man_type = (val.man_type) ? val.publication_desc : 'N/a'; 
 
-                        if(file != ''){
-                            var dir = (file) ? 'revised' : 'initial';
-                        }else{
-                            var dir = (val.man_status >= 1) ? 'initial' : ((val.man_status >= 6) ? 'revised' : (val.man_status >= 8) ? 'final' : 'final');
-                        }
-                        
+                        var dir = (val.man_revision_status == 1) ? 'revised' : ((val.man_revision_status == 2) ? 'final' : 'initial');
+                      
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
                         var keywords = val.man_keywords ?? 'N/A';
 
@@ -6275,11 +6311,11 @@ function view_manus(id, hide, file) {
                                 '<tr>' +
                                     '<th>Year</th>' +
                                     '<td>' + yer + '</td>' +
-                                '</tr>' + 
-                                '<tr>' +
-                                    '<th>Remarks</th>' +
-                                    '<td>' + rem + '</td>' +
                                 '</tr>';
+                                // '<tr>' +
+                                //     '<th>Remarks</th>' +
+                                //     '<td>' + rem + '</td>' +
+                                // '</tr>';
                     });
 
                     $('#manuscriptModal .table-bordered > tbody').html(html);
@@ -7959,26 +7995,127 @@ function submit_publishable(id){
 }
 
 function publish_to_ejournal(id){
+
+    $('#publishModal #pub_man_id').val(id);
+    $('#publishModal .table-bordered > tbody').empty();
+
+    var coa = [];
+    var html = '';
+ 
     $.ajax({
         type: "GET",
-        url: base_url + "oprs/manuscripts/manuscript/" + id,
+        url: base_url + "oprs/manuscripts/authors/get/" + id,
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            console.log(data);
-            $.each(data, function(key, val) {
-                $.each(val, function(k, v){
-                    if(k == 'man_issue'){
-
-                        var iss = (v >= 5) ? 'Special Issue No. ' + (v - 4) : v;
-                        $('#pub_to_e_table #' + k).text(iss);
-                    }else{
-                        $('#pub_to_e_table #' + k).text(v);
-                    }
-                    $('#pub_to_e_form #man_id').val(id);
-                    $('#pub_to_e_form #man_id').val(id);
-
+            if (data.length > 0) {
+                $.each(data, function(key, val) {
+                    coa.push(val.coa_name + ', ' + val.coa_affiliation + ', ' + val.coa_email + '<br/>');
                 });
+            }
+
+            $.ajax({
+                type: "GET",
+                url: base_url + "oprs/manuscripts/manuscript/" + id,
+                dataType: "json",
+                crossDomain: true,
+                success: function(data) {
+                    $.each(data, function(key, val) {
+
+                        var vol = (val.man_volume != null) ? val.man_volume : 'N/a';
+                        var iss = (val.man_issue != null) ? val.man_issue : 'N/a';
+                        var iss = (iss >= 5) ? 'Special Issue No. ' + (iss - 4) : iss;
+                        var yer = (val.man_year != null) ? val.man_year : 'N/a';
+                        var rem = (val.man_remarks != null) ? val.man_remarks : 'N/a';
+                        var coas = (coa.length > 0) ? coa.join('') : 'N/a';
+                        var prim =  val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
+                        // var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
+                        var man_type = (val.man_type) ? val.publication_desc : 'N/a'; 
+
+                        var dir = (val.man_revision_status == 1) ? 'revised' : ((val.man_revision_status == 2) ? 'final' : 'initial');
+                      
+                        var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
+                        var keywords = val.man_keywords ?? 'N/A';
+
+                        html += '<tr>' +
+                                    '<th>Title</th>' +
+                                    '<td>' + val.man_title + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>No. of Pages</th>' +
+                                    '<td>' + val.man_pages + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Type of Publication</th>'+
+                                    '<td>' + man_type + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Keywords</th>'+
+                                    '<td>' + keywords + '</td>' +
+                                '</tr>';
+
+
+                                if(val.man_author_type == 1){
+                                    html += '<tr>' +
+                                            '<th>Corresponding Author</th>' +
+                                            '<td>' + prim + ' (Main Author)</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<th>Co-authors</th>' +
+                                            '<td>' + coas + '</td>' +
+                                        '</tr>';
+                                }
+                                
+                                if(val.man_author_type == 2){
+                                    html += '<tr>' +
+                                            '<th>Corresponding Author</th>' +
+                                            '<td>' + coas + ' (Co-author)</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<th>Main Author</th>' +
+                                            '<td>' + prim + '</td>' +
+                                        '</tr>';
+                                }
+
+                        html +=  '<tr>'+
+                                    '<th>Abstract</th>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/" + dir + "_abstracts_pdf/" + val.man_abs + '" target="_blank">PDF</a></td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Full Text Manuscript</th>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/" + dir + "_manuscripts_pdf/" + val.man_file + '" target="_blank">PDF</a> | <a href="' + base_url + "assets/oprs/uploads/" + dir + "_manuscripts_word/" + val.man_word + '" download>WORD</a></td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Latex</th>' +
+                                    '<td>' + latex + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Volume</th>' +
+                                    '<td>' + vol + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Issue</th>' +
+                                    '<td>' + iss + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Year</th>' +
+                                    '<td>' + yer + '</td>' +
+                                '</tr>'+
+                                '<tr>'+
+                                '<th scope="row">Page no.</th>'+
+                                    '<td>'+
+                                        '<input type="text" class="form-control" id="man_page_position" name="man_page_position" placeholder="ex. 1-3" required></td>'+
+                                        '<input type="hidden" id="man_id" name="man_id">'+
+                                '</tr>';
+                                // '<tr>' +
+                                //     '<th>Remarks</th>' +
+                                //     '<td>' + rem + '</td>' +
+                                // '</tr>';
+                    });
+
+                    $('#publishModal .table-bordered > tbody').html(html);
+                    $('#publishModal').modal('toggle');
+                }
             });
         }
     });
@@ -9698,7 +9835,7 @@ function upload_revision(man_id){
             console.log(data);
             $.each(data, function(key, val){    
                 // technical desk editor consolidate peer review results
-                $('#revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'">Download</a>');
+                $('#revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'" target="_blank">Download</a>');
                 $('#revision_remarks').text(val.cons_remarks);
                 $('#revision_status').text(val.cons_status);
 
@@ -9727,7 +9864,7 @@ function upload_proofread_revision(man_id){
         success: function(data) {
             $.each(data, function(key, val){    
                 // technical desk editor consolidate peer review results
-                $('#layout_file').append('<a href="'+ base_url + 'assets/oprs/uploads/layouts/' + val.lay_file +'">Download</a>');
+                $('#layout_file').append('<a href="'+ base_url + 'assets/oprs/uploads/layouts/' + val.lay_file +'" target="_blank">Download</a>');
                 $('#layout_remarks').text(val.lay_remarks);
             });
         }

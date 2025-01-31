@@ -407,7 +407,7 @@
 									<?php $c = 1;foreach ($manus as $m): ?>
 									<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
 									<?php $mantitle = rawurlencode($m->man_title); ?>
-									<?php $action = ($m->scr_status == '4') ? '<span class="badge rounded-pill bg-success">PASSED</span>' : '<span class="badge rounded-pill bg-danger">FAILED</span>';?>
+									<?php $action = ($m->scr_status == 4) ? '<span class="badge rounded-pill bg-success">PASSED</span>' : (($m->scr_status == 7) ? '<span class="badge rounded-pill bg-danger">FAILED</span>' : '<span class="badge rounded-pill bg-secondary">PENDING</span>');?>
 
 											
 									<?php $i = $m->man_issue;
@@ -426,7 +426,7 @@
 										<td><?php echo $drev; ?></td>
 										<td><?php echo $action;?></td>
 										<td>
-										<?php if($m->scr_status < 2){ ?>
+										<?php if($m->scr_status == 2){ ?>
 											<button type="button" class="btn btn-outline-success"  data-bs-toggle="modal" rel="tooltip" data-bs-placement="top" title="Start Review" data-bs-target="#startReviewModal" onclick="start_review('<?php echo $m->man_file;?>','<?php echo $m->row_id; ?>','<?php echo $mantitle; ?>','<?php echo $m->man_author; ?>','<?php echo $m->rev_hide_auth; ?>')"><span class="fa fa-play-circle" ></span></button>
 										<?php } ?>
 											<button type="button" class="btn btn-outline-secondary" rel="tooltip"
@@ -516,7 +516,7 @@
 															<!-- publish to ejournal -->
 															<button type="button" class="btn btn-outline-primary"
 																onclick="publish_to_ejournal('<?php echo $m->row_id; ?>')"
-																data-bs-toggle="modal" data-bs-target="#publishModal" rel="tooltip"
+																rel="tooltip"
 																data-bs-placement="top" title="Publish to eJournal"><span
 																	class="fas fa-paper-plane"></span></button>
 														<?php } ?>

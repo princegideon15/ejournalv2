@@ -261,6 +261,8 @@ class Signup extends EJ_Controller {
 		$mail->FromName = $sender;
 	
 		$mail->AddAddress($email);
+		// remove after development
+		$mail->AddCC('gerard_balde@yahoo.com');
 
 
 		$date = date("F j, Y") . '<br/><br/>';
@@ -651,17 +653,17 @@ class Signup extends EJ_Controller {
 
 				// get member info
 				$result = $this->User_model->get_nrcp_member_info($email);
-
+				
 				// create author account in oprs
 				$data = [
-					'usr_id' => $result['usr_id'],
+					'usr_id' => $result[0]->usr_id,
 					'usr_username' => $email,
 					'usr_password' => password_hash($password, PASSWORD_BCRYPT),
-					'usr_contact' => $result['pp_contact'],
+					'usr_contact' => $result[0]->pp_contact,
 					'usr_desc' => 'Author',
-					'usr_role' => 6,
+					'usr_role' => 1,
 					'usr_status' => 2,
-					'usr_sex' => $result['pp_sex'],
+					'usr_sex' => $result[0]->pp_sex,
 					'usr_category' => $member,
 					'date_created' => date('Y-m-d H:i:s'),
 					'usr_sys_acc' => 2,
@@ -720,7 +722,7 @@ class Signup extends EJ_Controller {
 					'usr_password' => password_hash($password, PASSWORD_BCRYPT),
 					'usr_contact' => $contact,
 					'usr_desc' => 'Author',
-					'usr_role' => 6,
+					'usr_role' => 1,
 					'usr_status' => 2,
 					'usr_sex' => $this->input->post('sex', TRUE),
 					'usr_category' => $member,

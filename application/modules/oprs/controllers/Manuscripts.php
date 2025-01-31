@@ -126,9 +126,9 @@ class Manuscripts extends OPRS_Controller {
 		$result = $oprs->list_fields($tableName);
 		$post = array();
 		$man_author_type = $this->input->post('man_author_type', TRUE);
-		$publication_type = "0" . $this->input->post('man_type'); 
+		$publication_type = "0" . $this->input->post('man_type', TRUE); 
 		$currentYear = date("Y"); // Get the current year
-		$totalEntries = $this->Manuscript_model->count_manus('total');
+		$totalEntries = $this->Manuscript_model->count_manus_by_type($this->input->post('man_type'), $currentYear); // Get the total number of entries for the current year
 		$newNumber = $totalEntries + 1; // Increment the count for the new entry
 
 		foreach ($result as $i => $field) {
@@ -178,7 +178,7 @@ class Manuscripts extends OPRS_Controller {
 			$post['man_word'] = date('YmdHis') . '_' . $clean_file_word . '.' . $file_ext_word;
 			$upload_file_word = $post['man_word'];
 
-			if(isset($_FILES['man_latex']['name'])){
+			if($_FILES['man_latex']['name'] != ''){
 				// latex
 				$file_string_latex = str_replace(" ", "_", $_FILES['man_latex']['name']);
 				$file_no_ext_latex = preg_replace("/\.[^.]+$/", "", $file_string_latex);
@@ -329,7 +329,7 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// send email to author if submit successfull/acknowledgement email
-		$this->send_email_author();
+		$this->send_email_author($output);
 	}
 
 	/**
@@ -905,6 +905,7 @@ class Manuscripts extends OPRS_Controller {
 		$track['trk_man_id'] = $id;
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_remarks'] = $this->input->post('scr_remarks', true);
+		$track['trk_description'] = ($total_score <= 75) ? 'Failed' : 'Passed';
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		if (strpos(_UserIdFromSession(), 'NM') !== false) {
 			$track['trk_source'] = '_op';
@@ -1676,7 +1677,7 @@ class Manuscripts extends OPRS_Controller {
 			$mail->AddAddress($email);
 		}else{ // no revision
 			$man['man_status'] = 7;
-			$track['trk_description'] = 'For Proofread';
+			$track['trk_description'] = 'Endorsed to Copy Editor for Proofreading';
 			$email_contents = $this->Email_model->get_email_content(12);
 
 			$next_processor_info = $this->User_model->get_processor_by_role(17);
@@ -2297,15 +2298,15 @@ class Manuscripts extends OPRS_Controller {
 		$output = $this->Manuscript_model->get_manus_info($id);
 		foreach($output as $row){
 			$dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
-			// $dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/abstracts/';
+			// $dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
 			unlink($dir_abs . $row->man_abs);
 			
 			$dir_file = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
-			// $dir_file = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/manuscripts/';
+			// $dir_file = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
 			unlink($dir_file . $row->man_file);
 			
 			$dir_word = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
-			// $dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/manuscriptsdoc/';
+			// $dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
 			unlink($dir_word . $row->man_word);
 		}
 		$where_m['row_id'] = $id;
@@ -2326,21 +2327,30 @@ class Manuscripts extends OPRS_Controller {
 	 * @param [type] $id
 	 * @return void
 	 */
-	public function send_email_author(){
+	public function send_email_author($man_id){
 
-		$user_info = $this->User_model->get_corresponding_author(_UserIdFromSession());
-		foreach ($user_info as $key => $row) {
-			$title =  $row->title;
-			$name = $row->first_name . ' ' . $row->last_name;
-			$email = $row->usr_username;
+		$output = $this->Review_model->get_manus_author_info($man_id);
+
+		foreach ($output as $key => $value) {
+			$manuscript = $value->man_title;
+			$title = $value->man_author_title;
+			$author = $value->man_author;
+			$email = $value->man_email;
 		}
+
+		// $user_info = $this->User_model->get_corresponding_author(_UserIdFromSession());
+		// foreach ($user_info as $key => $row) {
+		// 	$title =  $row->title;
+		// 	$name = $row->first_name . ' ' . $row->last_name;
+		// 	$email = $row->usr_username;
+		// }
 		
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
-
-		$nameuser = 'eJournal Admin';
-		$usergmail = 'nrcp.ejournal@gmail.com';
+		$sender = 'eReview';
+		$sender_email = 'nrcp.ejournal@gmail.com';
 		$password = 'fpzskheyxltsbvtg';
+
 		$mail = new PHPMailer;
 		$mail->isSMTP();
 		$mail->Host = "smtp.gmail.com";
@@ -2348,14 +2358,15 @@ class Manuscripts extends OPRS_Controller {
 		$mail->SMTPAuth = true;
 		$mail->Port = 465;
 		// Enable SMTP authentication
-		$mail->Username = $usergmail;
+		$mail->Username = $sender_email;
 		// SMTP username
 		$mail->Password = $password;
 		// SMTP password
 		$mail->SMTPSecure = 'ssl';
 		// Enable encryption, 'ssl' also accepted
-		$mail->From = $usergmail;
-		$mail->FromName = $nameuser;
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+		
 		$mail->AddAddress($email);
 
 		$email_contents = $this->Email_model->get_email_content(1);
@@ -2396,12 +2407,33 @@ class Manuscripts extends OPRS_Controller {
 				array_push($user_group_emails, $username);
 			}
 		}
+
+		// add cc if any
+		if(count($email_cc) > 0){
+			foreach($email_cc as $cc){
+				$mail->AddCC($cc);
+			}
+		}
+		// add bcc if any
+		if(count($email_bcc) > 0){
+			foreach($email_bcc as $bcc){
+				$mail->AddBCC($bcc);
+			}
+		}
+		// add existing as cc
+		if(count($user_group_emails) > 0){
+			foreach($user_group_emails as $grp){
+				$mail->AddCC($grp);
+			}
+		}
 		
 		// replace reserved words
+		$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph/</a>";
 		$emailBody = str_replace('[TITLE]', $title, $email_body);
-		$emailBody = str_replace('[FULL NAME]', $name, $emailBody);
-		$emailBody = str_replace('[LINK]', $link_to, $emailBody);
-		$emailBody = $emailBody;
+		$emailBody = str_replace('[FULL NAME]', $author, $emailBody);
+		$emailBody = str_replace('[LINK]', $link, $emailBody);
+		$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
 
 	
 		// email content
@@ -2829,12 +2861,13 @@ class Manuscripts extends OPRS_Controller {
 
 		}else{ // failed
 
-			$track['trk_description'] = 'Failed: Failure to meet the criteria';
+			//TODO: change status and email notification
+			$track['trk_description'] = 'For Revision: Failure to meet the criteria';
 			$track['trk_remarks'] = $remarks;
 
 			// send email 2
-			// update manuscript status rejected or failed
-			$manus['man_status'] = 15;
+			// update manuscript status failed/for revision
+			$manus['man_status'] = 10;
 			$where['row_id'] = $man_id;
 			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
 			
@@ -2848,7 +2881,7 @@ class Manuscripts extends OPRS_Controller {
 			}
 
 			// get email notification content
-			$email_contents = $this->Email_model->get_email_content(2);
+			$email_contents = $this->Email_model->get_email_content(13);
 			
 			foreach($email_contents as $row){
 				$email_subject = $row->enc_subject;
@@ -4272,6 +4305,7 @@ class Manuscripts extends OPRS_Controller {
 		$post = array();
 		$post['man_pages'] = $man_pages;
 		$post['man_status'] = ($revision_status == 2) ? 6 : 8;
+		$post['man_revision_status'] = ($revision_status == 2) ? 1 : 0;
 
 		// full manuscript
 		$file_string_man = str_replace(" ", "_", $_FILES['man_file']['name']);
@@ -4353,9 +4387,9 @@ class Manuscripts extends OPRS_Controller {
 			// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
 		}else{
 			// final revision
-			$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf_pdf/';
+			$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 			// server
-			// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf_pdf/';
+			// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 		}
 	
 		// upload full manuscript
@@ -4464,7 +4498,7 @@ class Manuscripts extends OPRS_Controller {
 
 		// save tracking
 		$track['trk_man_id'] = $man_id;
-		$track['trk_description'] = ($revision_status == 2) ? 'Uploaded revision' : 'Uploaded final revision';
+		$track['trk_description'] = ($revision_status >= 1) ? 'Uploaded revision' : 'Uploaded final revision';
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		$this->Manuscript_model->tracking(array_filter($track));
@@ -4822,7 +4856,8 @@ class Manuscripts extends OPRS_Controller {
 
 		// save tracking
 		$track['trk_man_id'] = $man_id;
-		$track['trk_description'] = $remarks;
+		$track['trk_remarks'] = $remarks;
+		$track['trk_description'] = 'Endorsed to Author for Proofreading/Revision';
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		$this->Manuscript_model->tracking(array_filter($track));
@@ -4960,7 +4995,8 @@ class Manuscripts extends OPRS_Controller {
 
 		// save tracking
 		$track['trk_man_id'] = $man_id;
-		$track['trk_description'] = $remarks;
+		$track['trk_description'] = 'Endorsed to Layout Artist';
+		$track['trk_remarks'] = $remarks;
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		$this->Manuscript_model->tracking(array_filter($track));
@@ -5170,6 +5206,7 @@ class Manuscripts extends OPRS_Controller {
 
 		// save tracking
 		$track['trk_man_id'] = $man_id;
+		$track['trk_description'] = 'For Author Proofreading'; 
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		$this->Manuscript_model->tracking(array_filter($track));
@@ -5270,6 +5307,7 @@ class Manuscripts extends OPRS_Controller {
 		// udpate manuscript, status
 		$post = array();
 		$post['man_pages'] = $man_pages;
+		$post['man_revision_status'] = 2;
 		$post['man_status'] = 12;
 
 		// full manuscript
@@ -5342,9 +5380,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// final revision
-		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf_pdf/';
+		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 		// server
-		// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf_pdf/'
+		// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/'
 	
 		// upload full manuscript
 		$config_abs['upload_path'] = $dir_abs;
@@ -5532,12 +5570,6 @@ class Manuscripts extends OPRS_Controller {
 			exit;
 		}
 	}
-
-	public function eic_final_approval(){
-		
-
-	}
-
 	
 	/**
 	 * Publish manuscripts
@@ -5546,10 +5578,11 @@ class Manuscripts extends OPRS_Controller {
 	 */
 	public function publish(){
 		$pages = $this->input->post('man_page_position');
-		$man_id = $this->input->post('man_id');
+		$man_id = $this->input->post('pub_man_id');
 
 		// get manus info
 		$info = $this->Manuscript_model->get_manus_info($man_id);
+
 		foreach ($info as $key => $value) {
 			$volume = $value->man_volume;
 			$issue = $value->man_issue;
@@ -5564,17 +5597,27 @@ class Manuscripts extends OPRS_Controller {
 			$user_id = $value->man_user_id;
 		}
 
-		
-		$from_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts/' . $abs;
-		$to_abs = '/var/www/html/ejournal/assets/uploads/abstract/' . $abs;
+		// server
+		// $from_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/' . $abs;
+		// $to_abs = '/var/www/html/ejournal/assets/uploads/abstract/' . $abs;
+		// local
+		$from_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/' . $abs;
+		$to_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/uploads/abstract/' . $abs;
+
+
 		if (!copy($from_abs, $to_abs)) {
 			echo "failed to copy $from_abs...\n";
 		} else {
 			echo "copied $from_abs into $to_abs\n";
 		}
 
-		$from_pdf = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts/' . $file;
-		$to_pdf = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
+		// server
+		// $from_pdf = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/' . $file;
+		// $to_pdf = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
+		// local
+		$from_pdf = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/' . $abs;
+		$to_pdf = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/uploads/pdf/' . $abs;
+
 		if (!copy($from_pdf, $to_pdf)) {
 			echo "failed to copy $from_abs...\n";
 		} else {
@@ -5644,25 +5687,159 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// update manuscript
-		$post['man_status'] = 9;
+		$post['man_status'] = 16;
 		$post['man_page_position'] = $pages;
 		$post['last_updated'] = date('Y-m-d H:i:s');
 		$where['row_id'] = $man_id;
-		$this->Manuscript_model->process_manuscript(array_filter($post), $where, 3);
+		// $this->Manuscript_model->process_manuscript(array_filter($post), $where, 3);
+		$this->Manuscript_model->update_manuscript_status(array_filter($post), $where);
 		
 		// save tracking
 		$track['trk_man_id'] = $man_id;
 		$track['trk_processor'] = _UserIdFromSession();
+		$track['trk_description'] = 'Published to eJournal';
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
-		$track['trk_description'] = 'PUBLISHED';
-		$issue = (
-			($issue == 5) ? 'Special Issue No. 1' :
-			(($issue == 6) ? 'Special Issue No. 2' :
-				(($issue == 7) ? 'Special Issue No. 3' :
-					(($issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $issue)))
-		);
-		$track['trk_remarks'] = 'Published to eJournal Volume ' . $volume . ', ' . $issue;
+		// $issue = (
+		// 	($issue == 5) ? 'Special Issue No. 1' :
+		// 	(($issue == 6) ? 'Special Issue No. 2' :
+		// 		(($issue == 7) ? 'Special Issue No. 3' :
+		// 			(($issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $issue)))
+		// );
+		// $track['trk_remarks'] = 'Published to eJournal Volume ' . $volume . ', ' . $issue;
 		$this->Manuscript_model->tracking(array_filter($track));
+
+
+		// get manuscript info
+		$output = $this->Review_model->get_manus_author_info($man_id);
+
+		foreach ($output as $key => $value) {
+			$manuscript = $value->man_title;
+			$title = $value->man_author_title;
+			$author = $value->man_author;
+			$email = $value->man_email;
+		}
+		
+		// send email to author
+		$email_contents = $this->Email_model->get_email_content(19);
+
+		// add cc/bcc
+		foreach($email_contents as $row){
+			$email_subject = $row->enc_subject;
+			$email_contents = $row->enc_content;
+
+			if( strpos($row->enc_cc, ',') !== false ) {
+				$email_cc = explode(',', $row->enc_cc);
+		    }else{
+				$email_cc = array();
+				array_push($email_cc, $row->enc_cc);
+			}
+
+			if( strpos($row->enc_bcc, ',') !== false ) {
+				$email_bcc = explode(',', $row->enc_bcc);
+		    }else{
+				$email_bcc = array();
+				array_push($email_bcc, $row->enc_bcc);
+			}
+
+			if( strpos($row->enc_user_group, ',') !== false ) {
+				$email_user_group = explode(',', $row->enc_user_group);
+		    }else{
+				$email_user_group = array();
+				array_push($email_user_group, $row->enc_user_group);
+			}
+			
+		}
+
+		// add exisiting email as cc
+		if(count($email_user_group) > 0){
+			$user_group_emails = array();
+			foreach($email_user_group as $grp){
+				$username = $this->Email_model->get_user_group_emails($grp);
+				array_push($user_group_emails, $username);
+			}
+		}
+
+		// email config
+		// $link_to = "https://researchjournal.nrcp.dost.gov.ph";
+		$link_to = base_url();
+		$sender = 'eReview';
+		$sender_email = 'nrcp.ejournal@gmail.com';
+		$password = 'fpzskheyxltsbvtg';
+
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		// Specify main and backup server
+		$mail->SMTPAuth = true;
+		$mail->Port = 465;
+		// Enable SMTP authentication
+		$mail->Username = $sender_email;
+		// SMTP username
+		$mail->Password = $password;
+		// SMTP password
+		$mail->SMTPSecure = 'ssl';
+		// Enable encryption, 'ssl' also accepted
+		$mail->From = $sender_email;
+		$mail->FromName = $sender;
+		$mail->AddAddress($email);
+		
+		$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+		https://researchjournal.nrcp.dost.gov.ph</a>";
+		$emailBody = str_replace('[LINK]', $link, $email_contents);
+		$emailBody = str_replace('[FULL NAME]', $author, $emailBody);
+		$emailBody = str_replace('[TITLE]', $title, $emailBody);
+		$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+		// add exisiting email as cc
+		if(count($email_user_group) > 0){
+			$user_group_emails = array();
+			foreach($email_user_group as $grp){
+				$username = $this->Email_model->get_user_group_emails($grp);
+				array_push($user_group_emails, $username);
+			}
+		}
+
+
+		// add cc if any
+		if(count($email_cc) > 0){
+			foreach($email_cc as $cc){
+				$mail->AddCC($cc);
+			}
+		}
+
+		// add bcc if any
+		if(count($email_bcc) > 0){
+			foreach($email_bcc as $bcc){
+				$mail->AddBCC($bcc);
+			}
+		}
+
+		// add existing as cc
+		if(count($user_group_emails) > 0){
+			foreach($user_group_emails as $grp){
+				$mail->AddCC($grp);
+			}
+		}
+
+		// replace reserved words
+
+		// send email
+		$mail->Subject = $email_subject;
+		$mail->Body = $emailBody;
+		$mail->IsHTML(true);
+		$mail->smtpConnect([
+			'ssl' => [
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true,
+			],
+		]);
+
+		if (!$mail->Send()) {
+			echo '</br></br>Message could not be sent.</br>';
+			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+			exit;
+		}
 	}
 
 

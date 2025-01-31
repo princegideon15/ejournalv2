@@ -1251,11 +1251,11 @@
 					<thead>
 						<tr>
 							<th>TITLE</th>
-							<th colspan="4" id="score_title"></th>
+							<th colspan="4" id="score_title" class="fw-normal"></th>
 						</tr>
 						<tr>
 							<th>AUTHOR</th>
-							<th colspan="4" id="score_author"></th>
+							<th colspan="4" id="score_author" class="fw-normal"></th>
 						</tr>
 						<tr>
 							<th scope="col">CRITERIA</th>
@@ -1279,8 +1279,8 @@
 						</tr>
 						<?php endforeach;?>
 						<tr>
-							<td colspan="3" class="fw-bold">TOTAL SCORE</td>
-							<td colspan="2" id="scr_total" class="text-primary"></td>
+							<td colspan="2" class="fw-bold">TOTAL SCORE</td>
+							<td colspan="3" id="scr_total" class="text-primary text-center"></td>
 						</tr>
 						<tr>
 							<td class="fw-bold">GENERAL REMARKS</td>
@@ -1347,7 +1347,7 @@
 
 <!-- Publish Modal -->
 <div class="modal fade" id="publishModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel">Publish Manuscript to eJournal</h5>
@@ -1355,48 +1355,15 @@
 			</div>
 			<div class="modal-body">
 				<form id="pub_to_e_form">
-					<table class="table table-borderless" id="pub_to_e_table">
+					<input type="hidden" id="pub_man_id" name="pub_man_id">
+					<table class="table table-bordered">
 						<tbody>
-							<tr>
-								<th scope="row">Title</th>
-								<td id="man_title"></td>
-							</tr>
-							<tr>
-								<th scope="row">Author</th>
-								<td id="man_author"></td>
-							</tr>
-							<tr>
-								<th scope="row">Final Absract</th>
-								<td id="man_abs"></td>
-							</tr>
-							<tr>
-								<th scope="row">Final Manuscript</th>
-								<td id="man_word"></td>
-							</tr>
-							<tr>
-								<th scope="row">Issue</th>
-								<td id="man_issue"></td>
-							</tr>
-							<tr>
-								<th scope="row">Volume</th>
-								<td id="man_volume"></td>
-							</tr>
-							<tr>
-								<th scope="row">Year</th>
-								<td id="man_year"></td>
-							</tr>
-							<tr>
-								<th scope="row">Page no.</th>
-								<td>
-									<input type="text" class="form-control" id="man_page_position" name="man_page_position" placeholder="ex. 1-3" required></td>
-									<input type="hidden" id="man_id" name="man_id">
-							</tr>
 						</tbody>
 					</table>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Save changes</button>
+				<button type="submit" class="btn btn-primary">Publish to eJournal</button>
 				</form>
 			</div>
 		</div>
