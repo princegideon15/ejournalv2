@@ -231,7 +231,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="usr_sex">Sex</label>
-                    <select id="usr_sex" name="usr_sex" class="form-control">
+                    <select id="usr_sex" name="usr_sex" class="form-select form-control-lg">
                       <option value="" selected>Select Sex</option>
                       <option value='1'>Male</option>
                       <option value='2'>Female</option>

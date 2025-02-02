@@ -275,5 +275,20 @@ class User extends OPRS_Controller {
 		}
 	}
 
+	public function udpate_account(){
+		$post['usr_full_name'] = $this->input->post('usr_full_name', TRUE);
+		$post['usr_username'] = $this->input->post('usr_username', TRUE);
+		$post['usr_sex'] = $this->input->post('usr_sex', TRUE);
+		$post['usr_contact'] = $this->input->post('usr_contact', TRUE);
+		$post['last_updated'] = date('Y-m-d H:i:s');
+		$where['usr_id'] = _UserIdFromSession();
+		$this->User_model->update_account(array_filter($post), $where);
+	}
+
+	public function get_account_info(){
+		$output = $this->User_model->get_user_info(_UserIdFromSession());
+		echo json_encode($output);
+	}
+
 
 }

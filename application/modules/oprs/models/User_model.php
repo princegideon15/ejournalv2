@@ -647,6 +647,11 @@ class User_model extends CI_Model {
 		return $query->result();
 	}
 
+	public function update_account($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->oprs_users, $data, $where);
+	}
+
 	
 }
 

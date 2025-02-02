@@ -658,6 +658,7 @@ class Signup extends EJ_Controller {
 				$data = [
 					'usr_id' => $result[0]->usr_id,
 					'usr_username' => $email,
+					'usr_full_name' => $result[0]->pp_first_name . ' ' . $result[0]->pp_last_name,
 					'usr_password' => password_hash($password, PASSWORD_BCRYPT),
 					'usr_contact' => $result[0]->pp_contact,
 					'usr_desc' => 'Author',
@@ -719,6 +720,7 @@ class Signup extends EJ_Controller {
 				$data = [
 					'usr_id' => $newUserID,
 					'usr_username' => $email,
+					'usr_full_name' => $this->input->post('first_name', TRUE) . ' ' . $this->input->post('last_name', TRUE),
 					'usr_password' => password_hash($password, PASSWORD_BCRYPT),
 					'usr_contact' => $contact,
 					'usr_desc' => 'Author',

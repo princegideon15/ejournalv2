@@ -41,7 +41,27 @@ var inpIncr = 0; // added peer reviewer count
 var suggIncr = 1; // added peer reviewer count
 
 $(document).ready(function() {
+    // get user account info
     
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/user/get_account_info",
+        async:false,
+        crossDomain: true,
+        dataType: 'json',
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#form_update_account #usr_username').val(val.usr_username);
+                $('#form_update_account #usr_full_name').val(val.usr_full_name);
+                $('#form_update_account #usr_sex').val(val.usr_sex);
+                $('#form_update_account #usr_contact').val(val.usr_contact);
+            });
+        },
+        error: function(xhr, status, error) {
+        reject(error);
+        }
+    }); 
+
     // get user access token
     accessToken = $.ajax({
         type: "GET",
@@ -49,7 +69,7 @@ $(document).ready(function() {
         async:false,
         crossDomain: true,
         success: function(data) {
-            console.log("🚀 ~ $ ~ data:", data)
+            // console.log("🚀 ~ $ ~ data:", data)
             if(data != 0){
                 return data;
             }
@@ -483,7 +503,7 @@ $(document).ready(function() {
       var timerInterval = setInterval(function() {
           idleTime += 1;
           
-          console.log("🚀 ~ timerInterval ~ idleTime:", idleTime)
+        //   console.log("🚀 ~ timerInterval ~ idleTime:", idleTime)
           if (idleTime >= 1200) { // 20 minutes in seconds
   
               Swal.fire({
@@ -4697,30 +4717,62 @@ $(document).ready(function() {
             usr_full_name: {
                 required: true,
             },
-            usr_username: {
+            usr_sex: {
                 required: true,
-                minlength: 5
             },
         },
         submitHandler: function() {
-            $.ajax({
-                type: "POST",
-                url: base_url + "oprs/user/update_account",
-                data: $('#form_change_pass').serializeArray(),
-                cache: false,
-                crossDomain: true,
-                success: function(data) {
+            Swal.fire({
+                title: "Apply changes?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
 
-                    $('#form_change_pass')[0].reset();
-                    $('#changePassModal').modal('toggle');
-                    $.notify({
-                        icon: 'fa fa-check-circle',
-                        message: 'Password changed successfull.'
-                    }, {
-                        type: 'success',
-                        timer: 3000,
+                    $('body').loading('start');
+                    $('#accountSettingModal').modal('toggle');
+
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "oprs/user/udpate_account",
+                        data: $('#form_update_account').serializeArray(),
+                        cache: false,
+                        crossDomain: true,
+                        success: function(data) {
+
+                            $('body').loading('stop');
+                            $('#form_update_account')[0].reset();
+
+                            Swal.fire({
+                                title: "Account updated successfully!",
+                                icon: 'success',
+                                // html: "I will close in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                    location.reload();
+                                }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
                     });
-
                 }
             });
         }
