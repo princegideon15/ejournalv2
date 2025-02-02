@@ -3595,7 +3595,7 @@ class Manuscripts extends OPRS_Controller {
 			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
 			https://researchjournal.nrcp.dost.gov.ph</a>";
 			$emailBody = str_replace('[LINK]', $link, $email_contents);
-			$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
+			$emailBody = str_replace('[FULL NAME]', $author, $emailBody);
 			$emailBody = str_replace('[TITLE]', $title, $emailBody);
 			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
 
@@ -4089,7 +4089,7 @@ class Manuscripts extends OPRS_Controller {
 			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
 			https://researchjournal.nrcp.dost.gov.ph</a>";
 			$emailBody = str_replace('[LINK]', $link, $email_contents);
-			$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
+			$emailBody = str_replace('[FULL NAME]', $author, $emailBody);
 			$emailBody = str_replace('[TITLE]', $title, $emailBody);
 			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
 

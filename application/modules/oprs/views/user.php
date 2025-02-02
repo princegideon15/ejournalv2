@@ -42,19 +42,19 @@
                     <input type="password" class="form-control" id="usr_password" name="usr_password" placeholder="Your password">
                   </div>
                   <div class="card mb-3 d-none" id="password_strength_container">
-                                <div class="card-body text-secondary">
-                                    <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="password-strength"></span></div>
-                                    <div class="progress mt-1" style="height: .5rem;">
-                                        <div class="progress-bar" role="progressbar"  id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <ul class="mt-3 small text-muted ps-3">
-                                        <li>8-20 characters long.</li>
-                                        <li>At least 1 letter.</li>
-                                        <li>At lestt 1 number.</li>
-                                        <li>At least 1 special character.</li>
-                                    </ul>
-                                </div>
-                            </div>
+                      <div class="card-body text-secondary">
+                          <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="password-strength"></span></div>
+                          <div class="progress mt-1" style="height: .5rem;">
+                              <div class="progress-bar" role="progressbar"  id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <ul class="mt-3 small text-muted ps-3">
+                              <li>8-20 characters long.</li>
+                              <li>At least 1 letter.</li>
+                              <li>At lestt 1 number.</li>
+                              <li>At least 1 special character.</li>
+                          </ul>
+                      </div>
+                  </div>
                   <div class="mb-3">
                     <label for="usr_rep_password" class="form-label">Repeat Password</label>
                     <input type="password" class="form-control" id="usr_rep_password" name="usr_rep_password" placeholder="Repeat your password">

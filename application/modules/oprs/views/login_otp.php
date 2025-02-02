@@ -41,7 +41,7 @@
                   </div>
                   <?php //$disabled ?>
                   <button type="submit" class="btn btn-primary w-100 mt-1 mb-2" id="verify_code" onclick="disableOnSubmit(this, '#verifyOTPForm', 'verify')">Verify Code</button>
-                  <a type="button" class="btn btn-primary w-100 mt-1 disabled" id="resend_code">Resend Code</a>
+                  <a type="button" class="btn btn-outline-secondary w-100 mt-1 disabled" id="resend_code">Resend Code</a>
               <!-- </form> -->
               <?=form_close()?>
 

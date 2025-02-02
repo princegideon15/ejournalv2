@@ -49,6 +49,7 @@ $(document).ready(function() {
         async:false,
         crossDomain: true,
         success: function(data) {
+            console.log("🚀 ~ $ ~ data:", data)
             if(data != 0){
                 return data;
             }
@@ -482,6 +483,7 @@ $(document).ready(function() {
       var timerInterval = setInterval(function() {
           idleTime += 1;
           
+          console.log("🚀 ~ timerInterval ~ idleTime:", idleTime)
           if (idleTime >= 1200) { // 20 minutes in seconds
   
               Swal.fire({
@@ -2681,6 +2683,31 @@ $(document).ready(function() {
         }
       });
 
+      $('#form_change_pass #usr_password').on('keyup', function() {
+        $("#account_password_strength_container").removeClass('d-none');
+        if($(this).val().length > 0){
+          var password = $(this).val();
+          var strength = getPasswordStrength(password);
+          var barColor, passwordStrength;
+          if (strength <= 25) {
+              barColor = 'red';
+              passwordStrength = 'Weak';
+          } else if (strength <= 50) {
+              barColor = 'orange';
+              passwordStrength = 'Good';
+          } else if (strength <= 75) {
+              barColor = 'yellow';
+              passwordStrength = 'Fair';
+          }else {
+            barColor = 'green';
+            passwordStrength = 'Excellent';
+          }
+          $('#account-password-strength').text(passwordStrength);
+          $('#account-password-strength-bar').css('width' , strength + '%');
+          $('#account-password-strength-bar').css('background-color', barColor);
+        }
+      });
+
 
       // Add custom validation method for password
       $.validator.addMethod("passwordCheck", function(value, element) {
@@ -4562,11 +4589,11 @@ $(document).ready(function() {
         rules: {
             usr_password: {
                 required: true,
-                minlength: 5
+                minlength: 8,
+                maxlength: 20
             },
             old_password: {
                 required: true,
-                minlength: 5,
                 remote: {
                     url: base_url + "oprs/user/verify_old_password",
                     type: "post"
@@ -4574,30 +4601,111 @@ $(document).ready(function() {
             },
             repeat_password: {
                 required: true,
-                minlength: 5,
+                minlength: 8,
+                maxlength: 20,
                 equalTo: "#usr_password"
             }
         },
         messages: {
             usr_password: {
-                required: "Please enter old password",
-                minlength: "Your password must be at least 5 characters long"
+                required: "Please enter new password",
+                minlength: "Your password must be at least 8 characters long",
+                maxlength: "Your password must be 20 characters long max"
             },
             old_password: {
-                required: "Please enter new password",
-                minlength: "Your password must be at least 5 characters long",
+                required: "Please enter old password",
                 remote: "Incorrect password"
             },
             repeat_password: {
                 required: "Please repeat new password",
-                minlength: "Your password must be at least 5 characters long",
-                equalTo: "Please enter the same password as above"
+                minlength: "Your password must be 8-20 characters long",
+                equalTo: "Please enter the same password as above",
+                maxlength: "Your password must be 20 characters long max"
             }
+        },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "usr_password" || element.attr("name") === "repeat_password" || element.attr("name") === "old_password") {
+                error.insertAfter(element.closest("[name='" + element.attr("name") + "']").parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function() {
+
+            Swal.fire({
+                title: "Apply changes?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#changePassModal').modal('toggle');
+
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "oprs/user/change_password",
+                        data: $('#form_change_pass').serializeArray(),
+                        cache: false,
+                        crossDomain: true,
+                        success: function(data) {
+
+                            $('body').loading('stop');
+                            $('#form_change_pass')[0].reset();
+
+                            
+
+                            Swal.fire({
+                                title: "Password updated successfully!",
+                                icon: 'success',
+                                // html: "I will close in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    // update account
+    $("#form_update_account").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            usr_full_name: {
+                required: true,
+            },
+            usr_username: {
+                required: true,
+                minlength: 5
+            },
         },
         submitHandler: function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/user/change_password",
+                url: base_url + "oprs/user/update_account",
                 data: $('#form_change_pass').serializeArray(),
                 cache: false,
                 crossDomain: true,

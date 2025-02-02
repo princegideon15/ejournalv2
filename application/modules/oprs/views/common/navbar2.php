@@ -61,7 +61,7 @@
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#!">eReview</a>
+            <a class="nav-link active fw-bolder text-decoration-uppercase" aria-current="page" href="#!">Online Peer Review System (eReview)</a>
         </li>
     </ul>
     <button class="btn btn-dark text-start border border-1" style="width:20%" onclick="toggleSearch()"><span class="fas fa-search"></span> Search</button>
@@ -92,14 +92,18 @@
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user fa-fw me-1"></i><?php echo $this->session->userdata('_oprs_username'); ?>
+                <?php echo $this->session->userdata('_oprs_username'); ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 <li><h6 class="dropdown-header">Last visit: <?php echo $this->session->userdata('_oprs_last_visit'); ?></h6></li>
                 <li><h6 class="dropdown-header">Account: <?php echo $this->session->userdata('_oprs_type'); ?></h6></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#changePassModal">Change Password</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);" id="logout_oprs" onclick="logout()">Logout</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#accountSettingModal">
+                    <span class="fas fa-user-circle me-2"></span>Account Setting</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#changePassModal">
+                    <span class="fa fa-lock me-2"></span>Change Password</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0);" id="logout_oprs" onclick="logout()">
+                    <span class="fa fa-sign-out me-2"></span>Logout</a></li>
             </ul>
         </li>
     </ul>
@@ -155,27 +159,49 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="user_modal"><span class="oi oi-shield"></span> Change Password</h5>
+            <h5 class="modal-title" id="user_modal">Change Password</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <form id="form_change_pass">
                 <div class="mb-3">
                     <label class="form-label" for="old_password">Old Password</label>
-                    <input type="password" class="form-control form-control-lg" id="old_password" name="old_password" placeholder="Enter old password" >
+                    <div class="input-group">
+                        <input type="password" class="form-control form-control-lg" id="old_password" name="old_password" placeholder="Enter old password" >
+                        <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#old_password', '#old_password_icon')"><i class="fa fa-eye-slash" id="old_password_icon"></i></a></span>             
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="usr_password">New Password</label>
-                    <input type="password" class="form-control form-control-lg" id="usr_password" name="usr_password" placeholder="Enter new password" >
+                    <div class="input-group">
+                        <input type="password" class="form-control form-control-lg" id="usr_password" name="usr_password" placeholder="Enter new password" >
+                        <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#usr_password', '#new_passsword_icon')"><i class="fa fa-eye-slash" id="new_passsword_icon"></i></a></span>             
+                    </div>
+                </div>
+                <div class="card mb-3 d-none" id="account_password_strength_container">
+                    <div class="card-body text-secondary">
+                        <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="account-password-strength"></span></div>
+                        <div class="progress mt-1" style="height: .5rem;">
+                            <div class="progress-bar" role="progressbar"  id="account-password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <ul class="mt-3 small text-muted ps-3">
+                            <li>8-20 characters long.</li>
+                            <li>At least 1 letter.</li>
+                            <li>At lestt 1 number.</li>
+                            <li>At least 1 special character.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="repeat_password">Repeat Password</label>
-                    <input type="password" class="form-control form-control-lg" name="repeat_password" id="repeat_password" placeholder="Repeat password" >
-                    <p id="match" class="mt-2"></p>
+                    <div class="input-group">
+                        <input type="password" class="form-control form-control-lg" name="repeat_password" id="repeat_password" placeholder="Repeat password" >
+                        <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#repeat_password', '#repeat_password_icon')"><i class="fa fa-eye-slash" id="repeat_password_icon"></i></a></span>             
+                    </div>
                 </div>
                 </div>
                 <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save</button>
             </form>
         </div>
@@ -183,6 +209,48 @@
     </div>
 </div>
 <!-- /.Change Password Modal -->
+
+<!-- Account Setting Modal -->
+<div class="modal fade" id="accountSettingModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="user_modal">Account Setting</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="form_update_account">
+                <input type="hidden" name="usr_id" id="usr_id">
+                <div class="mb-3">
+                    <label class="form-label" for="usr_full_name">Account Name</label>
+                    <input type="text" class="form-control form-control-lg" id="usr_full_name" name="usr_full_name" placeholder="First Name, Last Name" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="usr_username">Email</label>
+                    <input type="email" class="form-control form-control-lg" id="usr_username" name="usr_username" placeholder="Enter a valid email address" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="usr_sex">Sex</label>
+                    <select id="usr_sex" name="usr_sex" class="form-control">
+                      <option value="" selected>Select Sex</option>
+                      <option value='1'>Male</option>
+                      <option value='2'>Female</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="usr_contact">Contact</label>
+                    <input type="text" class="form-control form-control-lg" name="usr_contact" id="usr_contact" placeholder="Enter 11-digit number" >
+                </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- /.Account Setting Modal -->
 
 <!-- FEEDBACK MODAL -->
 <div class="modal fade" id="feedbackModal">
@@ -243,13 +311,11 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark pt-5" id="sidenavAccordion">
             <div class="sb-sidenav-menu overflow-hidden">
                 <div class="nav pt-3">
-                    
                     <div class="sb-sidenav-menu-heading">Main</div>
-
                     <?php if ($role == 19 || $role == 20 || $role == 3 || $role == 5 || $role == 6) {?>
                         
                         <a class="nav-link" href="dashboard">
-                        <i class="fas fa-fw fa-tachometer-alt pe-1"></i>
+                        <i class="fas fa-fw fa-tachometer-alt me-2"></i>
                         <span>Dashboard</span>
                         </a>
                     
@@ -258,13 +324,13 @@
                     
                     <?php if ($role == 1) {?>
                         <a class="nav-link" href="manuscripts">
-                        <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
+                        <i class="fas fa-scroll me-2"></i>
                         My Submissions
                         <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
                         </a> 
                     <?php }else{ ?>
                         <a class="nav-link" href="manuscripts">
-                        <i class="fas fa-fw fa-clipboard-list  pe-1"></i>
+                        <i class="fas fa-scroll me-2"></i>
                         Manuscripts
                         <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
                         </a> 
@@ -277,7 +343,7 @@
                     <div class="sb-sidenav-menu-heading">User Management</div>
                     
                         <a class="nav-link" href="user">
-                        <i class="fas fa-fw fa-user me-1"></i>
+                        <i class="fas fa-fw fa-user me-2"></i>
                         Users<span class="ms-2 badge text bg-danger"><?php echo $usr_count; ?></span>
                         </a>
 
@@ -289,19 +355,19 @@
                         <div class="sb-sidenav-menu-heading">Reports and Statisttics</div>
 
                         <a class="nav-link" href="reports">
-                        <i class="fas fa-fw fa-chart-bar me-1"></i>
+                        <i class="fas fa-fw fa-chart-bar me-2"></i>
                         <span>Reports</span>
                         </a>
                         <a class="nav-link" href="<?php echo base_url('oprs/statistics'); ?>">
-                        <i class="fas fa-fw fa-chart-bar me-1"></i>
+                        <i class="fas fa-fw fa-chart-bar me-2"></i>
                         <span>Statistics</span>
                         </a>
                         <!-- <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=1'); ?>">
-                        <i class="fas fa-fw fa-chart-bar me-1"></i>
+                        <i class="fas fa-fw fa-chart-bar me-2"></i>
                         <span>Submission Statistics</span>
                         </a>
                         <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=2'); ?>">
-                        <i class="fas fa-fw fa-chart-bar me-1"></i>
+                        <i class="fas fa-fw fa-chart-bar me-2"></i>
                         <span>Author by Sex</span>
                         </a> -->
                     
@@ -313,42 +379,42 @@
                         <div class="sb-sidenav-menu-heading">Library</div>
 
                         <a class="nav-link" href="roles">
-                        <i class="fas fa-fw fa-user me-1"></i>
+                        <i class="fas fa-fw fa-user-cog me-2"></i>
                         User Types</span>
                         </a>
 
                         <a class="nav-link" href="status">
-                        <i class="fas fa-envelope-open me-1"></i>
+                        <i class="fas fa-bullhorn me-2"></i>
                         Status Types
                         </a>
 
                         <a class="nav-link" href="<?php echo base_url('oprs/criterion?type=1'); ?>">
-                        <i class="fas fa-envelope-open me-1"></i>
+                        <i class="fas fa-pencil-square me-2"></i>
                         Technical Review Criterion
                         </a>
 
                         <a class="nav-link" href="<?php echo base_url('oprs/criterion?type=2'); ?>">
-                        <i class="fas fa-envelope-open me-1"></i>
+                        <i class="fas fa-pencil-square me-2"></i>
                         Peer Review Criterion
                         </a>
 
                         <a class="nav-link" href="publication_types">
-                        <i class="fas fa-envelope-open me-1"></i>
+                        <i class="fas fa-book me-2"></i>
                         Publication Types
                         </a>
 
                         <a class="nav-link" href="emails">
-                        <i class="fas fa-envelope-open me-1"></i>
+                        <i class="fas fa-envelope-open me-2"></i>
                         Email Notificatiions
                         </a>
 
                         <a class="nav-link" href="process">
-                        <i class="fas fa-envelope-open me-1"></i>
+                        <i class="fas fa-clock me-2"></i>
                         Process Time Duration
                         </a>
 
                         <!-- <a class="nav-link" href="emails">
-                        <i class="fas fa-envelope-open me-1"></i>
+                        <i class="fas fa-envelope-open me-2"></i>
                         Publication Committee
                         </a> -->
 
@@ -359,12 +425,12 @@
                         <div class="sb-sidenav-menu-heading">Settings</div>
 
                         <a class="nav-link" href="controls">
-                        <i class="fas fa-fw fa-cogs me-1"></i>
+                        <i class="fas fa-fw fa-cogs me-2"></i>
                         <span>Control Panel</span>
                         </a>
 
                         <a class="nav-link" href="backup">
-                        <i class="fas fa-database me-1"></i>
+                        <i class="fas fa-database me-2"></i>
                         <span>Database</span>
                         </a>
 
@@ -376,12 +442,12 @@
                         <div class="sb-sidenav-menu-heading">Feedback</div>
                     
                         <a class="nav-link" href="feedbacks">
-                        <i class="fas fa-star me-1"></i>
+                        <i class="fas fa-star me-2"></i>
                         CSF UI/UX<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
                         </a>
 
                         <a class="nav-link" href="arta">
-                        <i class="fas fa-edit me-1"></i>
+                        <i class="fas fa-edit me-2"></i>
                         CSF ARTA<span class="ms-2 badge text bg-danger"><?php echo $arta_count; ?></span>
                         </a>
 
@@ -389,7 +455,7 @@
                         <div class="sb-sidenav-menu-heading">Logs</div>
                     
                         <a class="nav-link" href="logs">
-                        <i class="fas fa-fw fa-clipboard-list me-1"></i>
+                        <i class="fas fa-fw fa-clipboard-list me-2"></i>
                         <span>Activity Logs</span>
                         </a>
                     
