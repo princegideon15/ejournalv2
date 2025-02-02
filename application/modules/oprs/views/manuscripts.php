@@ -89,7 +89,7 @@
 												<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y'); ?></td>
 												<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
 												<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->row_id;?>,<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
-												<td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->row_id;?>)"><?php echo $m->man_trk_no;?></a></td>
+												<td class="text-centerx"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->row_id;?>)"><?php echo $m->man_trk_no;?></a></td>
 												<td>
 													<div class="d-flex gap-2" role="group">
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"

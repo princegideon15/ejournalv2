@@ -384,8 +384,8 @@ class Manuscripts extends OPRS_Controller {
 			if ($field != 'row_id') {
 				$track[$field] = $this->input->post($field, true);
 				$remarks = $this->input->post('trk_remarks', true);
-				$timeframe = $this->input->post('trk_timeframe', true) ?? 30;
-				$rev_timer = $this->input->post('trk_request_timer', true) ?? 3;
+				$timeframe = $this->input->post('trk_timeframe', true);
+				$rev_timer = $this->input->post('trk_request_timer', true);
 				$req_day_week = $this->input->post('trk_req_day_week');
 				$rev_day_week = $this->input->post('trk_rev_day_week');
 			}
@@ -2751,18 +2751,35 @@ class Manuscripts extends OPRS_Controller {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$tableName = 'tbltech_rev_score';
 		$result = $oprs->list_fields($tableName);
-		$post = array();
+		$post = array(); $where = array();
 		foreach ($result as $i => $field) {
+			if($field != 'tr_remarks'){
 				$post[$field] = $this->input->post($field, true);
+			}
 		}
 
 		$man_id = $this->input->post('tr_man_id', TRUE);
-		$remarks = $this->input->post('tr_remarks', TRUE) ?? 'No remarks';
+		$remarks = $this->input->post('tr_remarks', TRUE);
+		$output = $this->Review_model->get_tech_rev_score($man_id);
 
-		// save criteria score
-		$post['tr_processor_id'] = _UserIdFromSession();
-		$post['tr_date_reviewed'] = date('Y-m-d H:i:s');
-		$this->Review_model->save_tech_rev_score(array_filter($post));
+		if(count($output) > 0){
+			// update exsiting record
+			$where['tr_processor_id'] = _UserIdFromSession();
+			$where['tr_man_id'] = $man_id;
+			$post['tr_date_reviewed'] = date('Y-m-d H:i:s');
+			$post['tr_final'] = 1;
+			$post['tr_remarks'] = ($remarks != '') ? $remarks : 'No remarks';
+
+			$this->Review_model->update_tech_rev_score(array_filter($post), $where);
+		}else{
+			// save criteria score
+			$post['tr_processor_id'] = _UserIdFromSession();
+			$post['tr_date_reviewed'] = date('Y-m-d H:i:s');
+			$post['tr_remarks'] = ($remarks != '') ? $remarks : 'No remarks';
+
+			$this->Review_model->save_tech_rev_score(array_filter($post));
+		}
+
 
 		// email config
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
@@ -2786,11 +2803,14 @@ class Manuscripts extends OPRS_Controller {
 		// Enable encryption, 'ssl' also accepted
 		$mail->From = $sender_email;
 		$mail->FromName = $sender;
+		
+		$post = array(); $where = array();
 
 		if($this->input->post('tr_final') == 1){ // passed
 
 			$track['trk_description'] = 'Passed: Endorsed to Editor-in-chief';
-			$track['trk_remarks'] = $remarks;
+			$track['trk_remarks'] = ($remarks != '') ? $remarks : 'No remarks';
+
 
 			// send email 3
 			// update manuscript status passed endorsed to EIC
@@ -2798,7 +2818,7 @@ class Manuscripts extends OPRS_Controller {
 			$where['row_id'] = $man_id;
 			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
 
-			// save initial data for EIC review for duration validation
+			// save/update initial data for EIC review for duration validation
 			$next_processor_info = $this->User_model->get_processor_by_role(6);
 
 			foreach ($next_processor_info as $row) {
@@ -2806,11 +2826,22 @@ class Manuscripts extends OPRS_Controller {
 				$next_processor_email = $row->usr_username;
 			}
 
+			$output = $this->Review_model->get_last_editors_review($man_id);
+
+			if(count($output) > 0){
+				// remove all editors review score
+				$this->Review_model->reset_editor_review(['edit_man_id' => $man_id]);
+			}
+
+			
+			// save editors review data
 			$editorial_data['edit_man_id'] = $man_id;
 			$editorial_data['edit_usr_id'] = $next_processor_user_id;
 			$editorial_data['date_created'] = date('Y-m-d H:i:s');
 			$this->Review_model->save_initial_editor_data(array_filter($editorial_data));
 
+			
+			
 			// send email to next processor
 			$mail->AddAddress($next_processor_email);
 
@@ -2861,7 +2892,6 @@ class Manuscripts extends OPRS_Controller {
 
 		}else{ // failed
 
-			//TODO: change status and email notification
 			$track['trk_description'] = 'For Revision: Failure to meet the criteria';
 			$track['trk_remarks'] = $remarks;
 
@@ -2910,8 +2940,11 @@ class Manuscripts extends OPRS_Controller {
 				
 			}
 
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
 			$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
 			$emailBody = str_replace('[TITLE]', $title, $emailBody);
+			$emailBody = str_replace('[LINK]', $link, $emailBody);
 			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
 
 			$mail->AddAddress($email);
@@ -3122,7 +3155,7 @@ class Manuscripts extends OPRS_Controller {
 			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
 			https://researchjournal.nrcp.dost.gov.ph</a>";
 			$emailBody = str_replace('[LINK]', $link, $email_contents);
-			$emailBody = str_replace('[FULL NAME]', $author, $email_contents);
+			$emailBody = str_replace('[FULL NAME]', $author, $emailBody);
 			$emailBody = str_replace('[TITLE]', $title, $emailBody);
 			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
 
@@ -3254,7 +3287,7 @@ class Manuscripts extends OPRS_Controller {
 
 			$editorial_data['edit_man_id'] = $man_id;
 			$editorial_data['edit_usr_id'] = $next_processor_user_id;
-			$editorial_data['edit_remarks'] = $this->input->post('man_remarks', TRUE);
+			$editorial_data['edit_remarks'] = $remarks;
 			$editorial_data['date_created'] = date('Y-m-d H:i:s');
 
 			$this->Review_model->save_initial_editor_data(array_filter($editorial_data));
@@ -3360,7 +3393,7 @@ class Manuscripts extends OPRS_Controller {
 		$where_editorial_data['edit_man_id'] = $man_id;
 		$where_editorial_data['edit_usr_id'] = _UserIdFromSession();
 		$update_editorial_data['edit_status'] = $status;
-		$update_editorial_data['edit_remarks'] = $this->input->post('man_remarks', TRUE);
+		$update_editorial_data['edit_remarks'] = $remarks;
         $update_editorial_data['last_updated'] = date('Y-m-d H:i:s');
 
 		$this->Review_model->update_editor_data($update_editorial_data, $where_editorial_data);
@@ -4286,6 +4319,11 @@ class Manuscripts extends OPRS_Controller {
 		echo json_encode($output);
 	}
 
+	public function get_last_editors_review($id){
+		$output = $this->Review_model->get_last_editors_review($id);
+		echo json_encode($output);
+	}
+
 	public function get_suggested_peer($id){
 		$output = $this->Review_model->get_suggested_peer($id);
 		echo json_encode($output);
@@ -4300,12 +4338,14 @@ class Manuscripts extends OPRS_Controller {
 		$man_id = $this->input->post('man_id', TRUE);
 		$man_pages = $this->input->post('man_pages', TRUE);
 		$revision_status = $this->input->post('revision_status', TRUE);
+		$criteria_status = $this->input->post('criteria_status', TRUE);
+		$editor_review_status = $this->input->post('editor_review_status', TRUE);
 
 		// udpate manuscript, status
 		$post = array();
 		$post['man_pages'] = $man_pages;
-		$post['man_status'] = ($revision_status == 2) ? 6 : 8;
-		$post['man_revision_status'] = ($revision_status == 2) ? 1 : 0;
+		$post['man_status'] = ($revision_status == 2) ? 6 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
+		$post['man_revision_status'] = ($revision_status == 2) ? 1 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 0);
 
 		// full manuscript
 		$file_string_man = str_replace(" ", "_", $_FILES['man_file']['name']);
@@ -4341,22 +4381,24 @@ class Manuscripts extends OPRS_Controller {
 		$upload_file_word = $post['man_word'];
 
 		// latex
-		$file_string_latex = str_replace(" ", "_", $_FILES['man_latex']['name']);
-		$file_no_ext_latex = preg_replace("/\.[^.]+$/", "", $file_string_latex);
-		$clean_file_latex = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_latex);
+		if($_FILES['man_latex']['name'] != ''){
+			$file_string_latex = str_replace(" ", "_", $_FILES['man_latex']['name']);
+			$file_no_ext_latex = preg_replace("/\.[^.]+$/", "", $file_string_latex);
+			$clean_file_latex = preg_replace('/[^A-Za-z0-9\-]/', '_', $file_no_ext_latex);
 
-		$filename_latex = $_FILES["man_latex"]["name"];
-		$file_ext_latex = pathinfo($filename_latex, PATHINFO_EXTENSION);
+			$filename_latex = $_FILES["man_latex"]["name"];
+			$file_ext_latex = pathinfo($filename_latex, PATHINFO_EXTENSION);
 
-		$post['man_latex'] = date('YmdHis') . '_' . $clean_file_latex . '.' . $file_ext_latex;
-		$upload_file_latex = $post['man_latex'];
+			$post['man_latex'] = date('YmdHis') . '_' . $clean_file_latex . '.' . $file_ext_latex;
+			$upload_file_latex = $post['man_latex'];
+		}
 
 		$post['last_updated'] = date('Y-m-d H:i:s');
 		$where['row_id'] = $man_id;
 		$this->Manuscript_model->update_manuscript_status(array_filter($post), $where);
 
 
-		if($revision_status == 2){ // pre-final revision
+		if($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
 			$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
 			// server
 			// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
@@ -4381,7 +4423,7 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 
-		if($revision_status == 2){ // pre-final revision
+		if($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
 			$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
 			// server
 			// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
@@ -4406,7 +4448,7 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 		
-		if($revision_status == 2){ // pre-final revision
+		if($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
 			$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
 			// server
 			// $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
@@ -4431,7 +4473,7 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 		
-		if($revision_status == 2){ // pre-final revision
+		if($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
 			$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_latex/';
 			// server
 			// $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/revised_latex/';
@@ -4442,18 +4484,20 @@ class Manuscripts extends OPRS_Controller {
 			// $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/final_latex/';
 		}
 	
-		// upload full manuscript latex
-		$config_latex['upload_path'] = $dir_latex;
-		$config_latex['allowed_types'] = 'tex';
-		$config_latex['file_name'] = $upload_file_latex;
+		if(isset($upload_file_latex)){
+			// upload full manuscript latex
+			$config_latex['upload_path'] = $dir_latex;
+			$config_latex['allowed_types'] = 'tex';
+			$config_latex['file_name'] = $upload_file_latex;
 
-		$this->load->library('upload', $config_latex);
-		$this->upload->initialize($config_latex);
+			$this->load->library('upload', $config_latex);
+			$this->upload->initialize($config_latex);
 
-		if (!$this->upload->do_upload('man_latex')) {
-			$error = $this->upload->display_errors(); 
-		} else {
-			$data = $this->upload->data();
+			if (!$this->upload->do_upload('man_latex')) {
+				$error = $this->upload->display_errors(); 
+			} else {
+				$data = $this->upload->data();
+			}
 		}
 
 		if($revision_status == 2){
@@ -4498,7 +4542,7 @@ class Manuscripts extends OPRS_Controller {
 
 		// save tracking
 		$track['trk_man_id'] = $man_id;
-		$track['trk_description'] = ($revision_status >= 1) ? 'Uploaded revision' : 'Uploaded final revision';
+		$track['trk_description'] = ($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10) ? 'Uploaded revision' : 'Uploaded final revision';
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		$this->Manuscript_model->tracking(array_filter($track));
@@ -4535,7 +4579,7 @@ class Manuscripts extends OPRS_Controller {
 			$email = $value->man_email;
 		}
 
-		if($revision_status == 2){
+		if($revision_status == 2 || $criteria_status == 2){
 			$next_processor_info = $this->User_model->get_processor_by_role(5);
 			// get email notification content
 			$email_contents = $this->Email_model->get_email_content(14);

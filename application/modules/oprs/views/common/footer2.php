@@ -648,10 +648,13 @@
 				<form id="manuscript_revision_form">
 					<input type="hidden" id="man_id" name="man_id">
 					<input type="hidden" id="revision_status" name="revision_status">
+					<input type="hidden" id="criteria_status" name="criteria_status">
+					<input type="hidden" id="editor_review_status" name="editor_review_status">
 				<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>REVISION DOCUMENTS/REMARKS</h6>
 					<table class="table">
 						<tbody>
-							<tr><td class="fw-bold bg-light">Consolidated Review/Remarks</td><td id="revision_consolidations"></td></tr>
+							<tr class="d-none" id="criteria_review_result"><td class="fw-bold bg-light">Criteria Review Result</td><td id="criteria_review_result_value"></td></tr>
+							<tr id="revision_consolidations_row"><td class="fw-bold bg-light">Consolidated Review/Remarks</td><td id="revision_consolidations"></td></tr>
 							<tr><td class="fw-bold bg-light">Remarks</td><td id="revision_remarks"></td></tr>
 							<tr id="revision_matrix_template"><td class="fw-bold bg-light">Revision Matrix Template</td><td><a href="<?php echo base_url("assets/oprs/uploads/REVISION_MATRIX_TEMPLATE.docx");?>" download>Download</a></td></tr>
 						</tbody>

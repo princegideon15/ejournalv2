@@ -263,6 +263,11 @@ class Review_model extends CI_Model {
 		return $query->result();
 	}
 
+	public function update_tech_rev_score($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->tech_rev_score, $data, $where);
+	}	
+
 	public function save_initial_editor_data($data){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->insert($this->editors_review, $data);
@@ -281,6 +286,32 @@ class Review_model extends CI_Model {
 		$oprs->where('edit_usr_id', _UserIdFromSession());
 		$query = $oprs->get();
 		return $query->result();
+	}
+
+	public function get_editors_review_by_process_id($man_id, $processor_id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->editors_review);
+		$oprs->where('edit_man_id', $man_id);
+		$oprs->where('edit_usr_id', $processor_id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+	
+	public function get_last_editors_review($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->editors_review);
+		$oprs->where('edit_man_id', $id);
+		$oprs->order_by('date_created', 'desc');
+		$oprs->limit(1);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function reset_editor_review($where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->delete($this->editors_review, $where);
 	}
 
 	public function save_peer_reviewers($data){

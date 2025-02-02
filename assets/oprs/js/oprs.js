@@ -5623,7 +5623,7 @@ $(document).ready(function() {
         errorClass: 'text-danger',
         rules: {
             man_matrix : {
-                required: true,
+                // required: true,
                 extension: "pdf|doc|docx",
                 filesize : 20000000,
             },
@@ -9824,8 +9824,48 @@ function upload_revision(man_id){
     $('#revision_consolidations').empty();
     $('#revision_remarks').text('');
     $('#manuscript_revision_form #man_id').val(man_id);
+
+    // get criteria review results
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_tech_rev_score/"+man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                if(val.tr_final == 2){
+                    $('#criteria_review_result').removeClass('d-none');
+                    $('#criteria_review_result_value').text('Failed');
+                    $('#revision_remarks').text(val.tr_remarks);
+                    $('#revision_consolidations_row').hide();
+                    $('#revision_matrix_template').hide();
+                    $('#div_man_matrix').hide();
+                    $('#criteria_status').val(2);
+                }
+            });
+        }
+    });
+
+    // get editors review if for revision
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_last_editors_review/"+man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                if(val.edit_status == 10){
+                    $('#revision_remarks').text(val.edit_remarks);
+                    $('#revision_consolidations_row').hide();
+                    $('#revision_matrix_template').hide();
+                    $('#div_man_matrix').hide();
+                    $('#editor_review_status').val(10);
+                }
+            });
+        }
+    });
     
-    //get consolidation
+    // get consolidation
     $.ajax({
         type: "GET",
         url: base_url + "oprs/manuscripts/get_consolidation/" + man_id,
