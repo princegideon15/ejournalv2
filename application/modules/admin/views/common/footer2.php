@@ -404,48 +404,7 @@
 </div>
 <!-- /.VISITOR DETAILS -->
 
-<!-- ADD USER -->
-<div class="modal fade" id="user_modal" tabindex="-1" role="dialog" aria-labelledby="user_modal" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="user_modal"><span class="oi oi-person"></span> Add User Account</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="form_add_user">
-					<div class="form-group">
-						<label for="acc_username">Username</label>
-						<input type="text" class="form-control" id="acc_username" name="acc_username" aria-describedby="acc_username" placeholder="Enter username" >
-					</div>
-					<div class="form-group">
-						<label for="acc_password">Password</label>
-						<input type="password" class="form-control" id="acc_password" name="acc_password" placeholder="Password" >
-					</div>
-					<div class="form-group">
-						<label for="repeat_password">Repeat Password</label>
-						<input type="password" class="form-control" name="repeat_password" id="repeat_password" placeholder="Repeat Password" >
-						<p id="match" class="mt-2"></p>
-					</div>
-					<div class="form-group">
-						<label for="acc_type">User Type</label>
-						<select class="form-select" id="acc_type" name="acc_type" >
-							<option value="">Select User Type</option>
-							<option value='0'>Super Admin</option>
-							<option value='1'>Administrator</option>
-							<option value='2'>Manager</option>
-						</select>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Save</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- /.ADD USER -->
+
 
 <!-- MANAGE USER -->
 <div class="modal fade" id="manage_user_modal" tabindex="-1" role="dialog">
@@ -521,26 +480,50 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="user_modal"><span class="oi oi-shield"></span> Change Password</h5>
+				<h5 class="modal-title" id="user_modal">Change Password</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<form id="form_change_pass">
+                <div class="mb-3">
+                    <label class="form-label fw-bold" for="old_password">Current Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control form-control-lg" id="old_password" name="old_password" placeholder="Enter old password" >
+                        <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#old_password', '#old_password_icon')"><i class="fa fa-eye-slash" id="old_password_icon"></i></a></span>             
+                    </div>
+                </div>
 				<div class="mb-3">
 					<label for="acc_password" class="form-label fw-bold">New Password</label>
-					<input type="password" class="form-control" id="new_password" name="acc_password" placeholder="Enter new password" >
+                    <div class="input-group">
+						<input type="password" class="form-control form-control-lg" id="new_password" name="acc_password" placeholder="Enter new password">
+                        <span class="input-group-text bg-white text-muted rounded-end">
+							<a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#new_password','#password_icon','#repeat_password')"><i class="fa fa-eye-slash" id="password_icon"></i></a></span>             
+                    </div>
 				</div>
+                <div class="card mb-3 d-none" id="ejournal_password_strength_container">
+                    <div class="card-body text-secondary">
+                        <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="ejournal-password-strength"></span></div>
+                        <div class="progress mt-1" style="height: .5rem;">
+                            <div class="progress-bar" role="progressbar"  id="ejournal-password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <ul class="mt-3 small text-muted ps-3">
+                            <li>8-20 characters long.</li>
+                            <li>At least 1 letter.</li>
+                            <li>At lestt 1 number.</li>
+                            <li>At least 1 special character.</li>
+                        </ul>
+                    </div>
+                </div>
 				<div class="mb-3">
-					<label for="repeat_password" class="form-label fw-bold">Repeat Password</label>
-					<input type="password" class="form-control" name="repeat_password" id="repeat_password" placeholder="Repeat password" >
-					<p id="match" class="mt-2"></p>
+					<label for="repeat_password" class="form-label fw-bold">Confirm Password</label>
+					<input type="password" class="form-control form-control-lg" name="repeat_password" id="repeat_password" placeholder="Repeat password">
 				</div>
-				<div class="alert alert-danger" role="alert">
+				<!-- <div class="alert alert-danger" role="alert">
 					<span class="oi oi-warning"></span> You will be redirected to login page after saving.
-				</div>
+				</div> -->
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 				<button type="submit" class="btn btn-primary" id="change_password">Save</button>
 			</form>
 			</div>
@@ -872,6 +855,48 @@
   </div>
 </div>
 <!--/. EMAIL LIBRARY MODAL -->
+
+<!-- Account Setting Modal -->
+<div class="modal fade" id="accountSettingModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="user_modal">Account Setting</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="form_update_account">
+                <input type="hidden" name="usr_id" id="usr_id">
+                <div class="mb-3">
+                    <label class="form-label" for="usr_full_name">Account Name</label>
+                    <input type="text" class="form-control form-control-lg" id="usr_full_name" name="usr_full_name" placeholder="First Name, Last Name" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="usr_username">Email</label>
+                    <input type="email" class="form-control form-control-lg" id="usr_username" name="usr_username" placeholder="Enter a valid email address" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="usr_sex">Sex</label>
+                    <select id="usr_sex" name="usr_sex" class="form-select form-control-lg">
+                      <option value="" selected>Select Sex</option>
+                      <option value='1'>Male</option>
+                      <option value='2'>Female</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="usr_contact">Contact</label>
+                    <input type="text" class="form-control form-control-lg" name="usr_contact" id="usr_contact" placeholder="Enter 11-digit number" >
+                </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- /.Account Setting Modal -->
 
 <script type="text/javascript" >
 var base_url = '<?php echo base_url(); ?>';

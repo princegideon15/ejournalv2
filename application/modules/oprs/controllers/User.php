@@ -172,6 +172,13 @@ class User extends OPRS_Controller {
 		echo $output;
 	}
 
+	public function verify_email_except_self() {
+		$current_email = $this->session->userdata('_oprs_username');
+		$entered_email = $this->input->post('usr_username', true);
+		$output = $this->User_model->verify_email_except_self($current_email, $entered_email);
+		echo $output;
+	}
+
 	/**
 	 * this function verify old password
 	 *

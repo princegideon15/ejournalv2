@@ -306,6 +306,7 @@ class Manuscript_model extends CI_Model {
 		$oprs->join($this->manus . ' m', 'm.row_id = t.trk_man_id');
 		$oprs->join($this->user, 'usr_id = trk_processor', 'left');
 		$oprs->order_by('trk_process_datetime', 'desc');
+		$oprs->limit(10);
 		$query = $oprs->get();
 		$output = $query->result();
 

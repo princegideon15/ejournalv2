@@ -249,6 +249,21 @@ class User_model extends CI_Model {
 		}
 	}
 
+	public function verify_email_except_self($current_email, $entered_email) {
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->oprs_users);
+		$oprs->where('usr_username', $entered_email);
+		$oprs->where('usr_username !=', $current_email);
+		$query = $oprs->get();
+		$rows = $query->num_rows();
+		if ($rows > 0) {
+			return 'false';
+		} else {
+			return 'true';
+		}
+	}
+
 	/**
 	 * Disable reviewer account
 	 *

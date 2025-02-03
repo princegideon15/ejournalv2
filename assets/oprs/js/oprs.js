@@ -42,7 +42,6 @@ var suggIncr = 1; // added peer reviewer count
 
 $(document).ready(function() {
     // get user account info
-    
     $.ajax({
         type: "GET",
         url: base_url + "oprs/user/get_account_info",
@@ -2678,32 +2677,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#form_add_user #usr_password').on('keyup', function() {
-        $("#password_strength_container").removeClass('d-none');
-        if($(this).val().length > 0){
-          var password = $(this).val();
-          var strength = getPasswordStrength(password);
-          var barColor, passwordStrength;
-          if (strength <= 25) {
-              barColor = 'red';
-              passwordStrength = 'Weak';
-          } else if (strength <= 50) {
-              barColor = 'orange';
-              passwordStrength = 'Good';
-          } else if (strength <= 75) {
-              barColor = 'yellow';
-              passwordStrength = 'Fair';
-          }else {
-            barColor = 'green';
-            passwordStrength = 'Excellent';
-          }
-          $('#password-strength').text(passwordStrength);
-          $('#password-strength-bar').css('width' , strength + '%');
-          $('#password-strength-bar').css('background-color', barColor);
-        }
-      });
-
-      $('#form_change_pass #usr_password').on('keyup', function() {
+    $('#form_add_user #add_usr_password').on('keyup', function() {
         $("#account_password_strength_container").removeClass('d-none');
         if($(this).val().length > 0){
           var password = $(this).val();
@@ -2725,6 +2699,31 @@ $(document).ready(function() {
           $('#account-password-strength').text(passwordStrength);
           $('#account-password-strength-bar').css('width' , strength + '%');
           $('#account-password-strength-bar').css('background-color', barColor);
+        }
+      });
+
+      $('#form_change_pass #usr_password').on('keyup', function() {
+        $("#change_password_strength_container").removeClass('d-none');
+        if($(this).val().length > 0){
+          var password = $(this).val();
+          var strength = getPasswordStrength(password);
+          var barColor, passwordStrength;
+          if (strength <= 25) {
+              barColor = 'red';
+              passwordStrength = 'Weak';
+          } else if (strength <= 50) {
+              barColor = 'orange';
+              passwordStrength = 'Good';
+          } else if (strength <= 75) {
+              barColor = 'yellow';
+              passwordStrength = 'Fair';
+          }else {
+            barColor = 'green';
+            passwordStrength = 'Excellent';
+          }
+          $('#change-password-strength').text(passwordStrength);
+          $('#change-password-strength-bar').css('width' , strength + '%');
+          $('#change-password-strength-bar').css('background-color', barColor);
         }
       });
 
@@ -2756,7 +2755,6 @@ $(document).ready(function() {
             },
             usr_username: {
                 required: true,
-                minlength: 3,
                 email: true,
                 remote: {
                     url: base_url + "oprs/user/verify_email",
@@ -2791,8 +2789,8 @@ $(document).ready(function() {
             },
             usr_username: {
                 // required: "Please provide a username",
-                minlength: "Your username must be at least 3 characters long",
-                remote: "Email already used",
+                // minlength: "Your username must be at least 3 characters long",
+                remote: "Email already use",
             },
             usr_role: {
                 // required: "Please select user role",
@@ -4641,7 +4639,7 @@ $(document).ready(function() {
                 maxlength: "Your password must be 20 characters long max"
             },
             old_password: {
-                required: "Please enter old password",
+                required: "Please enter current password",
                 remote: "Incorrect password"
             },
             repeat_password: {
@@ -4653,7 +4651,7 @@ $(document).ready(function() {
         },
         errorPlacement: function (error, element) {
             // Place error message below the group of checkboxes
-            if (element.attr("name") === "usr_password" || element.attr("name") === "repeat_password" || element.attr("name") === "old_password") {
+            if (element.attr("name") === "usr_password" || element.attr("name") === "old_password") {
                 error.insertAfter(element.closest("[name='" + element.attr("name") + "']").parent());
             } else {
                 error.insertAfter(element);
@@ -4725,9 +4723,21 @@ $(document).ready(function() {
             usr_full_name: {
                 required: true,
             },
+            usr_username: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/user/verify_email_except_self",
+                    type: "post"
+                }
+            },
             usr_sex: {
                 required: true,
             },
+        },
+        messages: {
+            usr_username: {
+                remote: "Email already in use"
+            }
         },
         submitHandler: function() {
             Swal.fire({
@@ -8322,18 +8332,32 @@ function send_cert(rev, man){
     });
 }
 
-function togglePassword(elementID, iconID){
-    var passwordInput = $(elementID);
-    var passwordIcon = $(iconID);
-    if (passwordInput.attr('type') === 'password') {
-      passwordInput.attr('type', 'text');
-      passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
-    } else {
-      passwordInput.attr('type', 'password');
-      passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
-    }
-}
-
+  
+function togglePassword(elementID, iconID, elementID2){
+	var passwordInput = $(elementID);
+	if(elementID2){
+		var passwordInput2 = $(elementID2);
+		var passwordIcon = $(iconID);
+		if (passwordInput.attr('type') === 'password' && passwordInput2.attr('type') === 'password') {
+		  passwordInput.attr('type', 'text');
+		  passwordInput2.attr('type', 'text');
+		  passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+		} else {
+		  passwordInput.attr('type', 'password');
+		  passwordInput2.attr('type', 'password');
+		  passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+		}
+	}else{
+		var passwordIcon = $(iconID);
+		if (passwordInput.attr('type') === 'password') {
+		  passwordInput.attr('type', 'text');
+		  passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+		} else {
+		  passwordInput.attr('type', 'password');
+		  passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+		}
+	}
+  }
 function disableOnSubmit(element, form, action){
     var newButtonText = (action == 'verify') ? 'Verifying' : 'Loading';
 
@@ -9012,38 +9036,38 @@ function filter_arta_sqd(){
 }
 
 function getPasswordStrength(password) {
-// Implement your password strength logic here
-// For example, you can check for length, uppercase, lowercase, numbers, and special characters
-var strength = 0;
-if (password.length >= 8) {
-    strength+=10;
-}
-if (password.length >= 12) {
-    strength+=15;
-}
-if (password.length >= 16) {
-    strength+=20;
-}
-if (/[A-Z]/.test(password)) {
-    strength+=15;
-}
-if (/[a-z]/.test(password)) {
-    strength+=10;
-}
-if (/[0-9]/.test(password)) {
-    strength+=15;
-}
-if   
-(/[^A-Za-z0-9]/.test(password)) {
-    strength+=15;
-}
-return strength;   
+    // Implement your password strength logic here
+    // For example, you can check for length, uppercase, lowercase, numbers, and special characters
+    var strength = 0;
+    if (password.length >= 8) {
+        strength+=10;
+    }
+    if (password.length >= 12) {
+        strength+=15;
+    }
+    if (password.length >= 16) {
+        strength+=20;
+    }
+    if (/[A-Z]/.test(password)) {
+        strength+=15;
+    }
+    if (/[a-z]/.test(password)) {
+        strength+=10;
+    }
+    if (/[0-9]/.test(password)) {
+        strength+=15;
+    }
+    if   
+    (/[^A-Za-z0-9]/.test(password)) {
+        strength+=15;
+    }
+    return strength;   
 
 }
 
 function tech_rev_criterion(id, status){
-$('#tedEdCriteriaModal').modal('toggle');
-$('#tr_man_id').val(id);
+    $('#tedEdCriteriaModal').modal('toggle');
+    $('#tr_man_id').val(id);
 }
 
 function eic_process(id, title) {

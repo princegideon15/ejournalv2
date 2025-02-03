@@ -41,14 +41,14 @@
                     <label for="usr_password" class="form-label">Password</label>
                     <div class="input-group">
                       <input type="password" class="form-control" id="add_usr_password" name="usr_password" placeholder="Your password">
-                      <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#add_usr_password', '#add_usr_password_icon')"><i class="fa fa-eye-slash" id="add_usr_password_icon"></i></a></span>             
+                      <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#add_usr_password', '#add_usr_password_icon', '#usr_rep_password')"><i class="fa fa-eye-slash" id="add_usr_password_icon"></i></a></span>             
                     </div>
                   </div>
-                  <div class="card mb-3 d-none" id="password_strength_container">
+                  <div class="card mb-3 d-none" id="account_password_strength_container">
                       <div class="card-body text-secondary">
-                          <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="password-strength"></span></div>
+                          <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="account-password-strength"></span></div>
                           <div class="progress mt-1" style="height: .5rem;">
-                              <div class="progress-bar" role="progressbar"  id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                              <div class="progress-bar" role="progressbar"  id="account-password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                           <ul class="mt-3 small text-muted ps-3">
                               <li>8-20 characters long.</li>
@@ -59,11 +59,8 @@
                       </div>
                   </div>
                   <div class="mb-3">
-                    <label for="usr_rep_password" class="form-label">Repeat Password</label>
-                    <div class="input-group">
+                    <label for="usr_rep_password" class="form-label">Confirm Password</label>
                     <input type="password" class="form-control" id="usr_rep_password" name="usr_rep_password" placeholder="Repeat your password">
-                      <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#usr_rep_password', '#usr_rep_password_icon')"><i class="fa fa-eye-slash" id="usr_rep_password_icon"></i></a></span>             
-                    </div>
                   </div>
                   <div class="mb-3">
                     <label for="usr_contact" class="form-label">Contact</label>
