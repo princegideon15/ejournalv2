@@ -30,6 +30,16 @@ current_button_id = "#create_account";    // button to enable/disable for catpch
 $(document).ready(function()
 {
 
+  var currentUrl = window.location.href; // Get current path
+
+  $(".custom-nav a").each(function () {
+      var link = $(this).attr("href");
+      // Check if the current URL matches the link
+      if (currentUrl === link || (currentUrl === "/" && link === "home")) {
+          $(this).addClass("active");
+      }
+  });
+
   $('#arta_age').on('keypress', function(e) {
     var charCode = (e.which) ? e.which : e.keyCode;
     if (charCode < 48 || charCode > 57) {

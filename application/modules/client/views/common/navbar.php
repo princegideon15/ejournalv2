@@ -75,7 +75,7 @@
           <!-- <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a> -->
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/submission');?>">Research Integrity</a>
+          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/integrity');?>">Research Integrity</a>
         </li>
         <?php if($logged_in) {
           echo '<li class="nav-item dropdown">

@@ -127,6 +127,21 @@ div.sticky{
     background-color: #003a5d;
     color: white !important;
     padding:10px;
+    border-radius: 5px 10px 5px 10px;
+}
+
+.custom-nav .nav-link {
+    text-decoration: none;
+    padding:10px;
+    border-radius: 5px 10px 5px 10px;
+}
+
+.custom-nav .nav-link.active {
+    text-decoration: none;
+    background-color: #003a5d;
+    color: white !important;
+    padding:10px;
+    border-radius: 5px 10px 5px 10px;
 }
 
 .nav-link:hover {

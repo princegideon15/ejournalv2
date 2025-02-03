@@ -2801,6 +2801,14 @@ $(document).ready(function() {
                 // required: "Please select sex",
             },
         },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "usr_password" || element.attr("name") === "usr_rep_password") {
+                error.insertAfter(element.closest("[name='" + element.attr("name") + "']").parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
         submitHandler: function() {
 
             $.ajax({

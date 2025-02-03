@@ -39,7 +39,10 @@
                   </div>
                   <div class="mb-3">
                     <label for="usr_password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="usr_password" name="usr_password" placeholder="Your password">
+                    <div class="input-group">
+                      <input type="password" class="form-control" id="add_usr_password" name="usr_password" placeholder="Your password">
+                      <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#add_usr_password', '#add_usr_password_icon')"><i class="fa fa-eye-slash" id="add_usr_password_icon"></i></a></span>             
+                    </div>
                   </div>
                   <div class="card mb-3 d-none" id="password_strength_container">
                       <div class="card-body text-secondary">
@@ -57,7 +60,10 @@
                   </div>
                   <div class="mb-3">
                     <label for="usr_rep_password" class="form-label">Repeat Password</label>
+                    <div class="input-group">
                     <input type="password" class="form-control" id="usr_rep_password" name="usr_rep_password" placeholder="Repeat your password">
+                      <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#usr_rep_password', '#usr_rep_password_icon')"><i class="fa fa-eye-slash" id="usr_rep_password_icon"></i></a></span>             
+                    </div>
                   </div>
                   <div class="mb-3">
                     <label for="usr_contact" class="form-label">Contact</label>
