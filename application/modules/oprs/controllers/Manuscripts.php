@@ -47,6 +47,14 @@ class Manuscripts extends OPRS_Controller {
 				$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
 				$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 				$data['man_rej'] = $this->Manuscript_model->get_manuscripts(14);
+				$data['rev_cons'] = $this->Manuscript_model->get_manuscripts(6);
+				$data['prf_cop'] = $this->Manuscript_model->get_manuscripts(7);
+				$data['fin_rev'] = $this->Manuscript_model->get_manuscripts(8);
+				$data['prf_auth'] = $this->Manuscript_model->get_manuscripts(9);
+				$data['rev_auth'] = $this->Manuscript_model->get_manuscripts(10);
+				$data['lay_art'] = $this->Manuscript_model->get_manuscripts(11);
+				$data['fin_app'] = $this->Manuscript_model->get_manuscripts(12);
+				$data['publ'] = $this->Manuscript_model->get_manuscripts(16);
 						
 				$data['usr_count'] = $this->User_model->count_user();
 				$data['arta_count'] = count($this->Arta_model->get_arta());

@@ -123,37 +123,37 @@
 							<?php if (_UserRoleFromSession() == 5 || _UserRoleFromSession() == 20) { ?>
 								<ul class="nav nav-tabs" id="myTab" role="tablist">
 									<li class="nav-item" role="presentation">
-										<button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">All <?php if($man_count >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_count; ?></span><?php } ?></button>
+										<button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">All <?php if($man_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="new-tab" data-bs-toggle="tab" data-bs-target="#new-tab-pane" type="button" role="tab" aria-controls="new-tab-pane" aria-selected="false">New <?php if($man_new >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_new; ?></span><?php } ?></button>
+										<button class="nav-link" id="new-tab" data-bs-toggle="tab" data-bs-target="#new-tab-pane" type="button" role="tab" aria-controls="new-tab-pane" aria-selected="false">New <?php if($man_new > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_new; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
 										<button class="nav-link" id="onreview-tab" data-bs-toggle="tab" data-bs-target="#onreview-tab-pane" type="button" role="tab" aria-controls="onreview-tab-pane" aria-selected="false">On-review <?php if($man_onreview >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_onreview; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="review-consolidated-tab" data-bs-toggle="tab" data-bs-target="#review-consolidated-tab-pane" type="button" role="tab" aria-controls="review-consolidated-tab-pane" aria-selected="false">Review Consolidated</button>
+										<button class="nav-link" id="review-consolidated-tab" data-bs-toggle="tab" data-bs-target="#review-consolidated-tab-pane" type="button" role="tab" aria-controls="review-consolidated-tab-pane" aria-selected="false">Review Consolidated <?php if($rev_cons > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $rev_cons; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="proofread-coped-tab" data-bs-toggle="tab" data-bs-target="#proofread-coped-tab-pane" type="button" role="tab" aria-controls="proofread-coped-tab-pane" aria-selected="false">Proofread Copy Editor</button>
+										<button class="nav-link" id="proofread-coped-tab" data-bs-toggle="tab" data-bs-target="#proofread-coped-tab-pane" type="button" role="tab" aria-controls="proofread-coped-tab-pane" aria-selected="false">Proofread Copy Editor <?php if($prf_cop > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $prf_cop; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="final-review-tab" data-bs-toggle="tab" data-bs-target="#final-review-tab-pane" type="button" role="tab" aria-controls="final-review-tab-pane" aria-selected="false">Final Review</button>
+										<button class="nav-link" id="final-review-tab" data-bs-toggle="tab" data-bs-target="#final-review-tab-pane" type="button" role="tab" aria-controls="final-review-tab-pane" aria-selected="false">Final Review <?php if($fin_rev > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $fin_rev; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="proofread-author-tab" data-bs-toggle="tab" data-bs-target="#proofread-author-tab-pane" type="button" role="tab" aria-controls="proofread-author-tab-pane" aria-selected="false">Proofread Author</button>
+										<button class="nav-link" id="proofread-author-tab" data-bs-toggle="tab" data-bs-target="#proofread-author-tab-pane" type="button" role="tab" aria-controls="proofread-author-tab-pane" aria-selected="false">Proofread Author <?php if($prf_auth > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $prf_auth; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="revision-tab" data-bs-toggle="tab" data-bs-target="#revision-tab-pane" type="button" role="tab" aria-controls="revision-tab-pane" aria-selected="false">Revision</button>
+										<button class="nav-link" id="revision-tab" data-bs-toggle="tab" data-bs-target="#revision-tab-pane" type="button" role="tab" aria-controls="revision-tab-pane" aria-selected="false">Revision <?php if($rev_auth > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $rev_auth; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="layout-tab" data-bs-toggle="tab" data-bs-target="#layout-tab-pane" type="button" role="tab" aria-controls="layout-tab-pane" aria-selected="false">Layout</button>
+										<button class="nav-link" id="layout-tab" data-bs-toggle="tab" data-bs-target="#layout-tab-pane" type="button" role="tab" aria-controls="layout-tab-pane" aria-selected="false">Layout <?php if($lay_art > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $lay_art; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="final-approval-tab" data-bs-toggle="tab" data-bs-target="#final-approval-tab-pane" type="button" role="tab" aria-controls="final-approval-tab-pane" aria-selected="false">Final Approval</button>
+										<button class="nav-link" id="final-approval-tab" data-bs-toggle="tab" data-bs-target="#final-approval-tab-pane" type="button" role="tab" aria-controls="final-approval-tab-pane" aria-selected="false">Final Approval <?php if($fin_app > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $fin_app; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="publication-tab" data-bs-toggle="tab" data-bs-target="#publication-tab-pane" type="button" role="tab" aria-controls="publication-tab-pane" aria-selected="false">Publication</button>
+										<button class="nav-link" id="publication-tab" data-bs-toggle="tab" data-bs-target="#publication-tab-pane" type="button" role="tab" aria-controls="publication-tab-pane" aria-selected="false">Published <?php if($publ > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $publ; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
 										<button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected-tab-pane" type="button" role="tab" aria-controls="rejected-tab-pane" aria-selected="false">Rejected <?php if($man_rej >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_rej; ?></span><?php } ?></button>
@@ -260,13 +260,16 @@
 																<!-- SUPERADMIN -->
 																<?php if (_UserRoleFromSession() == 20 ) { ?>
 																	<!-- view reviewers -->
-																	<button type="button" class="btn border border-1  btn-light text-info"
+																	<button type="button" class="btn btn-outline-info"
 																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
 																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
 																		data-bs-placement="top" title="View Reviewers"><span
 																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
 																	<!-- view abstract and full text manuscript -->
-																	<button type="button" class="btn border border-1 btn-light text-dark"
+																	<!-- <button type="button" class="btn border border-1 btn-light text-dark"
 																		onclick="manus_view('<?php echo $m->man_abs; ?>', 'abs')"
 																		data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
 																		data-bs-placement="top" title="View Abstract"><span
@@ -275,9 +278,9 @@
 																		onclick="manus_view('<?php echo $m->man_file; ?>', 'full')"
 																		data-bs-toggle="modal" data-bs-target="#manusModal" rel="tooltip"
 																		data-bs-placement="top" title="View Full Manuscript"><span
-																			class="far fa-file-pdf"></span> </button>
+																			class="far fa-file-pdf"></span> </button> -->
 																	<!-- delete manuscript -->
-																	<button type="button" class="btn border border-1 btn-light text-danger"
+																	<button type="button" class="btn btn-outline-danger"
 																		rel="tooltip" data-bs-placement="top" title="Delete"
 																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
 																			class="fa fa-trash"></span></button>
