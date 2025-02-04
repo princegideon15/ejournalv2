@@ -51,21 +51,53 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php $c = 1;foreach ($stat_summary as $row): ?>
-                        <tr>
-                            <td><?= $row->pub_id ?></td>
-                            <td><?= $row->publication_desc ?></td>
-                            <td><?= $row->subm_count ?></td>
-                            <td><?= $row->rej_count ?></td>
-                            <td><?= round ( ($row->rej_count / $row->subm_count) * 100, 2 ) ?>%</td>
-                            <td><?= $row->pass_count ?></td>
-                            <td><?= round ( ($row->pass_count / $row->subm_count) * 100, 2 ) ?>%</td>
-                            <td><?= $row->process_count ?></td>
-                            <td><?= round ( ($row->process_count / $row->subm_count) * 100, 2 ) ?>%</td>
-                            <td><?= $row->publ_count ?></td>
-                            <td><?= round ( ($row->publ_count / $row->subm_count) * 100, 2 ) ?>%</td>
-                        </tr>
-                        <?php endforeach;?>
+                            <?php 
+                            $c = 1;
+
+                            $total_subm = 0;
+                            $total_rej = 0;
+                            $total_pass = 0;
+                            $total_process = 0;
+                            $total_publ = 0;
+
+                            foreach ($stat_summary as $row): 
+                            
+                                $total_subm += $row->subm_count;
+                                $total_rej += $row->rej_count;
+                                $total_pass += $row->pass_count;
+                                $total_process += $row->process_count;
+                                $total_publ += $row->publ_count;
+                            ?>
+
+                            <tr class="text-center">
+                                <td ><?= $row->pub_id ?></td>
+                                <td style="text-align: left !important;"><?= $row->publication_desc ?></td>
+                                <td><?= ($row->subm_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->subm_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->rej_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->rej_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->subm_count > 0 ) ? round ( ($row->rej_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($row->pass_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->pass_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->subm_count > 0 ) ? round ( ($row->pass_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($row->process_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->process_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->subm_count > 0 ) ? round ( ($row->process_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($row->publ_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->publ_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->subm_count > 0 ) ? round ( ($row->publ_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                            </tr>
+
+                            <?php endforeach;?>
+
+                            <tr class="text-center fw-bold">
+                                <td><?= count($stat_summary) + 1 ?></td>
+                                <td style="text-align: left !important";>Total</td>
+                                <td><?= ($total_subm > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_subm . '</a>' : 0; ?></td>
+                                <td><?= ($total_rej > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_rej . '</a>' : 0; ?></td>
+                                <td><?= ($total_subm > 0 ) ? round ( ($total_rej / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($total_pass > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_pass . '</a>' : 0; ?></td>
+                                <td><?= ($total_subm > 0 ) ? round ( ($total_pass / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($total_process > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_process . '</a>' : 0; ?></td>
+                                <td><?= ($total_subm > 0 ) ? round ( ($total_process / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($total_publ > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_publ . '</a>' : 0; ?></td>
+                                <td><?= ($total_subm > 0 ) ? round ( ($total_publ / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                            </tr>
                         </tbody>
                     </table>
                     </div>
@@ -106,25 +138,63 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php $c = 1;foreach ($stat_summary as $row): ?>
-                            <tr>
-                                <td><?= $row->pub_id ?></td>
-                                <td><?= $row->publication_desc ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                                <td><?= $row->subm_count ?></td>
-                            </tr>
-                            <?php endforeach;?>
+                            <?php 
+                                $c = 1;
+                                $total_subm = 0;
+                                $total_teded_rej = 0;
+                                $total_teded_pass = 0;
+                                $total_assoced_rej = 0;
+                                $total_assoced_pass = 0;
+                                $total_process = 0;
+                                $total_publ = 0;
+                                
+                                foreach ($stat_submission as $row): 
+                            
+                                    $total_subm += $row->subm_count;
+                                    $total_teded_rej += $row->rej_teded_count;
+                                    $total_teded_pass += $row->pass_teded_count;
+                                    $total_assoced_rej += $row->rej_assoced_count;
+                                    $total_assoced_pass += $row->pass_assoced_count;
+                                    $total_process += $row->process_count;
+                                    $total_publ += $row->publ_count;
+                                ?>
+
+                                <tr class="text-center">
+                                    <td><?= $row->pub_id ?></td>
+                                    <td style="text-align: left !important;"><?= $row->publication_desc ?></td>
+                                    <td><?= ($row->subm_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->subm_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->rej_teded_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->rej_teded_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->rej_teded_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->pass_teded_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->pass_teded_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->pass_teded_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->pass_assoced_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->pass_assoced_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->pass_assoced_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->rej_assoced_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->rej_assoced_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->rej_assoced_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->process_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->process_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->process_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->publ_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $row->publ_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->publ_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                </tr>
+                                <?php endforeach;?>
+                
+                                <tr class="text-center fw-bold">
+                                    <td><?= count($stat_submission) + 1 ?></td>
+                                    <td style="text-align: left !important";>Total</td>
+                                    <td><?= ($total_subm > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_subm . '</a>' : 0; ?></td>
+                                    <td><?= ($total_teded_rej > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_teded_rej . '</a>' : 0; ?></td>
+                                    <td><?= ($total_subm > 0 ) ? round ( ($total_teded_rej / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($total_teded_pass > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_teded_pass . '</a>' : 0; ?></td>
+                                    <td><?= ($total_subm > 0 ) ? round ( ($total_teded_pass / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($total_assoced_rej > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_assoced_rej . '</a>' : 0; ?></td>
+                                    <td><?= ($total_subm > 0 ) ? round ( ($total_assoced_rej / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($total_assoced_pass > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_assoced_pass . '</a>' : 0; ?></td>
+                                    <td><?= ($total_subm > 0 ) ? round ( ($total_assoced_pass / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($total_process > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_process . '</a>' : 0; ?></td>
+                                    <td><?= ($total_subm > 0 ) ? round ( ($total_process / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($total_publ > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' . $total_publ . '</a>' : 0; ?></td>
+                                    <td><?= ($total_subm > 0 ) ? round ( ($total_publ / $total_subm) * 100, 2 ) : '0' ?>%</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

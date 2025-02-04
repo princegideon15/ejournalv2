@@ -9,6 +9,8 @@ class Statistics_model extends CI_Model {
     private $publication = 'tblpublication_types';
 	private $coauthors = 'tblcoauthors';
 	private $sex = 'tblsex';
+	private $editors = 'tbleditors_review';
+	private $tech_rev_score = 'tbltech_rev_score';
 
 
 
@@ -20,12 +22,12 @@ class Statistics_model extends CI_Model {
     public function get_submission_summary($from = null, $to = null){
 
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('p.id as pub_id, publication_desc, 
+		$oprs->select('p.id as pub_id, publication_desc,   
 		COALESCE(SUM(man_type), 0) as subm_count, 
-		COALESCE(SUM(CASE WHEN man_status = "rejected" THEN 1 ELSE 0 END),0) as rej_count,
-		COALESCE(SUM(CASE WHEN man_status = "passed" THEN 1 ELSE 0 END),0) as pass_count,
+		COALESCE(SUM(CASE WHEN man_status = 14 THEN 1 ELSE 0 END),0) as rej_count,
+		COALESCE(SUM(CASE WHEN man_status = 12 THEN 1 ELSE 0 END),0) as pass_count,
 		COALESCE(SUM(CASE WHEN man_status > 1 THEN 1 ELSE 0 END),0) as process_count,
-		COALESCE(SUM(CASE WHEN man_status = "published" THEN 1 ELSE 0 END),0) as publ_count');
+		COALESCE(SUM(CASE WHEN man_status = 16 THEN 1 ELSE 0 END),0) as publ_count');
 		$oprs->from($this->publication . ' p');
 
         if($from > 0 && $to > 0){
@@ -42,10 +44,12 @@ class Statistics_model extends CI_Model {
     public function get_submission_stats($from = null, $to = null){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('p.id as pub_id, publication_desc, COALESCE(SUM(man_type), 0) as subm_count,
-		COALESCE(SUM(CASE WHEN man_status = "rejected" THEN 1 ELSE 0 END),0) as rej_count,
-		COALESCE(SUM(CASE WHEN man_status = "passed" THEN 1 ELSE 0 END),0) as pass_count,
-		COALESCE(SUM(CASE WHEN man_status > 1 THEN 1 ELSE 0 END),0) as process_count,
-		COALESCE(SUM(CASE WHEN man_status = "published" THEN 1 ELSE 0 END),0) as publ_count');
+		COALESCE(COUNT(DISTINCT CASE WHEN tr_final = 2 THEN t.tr_man_id END),0) as rej_teded_count,
+		COALESCE(COUNT(DISTINCT CASE WHEN tr_final = 1 THEN t.tr_man_id END),0) as pass_teded_count,
+		COALESCE(COUNT(DISTINCT CASE WHEN edit_status = 15 THEN e.edit_man_id END),0) as pass_assoced_count,
+		COALESCE(COUNT(DISTINCT CASE WHEN edit_status = 14 THEN e.edit_man_id END),0) as rej_assoced_count,
+		COALESCE(COUNT(DISTINCT CASE WHEN man_status > 1 THEN m.row_id END),0) as process_count,
+		COALESCE(COUNT(DISTINCT CASE WHEN man_status = 16 THEN m.row_id END),0) as publ_count');
 		$oprs->from($this->publication . ' p');
         
         if($from > 0 && $to > 0){
@@ -53,10 +57,28 @@ class Statistics_model extends CI_Model {
         }else{
             $oprs->join($this->manus . ' m', 'man_type = p.id', 'left');
         }
+	
+		$oprs->join(
+			'(' .
+			'SELECT ed.* FROM ' . $this->editors . ' ed ' .
+			'JOIN (SELECT edit_man_id, MAX(er.row_id) AS last_entry FROM ' . $this->editors . ' er JOIN tblusers on edit_usr_id = usr_id where usr_desc LIKE "%associate%" GROUP BY edit_man_id) latest ' .
+			'ON ed.row_id = latest.last_entry ' .
+			') e',
+			'm.row_id = e.edit_man_id',
+			'left'
+		);
+
+		$oprs->join($this->tech_rev_score . ' t', 'm.row_id = t.tr_man_id', 'left');
 
         $oprs->group_by('p.id');
 		$query = $oprs->get();
 		return $query->result();
+
+		
+		// SELECT e.* FROM tbleditors_review e 
+		// 	JOIN (SELECT edit_man_id, MAX(row_id) AS last_entry FROM tbleditors_review GROUP BY edit_man_id) latest 
+		// 	ON e.row_id = latest.last_entry LIMIT 100
+
     }
     public function get_author_by_sex_stats($from = null, $to = null){
 		
