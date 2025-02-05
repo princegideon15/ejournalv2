@@ -722,14 +722,14 @@ class Login extends OPRS_Controller {
 			// determine if reviewer has clicked accept or decline already
 			$message = ($status == 1) ? 'accepted' : 'declined';
 			$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-warning', 'msg' => 'Sorry, you have already ' . $message. ' the request.');
-			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+			$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
 			redirect('oprs/login');
-			$this->session->unset_userdata('_oprs_login_msg');
+			$this->session->unset_userdata('_reviewer_login_msg');
 		} else if ($status == 3) {
 			$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-danger', 'msg' => 'Sorry, the request has been expired.');
-			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+			$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
 			redirect('oprs/login');
-			$this->session->unset_userdata('_oprs_login_msg');
+			$this->session->unset_userdata('_reviewer_login_msg');
 		} else {
 			if ($action == 1) {
 				// accept
@@ -794,9 +794,9 @@ class Login extends OPRS_Controller {
 				$post_scr['scr_man_rev_id'] = $id;
 				$post_scr['scr_status'] = 2;
 				$this->Review_model->save_review(array_filter($post_scr));
-				$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+				$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
 				redirect('oprs/login');
-				$this->session->unset_userdata('_oprs_login_msg');
+				$this->session->unset_userdata('_reviewer_login_msg');
 			} else {
 				$rev_username = $this->Login_model->get_reviewer_info($id);
 				$this->decline_request($rev_username, $man_id, $id);
@@ -809,9 +809,9 @@ class Login extends OPRS_Controller {
 				$where['rev_man_id'] = $man_id;
 				$this->Manuscript_model->update_reviewer(array_filter($revs), $where);
 				$array_msg = array('icon' => 'fa fa-times-circle', 'class' => 'alert-warning', 'msg' => 'Request declined.');
-				$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+				$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
 				redirect('oprs/login');
-				$this->session->unset_userdata('_oprs_login_msg');
+				$this->session->unset_userdata('_reviewer_login_msg');
 			}
 		}
 	}

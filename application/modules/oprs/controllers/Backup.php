@@ -44,12 +44,8 @@ class Backup extends OPRS_Controller {
 					$data['main_content'] = "oprs/database";
 					$data['logs'] = $this->Log_model->count_logs();
 					$data['tables'] = $this->Library_model->get_tables();
-					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
-					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
-					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
-					$data['man_final'] = $this->Manuscript_model->get_manuscripts(4);
-					$data['man_for_p'] = $this->Manuscript_model->get_manuscripts(5);
-					$data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
 					$data['usr_count'] = $this->User_model->count_user();
 					$data['arta_count'] = count($this->Arta_model->get_arta());
 					$data['feed_count'] = $this->Feedback_model->count_feedbacks();

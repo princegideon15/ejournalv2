@@ -27,24 +27,16 @@ class Statistics extends OPRS_Controller {
 					$id = $this->session->userdata('_oprs_user_id');
 					$data['users'] = $this->User_model->get_user($id);
 					$data['logs'] = $this->Log_model->count_logs();
-					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
-					// $data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
-					// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
-					// $data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
-					// $data['man_final'] = $this->Manuscript_model->get_manuscripts(4);
-					// $data['man_for_p'] = $this->Manuscript_model->get_manuscripts(5);
-					// $data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
 					$data['usr_count'] = $this->User_model->count_user();
 					$data['arta_count'] = count($this->Arta_model->get_arta());
 					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
 					$data['user_types'] = $this->User_model->get_user_types();
 					$data['main_title'] = "OPRS";
-                    // $data['statistics'] = ($type == 1) ? $this->Statistics_model->get_submission_stats() : $this->Statistics_model->get_author_sex_stats() ;
                     $data['stat_summary'] = $this->Statistics_model->get_submission_summary();
                     $data['stat_submission'] = $this->Statistics_model->get_submission_stats();
                     $data['stat_author_by_sex'] = $this->Statistics_model->get_author_by_sex_stats();
-                    //  1-submission statistics 2- author by sex
-                    // $data['main_content'] = ($type == 1) ? "oprs/submission_statistics" : "oprs/author_by_sex";
                     $data['main_content'] = "oprs/submission_statistics";
 
 					$this->_LoadPage('common/body', $data);

@@ -21,12 +21,14 @@ class Process extends OPRS_Controller {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
 				// 3-managing editor 20-superadmin 5-technical desk editor
+				//TODO: adjust based on processor and create auto email notificatino function based on process duration
 				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20 || _UserRoleFromSession() == 5) {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/durations";
 					$data['user_roles'] = $this->Email_model->get_email_user_roles();
 					$data['emails'] = $this->Email_model->get_process_time_duration();
-					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
 					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
 					$data['man_final'] = $this->Manuscript_model->get_manuscripts(4);

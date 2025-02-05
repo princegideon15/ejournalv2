@@ -33,7 +33,7 @@ class Manuscripts extends OPRS_Controller {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 )
 			{
 				// $data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
-				$data['manus'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+				// $data['manus'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
 				$data['u_man_jor'] = $this->Manuscript_model->get_oprs_journal();
 				$data['publish'] = $this->Dashboard_model->get_publishables();
 				$data['u_journal'] = $this->Manuscript_model->get_unique_journal();
@@ -43,7 +43,8 @@ class Manuscripts extends OPRS_Controller {
 				$data['logs'] = $this->Log_model->count_logs();
 				$data['titles'] = $this->Library_model->get_titles();
 				$data['publ_types'] = $this->Library_model->get_publication_types(null);
-				$data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
+
+				$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
 				$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
 				$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 				$data['man_rej'] = $this->Manuscript_model->get_manuscripts(14);
@@ -55,7 +56,20 @@ class Manuscripts extends OPRS_Controller {
 				$data['lay_art'] = $this->Manuscript_model->get_manuscripts(11);
 				$data['fin_app'] = $this->Manuscript_model->get_manuscripts(12);
 				$data['publ'] = $this->Manuscript_model->get_manuscripts(16);
-						
+
+				$data['man_all_count'] = count($data['man_all']);
+				$data['man_new_count'] = count($data['man_new']);
+				$data['man_onreview_count'] = count($data['man_onreview']);
+				$data['man_rej_count'] = count($data['man_rej']);
+				$data['rev_cons_count'] = count($data['rev_cons']);
+				$data['prf_cop_count'] = count($data['prf_cop']);
+				$data['fin_rev_count'] = count($data['fin_rev']);
+				$data['prf_auth_count'] = count($data['prf_auth']);
+				$data['rev_auth_count'] = count($data['rev_auth']);
+				$data['lay_art_count'] = count($data['lay_art']);
+				$data['fin_app_count'] = count($data['fin_app']);
+				$data['publ_count'] = count($data['publ']);
+
 				$data['usr_count'] = $this->User_model->count_user();
 				$data['arta_count'] = count($this->Arta_model->get_arta());
 				$data['feed_count'] = $this->Feedback_model->count_feedbacks();
@@ -334,6 +348,22 @@ class Manuscripts extends OPRS_Controller {
 			$coa['coa_man_id'] = $output;
 			$coa['date_created'] = date('Y-m-d H:i:s');
 			$this->Manuscript_model->save_coauthors($coa);
+
+			$coauthors = $this->input->post('coa_name', true);
+			$affiliations = $this->input->post('coa_affiliation', true);
+			$emails = $this->input->post('coa_email', true);
+			$coa = array();
+	
+			if (!empty($coauthors)) {
+				for ($i = 0; $i < count($coauthors); $i++) {
+					$coa['coa_name'] = $coauthors[$i];
+					$coa['coa_affiliation'] = $affiliations[$i];
+					$coa['coa_email'] = $emails[$i];
+					$coa['coa_man_id'] = $output;
+					$coa['date_created'] = date('Y-m-d H:i:s');
+					$this->Manuscript_model->save_coauthors($coa);
+				}
+			}
 		}
 
 		// send email to author if submit successfull/acknowledgement email

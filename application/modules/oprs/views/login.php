@@ -23,6 +23,17 @@
           <div class="col-6 d-flex justify-content-center align-items-center">
             <div class="row p-3">
               <div>
+                <?php if ($this->session->flashdata('_reviewer_login_msg')) { 
+                  $msg = $this->session->flashdata('_reviewer_login_msg');
+                  $message = $msg['msg'];
+                  $class = $msg['class'];
+                  $icon = $msg['icon'];?>
+                        <div class="text-left mb-3 alert border border-0 <?php echo $class; ?>" role="alert" style="font-size:14px">
+                          <span class="oi <?php echo $icon; ?>"></span> <?php echo $message; ?>
+                        </div>
+                        <?php
+                } ?>
+
                 <?php if ($this->session->flashdata('_oprs_login_msg')) { ?>
                     <div class="alert alert-danger d-flex">
                         <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('_oprs_login_msg'); ?>

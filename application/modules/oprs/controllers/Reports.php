@@ -31,7 +31,8 @@ class Reports extends OPRS_Controller {
 					$data['completed'] = $this->Manuscript_model->get_completed_reviews();
 					$data['criteria'] = $this->Review_model->get_criterias();
 					$data['logs'] = $this->Log_model->count_logs();
-					$data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
 					$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
 					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);

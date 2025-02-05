@@ -61,9 +61,9 @@
         <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" id="nav_home" href="<?php echo base_url();?>">Home</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/about');?>">About</a>
-        </li>
+        </li> -->
         <!-- <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/guidelines');?>">Guidelines</a>
         </li> -->
@@ -74,9 +74,9 @@
           <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/submission');?>">Submissions</a>
           <!-- <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a> -->
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/integrity');?>">Research Integrity</a>
-        </li>
+        </li> -->
         <?php if($logged_in) {
           echo '<li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

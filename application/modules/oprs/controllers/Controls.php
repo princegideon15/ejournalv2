@@ -15,6 +15,7 @@ class Controls extends OPRS_Controller {
 	}
 	
 	public function index() {
+		//TODO:modify control panel in tor
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
 				if(_UserRoleFromSession() == 20){
@@ -23,7 +24,8 @@ class Controls extends OPRS_Controller {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/controls";
 					$data['logs'] = $this->Log_model->count_logs();
-					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
 					$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
 					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);

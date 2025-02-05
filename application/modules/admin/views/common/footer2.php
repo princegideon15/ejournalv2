@@ -671,7 +671,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"><span class="oi oi-hard-drive" style="width:20px"></span> Backup/Restore Database </h5>
+        <h5 class="modal-title" id="exampleModalLabel"><span class="fas fa-database" style="width:20px"></span> Backup/Restore Database </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -761,7 +761,11 @@
             </div>
             <div class="card-body">
                 <form id="import_db_form" method="POST" enctype="multipart/form-data">
-                    <div class="input-group is-invalid">
+					<div class="input-group">
+					<input type="file" class="form-control" id="import_file" name="import_file"  >
+						<button class="btn btn-dark" type="submit" id="inputGroupFileAddon04">Go</button>
+					</div>
+                    <!-- <div class="input-group is-invalid">
                         <div class="custom-file">
                         <input type="file" class="custom-file-input" id="import_file" name="import_file"  >
                         <label class="custom-file-label" for="import_file">Choose file...</label>
@@ -769,7 +773,7 @@
                         <div class="input-group-append">
                         <button type="submit" class="btn btn-dark">Go</button>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="invalid-feedback">
                     </div>
       			</form>
@@ -779,7 +783,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>

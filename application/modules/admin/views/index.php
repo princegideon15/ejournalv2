@@ -1087,7 +1087,7 @@
 							</div>
 							<?php if($all_logs){ ?>
 							<div class="mb-3">
-								<button class="btn btn-danger" id="clearLogs" data-bs-toggle="modal" data-bs-target="#clear_log_modal">Clear Logs</button>
+								<button class="btn btn-outline-danger" id="clearLogs" data-bs-toggle="modal" data-bs-target="#clear_log_modal">Clear Logs</button>
 							</div>
 							<?php } ?>
 						</div>

@@ -1646,21 +1646,6 @@ $(document).ready(function() {
         ]
     });
     
-
-    // all manuscripts;
-    var amt = $('#all-manuscript').DataTable({
-        "order": [[ 2, "desc" ]],
-        "columnDefs" : [
-            {"targets":2, "type":"date"},
-        ]
-    });
- 
-    amt.on( 'order.dt search.dt', function () {
-        amt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
-
     // author table manuscripts;
     var aut = $('#author_table').DataTable({
         "order": [[ 2, "desc" ]],
@@ -1712,22 +1697,42 @@ $(document).ready(function() {
         ],
         // Optional: to ensure the table layout is applied correctly
         autoWidth: false 
-      });
+    });
+
     $('#collapse_laprev_table').DataTable({
         columnDefs: [
           { width: "10px", targets: 0 } // Set the width of the first column
         ],
         // Optional: to ensure the table layout is applied correctly
         autoWidth: false 
-      });
+    });
+
     $('#controls_table').DataTable();
     // $('#uiux_table').DataTable();
     $('#cfs_table').DataTable();
 
+    
+
+    // all manuscripts;
+    var amt = $('#all-manuscript').DataTable({
+        "order": [[ 4, "desc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+ 
+    amt.on( 'order.dt search.dt', function () {
+        amt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
     // new manuscripts
-    var nmt = $('#new_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
-        "columnDefs" : [{"targets":2, "type":"date"}]
+    var nmt = $('#new-manuscript').DataTable({
+        "order": [[ 4, "desc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
     });
  
     nmt.on( 'order.dt search.dt', function () {
@@ -1737,9 +1742,11 @@ $(document).ready(function() {
     } ).draw();
 
     // on-review manuscripts
-    var ort = $('#onreview_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
-        "columnDefs" : [{"targets":2, "type":"date"}]
+    var ort = $('#onreview-manuscript').DataTable({
+        "order": [[ 4, "desc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
     });
  
     ort.on( 'order.dt search.dt', function () {
@@ -1748,12 +1755,14 @@ $(document).ready(function() {
         } );
     } ).draw();
 
-    // reviewed manuscripts
-    var rmt = $('#reviewed_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
-        "columnDefs" : [{"targets":2, "type":"date"}]
+    // consolidated reviews
+    var rmt = $('#review-consolidated-manuscript').DataTable({
+        "order": [[ 4, "desc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
     });
- 
+ //TODO: to be continued
     rmt.on( 'order.dt search.dt', function () {
         rmt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
@@ -5094,6 +5103,14 @@ $(document).ready(function() {
                 extension: 'xls|csv',
             },
         },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "import_backup") {
+                error.insertAfter(element.closest("[name='" + element.attr("name") + "']").parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
         submitHandler: function() {
             
             $('body').loading('start');
@@ -5146,10 +5163,10 @@ $(document).ready(function() {
         var val = $(this).val();
         $('#coauthors').empty();
         if(val == 1){
-            $('#add_coauthors').removeClass('d-none');
+            // $('#add_coauthors').removeClass('d-none');
             $('#add_main_author').addClass('d-none');
         }else{
-            $('#add_coauthors').addClass('d-none');
+            // $('#add_coauthors').addClass('d-none');
             $('#add_main_author').removeClass('d-none');
         }
 

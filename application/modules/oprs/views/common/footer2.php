@@ -566,7 +566,7 @@
 								<input type="email" class="form-control bg-light" placeholder="Enter a valid email" id="man_email" name="man_email">
 							</div>
 						</div>
-					<div class="mb-3 d-none" id="add_coauthors">
+					<div class="mb-3" id="add_coauthors">
 						<span id="coauthors"></span>
 						<button	button class="btn btn-outline-secondary mr-auto" type="button" id="btn_add_coa"><i
 						class="fa fa-plus"></i> Add Co-author</button>

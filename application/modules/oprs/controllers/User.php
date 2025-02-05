@@ -23,7 +23,8 @@ class User extends OPRS_Controller {
 					$id = $this->session->userdata('_oprs_user_id');
 					$data['users'] = $this->User_model->get_user($id);
 					$data['logs'] = $this->Log_model->count_logs();
-					$data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
 					// $data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
 					// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 					// $data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);

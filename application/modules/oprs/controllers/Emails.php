@@ -26,7 +26,8 @@ class Emails extends OPRS_Controller {
 					$data['main_content'] = "oprs/emails";
 					$data['user_roles'] = $this->Email_model->get_email_user_roles();
 					$data['emails'] = $this->Email_model->get_contents();
-					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
 					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
 					$data['man_final'] = $this->Manuscript_model->get_manuscripts(4);

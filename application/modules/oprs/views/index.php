@@ -224,7 +224,7 @@
               <div class="card border border-dark o-hidden h-100 rounded">
                 <div class="card-body d-flex justify-content-start align-items-center">
                   <div class="card-text">
-                    <span class="fw-bold me-2" style="font-size:50px"><?php echo count($publish); ?></span><i class="far fa-check-circle me-1"></i>Publishables
+                    <span class="fw-bold me-2" style="font-size:50px"><?php echo count($man_pub); ?></span><i class="far fa-check-circle me-1"></i>Published
                   </div>
                 </div>
                 <a class="card-footer text-dark clearfix small z-1 text-decoration-none text-end" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapse_publishables">
@@ -331,6 +331,44 @@
             </div>
           </div>
           <!-- /.LIST OF REVIEWERS -->
+          <!-- LIST OF PUBLISHED -->
+          <div id="collapse_publishables" class="accordion-collapse collapse" data-bs-parent="#collapse_parent_sub">
+            <div class="card border-dark">
+              <div class="card-header fw-bold fs-6">
+                List of Published Manuscripts
+              </div>
+              <div class="card-body">
+                <table class="table table-hover" id="collapse_published_table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Reviewer</th>
+                      <th>Manuscript</th>
+                      <th>Score</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php $c = 1;foreach ($reviewers as $row): ?>
+                    <?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($row->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($row->row_id);?>
+                    <?php $title = $row->man_title . ', ' . $row->man_author . $acoa?>
+                    <?php $rev_status = (($row->scr_status == '4') ? '<span class="badge rounded-pill text-bg-success">Approved</span>' :
+                ((($row->scr_status == '5') ? '<span class="badge rounded-pill text-bg-warning">Need Revision</span>' :
+                  '<span class="badge rounded-pill text-bg-danger">Disapproved</span>')));?>
+                    <tr>
+                      <td class="text-center align-middle"><?php echo $c++; ?></td></td>
+                      <td class="align-middle"><?php echo $this->Manuscript_model->get_reviewer_name($row->scr_man_rev_id); ?></td>
+                      <td class="align-middle"><?php echo $title; ?></td>
+                      <td class="align-middle"><?php echo $row->scr_total; ?></td>
+                      <td class="align-middle"><?php echo $rev_status; ?></td>
+                    </tr>
+                    <?php endforeach;?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- /.LIST OF PUBLISHED -->
         </div>
       </div>
     </main>  

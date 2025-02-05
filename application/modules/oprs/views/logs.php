@@ -45,12 +45,19 @@
             <div class="row">
               <div class="col-6">
                 <form id="import_backup_form">
-                  <div class="form-group">
+                  <p>Upload CSV file format</p>
+                  <div class="input-group">
+                      <input type="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="import_backup" name="import_backup">
+                      <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Import Backup</button>
+                  </div>
+                  <!-- <div class="form-group">
                     <label>Upload CSV file format</label>
                     <input type="file" class="form-control-file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="import_backup" name="import_backup">
                   </div>
-                  <button class="btn btn-outline-secondary">Import Backup</button>
-                  <button type="button" class="btn btn-outline-danger"  data-toggle="modal" data-target="#clearLogsModal">Clear Logs</button>
+                  <button class="btn btn-outline-secondary">Import Backup</button> -->
+                  <div>
+                    <button type="button" class="btn btn-outline-danger mt-3"  data-bs-toggle="modal" data-target="#clearLogsModal">Clear Logs</button>
+                  </div>
                 </form>
               </div>
             </div>

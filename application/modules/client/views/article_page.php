@@ -87,13 +87,15 @@
                                 Cite this article  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
                            
                            
-                            </div>
-                            
-                             <div class="input-group">
-                                <button class="btn btn-outline-dark" type="button" id="share_link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Copy to clipboard">Share <span class="oi oi-share ms-1"></span></button>
-                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="'. base_url('client/ejournal/article/'. $article[0]->art_id) . '" readonly>
                             </div>';
                         }?>
+
+                        
+                            
+                                <div class="input-group">
+                                <button class="btn btn-outline-dark" type="button" id="share_link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Copy to clipboard">Share <span class="oi oi-share ms-1"></span></button>
+                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="<?= base_url('client/ejournal/article/'. $article[0]->art_id) ?>" readonly>
+                            </div>
 
 
                     </div>

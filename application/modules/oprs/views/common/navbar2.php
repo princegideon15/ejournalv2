@@ -323,13 +323,13 @@
                         <a class="nav-link" href="manuscripts">
                         <i class="fas fa-scroll me-2"></i>
                         My Submissions
-                        <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
+                        <span class="ms-2 badge text bg-danger"><?php echo $man_all_count; ?></span>
                         </a> 
                     <?php }else{ ?>
                         <a class="nav-link" href="manuscripts">
                         <i class="fas fa-scroll me-2"></i>
                         Manuscripts
-                        <span class="ms-2 badge text bg-danger"><?php echo count($manus); ?></span>
+                        <span class="ms-2 badge text bg-danger"><?php echo $man_all_count; ?></span>
                         </a> 
                     <?php } ?>
 

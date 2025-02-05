@@ -876,20 +876,21 @@ class Manuscript_model extends CI_Model {
 	public function get_manuscripts($status) {
 		
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('*');
-		$oprs->from($this->manus);
+		$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
+		$oprs->from($this->manus . ' m');
+		$oprs->join($this->publication . ' p', 'm.man_type = p.id');
+		$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 
 		if($status > 0){
 			if($status == 2){
-				$oprs->where_in('man_status', [2,3,4,5]);
+				$oprs->where_in('m.man_status', [2,3,4,5]);
 			}else{
-				$oprs->where('man_status', $status);
+				$oprs->where('m.man_status', $status);
 			}
-			// $oprs->where('man_remarks IS NULL');
 		}
 
 		$query = $oprs->get();
-		return $query->num_rows();
+		return $query->result();
 	}
 	
 	/**

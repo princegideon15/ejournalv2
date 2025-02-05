@@ -12,7 +12,7 @@
           <div class="col-3">
             <div class="accordion ">
                 <ul class="list-group list-group-flush">
-                  <button class="list-group-item list-group-item-action text-primary cursor-pointer" data-bs-toggle="collapse" data-bs-target="#collapseManuscripts"><i class="fas fa-angle-right"></i> List of Manuscripts</button>
+                  <button class="list-group-item list-group-item-action text-primary cursor-pointer" data-bs-toggle="collapse" data-bs-target="#collapseManuscripts"><i class="fas fa-angle-right"></i> List of Submitted Manuscripts</button>
                   <li class="list-group-item list-group-item-action text-primary cursor-pointer" data-bs-toggle="collapse" data-bs-target="#collapseDecReq"><i class="fas fa-angle-right"></i> List of Declined Requests</li>
                   <li class="list-group-item list-group-item-action text-primary cursor-pointer" data-bs-toggle="collapse" data-bs-target="#collapseLapReq"><i class="fas fa-angle-right"></i> List of Lapsed Requests</li>
                   <li class="list-group-item list-group-item-action text-primary cursor-pointer" data-bs-toggle="collapse" data-bs-target="#collapseLapRev"><i class="fas fa-angle-right"></i> List of Lapsed Reviews</li>

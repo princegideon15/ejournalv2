@@ -58,7 +58,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<?php $c = 1;foreach ($manus as $m): ?>
+											<?php $c = 1;foreach ($man_all as $m): ?>
 											<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
 											<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
 
@@ -123,40 +123,40 @@
 							<?php if (_UserRoleFromSession() == 5 || _UserRoleFromSession() == 20) { ?>
 								<ul class="nav nav-tabs" id="myTab" role="tablist">
 									<li class="nav-item" role="presentation">
-										<button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">All <?php if($man_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_count; ?></span><?php } ?></button>
+										<button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">All <?php if($man_all_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_all_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="new-tab" data-bs-toggle="tab" data-bs-target="#new-tab-pane" type="button" role="tab" aria-controls="new-tab-pane" aria-selected="false">New <?php if($man_new > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_new; ?></span><?php } ?></button>
+										<button class="nav-link" id="new-tab" data-bs-toggle="tab" data-bs-target="#new-tab-pane" type="button" role="tab" aria-controls="new-tab-pane" aria-selected="false">New <?php if($man_new_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_new_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="onreview-tab" data-bs-toggle="tab" data-bs-target="#onreview-tab-pane" type="button" role="tab" aria-controls="onreview-tab-pane" aria-selected="false">On-review <?php if($man_onreview >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_onreview; ?></span><?php } ?></button>
+										<button class="nav-link" id="onreview-tab" data-bs-toggle="tab" data-bs-target="#onreview-tab-pane" type="button" role="tab" aria-controls="onreview-tab-pane" aria-selected="false">On-review <?php if($man_onreview_count >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_onreview_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="review-consolidated-tab" data-bs-toggle="tab" data-bs-target="#review-consolidated-tab-pane" type="button" role="tab" aria-controls="review-consolidated-tab-pane" aria-selected="false">Review Consolidated <?php if($rev_cons > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $rev_cons; ?></span><?php } ?></button>
+										<button class="nav-link" id="review-consolidated-tab" data-bs-toggle="tab" data-bs-target="#review-consolidated-tab-pane" type="button" role="tab" aria-controls="review-consolidated-tab-pane" aria-selected="false">Review Consolidated <?php if($rev_cons_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $rev_cons_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="proofread-coped-tab" data-bs-toggle="tab" data-bs-target="#proofread-coped-tab-pane" type="button" role="tab" aria-controls="proofread-coped-tab-pane" aria-selected="false">Proofread Copy Editor <?php if($prf_cop > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $prf_cop; ?></span><?php } ?></button>
+										<button class="nav-link" id="proofread-coped-tab" data-bs-toggle="tab" data-bs-target="#proofread-coped-tab-pane" type="button" role="tab" aria-controls="proofread-coped-tab-pane" aria-selected="false">Proofread Copy Editor <?php if($prf_cop_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $prf_cop_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="final-review-tab" data-bs-toggle="tab" data-bs-target="#final-review-tab-pane" type="button" role="tab" aria-controls="final-review-tab-pane" aria-selected="false">Final Review <?php if($fin_rev > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $fin_rev; ?></span><?php } ?></button>
+										<button class="nav-link" id="final-review-tab" data-bs-toggle="tab" data-bs-target="#final-review-tab-pane" type="button" role="tab" aria-controls="final-review-tab-pane" aria-selected="false">Final Review <?php if($fin_rev_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $fin_rev_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="proofread-author-tab" data-bs-toggle="tab" data-bs-target="#proofread-author-tab-pane" type="button" role="tab" aria-controls="proofread-author-tab-pane" aria-selected="false">Proofread Author <?php if($prf_auth > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $prf_auth; ?></span><?php } ?></button>
+										<button class="nav-link" id="proofread-author-tab" data-bs-toggle="tab" data-bs-target="#proofread-author-tab-pane" type="button" role="tab" aria-controls="proofread-author-tab-pane" aria-selected="false">Proofread Author <?php if($prf_auth_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $prf_auth_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="revision-tab" data-bs-toggle="tab" data-bs-target="#revision-tab-pane" type="button" role="tab" aria-controls="revision-tab-pane" aria-selected="false">Revision <?php if($rev_auth > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $rev_auth; ?></span><?php } ?></button>
+										<button class="nav-link" id="revision-tab" data-bs-toggle="tab" data-bs-target="#revision-tab-pane" type="button" role="tab" aria-controls="revision-tab-pane" aria-selected="false">Revision <?php if($rev_auth_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $rev_auth_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="layout-tab" data-bs-toggle="tab" data-bs-target="#layout-tab-pane" type="button" role="tab" aria-controls="layout-tab-pane" aria-selected="false">Layout <?php if($lay_art > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $lay_art; ?></span><?php } ?></button>
+										<button class="nav-link" id="layout-tab" data-bs-toggle="tab" data-bs-target="#layout-tab-pane" type="button" role="tab" aria-controls="layout-tab-pane" aria-selected="false">Layout <?php if($lay_art_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $lay_art_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="final-approval-tab" data-bs-toggle="tab" data-bs-target="#final-approval-tab-pane" type="button" role="tab" aria-controls="final-approval-tab-pane" aria-selected="false">Final Approval <?php if($fin_app > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $fin_app; ?></span><?php } ?></button>
+										<button class="nav-link" id="final-approval-tab" data-bs-toggle="tab" data-bs-target="#final-approval-tab-pane" type="button" role="tab" aria-controls="final-approval-tab-pane" aria-selected="false">Final Approval <?php if($fin_app_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $fin_app_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="publication-tab" data-bs-toggle="tab" data-bs-target="#publication-tab-pane" type="button" role="tab" aria-controls="publication-tab-pane" aria-selected="false">Published <?php if($publ > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $publ; ?></span><?php } ?></button>
+										<button class="nav-link" id="publication-tab" data-bs-toggle="tab" data-bs-target="#publication-tab-pane" type="button" role="tab" aria-controls="publication-tab-pane" aria-selected="false">Published <?php if($publ_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $publ_count; ?></span><?php } ?></button>
 									</li>
 									<li class="nav-item" role="presentation">
-										<button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected-tab-pane" type="button" role="tab" aria-controls="rejected-tab-pane" aria-selected="false">Rejected <?php if($man_rej >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_rej; ?></span><?php } ?></button>
+										<button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected-tab-pane" type="button" role="tab" aria-controls="rejected-tab-pane" aria-selected="false">Rejected <?php if($man_rej_count >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_rej_count; ?></span><?php } ?></button>
 									</li>
 								</ul>
 								<div class="tab-content" id="myTabContent">
@@ -178,7 +178,7 @@
 													</tr>
 												</thead>
 												<tbody>
-													<?php $c = 1;foreach ($manus as $m): ?>
+													<?php $c = 1;foreach ($man_all as $m): ?>
 													<?php $role = $this->session->userdata('_oprs_type_num');?>
 													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
 													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
@@ -343,6 +343,57 @@
 													</tr>
 												</thead>
 												<tbody>
+													<?php $c = 1;foreach ($man_new as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
 												</tbody>
 											</table>
 										</div>
@@ -365,6 +416,57 @@
 													</tr>
 												</thead>
 												<tbody>
+													<?php $c = 1;foreach ($man_onreview as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
 												</tbody>
 											</table>
 										</div>
@@ -387,6 +489,641 @@
 													</tr>
 												</thead>
 												<tbody>
+													<?php $c = 1;foreach ($rev_cons as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="proofread-coped-tab-pane" role="tabpanel" aria-labelledby="proofread-coped-tab" tabindex="0">
+										<div class="table-responsive">
+											<table class="table table-hover" id="review-consolidated-manuscript" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Author(s)</th>
+														<th>Membership Status</th>
+														<th>Date Submitted</th>
+														<th>Status</th>
+														<th>Tracking No.</th>
+														<th>Actions</th>
+														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $c = 1;foreach ($prf_cop as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="final-reviewd-tab-pane" role="tabpanel" aria-labelledby="final-reviewd-tab" tabindex="0">
+										<div class="table-responsive">
+											<table class="table table-hover" id="review-consolidated-manuscript" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Author(s)</th>
+														<th>Membership Status</th>
+														<th>Date Submitted</th>
+														<th>Status</th>
+														<th>Tracking No.</th>
+														<th>Actions</th>
+														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $c = 1;foreach ($fin_rev as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="proofread-author-tab-pane" role="tabpanel" aria-labelledby="proofread-author-tab" tabindex="0">
+										<div class="table-responsive">
+											<table class="table table-hover" id="review-consolidated-manuscript" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Author(s)</th>
+														<th>Membership Status</th>
+														<th>Date Submitted</th>
+														<th>Status</th>
+														<th>Tracking No.</th>
+														<th>Actions</th>
+														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $c = 1;foreach ($prf_auth as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="revision-tab-pane" role="tabpanel" aria-labelledby="revision-tab" tabindex="0">
+										<div class="table-responsive">
+											<table class="table table-hover" id="review-consolidated-manuscript" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Author(s)</th>
+														<th>Membership Status</th>
+														<th>Date Submitted</th>
+														<th>Status</th>
+														<th>Tracking No.</th>
+														<th>Actions</th>
+														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $c = 1;foreach ($rev_auth as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="layout-tab-pane" role="tabpanel" aria-labelledby="layout-tab" tabindex="0">
+										<div class="table-responsive">
+											<table class="table table-hover" id="review-consolidated-manuscript" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Author(s)</th>
+														<th>Membership Status</th>
+														<th>Date Submitted</th>
+														<th>Status</th>
+														<th>Tracking No.</th>
+														<th>Actions</th>
+														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $c = 1;foreach ($lay_art as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="final-approval-tab-pane" role="tabpanel" aria-labelledby="final-approval-tab" tabindex="0">
+										<div class="table-responsive">
+											<table class="table table-hover" id="review-consolidated-manuscript" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Author(s)</th>
+														<th>Membership Status</th>
+														<th>Date Submitted</th>
+														<th>Status</th>
+														<th>Tracking No.</th>
+														<th>Actions</th>
+														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $c = 1;foreach ($fin_app as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="publication-tab-pane" role="tabpanel" aria-labelledby="publication-tab" tabindex="0">
+										<div class="table-responsive">
+											<table class="table table-hover" id="review-consolidated-manuscript" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Author(s)</th>
+														<th>Membership Status</th>
+														<th>Date Submitted</th>
+														<th>Status</th>
+														<th>Tracking No.</th>
+														<th>Actions</th>
+														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $c = 1;foreach ($publ as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="rejected-tab-pane" role="tabpanel" aria-labelledby="rejected-tab" tabindex="0">
+										<div class="table-responsive">
+											<table class="table table-hover" id="review-consolidated-manuscript" width="100%" cellspacing="0">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Author(s)</th>
+														<th>Membership Status</th>
+														<th>Date Submitted</th>
+														<th>Status</th>
+														<th>Tracking No.</th>
+														<th>Actions</th>
+														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $c = 1;foreach ($man_rej as $m): ?>
+													<?php $role = $this->session->userdata('_oprs_type_num');?>
+													<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
+													<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
+													<?php $author_type = ($m->man_author_type == 1) ? 'Main Author' : 'Co-author'; ?>
+													<?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
+													<?php $title = $m->man_title; ?>
+													<?php $authors = $m->man_author . $acoa; ?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<tr>
+														<td></td>
+														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
+																class="text-dark text-decoration-none mb-1"><?php echo $title; ?></a>
+															<?php if($status > 1 && $status != 99){ ?>
+															</br>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $issue;?></span>
+															<span class="badge rounded-pill text-bg-secondary">Volume <?php echo $m->man_volume;?></span>
+															<span class="badge rounded-pill text-bg-secondary"><?php echo $m->man_year;?></span>
+															<?php } ?>
+														</td>
+														<td><?php echo $authors;?></td>
+														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
+														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
+														<td><?php echo $status;?></td>
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
+														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
+														<td>
+															<div class="btn-groupx d-flex gap-1" role="group">
+																<!-- SUPERADMIN -->
+																<?php if (_UserRoleFromSession() == 20 ) { ?>
+																	<!-- view reviewers -->
+																	<button type="button" class="btn btn-outline-info"
+																		onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																		data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																		data-bs-placement="top" title="View Reviewers"><span
+																			class="fas fa-users"></span></button>
+																	<!-- view manuscript details -->
+																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																	<button type="button" class="btn btn-outline-danger"
+																		rel="tooltip" data-bs-placement="top" title="Delete"
+																		onclick="remove_manus('<?php echo $m->row_id; ?>')"><span
+																			class="fa fa-trash"></span></button>
+																<?php } ?>
+															</div>
+														</td>
+														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td>Process Duration here</td>
+													</tr>
+													<?php endforeach; ?>
 												</tbody>
 											</table>
 										</div>
@@ -407,7 +1144,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<?php $c = 1;foreach ($manus as $m): ?>
+									<?php $c = 1;foreach ($man_all as $m): ?>
 									<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
 									<?php $mantitle = rawurlencode($m->man_title); ?>
 									<?php $action = ($m->scr_status == 4) ? '<span class="badge rounded-pill bg-success">PASSED</span>' : (($m->scr_status == 7) ? '<span class="badge rounded-pill bg-danger">FAILED</span>' : '<span class="badge rounded-pill bg-secondary">PENDING</span>');?>
@@ -469,7 +1206,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php $c = 1;foreach ($manus as $m): ?>
+										<?php $c = 1;foreach ($man_all as $m): ?>
 										<?php $role = $this->session->userdata('_oprs_type_num');?>
 										<?php $mem_type = $this->Manuscript_model->check_member($m->man_author_user_id); ?>
 										<?php $mem_type = ($mem_type == 3) ? 'Member' : 'Non-member'; ?>
@@ -670,7 +1407,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $c = 1;foreach ($manus as $m): ?>
+								<?php $c = 1;foreach ($man_all as $m): ?>
 								<?php $drev = ($m->date_reviewed == null) ? '-' : $m->date_reviewed?>
 								<?php $mantitle = rawurlencode($m->man_title); ?>
 								<?php $action = (($m->scr_status == '4') ? '<span class="badge rounded-pill bg-success">Recommended as submitted</span>' 
@@ -735,7 +1472,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $c = 1;foreach ($manus as $m): ?>
+								<?php $c = 1;foreach ($man_all as $m): ?>
 								<?php $mantitle = rawurlencode($m->man_title); ?>
 								<?php $i = $m->man_issue;
 								$issue = (($i == 5) ? 'Special Issue No. 1' 
@@ -806,7 +1543,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $c = 1;foreach ($manus as $m): ?>
+								<?php $c = 1;foreach ($man_all as $m): ?>
 								<?php $mantitle = rawurlencode($m->man_title); ?>
 								<?php $i = $m->man_issue;
 								$issue = (($i == 5) ? 'Special Issue No. 1' 
