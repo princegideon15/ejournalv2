@@ -35,6 +35,7 @@ class Statistics extends OPRS_Controller {
 					$data['user_types'] = $this->User_model->get_user_types();
 					$data['main_title'] = "OPRS";
                     $data['stat_summary'] = $this->Statistics_model->get_submission_summary();
+                    // var_dump($data['stat_summary']);exit;
                     $data['stat_submission'] = $this->Statistics_model->get_submission_stats();
                     $data['stat_author_by_sex'] = $this->Statistics_model->get_author_by_sex_stats();
                     $data['main_content'] = "oprs/submission_statistics";

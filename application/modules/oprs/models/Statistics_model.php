@@ -38,7 +38,33 @@ class Statistics_model extends CI_Model {
 
         $oprs->group_by('p.id');
 		$query = $oprs->get();
-		return $query->result();
+
+		$results = $query->result();
+
+		// Initialize total counters
+		$totals = [
+			'pub_id' => count($results) + 2,
+			'publication_desc' => 'Total',
+			'subm_count' => 0,
+			'rej_count' => 0,
+			'pass_count' => 0,
+			'process_count' => 0,
+			'publ_count' => 0
+		];
+
+		// Process the results and accumulate the totals
+		foreach ($results as $row) {
+			$totals['subm_count'] += $row->subm_count;
+			$totals['rej_count'] += $row->rej_count;
+			$totals['pass_count'] += $row->pass_count;
+			$totals['process_count'] += $row->process_count;
+			$totals['publ_count'] += $row->publ_count;
+		}
+
+		// Append grand total row to the results array
+		$results[] = (object) $totals; // Convert the array to an object for consistency
+
+		return $results;
     }
     
     public function get_submission_stats($from = null, $to = null){
@@ -72,12 +98,37 @@ class Statistics_model extends CI_Model {
 
         $oprs->group_by('p.id');
 		$query = $oprs->get();
-		return $query->result();
-
 		
-		// SELECT e.* FROM tbleditors_review e 
-		// 	JOIN (SELECT edit_man_id, MAX(row_id) AS last_entry FROM tbleditors_review GROUP BY edit_man_id) latest 
-		// 	ON e.row_id = latest.last_entry LIMIT 100
+		$results = $query->result();
+
+		// Initialize total counters
+		$totals = [
+			'pub_id' => count($results) + 2,
+			'publication_desc' => 'Total',
+			'subm_count' => 0,
+			'rej_teded_count' => 0,
+			'pass_teded_count' => 0,
+			'rej_assoced_count' => 0,
+			'pass_assoced_count' => 0,
+			'process_count' => 0,
+			'publ_count' => 0
+		];
+
+		// Process the results and accumulate the totals
+		foreach ($results as $row) {
+			$totals['subm_count'] += $row->subm_count;
+			$totals['rej_teded_count'] += $row->rej_teded_count;
+			$totals['pass_teded_count'] += $row->pass_teded_count;
+			$totals['rej_assoced_count'] += $row->rej_assoced_count;
+			$totals['pass_assoced_count'] += $row->pass_assoced_count;
+			$totals['process_count'] += $row->process_count;
+			$totals['publ_count'] += $row->publ_count;
+		}
+
+		// Append grand total row to the results array
+		$results[] = (object) $totals; // Convert the array to an object for consistency
+		
+		return $results;
 
     }
     public function get_author_by_sex_stats($from = null, $to = null){
