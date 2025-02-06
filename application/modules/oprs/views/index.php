@@ -62,8 +62,8 @@
             </div>
           </div>
         </div>
-        <!-- NEW MANUSCRIPT -->
         <div id="collapse_parent">
+          <!-- NEW MANUSCRIPT -->
           <div id="collapse_new" class="accordion-collapse collapse" data-bs-parent="#collapse_parent">
             <div class="card border-warning mb-3">
               <div class="card-header text-warning fw-bold fs-6 bg-white">New Manuscripts</div>
@@ -178,6 +178,7 @@
               </div>
             </div>
           </div>
+          <!-- LAPSED REVIEW -->
         </div>
         <div>
         </div>
@@ -332,39 +333,30 @@
           </div>
           <!-- /.LIST OF REVIEWERS -->
           <!-- LIST OF PUBLISHED -->
-          <div id="collapse_publishables" class="accordion-collapse collapse" data-bs-parent="#collapse_parent_sub">
-            <div class="card border-dark">
-              <div class="card-header fw-bold fs-6">
-                List of Published Manuscripts
-              </div>
+          <div id="collapse_publishables" class="accordion-collapse collapse" data-bs-parent="#collapse_parent">
+            <div class="card border-dark mb-3">
+              <div class="card-header text-dark fw-bold fs-6 bg-white">List of Published Manuscripts</div>
               <div class="card-body">
-                <table class="table table-hover" id="collapse_published_table">
-                  <thead>
+                <table class="table table-hover" id="collapse_new_table">
+                  <thead class="thead-dark">
                     <tr>
-                      <th>#</th>
-                      <th>Reviewer</th>
-                      <th>Manuscript</th>
-                      <th>Score</th>
-                      <th>Status</th>
+                      <th scope="col">#</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Date Published</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php $c = 1;foreach ($reviewers as $row): ?>
-                    <?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($row->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($row->row_id);?>
-                    <?php $title = $row->man_title . ', ' . $row->man_author . $acoa?>
-                    <?php $rev_status = (($row->scr_status == '4') ? '<span class="badge rounded-pill text-bg-success">Approved</span>' :
-                ((($row->scr_status == '5') ? '<span class="badge rounded-pill text-bg-warning">Need Revision</span>' :
-                  '<span class="badge rounded-pill text-bg-danger">Disapproved</span>')));?>
+                    <?php $c = 1;foreach ($man_pub as $row): ?>
+                    <?php $acoa = $this->Coauthor_model->get_author_coauthors($row->row_id);?>
+                    <?php $title = $row->man_title . ', ' . $row->man_author . ', ' . $acoa?>
                     <tr>
-                      <td class="text-center align-middle"><?php echo $c++; ?></td></td>
-                      <td class="align-middle"><?php echo $this->Manuscript_model->get_reviewer_name($row->scr_man_rev_id); ?></td>
-                      <td class="align-middle"><?php echo $title; ?></td>
-                      <td class="align-middle"><?php echo $row->scr_total; ?></td>
-                      <td class="align-middle"><?php echo $rev_status; ?></td>
+                      <td class="text-center align-middle"><?php echo $c++; ?></td>
+                      <td class="align-middle" style="width:70%; !important"><a href="<?php echo base_url('/client/ejournal/article/' .$row->art_id);?>" target="_blnak" class="btn-link text-dark text-decoration-none" ><?php echo $title;?></a></td>
+                      <td class="align-middle"><?php echo date_format(new DateTime($row->last_updated), 'F j, Y, g:i a'); ?></td>
                     </tr>
                     <?php endforeach;?>
                   </tbody>
-                </table>
+                    </table>
               </div>
             </div>
           </div>

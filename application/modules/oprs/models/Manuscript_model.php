@@ -1242,6 +1242,17 @@ class Manuscript_model extends CI_Model {
 			return 'true';
 		}
 	}
+
+	public function get_published_manus(){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('m.*, a.art_id');
+		$oprs->from($this->manus . ' m');
+		$oprs->join('dbej.tblarticles a', 'm.man_title = a.art_title');
+		$oprs->where('man_status' , 16);
+		$query = $oprs->get();
+		return $query->result();
+	}
 }
+
 
 /* End of file Manuscript_model.php */
