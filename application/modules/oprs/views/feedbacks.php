@@ -42,6 +42,9 @@
                   <div class="mb-1 d-flex flex-column justify-content-end">
                       <button class="btn btn-light border border-3" onclick="filter_uiux()">Apply Filter</button>
                   </div>
+                  <div class="mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light" onclick="filter_uiux('clear')">Clear</button>
+                  </div>
                 </div>
                 <div class="table-responsive mt-3">
                   <table class="table table-hover" id="uiux_table" width="100%" cellspacing="0">
@@ -94,6 +97,9 @@
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
                       <button class="btn btn-light border border-1" onclick="filter_uiux_sex()">Apply Filter</button>
+                  </div>
+                  <div class="mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light" onclick="filter_uiux_sex('clear')">Clear</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">

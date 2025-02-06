@@ -67,6 +67,9 @@
                   <div class="col mb-1 d-flex flex-column justify-content-end">
                       <button class="btn btn-light border border-3" onclick="filter_arta()">Apply Filter</button>
                   </div>
+                  <div class="col mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light" onclick="filter_arta('clear')">Clear</button>
+                  </div>
                 </div>
                 <div class="table-responsive mt-3">
                   <table class="table table-hover" id="arta_table" width="100%" cellspacing="0">
@@ -137,6 +140,9 @@
                   <div class="mb-1 d-flex flex-column justify-content-end">
                       <button class="btn btn-light border border-3" onclick="filter_arta_age()">Apply Filter</button>
                   </div>
+                  <div class="mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light" onclick="filter_arta_age('clear')">Clear</button>
+                  </div>
                 </div>
                 <div class="table-responsive mt-3">
                   <table class="table table-hover" id="arta_age_table" width="100%" cellspacing="0">
@@ -181,6 +187,9 @@
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
                       <button class="btn btn-light border border-3" onclick="filter_arta_region()">Apply Filter</button>
+                  </div>
+                  <div class="mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light" onclick="filter_arta_region('clear')">Clear</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -233,6 +242,9 @@
                   <div class="mb-1 d-flex flex-column justify-content-end">
                       <button class="btn btn-light border border-3" onclick="filter_arta_cc()">Apply Filter</button>
                   </div>
+                  <div class="mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light" onclick="filter_arta_cc('clear')">Clear</button>
+                  </div>
                 </div>
                 <div class="table-responsive mt-3">
                   <table class="table table-hover" id="arta_cc_table" width="100%" cellspacing="0">
@@ -276,6 +288,9 @@
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
                       <button class="btn btn-light border border-3" onclick="filter_arta_sqd()">Apply Filter</button>
+                  </div>
+                  <div class="mb-1 d-flex flex-column justify-content-end">
+                      <button class="btn btn-light" onclick="filter_arta_sqd('clear')">Clear</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">

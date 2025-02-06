@@ -30,7 +30,10 @@
                             <input type="date" id="date_to" class="form-control">
                         </div>
                         <div class="mb-3 d-flex flex-column justify-content-end">
-                            <button class="btn btn-light border border-1" onclick="filter_submission_summary()">Go</button>
+                            <button class="btn btn-primary" onclick="filter_submission_summary()">Go</button>
+                        </div>
+                        <div class="mb-3 d-flex flex-column justify-content-end">
+                            <button class="btn btn-light" onclick="filter_submission_summary('clear')">Clear</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -89,11 +92,14 @@
                                 <input type="date" id="date_to" class="form-control">
                             </div>
                         <div class="mb-3 d-flex flex-column justify-content-end">
-                            <button class="btn btn-light border border-1" onclick="filter_submission_statistics()">Go</button>
+                            <button class="btn btn-primary" onclick="filter_submission_statistics()">Go</button>
+                        </div>
+                        <div class="mb-3 d-flex flex-column justify-content-end">
+                            <button class="btn btn-light" onclick="filter_submission_statistics('clear')">Clear</button>
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover" id="sub_stats_table">
+                        <table class="table table-hover" id="sub_stats_table" width="100%">
                             <thead>
                             <tr>
                                 <th></th>
@@ -154,7 +160,10 @@
                                 <input type="date" id="date_to" class="form-control">
                             </div>
                         <div class="mb-3 d-flex flex-column justify-content-end">
-                            <button class="btn btn-light border border-1" onclick="filter_author_by_sex()">Go</button>
+                            <button class="btn btn-primary" onclick="filter_author_by_sex()">Go</button>
+                        </div>
+                        <div class="mb-3 d-flex flex-column justify-content-end">
+                            <button class="btn btn-light" onclick="filter_author_by_sex('clear')">Clear</button>
                         </div>
                     </div>
                     <div class="table-responsive">

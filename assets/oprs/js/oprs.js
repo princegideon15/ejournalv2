@@ -1030,6 +1030,11 @@ $(document).ready(function() {
     
     // submission summary 
     sst = $('#sub_sum_table').DataTable({
+        "pageLength": -1, // Show all rows
+        "lengthChange": false, // Disable the entries display (Show 10 entries)
+        "language": {
+            "lengthMenu": "" // This hides the "Show entries" text
+        },
         "order": [
             [0, "asc"]
         ],
@@ -1092,11 +1097,24 @@ $(document).ready(function() {
                     window.print();
                 }
             }
-        ]
+        ],
+        "drawCallback": function(settings) {
+            var api = this.api();
+            var lastRow = $('#sub_sum_table tbody tr:last');
+            lastRow.css({
+                "font-weight": "bold",
+                "background-color": "#f8f9fa" // Optional: Light background to highlight the row
+            });
+        }
     });
     
     // submission statistics 
     sstt = $('#sub_stats_table').DataTable({
+        "pageLength": -1, // Show all rows
+        "lengthChange": false, // Disable the entries display (Show 10 entries)
+        "language": {
+            "lengthMenu": "" // This hides the "Show entries" text
+        },
         "order": [
             [0, "asc"]
         ],
@@ -1159,7 +1177,15 @@ $(document).ready(function() {
                     window.print();
                 }
             }
-        ]
+        ],
+        "drawCallback": function(settings) {
+            var api = this.api();
+            var lastRow = $('#sub_stats_table tbody tr:last');
+            lastRow.css({
+                "font-weight": "bold",
+                "background-color": "#f8f9fa" // Optional: Light background to highlight the row
+            });
+        }
     });
     
     // author by sex statistics 
@@ -8594,182 +8620,210 @@ $.ajax({
 });
 }
 
-function filter_submission_summary(){
-var from = $('#sub_sum #date_from').val();
-var to = $('#sub_sum #date_to').val();
+function filter_submission_summary(action){
 
-var data = {
-    from: from,
-    to: to
-};
+    var from = $('#sub_sum #date_from').val();
+    var to = $('#sub_sum #date_to').val();
 
-$.ajax({
-    url: base_url + "oprs/statistics/filter_sub_sum",
-    data: data,
-    cache: false,
-    crossDomain: true,
-    dataType: 'json',
-    type: "POST",
-    success: function(data) {
+    if(action){
+        $('#sub_sum #date_from').val('')
+        $('#sub_sum #date_to').val('');
+        from = '';
+        to = '';
+    }
 
-        sst.clear();
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_sub_sum",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+
+            sst.clear();
+                $.each(data, function(key, val){
+                    sst.row.add([
+                        val.pub_id,
+                        val.publication_desc,
+                        (val.subm_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
+                        val.rej_count,
+                        (val.subm_count > 0) ? ((val.rej_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        val.pass_count,
+                        (val.subm_count > 0) ? ((val.pass_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        val.process_count,
+                        (val.subm_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        val.publ_count,
+                        (val.subm_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                    ]);
+                });
+            sst.draw();
+        }
+    });
+}
+
+function filter_submission_statistics(action){
+    var from = $('#sub_stat #date_from').val();
+    var to = $('#sub_stat #date_to').val();
+
+    if(action){
+        $('#sub_stat #date_from').val('')
+        $('#sub_stat #date_to').val('');
+        from = '';
+        to = '';
+    }
+
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_sub_stat",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+
+            sstt.clear();
+                $.each(data, function(key, val){
+
+                    sstt.row.add([
+                        val.pub_id,
+                        val.publication_desc,
+                        val.subm_count,
+                        val.rej_teded_count,
+                        (val.subm_count > 0) ? ((val.rej_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        val.pass_teded_count,
+                        (val.subm_count > 0) ? ((val.pass_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        val.rej_assoced_count,
+                        (val.subm_count > 0) ? ((val.rej_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        val.pass_assoced_count,
+                        (val.subm_count > 0) ? ((val.pass_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        val.process_count,
+                        (val.subm_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        val.publ_count,
+                        (val.subm_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                    ]);
+                });
+            sstt.draw();
+        }
+    });
+}
+
+function filter_author_by_sex(action){
+    var from = $('#auth_sex #date_from').val();
+    var to = $('#auth_sex #date_to').val();
+
+    if(action){
+        $('#auth_sex #date_from').val('')
+        $('#auth_sex #date_to').val('');
+        from = '';
+        to = '';
+    }
+
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_auth_by_sex",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            console.log(data);
+            abst.clear();
+            var total_auth = 0;
+            var total_coa = 0;
+            var author_row_array = [];
+            var coauthor_row_array = [];
+
+            author_row_array.push('Primary Author');
+                $.each(data['authors'], function(key, val){
+                    total_auth += parseInt(val.total);
+                    author_row_array.push(val.total);
+                });
+                author_row_array.push(total_auth);
+            abst.row.add(author_row_array);
+            
+            coauthor_row_array.push('Co-Authors');
+                $.each(data['coauthors'], function(key, val){
+                    total_coa += parseInt(val.total);
+                    coauthor_row_array.push(val.total);
+                });
+            coauthor_row_array.push(total_coa);
+            abst.row.add(coauthor_row_array);
+
+            abst.draw();
+        }
+    });
+}
+
+function filter_uiux(action){
+    var from = $('#uiux #date_from').val();
+    var to = $('#uiux #date_to').val();
+
+    if(action){
+        $('#uiux #date_from').val('')
+        $('#uiux #date_to').val('');
+        from = '';
+        to = '';
+    }
+
+    var data = {
+        from: from,
+        to: to
+    };
+
+    uiux_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/feedbacks/filter_uiux",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            var i = 1;
             $.each(data, function(key, val){
 
-                sst.row.add([
-                    val.pub_id,
-                    val.publication_desc,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
+                var ui_star = '', ux_star = '';
+                for(var x=0;x<val.csf_rate_ui;x++){
+                    ui_star += '<span class="text-warning fs-5 star-icon">★</span>';
+                }
+                for(var x=0;x<val.csf_rate_ux;x++){
+                    ux_star += '<span class="text-warning fs-5 star-icon">★</span>';
+                }
+
+                uiux_table.row.add([
+                    i++,
+                    val.email,
+                    ui_star,
+                    val.csf_ui_suggestions,
+                    ux_star,
+                    val.csf_ux_suggestions,
+                    val.csf_system,
+                    moment(val.csf_created_at).format('MMMM D, YYYY h:mm a')
                 ]);
             });
-        sst.draw();
-    }
-});
+            uiux_table.draw();
+        }
+    });
 }
 
-function filter_submission_statistics(){
-var from = $('#sub_stat #date_from').val();
-var to = $('#sub_stat #date_to').val();
-
-var data = {
-    from: from,
-    to: to
-};
-
-$.ajax({
-    url: base_url + "oprs/statistics/filter_sub_stat",
-    data: data,
-    cache: false,
-    crossDomain: true,
-    dataType: 'json',
-    type: "POST",
-    success: function(data) {
-
-        sstt.clear();
-            $.each(data, function(key, val){
-
-                sstt.row.add([
-                    val.pub_id,
-                    val.publication_desc,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                    val.subm_count,
-                ]);
-            });
-        sstt.draw();
-    }
-});
-}
-
-function filter_author_by_sex(){
-var from = $('#auth_sex #date_from').val();
-var to = $('#auth_sex #date_to').val();
-
-var data = {
-    from: from,
-    to: to
-};
-
-$.ajax({
-    url: base_url + "oprs/statistics/filter_auth_by_sex",
-    data: data,
-    cache: false,
-    crossDomain: true,
-    dataType: 'json',
-    type: "POST",
-    success: function(data) {
-        console.log(data);
-        abst.clear();
-        var total_auth = 0;
-        var total_coa = 0;
-        var author_row_array = [];
-        var coauthor_row_array = [];
-
-        author_row_array.push('Primary Author');
-            $.each(data['authors'], function(key, val){
-                total_auth += parseInt(val.total);
-                author_row_array.push(val.total);
-            });
-            author_row_array.push(total_auth);
-        abst.row.add(author_row_array);
-        
-        coauthor_row_array.push('Co-Authors');
-            $.each(data['coauthors'], function(key, val){
-                total_coa += parseInt(val.total);
-                coauthor_row_array.push(val.total);
-            });
-        coauthor_row_array.push(total_coa);
-        abst.row.add(coauthor_row_array);
-
-        abst.draw();
-    }
-});
-}
-
-function filter_uiux(){
-var from = $('#uiux #date_from').val();
-var to = $('#uiux #date_to').val();
-
-var data = {
-    from: from,
-    to: to
-};
-
-uiux_table.clear();
-
-$.ajax({
-    url: base_url + "oprs/feedbacks/filter_uiux",
-    data: data,
-    cache: false,
-    crossDomain: true,
-    dataType: 'json',
-    type: "POST",
-    success: function(data) {
-        var i = 1;
-        $.each(data, function(key, val){
-
-            var ui_star = '', ux_star = '';
-            for(var x=0;x<val.csf_rate_ui;x++){
-                ui_star += '<span class="text-warning fs-5 star-icon">★</span>';
-            }
-            for(var x=0;x<val.csf_rate_ux;x++){
-                ux_star += '<span class="text-warning fs-5 star-icon">★</span>';
-            }
-
-            uiux_table.row.add([
-                i++,
-                val.email,
-                ui_star,
-                val.csf_ui_suggestions,
-                ux_star,
-                val.csf_ux_suggestions,
-                val.csf_system,
-                moment(val.csf_created_at).format('MMMM D, YYYY h:mm a')
-            ]);
-        });
-        uiux_table.draw();
-    }
-});
-}
-
-function filter_uiux_sex(){
+function filter_uiux_sex(action){
     
     var from = $('#uiux-sex #date_from').val();
     var to = $('#uiux-sex #date_to').val();
@@ -8778,6 +8832,13 @@ function filter_uiux_sex(){
         from: from,
         to: to
     };
+
+    if(action){
+        $('#uiux-sex #date_from').val('')
+        $('#uiux-sex #date_to').val('');
+        from = '';
+        to = '';
+    }
 
     uiux_sex_table.clear();
 
@@ -8801,7 +8862,7 @@ function filter_uiux_sex(){
     });
 }
 
-function filter_arta(){
+function filter_arta(action){
     
     var from = $('#arta-tab #date_from').val();
     var to = $('#arta-tab #date_to').val();
@@ -8809,6 +8870,20 @@ function filter_arta(){
     var ctype = $('#arta-tab #customer_type').val();
     var sex = $('#arta-tab #sex').val();
     
+    if(action){    
+        $('#arta-tab #date_from').val('');
+        $('#arta-tab #date_to').val('');
+        $('#arta-tab #region').val('');
+        $('#arta-tab #customer_type').val('');
+        $('#arta-tab #sex').val('');
+        
+        from = '';
+        to = '';
+        region = '';
+        ctype = '';
+        sex = '';
+    }
+
     var data = {
         from: from,
         to: to,
@@ -8859,11 +8934,19 @@ function filter_arta(){
     });
 }
 
-function filter_arta_age(){
+function filter_arta_age(action){
     
     var from = $('#arta-age-tab #date_from').val();
     var to = $('#arta-age-tab #date_to').val();
     
+    if(action){    
+        $('#arta-age-tab #date_from').val('');
+        $('#arta-age-tab #date_to').val('');
+        
+        from = '';
+        to = '';
+    }
+
     var data = {
         from: from,
         to: to
@@ -8906,10 +8989,18 @@ function filter_arta_age(){
     });
 }
 
-function filter_arta_region(){
+function filter_arta_region(action){
 
 var from = $('#arta-reg-tab #date_from').val();
 var to = $('#arta-reg-tab #date_to').val();
+    
+if(action){    
+    $('#arta-reg-tab #date_from').val('');
+    $('#arta-reg-tab #date_to').val('');
+    
+    from = '';
+    to = '';
+}
 
 var data = {
     from: from,
@@ -8957,10 +9048,18 @@ $.ajax({
 });
 }
 
-function filter_arta_cc(){
+function filter_arta_cc(action){
     
     var from = $('#arta-cc-tab #date_from').val();
     var to = $('#arta-cc-tab #date_to').val();
+    
+    if(action){    
+        $('#arta-cc-tab #date_from').val('');
+        $('#arta-cc-tab #date_to').val('');
+        
+        from = '';
+        to = '';
+    }
     
     var data = {
         from: from,
@@ -8995,10 +9094,18 @@ function filter_arta_cc(){
     });
 }
 
-function filter_arta_sqd(){
+function filter_arta_sqd(action){
     
     var from = $('#arta-sqd-tab #date_from').val();
     var to = $('#arta-sqd-tab #date_to').val();
+    
+    if(action){    
+        $('#arta-sqd-tab #date_from').val('');
+        $('#arta-sqd-tab #date_to').val('');
+        
+        from = '';
+        to = '';
+    }
     
     var data = {
         from: from,
