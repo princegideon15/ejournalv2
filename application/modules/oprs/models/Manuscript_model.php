@@ -18,6 +18,7 @@ class Manuscript_model extends CI_Model {
 	private $publication = 'tblpublication_types';
 	private $roles = 'tblroles';
 	private $matrix = 'tblrevision_matrix';
+	private $tech_rev_score = 'tbltech_rev_score';
 	// skms
 	private $skms_mem = 'tblpersonal_profiles';
 	private $skms_exp = 'tblmembership_profiles';
@@ -1249,6 +1250,52 @@ class Manuscript_model extends CI_Model {
 		$oprs->from($this->manus . ' m');
 		$oprs->join('dbej.tblarticles a', 'm.man_title = a.art_title');
 		$oprs->where('man_status' , 16);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function get_manuscripts_publication_status($pub_id, $status, $editor_type){
+
+		$oprs = $this->load->database('dboprs', TRUE);
+
+		// Check if the ID exists in the table
+		$exists = $oprs->select('*')->from($this->publication)->where('id', $pub_id)->get()->num_rows();
+
+		$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
+		$oprs->from($this->manus . ' m');
+		$oprs->join($this->publication . ' p', 'm.man_type = p.id', 'left');
+		$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+
+		if($exists > 0){
+			$oprs->where('man_type', $pub_id);
+		}
+
+		if($editor_type == 'technical'){
+			
+			$oprs->join($this->tech_rev_score . ' t', 'm.row_id = t.tr_man_id', 'left');
+			$oprs->where('t.tr_final', $status);
+
+		}else if($editor_type == 'associate'){
+
+			$oprs->join(
+				'(' .
+				'SELECT ed.* FROM ' . $this->editors_review . ' ed ' .
+				'JOIN (SELECT edit_man_id, MAX(er.row_id) AS last_entry FROM ' . $this->editors_review . ' er JOIN tblusers on edit_usr_id = usr_id where usr_desc LIKE "%associate%" GROUP BY edit_man_id) latest ' .
+				'ON ed.row_id = latest.last_entry ' .
+				') e',
+				'm.row_id = e.edit_man_id',
+				'left'
+			);
+	
+			$oprs->where('edit_status', $status);
+		}else{
+			if($status == 1){
+				$oprs->where('m.man_status > ', $status); // editor in chief 1st review
+			}else if($status > 1){
+				$oprs->where('m.man_status', $status);
+			}
+		}
+
 		$query = $oprs->get();
 		return $query->result();
 	}

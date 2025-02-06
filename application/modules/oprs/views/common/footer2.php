@@ -2386,7 +2386,42 @@
 	</div>
 </div>
 <!-- /.Layout Arist Formatting -->
-                                                                                                                                                             
+         
+<!-- Clickables in Statistics Modal -->
+<div class="modal" id="statsModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Manuscripts</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+		<div class="table-responsive">
+			<table class="table table-hover" id="stats-manuscript" width="100%" cellspacing="0">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Title</th>
+						<th>Author(s)</th>
+						<th>Membership Status</th>
+						<th>Date Submitted</th>
+						<th>Status</th>
+						<th>Tracking No.</th>
+						<th>Remarks</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Clickables in Statistics Modal -->
 
 <script type="text/javascript" >
 var base_url = '<?php echo base_url(); ?>';

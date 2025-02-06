@@ -366,11 +366,11 @@ $(document).ready(function() {
             var uxSuggestion = $('#fb_suggest_ux').val();
             
             var data = {
-            'ui' : selectedRatingUI,
-            'ux' : selectedRatingUX,
-            'ui_sug' : uiSuggestion,
-            'ux_sug' : uxSuggestion,
-            'csf_system' : 'eReview'
+                'ui' : selectedRatingUI,
+                'ux' : selectedRatingUX,
+                'ui_sug' : uiSuggestion,
+                'ux_sug' : uxSuggestion,
+                'csf_system' : 'eReview'
             };
     
             const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
@@ -8651,14 +8651,14 @@ function filter_submission_summary(action){
                     sst.row.add([
                         val.pub_id,
                         val.publication_desc,
-                        (val.subm_count > 0) ? '<a href="javascript:void(0);" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
-                        val.rej_count,
+                        (val.subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',null)" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
+                        (val.rej_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',14)" class="pe-auto text-decoration-none">' + val.rej_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.rej_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        val.pass_count,
+                        (val.pass_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',12)" class="pe-auto text-decoration-none">' + val.pass_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.pass_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        val.process_count,
+                        (val.process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',1)" class="pe-auto text-decoration-none">' + val.process_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        val.publ_count,
+                        (val.publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',16)" class="pe-auto text-decoration-none">' + val.publ_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
                     ]);
                 });
@@ -8698,18 +8698,18 @@ function filter_submission_statistics(action){
                     sstt.row.add([
                         val.pub_id,
                         val.publication_desc,
-                        val.subm_count,
-                        val.rej_teded_count,
+                        (val.subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',null)" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
+                        (val.rej_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',2,`technical`)" class="pe-auto text-decoration-none">' + val.rej_teded_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.rej_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        val.pass_teded_count,
+                        (val.pass_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',1,`technical`)" class="pe-auto text-decoration-none">' + val.pass_teded_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.pass_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        val.rej_assoced_count,
+                        (val.rej_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',15,`associate`)" class="pe-auto text-decoration-none">' + val.rej_assoced_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.rej_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        val.pass_assoced_count,
+                        (val.pass_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',14,`associate`)" class="pe-auto text-decoration-none">' + val.pass_assoced_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.pass_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        val.process_count,
+                        (val.process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',1)" class="pe-auto text-decoration-none">' + val.process_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        val.publ_count,
+                        (val.publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',16)" class="pe-auto text-decoration-none">' + val.publ_count + '</a>' : 0,
                         (val.subm_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
                     ]);
                 });
@@ -10250,4 +10250,37 @@ function final_review(man_id){
 
 function layout_process(man_id){
     $('#submit_layout_form #lay_man_id').val(man_id);
+}
+
+function view_stats_info(pub_id, man_status, editor_type){
+
+ //TODO: add date filter   
+    // var from = $('#sub_stat #date_from').val();
+    // var to = $('#sub_stat #date_to').val();
+
+    // if(action){
+    //     $('#sub_stat #date_from').val('')
+    //     $('#sub_stat #date_to').val('');
+    //     from = '';
+    //     to = '';
+    // }
+
+    // var data = {
+    //     from: from,
+    //     to: to
+    // };
+
+
+    $('#statsModal').modal('toggle');
+
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_manuscripts_publication_status/" + pub_id + "/" + man_status + '/' + editor_type,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            console.log(data);
+        }
+    });
+
 }
