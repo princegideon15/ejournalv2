@@ -23,7 +23,7 @@ var remove_man_id;
 var mail_content;
 var mail_title = '';
 var editor_mail_content;
-var sst,sstt,abst; // statistics
+var sst,sstt,abst,sm; // statistics
 var arta_table,arta_age_table,arta_reg_table,arta_cc_table,arta_sqd_table; // arta
 var uiux_table, uiux_sex_table; // uiux
 
@@ -1038,11 +1038,10 @@ $(document).ready(function() {
         "order": [
             [0, "asc"]
         ],
-        columnDefs: [
-            {
-                targets: 0, // Target the first column (ID column)
-                visible: false // Hide the ID column
-            }
+        "columnDefs": [
+            // { "className": "center-text", "targets": "_all" }, // Apply to all columns
+            // { "className": "", "targets": 1}, // Remove centering from the first column
+            { "targets": 0, "visible": false } // Hide the first column
         ],
         autowidth: true,
         dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
@@ -1788,7 +1787,7 @@ $(document).ready(function() {
             {"targets":4, "type":"date"},
         ]
     });
- //TODO: to be continued
+
     rmt.on( 'order.dt search.dt', function () {
         rmt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
@@ -1893,6 +1892,18 @@ $(document).ready(function() {
  
     emt.on( 'order.dt search.dt', function () {
         emt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // statistics manuscripts
+    sm = $('#stats-manuscript').DataTable({
+        "order": [[ 4, "desc" ]],
+        "columnDefs" : [{"targets":4, "type":"date"}]
+    });
+ 
+    sm.on( 'order.dt search.dt', function () {
+        sm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
         } );
     } ).draw();
@@ -6201,6 +6212,10 @@ function edit_man(id) {
 // function tracking(id, role, title, status) {
 
 function tracking(id, role, title, status) {
+
+    if(role == 2000){
+     $('#trackingModal').css('z-index', role);
+    }
     
     $('#trackingModal').modal('toggle');
 
@@ -6428,6 +6443,10 @@ function unique(array) {
 
 // get all info of uploaded manuscript
 function view_manus(id, hide, file) {
+
+    if(hide == 2000){
+        $('#manuscriptModal').css('z-index', hide);
+    }
 
     $('#manuscriptModal .table-bordered > tbody').empty();
 
@@ -8651,18 +8670,22 @@ function filter_submission_summary(action){
                     sst.row.add([
                         val.pub_id,
                         val.publication_desc,
-                        (val.subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',null)" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
-                        (val.rej_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',14)" class="pe-auto text-decoration-none">' + val.rej_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.rej_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        (val.pass_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',12)" class="pe-auto text-decoration-none">' + val.pass_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.pass_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        (val.process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',1)" class="pe-auto text-decoration-none">' + val.process_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        (val.publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',16)" class="pe-auto text-decoration-none">' + val.publ_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',null)" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
+                        (val.rej_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',14)" class="pe-auto text-decoration-none">' + val.rej_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.rej_count > 0) ? ((val.rej_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.pass_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',12)" class="pe-auto text-decoration-none">' + val.pass_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.pass_count > 0) ? ((val.pass_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',1)" class="pe-auto text-decoration-none">' + val.process_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.process_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',16)" class="pe-auto text-decoration-none">' + val.publ_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.publ_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
                     ]);
                 });
             sst.draw();
+
+            $('#sub_sum_table tbody tr').each(function () {
+                $(this).find('td:not(:first-child)').addClass('text-center');
+            });
         }
     });
 }
@@ -8698,22 +8721,26 @@ function filter_submission_statistics(action){
                     sstt.row.add([
                         val.pub_id,
                         val.publication_desc,
-                        (val.subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',null)" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
-                        (val.rej_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',2,`technical`)" class="pe-auto text-decoration-none">' + val.rej_teded_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.rej_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        (val.pass_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',1,`technical`)" class="pe-auto text-decoration-none">' + val.pass_teded_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.pass_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        (val.rej_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',15,`associate`)" class="pe-auto text-decoration-none">' + val.rej_assoced_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.rej_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        (val.pass_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',14,`associate`)" class="pe-auto text-decoration-none">' + val.pass_assoced_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.pass_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        (val.process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',1)" class="pe-auto text-decoration-none">' + val.process_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
-                        (val.publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('+ val.pub_id +',16)" class="pe-auto text-decoration-none">' + val.publ_count + '</a>' : 0,
-                        (val.subm_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',null)" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
+                        (val.rej_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',2,`technical`)" class="pe-auto text-decoration-none">' + val.rej_teded_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.rej_teded_count > 0) ? ((val.rej_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.pass_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',1,`technical`)" class="pe-auto text-decoration-none">' + val.pass_teded_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.pass_teded_count > 0) ? ((val.pass_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.rej_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',15,`associate`)" class="pe-auto text-decoration-none">' + val.rej_assoced_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.rej_assoced_count > 0) ? ((val.rej_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.pass_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',14,`associate`)" class="pe-auto text-decoration-none">' + val.pass_assoced_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.pass_assoced_count > 0) ? ((val.pass_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',1)" class="pe-auto text-decoration-none">' + val.process_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.process_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',16)" class="pe-auto text-decoration-none">' + val.publ_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.publ_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
                     ]);
                 });
             sstt.draw();
+
+            $('#sub_stat_table tbody tr').each(function () {
+                $(this).find('td:not(:first-child)').addClass('text-center');
+            });
         }
     });
 }
@@ -10252,34 +10279,49 @@ function layout_process(man_id){
     $('#submit_layout_form #lay_man_id').val(man_id);
 }
 
-function view_stats_info(pub_id, man_status, editor_type){
+function view_stats_info(stat_id, pub_id, man_status, editor_type){
 
- //TODO: add date filter   
-    // var from = $('#sub_stat #date_from').val();
-    // var to = $('#sub_stat #date_to').val();
+    var from = $(stat_id + ' #date_from').val();
+    var to = $(stat_id + ' #date_to').val();
 
-    // if(action){
-    //     $('#sub_stat #date_from').val('')
-    //     $('#sub_stat #date_to').val('');
-    //     from = '';
-    //     to = '';
-    // }
-
-    // var data = {
-    //     from: from,
-    //     to: to
-    // };
-
+    var data = {
+        from: from,
+        to: to,
+        pub_id: pub_id,
+        man_status: man_status,
+        editor_type: editor_type
+    };
 
     $('#statsModal').modal('toggle');
 
     $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/get_manuscripts_publication_status/" + pub_id + "/" + man_status + '/' + editor_type,
-        dataType: "json",
+        url: base_url + "oprs/manuscripts/get_manuscripts_publication_status",
+        data:  data,
+        cache: false,
         crossDomain: true,
+        dataType: 'json',
+        type: "POST",
         success: function(data) {
-            console.log(data);
+             console.log(data)
+             sm.clear();
+                $.each(data, function(key, val){
+
+                    var coauthors = (val.coauthors) ? val.coauthors : '';
+                    var authors = (coauthors) ? val.man_author + ', ' + coauthors : val.man_author;
+
+                    sm.row.add([
+                        val.row_id,
+                        val.man_title,
+                        authors,
+                        moment(val.date_created, 'YYYY-MM-DD HH:mm').format("MMMM D, YYYY h:mm a"),
+                        '<span class="badge rounded-pill bg-' + val.status_class + '">' + val.status + '</span>',
+                        '<a href="javascript:void(0)" onclick="tracking(' + val.row_id + ', 2000)">' + val.man_trk_no + '</a>',
+                        val.man_remarks ?? 'No remarks',
+                        '<button rel="tooltip" data-bs-placement="top" title="View Details" class="btn btn-light" onclick="view_manus(' + val.row_id + ',2000)"><span class="fa fa-eye"></span></button>'
+                    ]);
+                });
+            sm.draw();
+
         }
     });
 

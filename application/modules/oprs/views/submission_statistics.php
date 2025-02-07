@@ -64,15 +64,15 @@
                             <tr class="text-center">
                                 <td ><?= $row->pub_id ?></td>
                                 <td style="text-align: left !important;"><?= $row->publication_desc ?></td>
-                                <td><?= ($row->subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',null)" class="pe-auto text-decoration-none">' . $row->subm_count . '</a>' : 0; ?></td>
-                                <td><?= ($row->rej_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',14)" class="pe-auto text-decoration-none">' . $row->rej_count . '</a>' : 0; ?></td>
-                                <td><?= ($row->subm_count > 0 ) ? round ( ($row->rej_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
-                                <td><?= ($row->pass_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',12)" class="pe-auto text-decoration-none">' . $row->pass_count . '</a>' : 0; ?></td>
-                                <td><?= ($row->subm_count > 0 ) ? round ( ($row->pass_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
-                                <td><?= ($row->process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',1)" class="pe-auto text-decoration-none">' . $row->process_count . '</a>' : 0; ?></td>
-                                <td><?= ($row->subm_count > 0 ) ? round ( ($row->process_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
-                                <td><?= ($row->publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',16)" class="pe-auto text-decoration-none">' . $row->publ_count . '</a>' : 0; ?></td>
-                                <td><?= ($row->subm_count > 0 ) ? round ( ($row->publ_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($row->subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'. $row->pub_id .',null)" class="pe-auto text-decoration-none">' . $row->subm_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->rej_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'. $row->pub_id .',14)" class="pe-auto text-decoration-none">' . $row->rej_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->subm_count > 0 && $row->rej_count > 0) ? number_format ( ($row->rej_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($row->pass_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'. $row->pub_id .',12)" class="pe-auto text-decoration-none">' . $row->pass_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->subm_count > 0 && $row->pass_count > 0) ? number_format ( ($row->pass_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($row->process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'. $row->pub_id .',1)" class="pe-auto text-decoration-none">' . $row->process_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->subm_count > 0 && $row->process_count > 0) ? number_format ( ($row->process_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                <td><?= ($row->publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'. $row->pub_id .',16)" class="pe-auto text-decoration-none">' . $row->publ_count . '</a>' : 0; ?></td>
+                                <td><?= ($row->subm_count > 0 && $row->publ_count > 0) ? number_format ( ($row->publ_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
                             </tr>
 
                             <?php endforeach;?>
@@ -129,19 +129,19 @@
                                 <tr class="text-center">
                                     <td><?= $row->pub_id ?></td>
                                     <td style="text-align: left !important;"><?= $row->publication_desc ?></td>
-                                    <td><?= ($row->subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',null)" class="pe-auto text-decoration-none">' . $row->subm_count . '</a>' : 0; ?></td>
-                                    <td><?= ($row->rej_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',2,`technical`)" class="pe-auto text-decoration-none">' . $row->rej_teded_count . '</a>' : 0; ?></td>
-                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->rej_teded_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
-                                    <td><?= ($row->pass_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',1,`technical`)" class="pe-auto text-decoration-none">' . $row->pass_teded_count . '</a>' : 0; ?></td>
-                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->pass_teded_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
-                                    <td><?= ($row->pass_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',15,`associate`)" class="pe-auto text-decoration-none">' . $row->pass_assoced_count . '</a>' : 0; ?></td>
-                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->pass_assoced_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
-                                    <td><?= ($row->rej_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',14,`associate`)" class="pe-auto text-decoration-none">' . $row->rej_assoced_count . '</a>' : 0; ?></td>
-                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->rej_assoced_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
-                                    <td><?= ($row->process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',1))" class="pe-auto text-decoration-none">' . $row->process_count . '</a>' : 0; ?></td>
-                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->process_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
-                                    <td><?= ($row->publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info('. $row->pub_id .',16))" class="pe-auto text-decoration-none">' . $row->publ_count . '</a>' : 0; ?></td>
-                                    <td><?= ($row->subm_count > 0 ) ? round ( ($row->publ_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'. $row->pub_id .',null)" class="pe-auto text-decoration-none">' . $row->subm_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->rej_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'. $row->pub_id .',2,`technical`)" class="pe-auto text-decoration-none">' . $row->rej_teded_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 && $row->rej_teded_count > 0) ? number_format ( ($row->rej_teded_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->pass_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'. $row->pub_id .',1,`technical`)" class="pe-auto text-decoration-none">' . $row->pass_teded_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 && $row->pass_teded_count > 0) ? number_format ( ($row->pass_teded_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->pass_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'. $row->pub_id .',15,`associate`)" class="pe-auto text-decoration-none">' . $row->pass_assoced_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 && $row->pass_assoced_count > 0) ? number_format ( ($row->pass_assoced_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->rej_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'. $row->pub_id .',14,`associate`)" class="pe-auto text-decoration-none">' . $row->rej_assoced_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 && $row->rej_assoced_count > 0) ? number_format ( ($row->rej_assoced_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'. $row->pub_id .',1))" class="pe-auto text-decoration-none">' . $row->process_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 && $row->process_count > 0) ? number_format ( ($row->process_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
+                                    <td><?= ($row->publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'. $row->pub_id .',16))" class="pe-auto text-decoration-none">' . $row->publ_count . '</a>' : 0; ?></td>
+                                    <td><?= ($row->subm_count > 0 && $row->publ_count > 0) ? number_format ( ($row->publ_count / $row->subm_count) * 100, 2 ) : '0' ?>%</td>
                                 </tr>
                                 <?php endforeach;?>
                 

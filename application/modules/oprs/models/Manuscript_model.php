@@ -1254,7 +1254,7 @@ class Manuscript_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function get_manuscripts_publication_status($pub_id, $status, $editor_type){
+	public function get_manuscripts_publication_status($pub_id, $status, $editor_type, $from = null, $to = null){
 
 		$oprs = $this->load->database('dboprs', TRUE);
 
@@ -1266,6 +1266,11 @@ class Manuscript_model extends CI_Model {
 		$oprs->join($this->publication . ' p', 'm.man_type = p.id', 'left');
 		$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 
+		if($from > 0 && $to > 0){
+		    $oprs->where('DATE(m.date_created) >=', $from);
+			$oprs->where('DATE(m.date_created) <=', $to);
+        }
+		
 		if($exists > 0){
 			$oprs->where('man_type', $pub_id);
 		}
@@ -1297,7 +1302,13 @@ class Manuscript_model extends CI_Model {
 		}
 
 		$query = $oprs->get();
-		return $query->result();
+		$results = $query->result();
+
+		foreach ($results as $row) {
+			$row->coauthors = $this->Coauthor_model->get_author_coauthors($row->row_id);
+		}
+
+		return $results;
 	}
 }
 

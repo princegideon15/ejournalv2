@@ -5924,8 +5924,15 @@ class Manuscripts extends OPRS_Controller {
 		}
 	}
 
-	function get_manuscripts_publication_status($pub_id, $man_status, $editor_type = null){
-		$output = $this->Manuscript_model->get_manuscripts_publication_status($pub_id, $man_status, $editor_type);
+	function get_manuscripts_publication_status(){
+		
+        $from = $this->input->post('from', TRUE);
+        $to = $this->input->post('to', TRUE); 
+		$pub_id =  $this->input->post('pub_id');
+		$man_status = $this->input->post('man_status', TRUE);
+		$editor_type = $this->input->post('editor_type', TRUE);
+
+		$output = $this->Manuscript_model->get_manuscripts_publication_status($pub_id, $man_status, $editor_type, $from, $to);
 		echo json_encode($output);
 	}
 
