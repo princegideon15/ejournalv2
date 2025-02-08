@@ -45,25 +45,29 @@ class Arta extends OPRS_Controller {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
 				// 3-managing editor 20-superadmin 5-technical desk editor
-				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20 || _UserRoleFromSession() == 5) {
-					$data['main_title'] = "OPRS";
-					$data['main_content'] = "oprs/arta";
-					$data['logs'] = $this->Log_model->count_logs();
-					$data['arta'] = $this->Arta_model->get_arta();
-					$data['arta_age'] = $this->Arta_model->get_arta_resp_age();
-					$data['arta_reg'] = $this->Arta_model->get_arta_region();
-					$data['arta_cc'] = $this->Arta_model->get_arta_cc();
-					$data['arta_sqd'] = $this->Arta_model->get_arta_sqd();
-					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
-					$data['man_all_count'] = count($data['man_all']);
-					$data['usr_count'] = $this->User_model->count_user();
-					$data['arta_count'] = count($this->Arta_model->get_arta());
-					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
-					$data['regions'] = $this->Library_model->get_regions();
-					$data['client_type'] = $this->Library_model->get_client_type();
-					$this->_LoadPage('common/body', $data);
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12  || _UserRoleFromSession() == 6){
-					redirect('oprs/manuscripts');
+				if (_UserRoleFromSession() != 1 && _UserRoleFromSession() != 16) { // can access except author and peer reviewers
+
+					$module_access_session = $this->session->userdata('_' . _UserIdFromSession() . '_acc_feedbacks');
+					if($module_access_session == 1){
+						$data['main_title'] = "OPRS";
+						$data['main_content'] = "oprs/arta";
+						$data['logs'] = $this->Log_model->count_logs();
+						$data['arta'] = $this->Arta_model->get_arta();
+						$data['arta_age'] = $this->Arta_model->get_arta_resp_age();
+						$data['arta_reg'] = $this->Arta_model->get_arta_region();
+						$data['arta_cc'] = $this->Arta_model->get_arta_cc();
+						$data['arta_sqd'] = $this->Arta_model->get_arta_sqd();
+						$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+						$data['man_all_count'] = count($data['man_all']);
+						$data['usr_count'] = $this->User_model->count_user();
+						$data['arta_count'] = count($this->Arta_model->get_arta());
+						$data['feed_count'] = $this->Feedback_model->count_feedbacks();
+						$data['regions'] = $this->Library_model->get_regions();
+						$data['client_type'] = $this->Library_model->get_client_type();
+						$this->_LoadPage('common/body', $data);
+					}else{
+						redirect('oprs/manuscripts');
+					}
 				}else {
 					redirect('oprs/dashboard');
 				}

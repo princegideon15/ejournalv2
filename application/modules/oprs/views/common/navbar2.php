@@ -310,7 +310,7 @@
             <div class="sb-sidenav-menu overflow-hidden">
                 <div class="nav pt-3 oprs-nav">
                     <div class="sb-sidenav-menu-heading">Main</div>
-                    <?php if ($role != 1 || $role != 16) {?>
+                    <?php if ($role != 1 && $role != 16) {?>
 
                         <?php if($this->session->userdata('_' . $user_id . '_acc_dashboard') == 1):?>
                         
@@ -355,7 +355,7 @@
                     
                     
                     <?php }?>
-                    <?php if ($role != 1 || $role != 16) {?>
+                    <?php if ($role != 1 && $role != 16) {?>
                         
                         <?php if($this->session->userdata('_' . $user_id . '_acc_reports') == 1):?>
                         
@@ -374,7 +374,7 @@
 
                     <?php }?>
 
-                    <?php if ($role != 1 || $role != 16) {?>
+                    <?php if ($role != 1 && $role != 16) {?>
                         
                         <?php if($this->session->userdata('_' . $user_id . '_acc_lib') == 1):?>
                     
@@ -419,7 +419,7 @@
 
                     <?php } ?>
 
-                    <?php if ($role != 1 || $role != 16) {?>
+                    <?php if ($role != 1 && $role != 16) {?>
                         
                         <?php if($this->session->userdata('_' . $user_id . '_acc_settings') == 1):?>
                         
@@ -440,7 +440,7 @@
                     <?php } ?>
                         
                         
-                    <?php if ($role != 1 || $role != 16) {?>
+                    <?php if ($role != 1 && $role != 16) {?>
                         
                         <?php if($this->session->userdata('_' . $user_id . '_acc_feedbacks') == 1):?>
 
@@ -470,7 +470,7 @@
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                <?php if ($role != 1 || $role != 16) {?>
+                <?php if ($role != 1 && $role != 16) {?>
                     
                     <?php if($this->session->userdata('_' . $user_id . '_acc_logs') == 1):?>
 

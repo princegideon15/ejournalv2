@@ -18,29 +18,27 @@ class User extends OPRS_Controller {
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 20) {
-					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
-					$id = $this->session->userdata('_oprs_user_id');
-					$data['users'] = $this->User_model->get_user($id);
-					$data['logs'] = $this->Log_model->count_logs();
-					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
-					$data['man_all_count'] = count($data['man_all']);
-					// $data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
-					// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
-					// $data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
-					// $data['man_final'] = $this->Manuscript_model->get_manuscripts(4);
-					// $data['man_for_p'] = $this->Manuscript_model->get_manuscripts(5);
-					// $data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
-					$data['usr_count'] = $this->User_model->count_user();
-					$data['arta_count'] = count($this->Arta_model->get_arta());
-					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
-					$data['user_types'] = $this->User_model->get_user_types();
-					$data['main_title'] = "OPRS";
-					$data['main_content'] = "oprs/user";
-					$this->_LoadPage('common/body', $data);
-					$this->session->unset_userdata('_oprs_usr_message');
-				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
-					redirect('oprs/manuscripts');
+				if (_UserRoleFromSession() != 1 && _UserRoleFromSession() != 16) { // can access except author and peer reviewers
+
+					$module_access_session = $this->session->userdata('_' . _UserIdFromSession() . '_acc_user_mgt');
+					if($module_access_session == 1){
+						$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
+						$id = $this->session->userdata('_oprs_user_id');
+						$data['users'] = $this->User_model->get_user($id);
+						$data['logs'] = $this->Log_model->count_logs();
+						$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+						$data['man_all_count'] = count($data['man_all']);
+						$data['usr_count'] = $this->User_model->count_user();
+						$data['arta_count'] = count($this->Arta_model->get_arta());
+						$data['feed_count'] = $this->Feedback_model->count_feedbacks();
+						$data['user_types'] = $this->User_model->get_user_types();
+						$data['main_title'] = "OPRS";
+						$data['main_content'] = "oprs/user";
+						$this->_LoadPage('common/body', $data);
+						$this->session->unset_userdata('_oprs_usr_message');
+					}else{
+						redirect('oprs/manuscripts');
+					}
 				}else {
 					redirect('oprs/dashboard');
 				}
@@ -57,8 +55,7 @@ class User extends OPRS_Controller {
 	 *
 	 * @return  array       log
 	 */
-	public function get_user_log($id)
-	{
+	public function get_user_log($id){
 		$output = $this->User_model->get_user_name($id);
 		echo json_encode($output);
 	}
@@ -141,19 +138,32 @@ class User extends OPRS_Controller {
 		if($role == 1 || $role == 16){
 			// manuscript view only
 		}else{
-			$access['acc_dashboard'] = 1;
-			$access['acc_reports'] = 1;
-			$access['acc_user_mgt'] = 1;
-			$access['acc_lib'] = 1;
-			$access['acc_settings'] = 1;
-			$access['acc_feedbacks'] = 1;
-			$access['acc_logs'] = 1;
+			// set default module access per role
+			if($role == 5){	// tededed
+				$access['acc_dashboard'] = 1;
+				$access['acc_reports'] = 1;
+				$access['acc_lib'] = 1;
+				$access['acc_feedbacks'] = 1;
+			}else if($role == 6 || $role == 7 || $role == 8 || $role == 9 || $role == 10 || $role == 11 || $role == 12 || $role == 13 || $role == 14 || $role == 17 || $role == 18){ //eic, assoc ed, clued, copy editor
+				$access['acc_dashboard'] = 1;
+				$access['acc_reports'] = 1;
+			}else if($role == 15){ // layout artist
+				$access['acc_dashboard'] = 1;
+			}else{ // admin, superadmin
+				$access['acc_dashboard'] = 1;
+				$access['acc_reports'] = 1;
+				$access['acc_user_mgt'] = 1;
+				$access['acc_lib'] = 1;
+				$access['acc_settings'] = 1;
+				$access['acc_feedbacks'] = 1;
+				$access['acc_logs'] = 1;
+			}
+
 			$access['acc_usr_id'] = $id;
 			$access['acc_date_created'] = date('Y-m-d H:i:s');
 			$this->User_model->add_module_access(array_filter($access));
 		}
 		
-
 
 
 		// $array_msg = array('icon' => 'fa fa-check-circle-o', 'class' => 'alert-success', 'msg' => 'User Saved.');
@@ -165,7 +175,7 @@ class User extends OPRS_Controller {
 	 *
 	 * @return  void
 	 */
-	public function change_password() {
+	public function change_password(){
 		$post['usr_password'] = password_hash($this->input->post('usr_password', TRUE), PASSWORD_BCRYPT);
 		$post['last_updated'] = date('Y-m-d H:i:s');
 		$where['usr_id'] = _UserIdFromSession();

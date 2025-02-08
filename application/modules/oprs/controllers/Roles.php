@@ -18,24 +18,27 @@ class Roles extends OPRS_Controller {
 	public function index(){
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				// 3-managing editor 20-superadmin 5-technical desk editor
-				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20 || _UserRoleFromSession() == 5) {
-					$data['roles'] = $this->User_model->get_user_types(null);
-					$id = $this->session->userdata('_oprs_user_id');
-					$data['users'] = $this->User_model->get_user($id);
-					$data['logs'] = $this->Log_model->count_logs();
-					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
-					$data['man_all_count'] = count($data['man_all']);
-					$data['usr_count'] = $this->User_model->count_user();
-					$data['arta_count'] = count($this->Arta_model->get_arta());
-					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
-					$data['user_types'] = $this->User_model->get_user_types();
-					$data['main_title'] = "OPRS";
-					$data['main_content'] = "oprs/user_types";
-					$this->_LoadPage('common/body', $data);
-					$this->session->unset_userdata('_oprs_usr_message');
-				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
-					redirect('oprs/manuscripts');
+				if (_UserRoleFromSession() != 1 && _UserRoleFromSession() != 16) { // can access except author and peer reviewers
+
+					$module_access_session = $this->session->userdata('_' . _UserIdFromSession() . '_acc_lib');
+					if($module_access_session == 1){
+						$data['roles'] = $this->User_model->get_user_types(null);
+						$id = $this->session->userdata('_oprs_user_id');
+						$data['users'] = $this->User_model->get_user($id);
+						$data['logs'] = $this->Log_model->count_logs();
+						$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+						$data['man_all_count'] = count($data['man_all']);
+						$data['usr_count'] = $this->User_model->count_user();
+						$data['arta_count'] = count($this->Arta_model->get_arta());
+						$data['feed_count'] = $this->Feedback_model->count_feedbacks();
+						$data['user_types'] = $this->User_model->get_user_types();
+						$data['main_title'] = "OPRS";
+						$data['main_content'] = "oprs/user_types";
+						$this->_LoadPage('common/body', $data);
+						$this->session->unset_userdata('_oprs_usr_message');
+					}else{
+						redirect('oprs/manuscripts');
+					}
 				}else {
 					redirect('oprs/dashboard');
 				}
