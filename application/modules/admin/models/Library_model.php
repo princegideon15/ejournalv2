@@ -38,11 +38,46 @@ class Library_model extends CI_Model {
 		return $query->result();
 	}
 
-	
-
     public function get_tables(){
         return $this->db->list_tables();
     }
+
+	public function get_editorial_board_position(){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from('tblroles');
+		$oprs->where('role_id >=', 2);
+		$oprs->where('role_id <=', 15);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function archive_editorial_policy($data, $where){
+		$this->db->update('tbleditorial_policy', $data, $where);
+	}
+
+	public function save_editorial_policy($data){
+		$this->db->insert('tbleditorial_policy', $data);
+	}
+
+	public function get_editorial_policy_content(){
+		$this->db->select("*");
+		$this->db->from('tbleditorial_policy');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function update_guidelines($data){
+		$this->db->update('tblguidelines', $data);
+	}
+
+	public function get_guidelines_content(){
+		$this->db->select("gd_content");
+		$this->db->from('tblguidelines');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result[0]['gd_content'];
+	}
 }
 
 /* End of file Library_model.php */

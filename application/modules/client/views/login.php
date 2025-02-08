@@ -1,33 +1,32 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VDLLX3HKBL"></script>
 <script>
-window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-function gtag() {
-    dataLayer.push(arguments);
-}
-gtag('js', new Date());
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
 
-gtag('config', 'G-VDLLX3HKBL');
-</script>
+    gtag('config', 'G-VDLLX3HKBL');
 
-<script>
-function validateForm() {
-    var recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse) {
-        // alert('Please complete the reCAPTCHA verification.');
-        $('#g-recaptcha').text('Please complete the reCAPTCHA verification.');
-        return false;
+
+    let recaptchaWidgetId_create_client_account;
+
+    // Initialize reCAPTCHA and store the widget ID
+    window.onload = function () {
+        recaptchaWidgetId_create_client_account = grecaptcha.render('captcha_client', {
+            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+            'callback': onRecaptchaSuccess,
+            'expired-callback': onRecaptchaExpired
+        });
+
     }
 
-    $('#create_account').prop('disabled' ,true);
-    $('#create_account').html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading');
-    return true;
-}
 </script>
 
 <?php error_reporting(0);?>
-<div class="container-fluid mt-3 p-4">
+<div class="container-fluid mt-2 p-4">
     <div class="row">
         <div class="col col-lg-4">
 
@@ -52,10 +51,21 @@ function validateForm() {
                     <!-- Login -->
                     <div class="tab-pane fade p-3 <?= $this->session->flashdata('active_tab1') ?? 'show active'?>" id="login-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                         tabindex="0">
-
+                  
                         <?php if ($this->session->flashdata('error_login')) { ?>
-                            <div class="alert alert-danger d-flex align-items-center w-50">
-                                <i class="oi oi-circle-x me-1"></i><?php echo $this->session->flashdata('error_login'); ?>
+                            <div class="alert alert-danger d-flex w-50">
+                                <i class="oi oi-circle-x me-1 pt-1"></i><?php echo $this->session->flashdata('error_login'); ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($this->session->flashdata('success')) { ?>
+                            <?php echo $this->session->flashdata('success'); ?>
+                        <?php } ?>
+
+
+                        <?php if ($this->session->flashdata('_ej_session_msg')) { ?>
+                            <div class="alert alert-danger d-flex w-50">
+                                <i class="oi oi-circle-x me-1 pt-1"></i><?php echo $this->session->flashdata('_ej_session_msg'); ?>
                             </div>
                         <?php } ?>
 
@@ -65,20 +75,18 @@ function validateForm() {
                         
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm', 'class' => 'w-50'])?>
                             <div class="mb-3">
-                                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
-                                <!-- <label for="email" class="form-label">Email</label> -->
-                                <input type="email" class="form-control <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="Email">
+                                <input type="email" class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="Email">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['email'] ?></span>
                             </div>
                             <div class="input-group mb-3 has-validation">
-                                <input type="password" class="form-control <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
+                                <input type="password" class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['password']){ echo 'is-invalid';} ?>"  id="password" name="password" placeholder="Password">
                                 <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#password', '#password_icon')"><i class="fa fa-eye-slash" id="password_icon"></i></a></span>
                                 <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['password'] ?></span>
                             </div>
                             <div class="mb-3 d-flex justify-content-end">
                                 <a class="main-link" href="<?php echo base_url('/client/login/forgot_password');?>">Forgot Password?</a>
                             </div>
-                            <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#loginForm', 'login')">Login </button>
+                            <button type="submit" class="btn btn-lg main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#loginForm', 'login')">Login</button>
                         <?=form_close()?>
                     </div>
                     <!-- Create Account -->
@@ -91,7 +99,7 @@ function validateForm() {
                             </div>
                         <?php } ?>
 
-                        <?=form_open('client/ejournal/create_account', ['method' => 'post', 'id' => 'signUpForm', 'onsubmit' => 'return validateForm();'])?>
+                        <?=form_open('client/signup/create_account', ['method' => 'post', 'id' => 'signUpForm'])?>
                             <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
                             <div class="mb-3">
                                 <label class="form-label" for="new_email"><span
@@ -262,18 +270,6 @@ function validateForm() {
                                             <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#new_password', '#new_passsword_icon')"><i class="fa fa-eye-slash" id="new_passsword_icon"></i></a></span>
                                             <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
                                         </div>
-                                        <div class="mt-1" style="font-size:.8rem">
-                                             <div><span class="fw-bold me-1">Password strength:</span><span id="password-strength"></span></div>
-                                            <div class="progress mt-1" style="height: .5rem;">
-                                                <div class="progress-bar" role="progressbar" <?= $this->session->flashdata('bar_style')?> id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <!-- <ul class="mt-1 text-muted ps-3">
-                                                <li>8-20 characters long.</li>
-                                                <li>At least 1 letter.</li>
-                                                <li>At lestt 1 number.</li>
-                                                <li>At least 1 special character.</li>
-                                            </ul> -->
-                                        </div>
                                     </div>
                                     <div class="col">
                                         <label class="form-label" for="confirm_password"><span
@@ -286,11 +282,28 @@ function validateForm() {
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 float-end ">
-                                <div class="g-recaptcha" data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6"></div>
+                            
+                            <div class="card mb-3 d-none w-50" id="password_strength_container">
+                                <div class="card-body text-secondary">
+                                    <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="password-strength"></span></div>
+                                    <div class="progress mt-1" style="height: .5rem;">
+                                        <div class="progress-bar" role="progressbar" <?= $this->session->flashdata('bar_style')?> id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <ul class="mt-3 small text-muted ps-3">
+                                        <li>8-20 characters long.</li>
+                                        <li>At least 1 letter.</li>
+                                        <li>At lestt 1 number.</li>
+                                        <li>At least 1 special character.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 w-100" id="google_recaptchav2_container">
+                                <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_client"></div>
                                 <p class="text-danger" id="g-recaptcha"></p>
                             </div>
-                            <button type="submit" class="btn main-btn w-100" id="create_account">Create Account</button>
+
+                            <button type="submit" class="btn main-btn w-100" id="create_account" onclick="disableOnSubmit(this, '#signUpForm', 'create')" disabled>Create Account</button>
                         <?=form_close()?>
                     </div>
             </div>

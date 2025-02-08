@@ -12,30 +12,34 @@ class User extends OPRS_Controller {
 		$this->load->model('User_model');
 		$this->load->model('Feedback_model');
 		$this->load->model('Log_model');
+		$this->load->model('Arta_model');
 	}
 
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 8) {
+				if (_UserRoleFromSession() == 20) {
 					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
 					$id = $this->session->userdata('_oprs_user_id');
 					$data['users'] = $this->User_model->get_user($id);
 					$data['logs'] = $this->Log_model->count_logs();
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
+					// $data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
+					// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
+					// $data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
+					// $data['man_final'] = $this->Manuscript_model->get_manuscripts(4);
+					// $data['man_for_p'] = $this->Manuscript_model->get_manuscripts(5);
+					// $data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
+					$data['usr_count'] = $this->User_model->count_user();
+					$data['arta_count'] = count($this->Arta_model->get_arta());
+					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
+					$data['user_types'] = $this->User_model->get_user_types();
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/user";
-					$data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
-					$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
-					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
-					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
-					$data['man_final'] = $this->Manuscript_model->get_manuscripts(4);
-					$data['man_for_p'] = $this->Manuscript_model->get_manuscripts(5);
-					$data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
-					$data['usr_count'] = $this->User_model->count_user();
-					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
 					$this->_LoadPage('common/body', $data);
 					$this->session->unset_userdata('_oprs_usr_message');
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
 					redirect('oprs/manuscripts');
 				}else {
 					redirect('oprs/dashboard');
@@ -89,6 +93,7 @@ class User extends OPRS_Controller {
 		$post['usr_role'] = $this->input->post('usr_role', TRUE);
 		$role = $post['usr_role'];
 		$post['usr_sys_acc'] = $this->input->post('usr_sys_acc', TRUE);
+		$post['usr_sex'] = $this->input->post('usr_sex', TRUE);
 		$post['usr_desc'] = $this->User_model->get_role($role);
 		$where['usr_id'] = $id;
 		$this->User_model->update_user(array_filter($post), $where);
@@ -108,22 +113,19 @@ class User extends OPRS_Controller {
 		foreach ($result as $i => $field) {
 			if ($field != 'row_id') {
 				$role = $this->input->post('usr_role', true);
+				$role_info = $this->User_model->get_user_types($role);
 				$post[$field] = $this->input->post($field, true);
 				$post['usr_password'] = password_hash($this->input->post('usr_password', true), PASSWORD_BCRYPT);
-				$post['usr_desc'] = (($role == '1') ? 'Author' :
-					((($role == '2') ? 'Co-Author' :
-						((($role == '3') ? 'Managing Editor' :
-							((($role == '12') ? 'Editor-in-Chief' :
-								(($role == '5') ? 'Reviewer' :
-									(($role == '6') ? 'Manager' :
-										(($role == '7') ? 'Admin' :
-											(($role == '8') ? 'Superadmin' :
-												'Committee')))))))))));
+				$post['usr_desc'] = $role_info[0]->role_name;
 				$post['usr_id'] = $id;
+				$post['usr_sys_acc'] = $role_info[0]->role_access;
+				$post['usr_status'] = 1;
 			}
 		}
 		$post['date_created'] = date('Y-m-d H:i:s');
 		$this->User_model->add_user(array_filter($post));
+
+		// add privilege
 		$priv['prv_usr_id'] = $id;
 		$priv['prv_add'] = 1;
 		$priv['prv_edit'] = 1;
@@ -132,8 +134,30 @@ class User extends OPRS_Controller {
 		$priv['prv_export'] = 1;
 		$priv['date_created'] = date('Y-m-d H:i:s');
 		$this->User_model->add_privilege(array_filter($priv));
-		$array_msg = array('icon' => 'fa fa-check-circle-o', 'class' => 'alert-success', 'msg' => 'User Saved.');
-		$this->session->set_flashdata('_oprs_usr_message', $array_msg);
+
+		// add module access
+		$role = $this->input->post('usr_role', TRUE);
+
+		if($role == 1 || $role == 16){
+			// manuscript view only
+		}else{
+			$access['acc_dashboard'] = 1;
+			$access['acc_reports'] = 1;
+			$access['acc_user_mgt'] = 1;
+			$access['acc_lib'] = 1;
+			$access['acc_settings'] = 1;
+			$access['acc_feedbacks'] = 1;
+			$access['acc_logs'] = 1;
+			$access['acc_usr_id'] = $id;
+			$access['acc_date_created'] = date('Y-m-d H:i:s');
+			$this->User_model->add_module_access(array_filter($access));
+		}
+		
+
+
+
+		// $array_msg = array('icon' => 'fa fa-check-circle-o', 'class' => 'alert-success', 'msg' => 'User Saved.');
+		// $this->session->set_flashdata('_oprs_usr_message', $array_msg);
 	}
 
 	/**
@@ -170,6 +194,13 @@ class User extends OPRS_Controller {
 	 */
 	public function verify_email() {
 		$output = $this->User_model->verify_user_email($this->input->post('usr_username', true), $this->input->post('role', true), $this->input->post('sys', true));
+		echo $output;
+	}
+
+	public function verify_email_except_self() {
+		$current_email = $this->session->userdata('_oprs_username');
+		$entered_email = $this->input->post('usr_username', true);
+		$output = $this->User_model->verify_email_except_self($current_email, $entered_email);
 		echo $output;
 	}
 
@@ -232,4 +263,76 @@ class User extends OPRS_Controller {
 		$where['prv_usr_id'] = $id;
 		$this->User_model->set_privilege($post, $where);
 	}
+
+	public function check_email_oprs($email){
+		$output = $this->User_model->get_user_info_by_email($email);
+		return $output;
+	}
+
+	public function get_user_types($id = null){
+		$output = $this->User_model->get_user_types($id);
+		echo json_encode($output);
+	}
+
+	public function types(){
+		if ($this->session->userdata('_oprs_logged_in')) {
+			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
+				if (_UserRoleFromSession() == 20) {
+					$data['roles'] = $this->User_model->get_user_types(null);
+					$id = $this->session->userdata('_oprs_user_id');
+					$data['users'] = $this->User_model->get_user($id);
+					$data['logs'] = $this->Log_model->count_logs();
+					$data['manus'] = $this->Manuscript_model->get_manus($this->session->userdata('_oprs_srce'), $this->session->userdata('_oprs_username'));
+					// $data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
+					// $data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
+					// $data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
+					// $data['man_final'] = $this->Manuscript_model->get_manuscripts(4);
+					// $data['man_for_p'] = $this->Manuscript_model->get_manuscripts(5);
+					// $data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
+					$data['usr_count'] = $this->User_model->count_user();
+					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
+					$data['user_types'] = $this->User_model->get_user_types();
+					$data['main_title'] = "OPRS";
+					$data['main_content'] = "oprs/user_types";
+					$this->_LoadPage('common/body', $data);
+					$this->session->unset_userdata('_oprs_usr_message');
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+					redirect('oprs/manuscripts');
+				}else {
+					redirect('oprs/dashboard');
+				}
+			} else {
+				redirect('admin/dashboard');
+			}
+		}
+	}
+
+	public function udpate_account(){
+		$post['usr_full_name'] = $this->input->post('usr_full_name', TRUE);
+		$post['usr_username'] = $this->input->post('usr_username', TRUE);
+		$post['usr_sex'] = $this->input->post('usr_sex', TRUE);
+		$post['usr_contact'] = $this->input->post('usr_contact', TRUE);
+		$post['last_updated'] = date('Y-m-d H:i:s');
+		$where['usr_id'] = _UserIdFromSession();
+		$this->User_model->update_account(array_filter($post), $where);
+	}
+
+	public function get_account_info(){
+		$output = $this->User_model->get_user_info(_UserIdFromSession());
+		echo json_encode($output);
+	}
+
+	public function set_module_access(){
+		$module = $this->input->post('module', TRUE);
+		$user_id = $this->input->post('user_id', TRUE);
+		$value = $this->input->post('value', TRUE);
+
+		$post[$module] = $value;
+		$where['acc_usr_id'] = $user_id;
+
+		$output = $this->User_model->set_module_access($post, $where);
+		echo json_encode($output);
+	}
+
+
 }

@@ -8,6 +8,12 @@ class Review_model extends CI_Model {
 	private $user = 'tblusers';
 	private $reviewers = 'tblreviewers';
 	private $non = 'tblnonmembers';
+	private $tech_rev_score = 'tbltech_rev_score';
+	private $editors_review = 'tbleditors_review';
+	private $suggested_peer = 'tblsuggested_peer';
+	private $consolidations = 'tblconsolidations';
+	private $revision_matrix = 'tblrevision_matrix';
+	private $layouts = 'tbllayouts';
 	// skms
 	private $business = 'tblbusiness_address';
 	private $specs = 'tblmembership_profiles';
@@ -241,6 +247,134 @@ class Review_model extends CI_Model {
 			return '0';
 		}
 	}
+
+	// Process v2
+	public function save_tech_rev_score($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->tech_rev_score, $data);
+	}
+
+	public function get_tech_rev_score($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('tr_crt_1, tr_crt_2, tr_crt_3, tr_crt_4, tr_crt_5, tr_crt_6, tr_remarks, tr_final');
+		$oprs->from($this->tech_rev_score);
+		$oprs->where('tr_man_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function update_tech_rev_score($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->tech_rev_score, $data, $where);
+	}	
+
+	public function save_initial_editor_data($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->editors_review, $data);
+	}
+
+	public function update_editor_data($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->editors_review, $data, $where);
+	}
+
+	public function get_editors_review($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->editors_review);
+		$oprs->where('edit_man_id', $id);
+		$oprs->where('edit_usr_id', _UserIdFromSession());
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function get_editors_review_by_process_id($man_id, $processor_id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->editors_review);
+		$oprs->where('edit_man_id', $man_id);
+		$oprs->where('edit_usr_id', $processor_id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+	
+	public function get_last_editors_review($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->editors_review);
+		$oprs->where('edit_man_id', $id);
+		$oprs->order_by('date_created', 'desc');
+		$oprs->limit(1);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function reset_editor_review($where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->delete($this->editors_review, $where);
+	}
+
+	public function save_peer_reviewers($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->suggested_peer, $data);
+	}
+
+	public function get_suggested_peer($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->suggested_peer);
+		$oprs->where('peer_man_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function save_consolidations($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->consolidations, $data);
+	}
+
+	public function get_consolidation($man_id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->consolidations);
+		$oprs->where('cons_man_id', $man_id);
+		$query = $oprs->order_by('id','desc')->limit(1)->get();
+		return $query->result();
+	}
+
+	public function save_revision_matrix($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->revision_matrix, $data);
+	}
+	
+	public function get_revision_matrix($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->revision_matrix);
+		$oprs->where('mtx_man_id', $id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	public function update_consolidations($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->consolidations, $data, $where);
+	}
+
+	public function save_layouts($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->layouts, $data);
+	}
+
+	public function get_layout($man_id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->layouts);
+		$oprs->where('lay_man_id', $man_id);
+		$query = $oprs->get();
+		return $query->result();
+	}
 }
+
 
 /* End of file Review_model.php */

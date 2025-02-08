@@ -1,7 +1,7 @@
 <?php error_reporting(0);?>
 <?php $logged_in = $this->session->userdata('user_id'); ?>
-<div class="container-fluid mt-3 p-4">
-    <div class="row pt-3">
+<div class="container-fluid mt-2 p-4">
+    <div class="row">
         <!-- SIDE NAVIGATION -->
         
         <div class="col col-3 p-3">
@@ -89,7 +89,7 @@
 					<div class="flex-grow-1">
 						<p class="mt-0 text-dark">
 							<h2>Volume <?= $journal; ?></h2>
-							<h5 class="text-muted small">Publication Year: <?= $pub_date; ?></h5>
+							<h5 class="text-muted small">Year Published: <?= $pub_date; ?></h5>
 							<!-- <h5 class="text-muted small">ISSN: <?= $issn; ?></h5> -->
 							<h5 class="text-muted small">Articles: <?= count($articles); ?></h5>
 							<h5 class="text-muted small">Description: <?= $description ?? '-'; ?></h5>
@@ -103,7 +103,8 @@
 				<?php $coa_arr = (explode(",& ", $row['coa']));?>
 
 				<!-- <p class="mt-0 text-dark mb-0 main-link"><?php echo $row['title']; ?></p> -->
-                <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $row['art_id'] ?>','hits','<?= $row['file'] ?>')"><?= $row['title'] ?></a>
+                <a class="mt-0 text-dark mb-0 main-link" href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>"><?= $row['title'] ?></a>
+                <!-- <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $row['art_id'] ?>','hits','<?= $row['file'] ?>')"><?= $row['title'] ?></a> -->
 				
 				<div class="mt-2">
 					<?php $i = 0; foreach ($coa_arr as $c): ?>

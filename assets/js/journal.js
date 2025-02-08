@@ -31,18 +31,383 @@ var ejChart;
 
 var global_coauthor_total = 0;
 
+var minutes = 5,          // otp timer
+seconds = 0,          // otp timer
+intervalId,           // otp timer
+isStartTimer = false, // otp timer
+refCode,              // reference code for otp
+accessToken,          // user access token generated on logged in   
+current_button_id;    // button to enable/disable for catpcha  
+
+var recaptchaWidgetId_logout; // recaptcha widget 
+
 $(document).ready(function () {
+	
+    // get user account info
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/user/get_account_info",
+        async:false,
+        crossDomain: true,
+        dataType: 'json',
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#form_update_account #usr_username').val(val.usr_username);
+                $('#form_update_account #usr_full_name').val(val.usr_full_name);
+                $('#form_update_account #usr_sex').val(val.usr_sex);
+                $('#form_update_account #usr_contact').val(val.usr_contact);
+            });
+        },
+        error: function(xhr, status, error) {
+        reject(error);
+        }
+    }); 
+
+	
+	// validate file size before uploading
+    $.validator.addMethod('filesize', function (value, element, param) {
+        return this.optional(element) || (element.files[0].size <= param)
+    }, `File size exceeds the allowed limit.`);
+
+
+	 // get user access token
+	 accessToken = $.ajax({
+        type: "GET",
+        url: base_url + "oprs/login/get_access_token/",
+        async:false,
+        crossDomain: true,
+        success: function(data) {
+            if(data != 0){
+                return data;
+            }
+        },
+        error: function(xhr, status, error) {
+        reject(error);
+        }
+    }); 
+
+    accessToken = (accessToken.responseText).trim();
+	
+	
+    let idleTime = 0;
+
+    if(accessToken != 0){
+      $(document).on('mousemove keydown scroll', function() {
+          idleTime = 0;
+      });
+  
+      let timerInterval = setInterval(function() {
+          idleTime += 1;
+          
+          if (idleTime >= 1200) { // 20 minutes in seconds
+              // Trigger logout or other actions
+              clearInterval(timerInterval); // Stop the timer
+  
+              destroyUserSession();
+  
+              Swal.fire({
+                title: "Session Expired",
+                text: "You have been idle for 20 minutes. Please log in again.",
+                icon: "info",
+                confirmButtonColor: "#0c6bcb",
+              
+              }).then(function () {
+                window.location = base_url + "oprs/login";
+              });
+          }
+      }, 1000); // Check every 1 second
+    }
+	// feedback suggestion box character limit
+	let $textArea = $("#fb_suggest_ui");
+	let $charCount = $("#char_count_ui");
+	let maxLength = $textArea.attr("maxlength");
+
+	$textArea.on("input", function () {
+		let currentLength = $(this).val().length;
+		$charCount.text(`${currentLength} / ${maxLength} characters`);
+
+		if (currentLength > maxLength) {
+			$charCount.addClass("exceeded");
+		} else {
+			$charCount.removeClass("exceeded");
+		}
+	});
+
+	let $textArea2 = $("#fb_suggest_ux");
+	let $charCount2 = $("#char_count_ux");
+	let maxLength2 = $textArea2.attr("maxlength");
+
+	$textArea2.on("input", function () {
+		let currentLength = $(this).val().length;
+		$charCount2.text(`${currentLength} / ${maxLength2} characters`);
+
+		if (currentLength > maxLength2) {
+			$charCount2.addClass("exceeded");
+		} else {
+			$charCount2.removeClass("exceeded");
+		}
+	});
+
+	// csf ui ux star rating
+	let selectedRatingUI = 0;
+	let selectedRatingUX = 0;
+
+	$('.rate-ui').on('mouseover', function () {
+		const value = $(this).data('value');
+		$('.rate-ui').each(function () {
+			$(this).toggleClass('selected', $(this).data('value') <= value);
+		});
+	});
+
+	$('.rate-ui').on('mouseleave', function () {
+		$('.rate-ui').each(function () {
+			$(this).toggleClass('selected', $(this).data('value') <= selectedRatingUI);
+		});
+	});
+
+	$('.rate-ui').on('click', function () {
+		selectedRatingUI = $(this).data('value');
+		
+		// Remove 'selected' class from all stars and add it to the clicked star and previous stars
+		$(".rate-ui").removeClass("selected");
+		$(".rate-ui").each(function () {
+			if ($(this).data("value") <= selectedRatingUI) {
+			$(this).addClass("selected");
+			$('.rate-ui-validation').text('');
+			}
+		});
+	});
+	
+	$('.rate-ux').on('mouseover', function () {
+		const value = $(this).data('value');
+		$('.rate-ux').each(function () {
+			$(this).toggleClass('selected', $(this).data('value') <= value);
+		});
+	});
+
+	$('.rate-ux').on('mouseleave', function () {
+		$('.rate-ux').each(function () {
+			$(this).toggleClass('selected', $(this).data('value') <= selectedRatingUX);
+		});
+	});
+
+	$('.rate-ux').on('click', function () {
+		selectedRatingUX = $(this).data('value');
+		
+		// Remove 'selected' class from all stars and add it to the clicked star and previous stars
+		$(".rate-ux").removeClass("selected");
+		$(".rate-ux").each(function () {
+			if ($(this).data("value") <= selectedRatingUX) {
+			$(this).addClass("selected");
+			$('.rate-ux-validation').text('');
+			}
+		});
+	});
+
+	// $("#feedback_form").validate({
+	// 	debug: true,
+	// 	errorClass: 'text-danger',
+	// 	rules: {
+	// 		non_title: {
+	// 			required: true,
+	// 			minlength: 2
+	// 		},
+		
+	// 	},
+	// 	messages: {
+	// 		usr_captcha: {
+	// 			equalTo: "Incorrect verification code"
+	// 		},
+	// 		non_email: {
+	// 			remote: "Email already in use"
+	// 		}
+	// 	},
+	// 	submitHandler: function() {
+	// 		$.ajax({
+	// 			type: "POST",
+	// 			url: base_url + "oprs/signup/sign_up/",
+	// 			data: $('#form_sign_up').serializeArray(),
+	// 			cache: false,
+	// 			crossDomain: true,
+	// 			success: function(data) {
+	// 				$.notify({
+	// 					icon: 'fa fa-check-circle',
+	// 					message: 'Thank you for signing up. You can now log in.'
+	// 				}, {
+	// 					type: 'success',
+	// 					timer: 3000,
+	// 				});
+
+	// 				$('#form_sign_up')[0].reset();
+	// 				$('#refresh_captcha').click();
+	// 			}
+	// 		});
+	// 	}
+	// });
+
+	$('#submit_feedback').on('click', function(){
+		if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
+
+			let uiSuggestion = $('#fb_suggest_ui').val();
+			let uxSuggestion = $('#fb_suggest_ux').val();
+			
+			let data = {
+			'ui' : selectedRatingUI,
+			'ux' : selectedRatingUX,
+			'ui_sug' : uiSuggestion,
+			'ux_sug' : uxSuggestion,
+			'csf_system' : 'eJournal Admin'
+			};
+	
+			const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
+	
+			if (captcha) {
+			$(this).prop('disabled', true);
+				// alert("reCAPTCHA is checked and valid!");
+				$.ajax({
+				type: "POST",
+				url: base_url + 'oprs/feedbacks/submit_csf_ui_ux',
+				data:  data,
+				cache: false,
+				crossDomain: true,
+				success: function(data) {
+					$('#feedbackModal').modal('toggle');
+					if(data == 1){
+					let timerInterval;
+					Swal.fire({
+						title: "Thank you for your feedback.",
+						text: "Logging out...",
+						icon: "success",
+						allowOutsideClick: false, // Prevent closing by clicking outside
+						allowEscapeKey: false,   // Prevent closing with the Escape key
+						allowEnterKey: false,    // Prevent closing with the Enter key
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: () => {
+						Swal.showLoading();
+						// const timer = Swal.getPopup().querySelector("b");
+						// timerInterval = setInterval(() => {
+						//   timer.textContent = `${Swal.getTimerLeft()}`;
+						// }, 100);
+						},
+						willClose: () => {
+						clearInterval(timerInterval);
+						}
+					}).then((result) => {
+						/* Read more about handling dismissals below */
+						if (result.dismiss === Swal.DismissReason.timer) {
+						window.location.href = base_url + "oprs/login/logout/";
+						}
+					});
+					}else{
+					console.log('Something went wrong.');
+					}
+				}
+				});
+			} else {
+				console.log("Please complete the reCAPTCHA!");
+			}
+	
+		} else {
+			if($(".rate-ui.selected").length == 0){
+				$('.rate-ui-validation').text('Please select at least one star.');
+			}
+
+			if($(".rate-ux.selected").length == 0){
+				$('.rate-ux-validation').text('Please select at least one star.');
+			}
+
+			return;
+		}
+	});
+
+	$('#search').on('keypress', function (event) {
+        if (event.which === 13) { // 13 is the key code for Enter
+            event.preventDefault(); // Prevent form submission
+            var search_value = $(this).val();
+            var search_filter = $('input[name="search_filter"]:checked').val();
+
+            if(search_value){
+
+                
+                let data = {
+                    search: search_value,
+                    filter: search_filter
+                };
+                
+                $.ajax({
+                    url: base_url + "admin/journal/search",
+                    data: data,
+                    cache: false,
+                    crossDomain: true,
+					dataType: 'json',
+                    type: "POST",
+                    success: function(data) {
+						$('#search_result').empty();
+
+                        if(data.length > 0){
+                            $('#searchModal .alert').addClass('d-none');
+
+
+							var html = '<div class="list-group overflow-hidden" style="max-height:65vh" id="search_result_list">';
+							$.each(data, function(key, val){
+								var coas = (val.coas) ? ', ' + val.coas : '';
+								html += `<a href="${base_url}/client/ejournal/article/${val.art_id}" target="_blank" class="list-group-item list-group-item-action p-3 pe-5" aria-current="true">
+										<h6 class="mb-1 fw-bold text-truncate">${val.art_title}</h6>
+										<p class="mb-1 text-truncate">${val.art_author}${coas}</p>
+										<p class="small text-truncate">${val.art_keywords}</p>
+										</a>`;
+							});
+
+							html += '</div>';
+							
+							$('#search_result').append(html);
+								
+                        }else{
+                            $('#searchModal .alert').removeClass('d-none');
+                            $('#searchModal .alert').html('<span class="oi oi-warning"></span>Sorry, no results found.');
+                        }
+                    }
+                });
+
+            }
+
+
+            
+        }
+    });
 
 	tinymce.init({
 		selector: '#enc_content',
 		forced_root_block: false,
-		height: "400"
+		height: "400",
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
+		menubar: false // Optional: Hide the menubar if not needed
 	});
 
 	tinymce.init({
 		selector: '#home_description',
 		forced_root_block: false,
-		height: "400"
+		height: "400",
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
+		menubar: false // Optional: Hide the menubar if not needed
+	});
+
+	tinymce.init({
+		selector: '#ep_content',
+		forced_root_block: false,
+		height: "900",
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
+		menubar: false // Optional: Hide the menubar if not needed,
+	});
+
+	tinymce.init({
+		selector: '#gd_content',
+		forced_root_block: false,
+		height: "900",
+		plugins: 'link',
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
+		menubar: false // Optional: Hide the menubar if not needed
 	});
 
 	$('#table-registry').DataTable();
@@ -87,7 +452,7 @@ $(document).ready(function () {
 
 	// enable use of tooltip
 	$('body').tooltip({
-		selector: '[data-toggle=tooltip]'
+		selector: '[data-bs-toggle=tooltip]'
 	});
 
 	// hide upload file element for user display picture
@@ -115,9 +480,9 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled 
 	if (prv_exp == 0) {
-		$('#table-citees').DataTable({
+		var tct = $('#table-citees').DataTable({
 			"order": [
-				[0, "asc"]
+				[1, "asc"]
 			],
 			retrieve: true,
 			"columnDefs": [{
@@ -126,21 +491,29 @@ $(document).ready(function () {
 			}]
 		});
 	} else {
-		$('#table-citees').DataTable({
+		var tct = $('#table-citees').DataTable({
 			"order": [
-				[0, "asc"]
+				[1, "asc"]
 			],
 			retrieve: true,
-			"columnDefs": [{
+			columnDefs: [
+				{
 				"targets": 0,
 				"orderable": false
-			}],
-			dom: 'lBfrtip',
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Citees',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied Citees to clipboard');
@@ -151,7 +524,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Citees',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported Citees as excel');
@@ -162,7 +535,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Citees',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported Citees as pdf');
@@ -172,7 +545,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Citees',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed Citees');
@@ -182,6 +555,26 @@ $(document).ready(function () {
 			]
 		});
 	}
+
+	// initiate and disable sorting on clicking first column first row
+	tct.on('draw', function () {
+		tct.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
+	tct.on('order.dt search.dt', function () {
+		tct.column(0, {
+			search: 'applied',
+			order: 'applied'
+		}).nodes().each(function (cell, i) {
+			cell.innerHTML = i + 1;
+		});
+	}).draw(false);
 
 	// check and display export button if privilege to export is enabled 
 	// if(prv_exp == 0){
@@ -195,7 +588,7 @@ $(document).ready(function () {
 	//                 extend: 'copy',
 	//                 text: 'Copy to clipboard',
 	//                 messageTop: 'List of Author Registry',
-	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal', 
+	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal', 
 	//                 action: function(e, dt, node, config)
 	//                 {
 	//                   // action saved to logs table
@@ -207,7 +600,7 @@ $(document).ready(function () {
 	//                 extend: 'excel',
 	//                 text: 'Export as Excel',
 	//                 messageTop: 'List of Author Registry',
-	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal', 
+	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal', 
 	//                 action: function(e, dt, node, config)
 	//                 {
 	//                   // action saved to logs table
@@ -219,7 +612,7 @@ $(document).ready(function () {
 	//                 extend: 'pdf',
 	//                 text: 'Export as PDF',
 	//                 messageTop: 'List of Author Registry',
-	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal', 
+	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal', 
 	//                 action: function(e, dt, node, config)
 	//                 {
 	//                   // action saved to logs table
@@ -230,7 +623,7 @@ $(document).ready(function () {
 	//             {
 	//                 extend: 'print',
 	//                 messageTop: 'List of Author Registry',
-	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal', 
+	//                 title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal', 
 	//                 action: function(e, dt, node, config)
 	//                 {
 	//                   // action saved to logs table
@@ -244,32 +637,46 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#table-all-articles').DataTable({
+		var tallart = $('#table-all-articles').DataTable({
 			"order": [
 				[1, "asc"]
 			],
 			retrieve: true,
-			"columnDefs": [{
+			columnDefs: [
+				{
 				"targets": 0,
 				"orderable": false
-			}]
+				},
+				{ width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: false,
 		});
+
 	} else {
-		$('#table-all-articles').DataTable({
+		var tallart = $('#table-all-articles').DataTable({
 			"order": [
 				[1, "asc"]
 			],
 			retrieve: true,
-			"columnDefs": [{
+			columnDefs: [
+				{
 				"targets": 0,
 				"orderable": false
-			}],
-			dom: 'lBfrtip',
+				},
+				{ width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied list of Articles to clipboard');
@@ -280,7 +687,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported list of Articles as excel');
@@ -291,7 +698,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported list of Articles as pdf');
@@ -301,7 +708,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed list of Articles');
@@ -313,15 +720,24 @@ $(document).ready(function () {
 	}
 
 	// initiate and disable sorting on clicking first column first row
-	var tpop = $('#table-all-articles').DataTable();
-	tpop.on('order.dt search.dt', function () {
-		tpop.column(0, {
+	tallart.on('draw', function () {
+		tallart.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
+	tallart.on('order.dt search.dt', function () {
+		tallart.column(0, {
 			search: 'applied',
 			order: 'applied'
 		}).nodes().each(function (cell, i) {
 			cell.innerHTML = i + 1;
 		});
-	}).draw();
+	}).draw(false);
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
@@ -345,12 +761,15 @@ $(document).ready(function () {
 				"targets": 0,
 				"orderable": false
 			}],
-			dom: 'lBfrtip',
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Journals',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					exportOptions: {
 						columns: ':not(:last-child)',
 					},
@@ -364,7 +783,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Journals',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					exportOptions: {
 						columns: ':not(:last-child)',
 					},
@@ -378,7 +797,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Journals',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					exportOptions: {
 						columns: ':not(:last-child)',
 					},
@@ -391,7 +810,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Journals',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					exportOptions: {
 						columns: ':not(:last-child)',
 					},
@@ -429,7 +848,7 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#table-popular').DataTable({
+		var tpop = $('#table-popular').DataTable({
 			"order": [
 				[3, "desc"]
 			],
@@ -440,21 +859,24 @@ $(document).ready(function () {
 			}]
 		});
 	} else {
-		$('#table-popular').DataTable({
+		var tpop = $('#table-popular').DataTable({
 			"order": [
 				[3, "desc"]
 			],
-			retrieve: true,
+			retreive: true,
 			"columnDefs": [{
 				"targets": 0,
 				"orderable": false
 			}],
-			dom: 'lBfrtip',
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List Popular Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied popular articles to clipboard');
@@ -465,7 +887,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List Popular Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported popular articles as excel');
@@ -476,7 +898,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List Popular Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported popular articles as pdf');
@@ -486,7 +908,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List Popular Articles',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed popular articles');
@@ -496,15 +918,6 @@ $(document).ready(function () {
 			]
 		});
 	}
-
-	// initiate and disable sorting on clicking first column first row
-	var tpop = $('#table-popular').DataTable();
-
-	// tpop.on( 'order.dt search.dt', function () {
-	//     tpop.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-	//         cell.innerHTML = i+1;
-	//     } );
-	// } ).draw();
 
 	tpop.on('draw', function () {
 		tpop.rows({
@@ -547,12 +960,15 @@ $(document).ready(function () {
 				"targets": 0,
 				"orderable": false
 			}],
-			dom: 'lBfrtip',
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Clients',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied list of clients to clipboard');
@@ -563,7 +979,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Clients',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported list of clients as excel');
@@ -574,7 +990,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Clients',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					orientation: 'landscape',
 					pageSize: 'LEGAL',
 					action: function (e, dt, node, config) {
@@ -586,7 +1002,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Clients',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed list of clients');
@@ -626,9 +1042,9 @@ $(document).ready(function () {
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#table-viewers').DataTable({
+		var tvwrs = $('#table-viewers').DataTable({
 			"order": [
-				[3, "desc"]
+				[1, "asc"]
 			],
 			retrieve: true,
 			"columnDefs": [{
@@ -637,21 +1053,29 @@ $(document).ready(function () {
 			}]
 		});
 	} else {
-		$('#table-viewers').DataTable({
+		var tvwrs = $('#table-viewers').DataTable({
 			"order": [
-				[3, "desc"]
+				[1, "asc"]
 			],
 			retrieve: true,
-			"columnDefs": [{
+			columnDefs: [
+				{
 				"targets": 0,
 				"orderable": false
-			}],
-			dom: 'lBfrtip',
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Abstract Hits',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied abstract hits to clipboard');
@@ -662,7 +1086,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Abstract Hits',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported abstract hits as excel');
@@ -673,7 +1097,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Abstract Hits',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported abstract hits as pdf');
@@ -683,7 +1107,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Abstract Hits',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed abstract hits');
@@ -695,27 +1119,67 @@ $(document).ready(function () {
 	}
 
 	// initiate and disable sorting on clicking first column first row 
-	var tcli = $('#table-viewers').DataTable();
-	tcli.on('order.dt search.dt', function () {
-		tcli.column(0, {
+	tvwrs.on('draw', function () {
+		tvwrs.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
+	tvwrs.on('order.dt search.dt', function () {
+		tvwrs.column(0, {
 			search: 'applied',
 			order: 'applied'
 		}).nodes().each(function (cell, i) {
 			cell.innerHTML = i + 1;
 		});
-	}).draw();
+	}).draw(false);
 
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
-		$('#table-editorials').DataTable();
+		var tedt = $('#table-editorials').DataTable({
+			
+			"order": [
+				[1, "asc"]
+			],
+			retrieve: true,
+			columnDefs: [
+				{
+				"targets": 0,
+				"orderable": false
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+		});
 	} else {
-		$('#table-editorials').DataTable({
-			dom: 'lBfrtip',
+		var tedt = $('#table-editorials').DataTable({
+			"order": [
+				[1, "asc"]
+			],
+			retrieve: true,
+			columnDefs: [
+				{
+				"targets": 0,
+				"orderable": false
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
 			buttons: [{
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Editorial Boards',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied editorial boards to clipboard');
@@ -726,7 +1190,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Editorial Boards',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported editorial boards as excel');
@@ -737,7 +1201,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Editorial Boards',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported editorial boards as pdf');
@@ -747,7 +1211,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Editorial Boards',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed editorial boards');
@@ -759,7 +1223,16 @@ $(document).ready(function () {
 	}
 
 	// initiate and disable sorting on clicking first column first row 
-	var tedt = $('#table-editorials').DataTable();
+	tedt.on('draw', function () {
+		tedt.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
 	tedt.on('order.dt search.dt', function () {
 		tedt.column(0, {
 			search: 'applied',
@@ -767,7 +1240,29 @@ $(document).ready(function () {
 		}).nodes().each(function (cell, i) {
 			cell.innerHTML = i + 1;
 		});
-	}).draw();
+	}).draw(false);
+
+	var temnot = $('#table-email-notifications').DataTable();
+	// initiate and disable sorting on clicking first column first row 
+	temnot.on('draw', function () {
+		temnot.rows({
+			search: 'applied',
+			order: 'applied',
+			filter: 'applied'
+		}).data().each(function (d, i) {
+			d[0] = i + 1;
+		});
+	});
+
+	temnot.on('order.dt search.dt', function () {
+		temnot.column(0, {
+			search: 'applied',
+			order: 'applied'
+		}).nodes().each(function (cell, i) {
+			cell.innerHTML = i + 1;
+		});
+	}).draw(false);
+
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
 		$('#table-activities').DataTable();
@@ -778,7 +1273,7 @@ $(document).ready(function () {
 					extend: 'copy',
 					text: 'Copy to clipboard',
 					messageTop: 'List of Activity Logs',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('copied activity logs to clipboard');
@@ -789,7 +1284,7 @@ $(document).ready(function () {
 					extend: 'excel',
 					text: 'Export as Excel',
 					messageTop: 'List of Activity Logs',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported activity logs as excel');
@@ -800,7 +1295,7 @@ $(document).ready(function () {
 					extend: 'pdf',
 					text: 'Export as PDF',
 					messageTop: 'List of Activity Logs',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('exported activity logs as pdf');
@@ -810,7 +1305,7 @@ $(document).ready(function () {
 				{
 					extend: 'print',
 					messageTop: 'List of Activity Logs',
-					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRPC Research Journal',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
 					action: function (e, dt, node, config) {
 						// action saved to logs table
 						log_export('printed activity logs');
@@ -821,29 +1316,160 @@ $(document).ready(function () {
 		});
 	}
 
+	// check and display export button if privilege to export is enabled
+	if (prv_exp == 0) {
+		$('#activityLogsTable').DataTable({
+			"order": [
+				[1, "asc"]
+			],
+			retrieve: true,
+			columnDefs: [
+				{
+				"targets": 0,
+				"orderable": false
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+		});
+	} else {
+		$('#activityLogsTable').DataTable({
+			"order": [
+				[1, "asc"]
+			],
+			retrieve: true,
+			columnDefs: [
+				{
+				"targets": 0,
+				"orderable": false
+				},
+				// { width: "500px", targets: 1 }, // Set the width of the first column
+				
+			],
+			autowidth: true,
+			dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+				 "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+				 "<'row'<'col-sm-12'tr>>" +   // Table itself
+				 "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+			buttons: [{
+					extend: 'copy',
+					text: 'Copy to clipboard',
+					messageTop: 'List of Activity Logs',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+					action: function (e, dt, node, config) {
+						// action saved to logs table
+						log_export('copied activity logs to clipboard');
+						$.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+					}
+				},
+				{
+					extend: 'excel',
+					text: 'Export as Excel',
+					messageTop: 'List of Activity Logs',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+					action: function (e, dt, node, config) {
+						// action saved to logs table
+						log_export('exported activity logs as excel');
+						$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+					}
+				},
+				{
+					extend: 'pdf',
+					text: 'Export as PDF',
+					messageTop: 'List of Activity Logs',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+					action: function (e, dt, node, config) {
+						// action saved to logs table
+						log_export('exported activity logs as pdf');
+						$.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+					}
+				},
+				{
+					extend: 'print',
+					messageTop: 'List of Activity Logs',
+					title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+					action: function (e, dt, node, config) {
+						// action saved to logs table
+						log_export('printed activity logs');
+						window.print();
+					}
+				}
+			]
+		});
+	}
+
+	// initiate and disable sorting on clicking first column first row 
+	var alt = $('#activityLogsTable').DataTable();
+
+    // Custom date range filter
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+
+			if (settings.nTable.id !== 'activityLogsTable') {
+                return true; // Bypass filtering for other tables
+            }
+
+            // Get the date column value
+            var dateColumnData = data[3]; // Assume date is in the first column (index 0). Adjust if needed.
+            var min = $('#dateFrom').val();
+            var max = $('#dateTo').val();
+
+			// Parse the date from the table and filter input values
+			var date = moment(dateColumnData, 'YYYY-MM-DD HH:mm:ss A'); // Use format 'YYYY-MM-DD HH:mm:ss A'
+			var minDate = min ? moment(min, 'YYYY-MM-DD') : null;
+			var maxDate = max ? moment(max, 'YYYY-MM-DD') : null;
+
+             // Filter by date range
+			 if (
+                (!minDate || date.isSameOrAfter(minDate)) &&
+                (!maxDate || date.isSameOrBefore(maxDate))
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+	
+	alt.on('order.dt search.dt', function () {
+		alt.column(0, {
+			search: 'applied',
+			order: 'applied'
+		}).nodes().each(function (cell, i) {
+			cell.innerHTML = i + 1;
+		});
+	}).draw();
+
+    // Event listeners for the date inputs
+    $('#dateFrom, #dateTo').on('change', function() {
+        alt.draw(); // Redraw the table with the new filter applied
+    });
+
+
 	// trigger click on side navigation to create journal
 	$('#btn-create-journal').click(function () {
-		$('#create-journal').trigger('click');
+		$('#v-pills-create-journal-tab').trigger('click');
 	});
 
 	// trigger click on side navigation to add editorial board
 	$('#btn-add-editorial').click(function () {
-		$('#add-editorial').trigger('click');
+		$('#v-pills-add-editorial-tab').trigger('click');
 	});
 
 	// trigger click on side navigation to view list of journals
 	$('#view_journals').click(function () {
-		$('#journal-list').trigger('click');
+		$('#v-pills-journal-list-tab').trigger('click');
 	});
 
 	// trigger click on side navigation to view list of editorail boards
 	$('#view_editorials').click(function () {
-		$('#editorial-list').trigger('click');
+		$('#v-pills-editorial-list-tab').trigger('click');
 	});
 
 	// trigger click on side navigation to view list of clients downloaded journals
 	$('#view_clients').click(function () {
-		$('#client-list').trigger('click');
+		$('#v-pills-client-list-tab').trigger('click');
 	});
 
 	// remove class 
@@ -927,17 +1553,45 @@ $(document).ready(function () {
 				processData: false,
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'Editorial board added successfully. Page will reload after 3 seconds.'
-					}, {
-						type: 'success',
-						timer: 3000
+
+					let timerInterval;
+
+					Swal.fire({
+					title: "Editorial board added successfully!",
+					text: 'Page reloading...',
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
 
-					setTimeout(function () {
-						history.go(0);
-					}, 3000);
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Editorial board added successfully. Page will reload after 3 seconds.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
 
 				}
 			});
@@ -994,18 +1648,46 @@ $(document).ready(function () {
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'Editorial board updated successfully. Page will reload after 3 seconds.'
-					}, {
-						type: 'success',
-						timer: 3000
+					
+					let timerInterval;
+
+					Swal.fire({
+					title: "Editorial board updated successfully!",
+					text: 'Page reloading...',
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
 
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Editorial board updated successfully. Page will reload after 3 seconds.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
 					$('#editorial_modal').modal('toggle');
-					setTimeout(function () {
-						history.go(0);
-					}, 3000);
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
 
 				}
 			});
@@ -1029,6 +1711,18 @@ $(document).ready(function () {
 			jor_year: {
 				required: true,
 				minlength: 4,
+			},
+			jor_cover : {
+				extension: "jpg",
+				filesize : 2000000,
+			},
+		},
+		messages: {
+			jor_cover: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
 			}
 		},
 		submitHandler: function () {
@@ -1050,18 +1744,46 @@ $(document).ready(function () {
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'Journal updated successfully. Page will reload after 3 seconds.'
-					}, {
-						type: 'success',
-						timer: 3000
+					$('#journal_modal button').prop('disabled', true);
+					let timerInterval;
+
+					Swal.fire({
+					title: "Journal updated successfully!",
+					text: "Page reloading...",
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
 
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Journal updated successfully. Page will reload after 3 seconds.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
 					$('#journal_modal').modal('toggle');
-					setTimeout(function () {
-						history.go(0);
-					}, 3000);
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
 
 				}
 			});
@@ -1090,15 +1812,33 @@ $(document).ready(function () {
 			},
 			art_abstract_file: {
 				required: true,
+				extension: "pdf",
+				filesize : 20000000,
 			},
 			art_full_text_pdf: {
 				required: true,
+				extension: "pdf",
+				filesize : 20000000,
 			},
 			art_author: {
 				required: true,
 			},
 			art_affiliation: {
 				required: true,
+			}
+		},
+		messages: {
+			art_abstract_file: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
+			},
+			art_full_text_pdf: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
 			}
 		},
 		submitHandler: function () {
@@ -1120,21 +1860,59 @@ $(document).ready(function () {
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'Article updated successfully. Page will reload after 3 seconds.'
-					}, {
-						type: 'success',
-						timer: 3000
+					let timerInterval;
+
+					Swal.fire({
+					title: "Article updated successfully!",
+					text: "Page reloading...",
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
 
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Article updated successfully. Page will reload after 3 seconds.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
 					$('#article_modal').modal('toggle');
-					setTimeout(function () {
-						history.go(0);
-					}, 3000);
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
 
 				}
 			});
+		}
+	});
+
+	$('#upload_call_papers').on('change', function(){
+		var selected = $(this).val();
+		if(selected == 1){
+			$('.upload_cfp').removeClass('d-none');
+			$('.upload_cfpi').addClass('d-none');
+		}else{
+			$('.upload_cfpi').removeClass('d-none');
+			$('.upload_cfp').addClass('d-none');
 		}
 	});
 
@@ -1147,10 +1925,14 @@ $(document).ready(function () {
 				required: true,
 			},
 			upload_cfp: {
-				required: '#upload_only[value="1"]:checked'
+				required: function () {
+					return $('#upload_call_papers').val() === '1'; // Check if the select value is '1'
+				}
 			},
 			upload_cfpi: {
-				required: '#upload_only[value="2"]:checked'
+				required: function () {
+					return $('#upload_call_papers').val() === '2'; // Check if the select value is '2'
+				}
 			}
 		},
 		submitHandler: function () {
@@ -1168,21 +1950,21 @@ $(document).ready(function () {
 
 			// if file size of pdf is less than 20mb hide warning
 			if (file_size_pdf < '20000000') {
-				$('#upload_cfp').next('.badge-danger').hide();
+				$('#upload_cfp').next('.bg-danger').hide();
 			}
 			// if file size of image is less than 20mb hide warning
 			if (file_size_img < 2000000) {
-				$('#upload_cfpi').next('.badge-danger').hide();
+				$('#upload_cfpi').next('.bg-danger').hide();
 			}
 
 			// if file size of pdf is more than 20mb show warning
 			if (file_size_pdf >= '20000000') {
-				$('#upload_cfp').next('.badge-danger').hide();
-				$('#upload_cfp').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+				$('#upload_cfp').next('.bg-danger').hide();
+				$('#upload_cfp').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
 			} else if (file_size_img >= 2000000) // if file size of image is more than 20mb show warning
 			{
-				$('#upload_cfpi').next('.badge-danger').hide();
-				$('#upload_cfpi').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
+				$('#upload_cfpi').next('.bg-danger').hide();
+				$('#upload_cfpi').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
 			} else {
 				$.ajax({
 					url: base_url + "admin/dashboard/update_home/",
@@ -1195,21 +1977,139 @@ $(document).ready(function () {
 
 						$('#form_home')[0].reset();
 
-						$.notify({
-							icon: 'oi oi-check',
-							message: 'Saved successfully. Page will reload in 3 seconds'
-						}, {
-							type: 'success',
-							timer: 3000
+						let timerInterval;
+
+						Swal.fire({
+						title: "Saved successfully!",
+						text: "Page reloading...",
+						icon: 'success',
+						// html: "I will close in <b></b> milliseconds.",
+						timer: 2000,
+						timerProgressBar: true,
+						didOpen: () => {
+							Swal.showLoading();
+							const timer = Swal.getPopup().querySelector("b");
+							timerInterval = setInterval(() => {
+							timer.textContent = `${Swal.getTimerLeft()}`;
+							}, 100);
+						},
+						willClose: () => {
+							clearInterval(timerInterval);
+							location.reload();
+						}
+						}).then((result) => {
+						/* Read more about handling dismissals below */
+						if (result.dismiss === Swal.DismissReason.timer) {
+							console.log("I was closed by the timer");
+						}
 						});
 
-						setTimeout(function () {
-							history.go(0);
-						}, 3000);
+						
+						// $.notify({
+						// 	icon: 'oi oi-check',
+						// 	message: 'Saved successfully. Page will reload in 3 seconds'
+						// }, {
+						// 	type: 'success',
+						// 	timer: 3000
+						// });
+
+						// setTimeout(function () {
+						// 	history.go(0);
+						// }, 3000);
 
 					}
 				});
 			}
+		}
+	});
+
+	// update editor polcy content
+	$("#form_policy").validate({
+		debug: true,
+		errorClass: 'text-danger',
+		rules: {
+			// ep_content: {
+			// 	required: true,
+			// },
+			ep_file : {
+				extension: "pdf",
+				filesize : 20000000,
+			},
+		},
+		messages: {
+			ep_file: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
+			}
+		},
+		submitHandler: function () {
+
+			// var ep_content = tinyMCE.get('ep_content').getContent();
+
+			var form = $('#form_policy');
+			var formdata = false;
+
+			if (window.FormData) {
+				formdata = new FormData(form[0]);
+			}
+
+			$.ajax({
+				url: base_url + "admin/dashboard/update_policy/",
+				// data: { content: ep_content },
+				data: formdata ? formdata : form.serialize(),
+				cache: false,
+				contentType: false,
+				processData: false,
+				// contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Use default content type for simple data
+				// processData: true, // Allow jQuery to process the data
+				type: 'POST',
+				success: function (data, textStatus, jqXHR) {
+
+					let timerInterval;
+
+					Swal.fire({
+					title: "Editorial Policy saved successfully!",
+					text: "Page reloading...",
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
+					});
+
+					
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'Saved successfully. Page will reload in 3 seconds'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
+
+					// setTimeout(function () {
+					// 	history.go(0);
+					// }, 3000);
+
+				}
+			});
+			
 		}
 	});
 
@@ -1218,60 +2118,100 @@ $(document).ready(function () {
 		debug: true,
 		errorClass: 'text-danger',
 		rules: {
-			upload_guidelines: {
+			// upload_guidelines: {
+			// 	required: true,
+			// },
+			gd_content: {
 				required: true,
-			}
+			},
 		},
 		submitHandler: function () {
 
-			var form = $('#form_guidelines');
-			var formdata = false;
+			// var form = $('#form_guidelines');
+			// var formdata = false;
 
-			if (window.FormData) {
-				formdata = new FormData(form[0]);
-			}
+			// if (window.FormData) {
+			// 	formdata = new FormData(form[0]);
+			// }
 
-			var formAction = form.attr('action');
-			var file_size = $('#upload_guidelines')[0].files[0].size;
+			// var formAction = form.attr('action');
+			// var file_size = $('#upload_guidelines')[0].files[0].size;
 
-			// if file size of pdf is less than 20mb hide warning
-			if (file_size < '20000000') {
-				$('#upload_guidelines').next('.badge-danger').hide();
-			}
+			// // if file size of pdf is less than 20mb hide warning
+			// if (file_size < '20000000') {
+			// 	$('#upload_guidelines').next('.bg-danger').hide();
+			// }
 
-			// if file size of pdf is more than 20mb hide warning
-			if (file_size >= '20000000') {
-				$('#upload_guidelines').next('.badge-danger').hide();
-				$('#upload_guidelines').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-			} else {
+			// // if file size of pdf is more than 20mb hide warning
+			// if (file_size >= '20000000') {
+			// 	$('#upload_guidelines').next('.bg-danger').hide();
+			// 	$('#upload_guidelines').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+			// } else {
+
+			
+			var gd_content = tinyMCE.get('gd_content').getContent();
+
+
 				$.ajax({
 					url: base_url + "admin/dashboard/update_guidelines/",
-					data: formdata ? formdata : form.serialize(),
+					data: { content: gd_content },
+					// data: formdata ? formdata : form.serialize(),
 					cache: false,
-					contentType: false,
-					processData: false,
+					contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Use default content type for simple data
+					processData: true, // Allow jQuery to process the data
+					// contentType: false,
+					// processData: false,
 					type: 'POST',
 					success: function (data, textStatus, jqXHR) {
 
-						$('#form_guidelines')[0].reset();
+						// $('#form_guidelines')[0].reset();
 
-						$.notify({
-							icon: 'oi oi-check',
-							message: 'File uploaded successfully. Page will reload in 3 seconds'
-						}, {
-							type: 'success',
-							timer: 3000
+						let timerInterval;
+
+						Swal.fire({
+						// title: "File uploaded successfully!",
+						title: "Guidelines saved successfully!",
+						text: "Page reloading...",
+						icon: 'success',
+						// html: "I will close in <b></b> milliseconds.",
+						timer: 2000,
+						timerProgressBar: true,
+						didOpen: () => {
+							Swal.showLoading();
+							const timer = Swal.getPopup().querySelector("b");
+							timerInterval = setInterval(() => {
+							timer.textContent = `${Swal.getTimerLeft()}`;
+							}, 100);
+						},
+						willClose: () => {
+							clearInterval(timerInterval);
+							location.reload();
+						}
+						}).then((result) => {
+						/* Read more about handling dismissals below */
+						if (result.dismiss === Swal.DismissReason.timer) {
+							console.log("I was closed by the timer");
+						}
 						});
 
-						setTimeout(function () {
-							history.go(0);
-						}, 3000);
+						// $.notify({
+						// 	icon: 'oi oi-check',
+						// 	message: 'File uploaded successfully. Page will reload in 3 seconds'
+						// }, {
+						// 	type: 'success',
+						// 	timer: 3000
+						// });
+
+						// setTimeout(function () {
+						// 	history.go(0);
+						// }, 3000);
 
 					}
 				});
-			}
+			// }
 		}
 	});
+
 
 	//add journal with validations
 	$("#form_create_journal").validate({
@@ -1287,6 +2227,18 @@ $(document).ready(function () {
 			jor_year: {
 				required: true,
 				minlength: 4,
+			},
+			jor_cover : {
+				extension: "jpg",
+				filesize : 2000000,
+			},
+		},
+		messages: {
+			jor_cover: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
 			}
 		},
 		submitHandler: function (submittedForm, event) {
@@ -1305,8 +2257,8 @@ $(document).ready(function () {
 			if (file_size > '0') {
 				
 				// if file size of pdf is less than 20mb hide warning
-				if (file_size < '20000000') {
-					$('#jor_cover').next('.badge-danger').hide();
+				if (file_size < '2000000') {
+					$('#jor_cover').next('.bg-danger').hide();
 					$('#submit_journal').prop('disabled', false);
 
 					$.ajax({
@@ -1321,27 +2273,82 @@ $(document).ready(function () {
 							var res = jQuery.parseJSON(data);
 	
 							if (res.flag == 0) {
-								$.notify({
-									icon: res.icon,
-									message: res.msg
-								}, {
-									type: 'danger',
-									timer: 3000
+
+								let timerInterval;
+
+								Swal.fire({
+								title: res.msg,
+								text: 'Page reloading...',
+								icon: 'error',
+								// html: "I will close in <b></b> milliseconds.",
+								timer: 2000,
+								timerProgressBar: true,
+								didOpen: () => {
+									Swal.showLoading();
+									const timer = Swal.getPopup().querySelector("b");
+									timerInterval = setInterval(() => {
+									timer.textContent = `${Swal.getTimerLeft()}`;
+									}, 100);
+								},
+								willClose: () => {
+									clearInterval(timerInterval);
+									// location.reload();
+								}
+								}).then((result) => {
+								/* Read more about handling dismissals below */
+								if (result.dismiss === Swal.DismissReason.timer) {
+									console.log("I was closed by the timer");
+								}
 								});
+
+								// $.notify({
+								// 	icon: res.icon,
+								// 	message: res.msg
+								// }, {
+								// 	type: 'danger',
+								// 	timer: 3000
+								// });
 							} else {
 								$('#form_create_journal')[0].reset();
 	
-								$.notify({
-									icon: res.icon,
-									message: res.msg
-								}, {
-									type: 'success',
-									timer: 3000
+								let timerInterval;
+
+								Swal.fire({
+								title: res.msg,
+								text: 'Page reloading...',
+								icon: 'success',
+								// html: "I will close in <b></b> milliseconds.",
+								timer: 2000,
+								timerProgressBar: true,
+								didOpen: () => {
+									Swal.showLoading();
+									const timer = Swal.getPopup().querySelector("b");
+									timerInterval = setInterval(() => {
+									timer.textContent = `${Swal.getTimerLeft()}`;
+									}, 100);
+								},
+								willClose: () => {
+									clearInterval(timerInterval);
+									location.reload();
+								}
+								}).then((result) => {
+								/* Read more about handling dismissals below */
+								if (result.dismiss === Swal.DismissReason.timer) {
+									console.log("I was closed by the timer");
+								}
 								});
+
+								// $.notify({
+								// 	icon: res.icon,
+								// 	message: res.msg
+								// }, {
+								// 	type: 'success',
+								// 	timer: 3000
+								// });
 	
-								setTimeout(function () {
-									history.go(0);
-								}, 3000);
+								// setTimeout(function () {
+								// 	history.go(0);
+								// }, 3000);
 							}
 	
 							$('#form_create_journal')[0].reset();
@@ -1351,10 +2358,10 @@ $(document).ready(function () {
 					
 				}
 				// if file size of pdf is less than 20mb show warning
-				else if (file_size >= '20000000') {
-					$('#jor_cover').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
-					$('#submit_journal').prop('disabled', false);
-				}
+				// else if (file_size >= '2000000') {
+				// 	$('#jor_cover').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 2 MB</span>');
+				// 	$('#submit_journal').prop('disabled', false);
+				// }
 			} else {
 				$.ajax({
 					url: base_url + "admin/dashboard/journal/",
@@ -1368,27 +2375,82 @@ $(document).ready(function () {
 						var res = jQuery.parseJSON(data);
 
 						if (res.flag == 0) {
-							$.notify({
-								icon: res.icon,
-								message: res.msg
-							}, {
-								type: 'danger',
-								timer: 3000
-							});
+
+							let timerInterval;
+
+								Swal.fire({
+								title: res.msg,
+								text: 'Page reloading...',
+								icon: 'error',
+								// html: "I will close in <b></b> milliseconds.",
+								timer: 2000,
+								timerProgressBar: true,
+								didOpen: () => {
+									Swal.showLoading();
+									const timer = Swal.getPopup().querySelector("b");
+									timerInterval = setInterval(() => {
+									timer.textContent = `${Swal.getTimerLeft()}`;
+									}, 100);
+								},
+								willClose: () => {
+									clearInterval(timerInterval);
+									// location.reload();
+								}
+								}).then((result) => {
+								/* Read more about handling dismissals below */
+								if (result.dismiss === Swal.DismissReason.timer) {
+									console.log("I was closed by the timer");
+								}
+								});
+
+							// $.notify({
+							// 	icon: res.icon,
+							// 	message: res.msg
+							// }, {
+							// 	type: 'danger',
+							// 	timer: 3000
+							// });
 						} else {
 							$('#form_create_journal')[0].reset();
 
-							$.notify({
-								icon: res.icon,
-								message: res.msg
-							}, {
-								type: 'success',
-								timer: 3000
+							let timerInterval;
+
+							Swal.fire({
+							title: res.msg,
+							text: 'Page reloading...',
+							icon: 'success',
+							// html: "I will close in <b></b> milliseconds.",
+							timer: 2000,
+							timerProgressBar: true,
+							didOpen: () => {
+								Swal.showLoading();
+								const timer = Swal.getPopup().querySelector("b");
+								timerInterval = setInterval(() => {
+								timer.textContent = `${Swal.getTimerLeft()}`;
+								}, 100);
+							},
+							willClose: () => {
+								clearInterval(timerInterval);
+								location.reload();
+							}
+							}).then((result) => {
+							/* Read more about handling dismissals below */
+							if (result.dismiss === Swal.DismissReason.timer) {
+								console.log("I was closed by the timer");
+							}
 							});
 
-							setTimeout(function () {
-								history.go(0);
-							}, 3000);
+							// $.notify({
+							// 	icon: res.icon,
+							// 	message: res.msg
+							// }, {
+							// 	type: 'success',
+							// 	timer: 3000
+							// });
+
+							// setTimeout(function () {
+							// 	history.go(0);
+							// }, 3000);
 						}
 
 						$('#form_create_journal')[0].reset();
@@ -1423,9 +2485,13 @@ $(document).ready(function () {
 			},
 			art_abstract_file: {
 				required: true,
+				extension: "pdf",
+				filesize : 20000000,
 			},
 			art_full_text_pdf: {
 				required: true,
+				extension: "pdf",
+				filesize : 20000000,
 			},
 			art_author: {
 				required: true,
@@ -1435,6 +2501,20 @@ $(document).ready(function () {
 			},
 			art_email: {
 				required: true,
+			}
+		},
+		messages: {
+			art_abstract_file: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 20 MB`;
+				}
+			},
+			art_full_text_pdf: {
+				filesize: function (param) {
+					// Dynamically construct the message based on the file size limit
+					return `File size must be less than 30 MB`;
+				}
 			}
 		},
 		submitHandler: function (submittedForm, event) {
@@ -1447,13 +2527,13 @@ $(document).ready(function () {
 				formdata = new FormData(form[0]);
 			}
 
-			// var file_size = ($('#jor_cover').val() != '') ? $('#jor_cover')[0].files[0].size : '';
-			var file_size_abs = $('#art_abstract_file')[0].files[0].size;
-			// if ($('#art_full_text_pdf').val() != '')
-			var file_size_txt = $('#art_full_text_pdf')[0].files[0].size;
+			// // var file_size = ($('#jor_cover').val() != '') ? $('#jor_cover')[0].files[0].size : '';
+			// var file_size_abs = $('#art_abstract_file')[0].files[0].size;
+			// // if ($('#art_full_text_pdf').val() != '')
+			// var file_size_txt = $('#art_full_text_pdf')[0].files[0].size;
 
 
-			if (file_size_abs < '20000000' && file_size_txt < '20000000') {
+			// if (file_size_abs < '20000000' && file_size_txt < '20000000') {
 
 				$.ajax({
 					url: base_url + "admin/dashboard/article/",
@@ -1466,17 +2546,44 @@ $(document).ready(function () {
 
 						var res = jQuery.parseJSON(data);
 
-						$.notify({
-							icon: res.icon,
-							message: res.msg
-						}, {
-							type: 'success',
-							timer: 1000
+						let timerInterval;
+
+						Swal.fire({
+						title: res.msg,
+						text: 'Page reloading...',
+						icon: 'success',
+						// html: "I will close in <b></b> milliseconds.",
+						timer: 2000,
+						timerProgressBar: true,
+						didOpen: () => {
+							Swal.showLoading();
+							const timer = Swal.getPopup().querySelector("b");
+							timerInterval = setInterval(() => {
+							timer.textContent = `${Swal.getTimerLeft()}`;
+							}, 100);
+						},
+						willClose: () => {
+							clearInterval(timerInterval);
+							location.reload();
+						}
+						}).then((result) => {
+						/* Read more about handling dismissals below */
+						if (result.dismiss === Swal.DismissReason.timer) {
+							console.log("I was closed by the timer");
+						}
 						});
 
-						setTimeout(function () {
-							history.go(0);
-						}, 3000);
+						// $.notify({
+						// 	icon: res.icon,
+						// 	message: res.msg
+						// }, {
+						// 	type: 'success',
+						// 	timer: 1000
+						// });
+
+						// setTimeout(function () {
+						// 	history.go(0);
+						// }, 3000);
 
 					}
 				});
@@ -1484,31 +2591,56 @@ $(document).ready(function () {
 				$('#form_add_article')[0].reset();
 				$('#submit_article').prop('disabled', false);
 
-			} else {
-				// if file size of pdf is less than 20mb hide warning
-				if (file_size_abs < '20000000') {
-					$('#badge_pdf').next('.badge-danger').hide();
-					$('#submit_article').prop('disabled', false);
-				}
-				// if file size of pdf is less than 20mb hide warning
-				else if (file_size_txt < '20000000') {
-					$('#badge_text').next('.badge-danger').hide();
-					$('#submit_article').prop('disabled', false);
-				}
-				// if file size of pdf is more than 20mb show warning
-				else if (file_size_abs >= '20000000') {
-					$('#badge_pdf').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-					$('#submit_article').prop('disabled', false);
-				}
-				// if file size of pdf is less than 20mb show warning
-				else if(file_size_txt >= '20000000') {
-					$('#badge_text').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-					$('#submit_article').prop('disabled', false);
-				}
-			}
-      event.preventDefault();
+			// } else {
+			// 	// if file size of pdf is less than 20mb hide warning
+			// 	if (file_size_abs < '20000000') {
+			// 		$('#badge_pdf').next('.bg-danger').hide();
+			// 		$('#submit_article').prop('disabled', false);
+			// 	}
+			// 	// if file size of pdf is less than 20mb hide warning
+			// 	else if (file_size_txt < '20000000') {
+			// 		$('#badge_text').next('.bg-danger').hide();
+			// 		$('#submit_article').prop('disabled', false);
+			// 	}
+			// 	// if file size of pdf is more than 20mb show warning
+			// 	else if (file_size_abs >= '20000000') {
+			// 		$('#badge_pdf').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+			// 		$('#submit_article').prop('disabled', false);
+			// 	}
+			// 	// if file size of pdf is less than 20mb show warning
+			// 	else if(file_size_txt >= '20000000') {
+			// 		$('#badge_text').after(' <span class="badge bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+			// 		$('#submit_article').prop('disabled', false);
+			// 	}
+			// }
+      		event.preventDefault();
 		}
 	});
+
+	$('#form_change_pass #new_password').on('keyup', function() {
+        $("#ejournal_password_strength_container").removeClass('d-none');
+        if($(this).val().length > 0){
+          var password = $(this).val();
+          var strength = getPasswordStrength(password);
+          var barColor, passwordStrength;
+          if (strength <= 25) {
+              barColor = 'red';
+              passwordStrength = 'Weak';
+          } else if (strength <= 50) {
+              barColor = 'orange';
+              passwordStrength = 'Good';
+          } else if (strength <= 75) {
+              barColor = 'yellow';
+              passwordStrength = 'Fair';
+          }else {
+            barColor = 'green';
+            passwordStrength = 'Excellent';
+          }
+          $('#ejournal-password-strength').text(passwordStrength);
+          $('#ejournal-password-strength-bar').css('width' , strength + '%');
+          $('#ejournal-password-strength-bar').css('background-color', barColor);
+        }
+      });
 
 	// change password with validations
 	$("#form_change_pass").validate({
@@ -1517,40 +2649,106 @@ $(document).ready(function () {
 		rules: {
 			acc_password: {
 				required: true,
-				minlength: 5
+				minlength: 8,
+				maxlength: 20
 			},
 			repeat_password: {
 				required: true,
-				minlength: 5,
+				minlength: 8,
+				maxlength: 20,
 				equalTo: "#new_password"
-			}
-		},
-		messages: {
-			acc_password: {
-				required: "Please provide a password",
-				minlength: "Your password must be at least 5 characters long"
 			},
-			repeat_password: {
-				required: "Please provide a password",
-				minlength: "Your password must be at least 5 characters long",
-				equalTo: "Please enter the same password as above"
-			}
+            old_password: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/user/verify_old_password",
+                    type: "post"
+                }
+            },
 		},
+        messages: {
+            acc_password: {
+                required: "Please enter new password",
+                minlength: "Your password must be at least 8 characters long",
+                maxlength: "Your password must be 20 characters long max"
+            },
+            repeat_password: {
+                required: "Please repeat new password",
+                minlength: "Your password must be 8-20 characters long",
+                equalTo: "Please enter the same password as above",
+                maxlength: "Your password must be 20 characters long max"
+            },
+            old_password: {
+                required: "Please enter current password",
+                remote: "Incorrect password"
+            },
+        },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "acc_password" || element.attr("name") === "old_password") {
+                error.insertAfter(element.closest("[name='" + element.attr("name") + "']").parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
 		submitHandler: function () {
-			$.ajax({
-				type: "POST",
-				url: base_url + "admin/dashboard/change_password/",
-				data: $('#form_change_pass').serializeArray(),
-				cache: false,
-				crossDomain: true,
-				success: function (data) {
-					location.reload();
-				}
-			});
+
+            Swal.fire({
+                title: "Apply changes?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+					$('#change_password').prop('disabled', true);
+                    $('#change_pass').modal('toggle');
+
+                    $.ajax({
+                        type: "POST",
+						url: base_url + "admin/dashboard/change_password/",
+						data: $('#form_change_pass').serializeArray(),
+                        cache: false,
+                        crossDomain: true,
+                        success: function(data) {
+
+                            $('#form_change_pass')[0].reset();
+							$('#change_password').prop('disabled', false);
+
+                            Swal.fire({
+                                title: "Password updated successfully!",
+                                icon: 'success',
+                                // html: "I will close in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
 		}
 	});
 
-	// add user with validations for superadmin account
+	// add user with validations for superadmin account (unused)
 	$("#form_add_user").validate({
 		debug: true,
 		errorClass: 'text-danger',
@@ -1599,13 +2797,39 @@ $(document).ready(function () {
 				crossDomain: true,
 				success: function (data) {
 
-					$.notify({
-						icon: 'oi oi-check',
-						message: 'User added successfully.'
-					}, {
-						type: 'success',
-						timer: 3000
+					let timerInterval;
+
+					Swal.fire({
+					title: 'User added successfully!',
+					icon: 'success',
+					// html: "I will close in <b></b> milliseconds.",
+					timer: 2000,
+					timerProgressBar: true,
+					didOpen: () => {
+						Swal.showLoading();
+						const timer = Swal.getPopup().querySelector("b");
+						timerInterval = setInterval(() => {
+						timer.textContent = `${Swal.getTimerLeft()}`;
+						}, 100);
+					},
+					willClose: () => {
+						clearInterval(timerInterval);
+						// location.reload();
+					}
+					}).then((result) => {
+					/* Read more about handling dismissals below */
+					if (result.dismiss === Swal.DismissReason.timer) {
+						console.log("I was closed by the timer");
+					}
 					});
+
+					// $.notify({
+					// 	icon: 'oi oi-check',
+					// 	message: 'User added successfully.'
+					// }, {
+					// 	type: 'success',
+					// 	timer: 3000
+					// });
 
 					$('#form_add_user')[0].reset();
 					$('#user_modal').modal('toggle');
@@ -1614,7 +2838,7 @@ $(document).ready(function () {
 		}
 	});
 
-	// show selected image for user display picture
+	// show selected image for user display picture (unused)
 	$('#set_d_p').change(function () {
 		readURL_dp(this);
 	});
@@ -1666,64 +2890,48 @@ $(document).ready(function () {
 							$('#table-registry').DataTable().clear().destroy();
 						}
 
+						var table = $('#table-registry').DataTable({
+							"order": [
+								[1, "desc"]
+							],
+							retrieve: true,
+							"columnDefs": [{
+								"targets": 0,
+								"orderable": false
+							}]
+						});
+
 						$.each(data.authors, function (key, val) {
 
-							$('#table-registry').dataTable({
-								"order": [
-									[1, "desc"]
-								],
-								retrieve: true,
-								"columnDefs": [{
-									"targets": 0,
-									"orderable": false
-								}]
-							}).fnAddData([
+						   table.row.add([
 								'',
 								val.art_author + ' (Author)',
 								val.art_affiliation,
 								val.art_email,
-								'<a class="text-info" onclick="reg_list(\'' + val.art_author + '\',\'aut\')"><span class="oi oi-list"></span> View</a>'
+								'<a href="javascript:void(0);" class="text-primary text-decoration-none" onclick="reg_list(\'' + val.art_author + '\',\'aut\')"><span class="oi oi-list"></span> View</a>'
 							]);
-
-							var t = $('#table-registry').DataTable();
-							t.on('order.dt search.dt', function () {
-								t.column(0, {
-									search: 'applied',
-									order: 'applied'
-								}).nodes().each(function (cell, i) {
-									cell.innerHTML = i + 1;
-								});
-							}).draw();
 						});
 
 						$.each(data.coas, function (key, val) {
-							$('#table-registry').dataTable({
-								"order": [
-									[1, "desc"]
-								],
-								retrieve: true,
-								"columnDefs": [{
-									"targets": 0,
-									"orderable": false
-								}]
-							}).fnAddData([
+							table.row.add([
 								'',
 								val.coa_name + ' (Co-author)',
 								val.coa_affiliation,
 								val.coa_email,
-								'<a class="text-info" onclick="reg_list(\'' + val.coa_name + '\',\'coa\')"><span class="oi oi-list"></span> View</a>'
+								'<a href="javascript:void(0);" class="text-primary text-decoration-none" onclick="reg_list(\'' + val.coa_name + '\',\'coa\')"><span class="oi oi-list"></span> View</a>'
 							]);
 
-							var t = $('#table-registry').DataTable();
-							t.on('order.dt search.dt', function () {
-								t.column(0, {
-									search: 'applied',
-									order: 'applied'
-								}).nodes().each(function (cell, i) {
-									cell.innerHTML = i + 1;
-								});
-							}).draw();
 						});
+
+						
+						table.on('order.dt search.dt', function () {
+							table.column(0, {
+								search: 'applied',
+								order: 'applied'
+							}).nodes().each(function (cell, i) {
+								cell.innerHTML = i + 1;
+							});
+						}).draw();
 					}
 				});
 			}
@@ -1753,18 +2961,46 @@ $(document).ready(function () {
 			crossDomain: true
 		});
 
-		$.notify({
-			icon: 'oi oi-check',
-			message: 'Editorial board deleted successfully. Page will reload in 3 seconds.'
-		}, {
-			type: 'success',
-			timer: 3000
+
+		let timerInterval;
+
+		Swal.fire({
+		title: 'Editorial board deleted successfully!',
+		text: 'Page reloading...',
+		icon: 'success',
+		// html: "I will close in <b></b> milliseconds.",
+		timer: 2000,
+		timerProgressBar: true,
+		didOpen: () => {
+			Swal.showLoading();
+			const timer = Swal.getPopup().querySelector("b");
+			timerInterval = setInterval(() => {
+			timer.textContent = `${Swal.getTimerLeft()}`;
+			}, 100);
+		},
+		willClose: () => {
+			clearInterval(timerInterval);
+			location.reload();
+		}
+		}).then((result) => {
+		/* Read more about handling dismissals below */
+		if (result.dismiss === Swal.DismissReason.timer) {
+			console.log("I was closed by the timer");
+		}
 		});
 
+		// $.notify({
+		// 	icon: 'oi oi-check',
+		// 	message: 'Editorial board deleted successfully. Page will reload in 3 seconds.'
+		// }, {
+		// 	type: 'success',
+		// 	timer: 3000
+		// });
+
 		$('#editorial_modal ,#remove_modal').modal('toggle');
-		setTimeout(function () {
-			history.go(0);
-		}, 3000);
+		// setTimeout(function () {
+		// 	history.go(0);
+		// }, 3000);
 
 	});
 
@@ -1784,18 +3020,45 @@ $(document).ready(function () {
 			crossDomain: true,
 		});
 
-		$.notify({
-			icon: 'oi oi-check',
-			message: 'Journal deleted successfully. Page will reload in 3 seconds.'
-		}, {
-			type: 'success',
-			timer: 3000
+		let timerInterval;
+
+		Swal.fire({
+		title: 'Journal deleted successfully!',
+		text: 'Page reloading...',
+		icon: 'success',
+		// html: "I will close in <b></b> milliseconds.",
+		timer: 2000,
+		timerProgressBar: true,
+		didOpen: () => {
+			Swal.showLoading();
+			const timer = Swal.getPopup().querySelector("b");
+			timerInterval = setInterval(() => {
+			timer.textContent = `${Swal.getTimerLeft()}`;
+			}, 100);
+		},
+		willClose: () => {
+			clearInterval(timerInterval);
+			location.reload();
+		}
+		}).then((result) => {
+		/* Read more about handling dismissals below */
+		if (result.dismiss === Swal.DismissReason.timer) {
+			console.log("I was closed by the timer");
+		}
 		});
 
+		// $.notify({
+		// 	icon: 'oi oi-check',
+		// 	message: 'Journal deleted successfully. Page will reload in 3 seconds.'
+		// }, {
+		// 	type: 'success',
+		// 	timer: 3000
+		// });
+
 		$('#journal_modal, #remove_modal').modal('toggle');
-		setTimeout(function () {
-			history.go(0);
-		}, 3000);
+		// setTimeout(function () {
+		// 	history.go(0);
+		// }, 3000);
 
 	});
 
@@ -1810,18 +3073,46 @@ $(document).ready(function () {
 			crossDomain: true,
 		});
 
-		$.notify({
-			icon: 'oi oi-check',
-			message: 'Article deleted successfully. Page will reload in 3 seconds.'
-		}, {
-			type: 'success',
-			timer: 3000
+		
+		let timerInterval;
+
+		Swal.fire({
+		title: 'Article deleted successfully!',
+		text: 'Page reloading...',
+		icon: 'success',
+		// html: "I will close in <b></b> milliseconds.",
+		timer: 2000,
+		timerProgressBar: true,
+		didOpen: () => {
+			Swal.showLoading();
+			const timer = Swal.getPopup().querySelector("b");
+			timerInterval = setInterval(() => {
+			timer.textContent = `${Swal.getTimerLeft()}`;
+			}, 100);
+		},
+		willClose: () => {
+			clearInterval(timerInterval);
+			location.reload();
+		}
+		}).then((result) => {
+		/* Read more about handling dismissals below */
+		if (result.dismiss === Swal.DismissReason.timer) {
+			console.log("I was closed by the timer");
+		}
 		});
 
+		// $.notify({
+		// 	icon: 'oi oi-check',
+		// 	message: 'Article deleted successfully. Page will reload in 3 seconds.'
+		// }, {
+		// 	type: 'success',
+		// 	timer: 3000
+		// });
+
 		$('#article_modal,#remove_modal').modal('toggle');
-		setTimeout(function () {
-			history.go(0);
-		}, 3000);
+		// setTimeout(function () {
+		// 	history.go(0);
+		// }, 3000);
 
 	});
 
@@ -1920,25 +3211,23 @@ $(document).ready(function () {
 		//     option += '<option value="'+val+'">'+val+'</option>';
 		//   });
 
-		html = '<div class="form-row"><div class="form-group col-md-4">' +
-			'<label for="jor_coauthors">Co-Author</label>' +
-			// '<select class="form-control" id="coa_name'+inpIncr+'" name="coa_name[]" placeholder="First name, Middle name, Last name" style="background-color:white">'+
-			//  option +
-			// '</select>'+
-			'<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="Search by name or specialization">' +
-			'</div>' +
-			'<div class="form-group col-md-4">' +
-			'<label for="jor_affiliation">Affiliation <small class="text-warning">(optional)</small></label>' +
-			'<input type="text" class="form-control" id="coa_affiliation' + inpIncr + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
-			'</div>' +
-			'<div class="form-group col-md-3">' +
-			'<label for="jor_email">Email Address <small class="text-warning">(optional)</small></label>' +
-			'<input type="text" class="form-control" id="coa_email' + inpIncr + '" name="coa_email[]" placeholder="Enter a valid email">' +
-			'</div>' +
-			'<div class="form-group col-md-1 text-center">' +
-			'<label>Cancel</label>' +
-			'<button type="button" class="btn btn-outline-danger"><span class="oi oi-x"></span></button>' +
-			'</div><div>';
+		html = '<div class="row mb-3">' +
+					'<div class="col-3 autocomplete">' +
+						'<label for="jor_coauthors" class="form-label">Co-Author</label>' +
+						'<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="Search by name or specialization">' +
+					'</div>' +
+					'<div class="col-3">' +
+						'<label for="jor_affiliation" class="form-label">Affiliation</label>' +
+						'<input type="text" class="form-control" id="coa_affiliation' + inpIncr + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
+					'</div>' +
+					'<div class="col-3">' +
+						'<label for="jor_email" class="form-label">Email Address</label>' +
+						'<input type="text" class="form-control" id="coa_email' + inpIncr + '" name="coa_email[]" placeholder="Enter a valid email">' +
+					'</div>' +
+					'<div class="col-3">' +
+						'<button type="button" class="btn btn-outline-danger mt-4"><span class="oi oi-x"></span></button>' +
+					'</div>' +
+				'<div>';
 
 		$('#coauthors').append(html);
 		// $('#coa_name'+inpIncr).editableSelect({ effects: 'slide' });
@@ -1959,22 +3248,24 @@ $(document).ready(function () {
 		//   option += '<option value="'+val+'">'+val+'</option>';
 		// });
 
-		html = '<div class="form-row"><div class="form-group col-md-4">' +
-			'<label for="jor_coauthors">Co-Author</label>' +
-			'<input class="form-control" id="coa_name' + global_coauthor_total + '" name="coa_name[]" placeholder="Search by name or specialization">' +
-			'</div>' +
-			'<div class="form-group col-md-4">' +
-			'<label for="jor_affiliation">Affiliation <small class="text-warning">(optional)</small></label>' +
-			'<input type="text" class="form-control" id="coa_affiliation' + global_coauthor_total + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
-			'</div>' +
-			'<div class="form-group col-md-3">' +
-			'<label for="jor_email">Email Address <small class="text-warning">(optional)</small></label>' +
-			'<input type="text" class="form-control" id="coa_email' + global_coauthor_total + '" name="coa_email[]" placeholder="Enter a valid email">' +
-			'</div>' +
-			'<div class="form-group col-md-1 text-center">' +
-			'<label>Cancel</label>' +
-			'<button type="button" class="btn btn-outline-danger"><span class="oi oi-x"></span></button>' +
-			'</div><div>';
+		html = '<div class="row mb-3">' +
+					'<div class="col autocomplete">' +
+						'<label for="jor_coauthors" class="form-label">Co-Author</label>' +
+						'<input class="form-control" id="coa_name' + global_coauthor_total + '" name="coa_name[]" placeholder="Search by name or specialization">' +
+					'</div>' +
+					'<div class="col">' +
+						'<label for="jor_affiliation" class="form-label">Affiliation</label>' +
+						'<input type="text" class="form-control" id="coa_affiliation' + global_coauthor_total + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
+					'</div>' +
+					'<div class="col">' +
+						'<label for="jor_email" class="form-label">Email Address</label>' +
+						'<input type="text" class="form-control" id="coa_email' + global_coauthor_total + '" name="coa_email[]" placeholder="Enter a valid email">' +
+					'</div>' +
+					'<div class="col-1">' +
+						'<button type="button" class="btn btn-outline-danger mt-4"><span class="oi oi-x"></span></button>' +
+					'</div>' +
+				'<div>';
+
 
 		$('#coa_list').append(html);
 		// $('#article_modal #coa_name'+inpIncr2).editableSelect({ effects: 'slide' });
@@ -1990,36 +3281,36 @@ $(document).ready(function () {
 
 	// remove data row after deleting co-author
 	$('#coauthors').on('click', '.btn-outline-danger', function () {
-		$(this).closest('.form-row').remove();
+		$(this).closest('.row').remove();
 	});
 
 	// remove data row after deleting co-author from modal
 	$('#article_modal #coa_list').on('click', '.btn-outline-danger', function () {
-		$(this).closest('.form-row').remove();
+		$(this).closest('.row').remove();
 	});
 
 	// store id of clicked item in side navigation
-	$('#list-tab ').on('click', '.list-group-item', function () {
-		$('.list-group-item').css('border-left', 'none');
-		$(this).css('border-left', '10px solid #5bc0de');
+	// $('#list-tab ').on('click', '.list-group-item', function () {
+	// 	$('.list-group-item').css('border-left', 'none');
+	// 	$(this).css('border-left', '10px solid #5bc0de');
 
-		href = $(this).attr('href');
-		localStorage.setItem('activeTab', href);
-		$('#table-clients').DataTable().search('').draw();
-		$('#table-viewers').DataTable().search('').draw();
+	// 	href = $(this).attr('href');
+	// 	localStorage.setItem('activeTab', href);
+	// 	$('#table-clients').DataTable().search('').draw();
+	// 	$('#table-viewers').DataTable().search('').draw();
 
-	});
+	// });
 
-	var activeTab = localStorage.getItem('activeTab'); // store side navigation item id
+	// var activeTab = localStorage.getItem('activeTab'); // store side navigation item id
 
 	// auto click stored side navigation id after reload event
-	if (activeTab) {
-		if (activeTab == '#add-editorial-tab' || activeTab == '#editorials') {
-			$('a[href="#manage-editorials"]').trigger('click');
-		}
+	// if (activeTab) {
+	// 	if (activeTab == '#add-editorial-tab' || activeTab == '#editorials') {
+	// 		$('a[href="#manage-editorials"]').trigger('click');
+	// 	}
 
-		$('#list-tab a[href="' + activeTab + '"]').trigger('click');
-	}
+	// 	$('#list-tab a[href="' + activeTab + '"]').trigger('click');
+	// }
 
 	// delete co-authors
 	$('#table-coauthor').on('click', '#delete-coauthor', function (e) {
@@ -2118,54 +3409,137 @@ $(document).ready(function () {
 			}
 		});
 
-	$('#feedback_form').on('submit', function (e) {
+		
+   
+    // update account
+    $("#form_update_account").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            usr_full_name: {
+                required: true,
+            },
+            usr_username: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/user/verify_email_except_self",
+                    type: "post"
+                }
+            },
+            usr_sex: {
+                required: true,
+            },
+        },
+        messages: {
+            usr_username: {
+                remote: "Email already in use"
+            }
+        },
+        submitHandler: function() {
+            Swal.fire({
+                title: "Apply changes?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
 
-		e.preventDefault();
+                    $('body').loading('start');
+                    $('#accountSettingModal').modal('toggle');
 
-		var alert = '<div class="alert alert-danger w-100" role="alert"> \
-                        Please select your rating. \
-                        </div>';
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "oprs/user/udpate_account",
+                        data: $('#form_update_account').serializeArray(),
+                        cache: false,
+                        crossDomain: true,
+                        success: function(data) {
 
-		if (!$("input[name='fb_rate_ui']").is(':checked')) {
-			$(".ui-container .alert-danger").remove();
-			$(alert).hide().appendTo(".ui-container").fadeIn();
-		}
+                            $('body').loading('stop');
+                            $('#form_update_account')[0].reset();
 
-		if (!$("input[name='fb_rate_ux']").is(':checked')) {
-			$(".ux-container .alert-danger").remove();
-			$(alert).hide().appendTo(".ux-container").fadeIn();
-		}
+                            Swal.fire({
+                                title: "Account updated successfully!",
+                                icon: 'success',
+                                // html: "I will close in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                    location.reload();
+                                }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
 
-		if ($("input[name='fb_rate_ui']").is(':checked') && $("input[name='fb_rate_ux']").is(':checked')) {
+	// $('#feedback_form').on('submit', function (e) {
 
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
+	// 	e.preventDefault();
 
-			var formdata = $(this).serializeArray();
-			// console.log(formdata);
-			$.ajax({
-				type: "POST",
-				url: base_url + 'admin/feedback/submit/1',
-				data: formdata,
-				cache: false,
-				crossDomain: true,
-				success: function (data) {
-					// console.log(data);return false;
-					$('#feedback_form').remove();
+	// 	var alert = '<div class="alert alert-danger w-100" role="alert"> \
+    //                     Please select your rating. \
+    //                     </div>';
 
-					var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
-                              <p class="text-center btn-link font-weight-bold"><u><a href="' + base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
+	// 	if (!$("input[name='fb_rate_ui']").is(':checked')) {
+	// 		$(".ui-container .alert-danger").remove();
+	// 		$(alert).hide().appendTo(".ui-container").fadeIn();
+	// 	}
+
+	// 	if (!$("input[name='fb_rate_ux']").is(':checked')) {
+	// 		$(".ux-container .alert-danger").remove();
+	// 		$(alert).hide().appendTo(".ux-container").fadeIn();
+	// 	}
+
+	// 	if ($("input[name='fb_rate_ui']").is(':checked') && $("input[name='fb_rate_ux']").is(':checked')) {
+
+	// 		$.ajaxSetup({
+	// 			headers: {
+	// 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	// 			}
+	// 		});
+
+	// 		var formdata = $(this).serializeArray();
+	// 		// console.log(formdata);
+	// 		$.ajax({
+	// 			type: "POST",
+	// 			url: base_url + 'admin/feedback/submit/1',
+	// 			data: formdata,
+	// 			cache: false,
+	// 			crossDomain: true,
+	// 			success: function (data) {
+	// 				// console.log(data);return false;
+	// 				$('#feedback_form').remove();
+
+	// 				var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
+    //                           <p class="text-center btn-link fw-bold"><u><a href="' + base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
 
 
-					$(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
+	// 				$(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
 
-				}
-			});
-		}
-	});
+	// 			}
+	// 		});
+	// 	}
+	// });
 
 
 
@@ -2261,7 +3635,38 @@ $(document).ready(function () {
 			data: formData,
 			cache: false,
 			crossDomain: true,
-			success: function (data) {}
+			success: function (data) {
+
+				$('#update_email_content_btn').attr('disabled', true);
+				$('#emailContentModal').modal('toggle');
+
+				let timerInterval;
+
+				Swal.fire({
+				title: "Email notification updated successfully!",
+				text: 'Page reloading...',
+				icon: 'success',
+				// html: "I will close in <b></b> milliseconds.",
+				timer: 2000,
+				timerProgressBar: true,
+				didOpen: () => {
+					Swal.showLoading();
+					const timer = Swal.getPopup().querySelector("b");
+					timerInterval = setInterval(() => {
+					timer.textContent = `${Swal.getTimerLeft()}`;
+					}, 100);
+				},
+				willClose: () => {
+					clearInterval(timerInterval);
+					location.reload();
+				}
+				}).then((result) => {
+				/* Read more about handling dismissals below */
+				if (result.dismiss === Swal.DismissReason.timer) {
+					console.log("I was closed by the timer");
+				}
+				});
+			}
 		});
 
 		location.reload();
@@ -2320,9 +3725,9 @@ function online_users() {
 					var icon = (val.acc_status == 1) ? "text-success" : "text-muted";
 					var notif = (val.acc_login_time != null) ? ' <small class="text-muted ml-2">Active ' + login_t + '</small>' : '';
 					var cog = (data.current_user == 0 && val.acc_type != 0) ?
-						'<a href="javascript:void(0);" data-toggle="modal" data-target="#manage_user_modal" onclick="manage_user(' + val.row_id + ',\'' + val.acc_username + '\',' + val.acc_status + ')"><span class="oi oi-cog text-muted float-right mt-1" data-toggle="tooltip" data-placement="top" title="Settings"></span></a>' : '';
+						'<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#manage_user_modal" onclick="manage_user(' + val.row_id + ',\'' + val.acc_username + '\',' + val.acc_status + ')"><span class="oi oi-cog text-muted float-right mt-1" data-bs-toggle="tooltip" data-placement="top" title="Settings"></span></a>' : '';
 					var msg = '<div class="icon-wrapper  float-right">' +
-						'<a href="javascript:void(0);" onclick="message(' + val.row_id + ',\'' + val.acc_username + '\')"><span class="oi oi-envelope-closed mt-1 ml-2 text-muted" data-toggle="tooltip" data-placement="top" title="Message"></span>' +
+						'<a href="javascript:void(0);" onclick="message(' + val.row_id + ',\'' + val.acc_username + '\')"><span class="oi oi-envelope-closed mt-1 ml-2 text-muted" data-bs-toggle="tooltip" data-placement="top" title="Message"></span>' +
 						'</a></div>';
 
 					html += '<li class="list-group-item">' +
@@ -2356,13 +3761,13 @@ function notifications() {
 		crossDomain: true,
 		success: function (data) {
 			$.each(data, function (key, val) {
-				$.notify({
-					icon: 'oi oi-bell',
-					message: '<span class="text-uppercase"><strong>' + val.acc_username + '</strong></span> ' + val.log_action
-				}, {
-					type: 'secondary',
-					timer: 5000
-				});
+				// $.notify({
+				// 	icon: 'oi oi-bell',
+				// 	message: '<span class="text-uppercase"><strong>' + val.acc_username + '</strong></span> ' + val.log_action
+				// }, {
+				// 	type: 'secondary',
+				// 	timer: 5000
+				// });
 
 				$.ajax({
 					type: "POST",
@@ -2391,17 +3796,24 @@ function edit_editorial(id) {
 		dataType: "json",
 		crossDomain: true,
 		success: function (data) {
+			console.log("🚀 ~ edit_editorial ~ data:", data)
 			if (data.length > '0') {
 				$.each(data, function (key, val) {
 					$('#edt_photo_exist').val(val.edt_photo);
 					if (val.edt_photo != '') {
 						$('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/uploads/editorial/' + val.edt_photo);
 					} else {
-						$('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/images/unavailable.jpg');
+						$('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/images/unavailable.png');
+						// $('#editorial_modal #editorial_photo').attr('src', base_url + 'assets/images/unavailable.jpg');
 					}
 					$.each(val, function (k, v) {
-						if (k != 'edt_photo')
-							$('#editorial_modal #' + k).val(v);
+						if (k != 'edt_photo'){
+							if(k == 'edt_position'){
+								$('#editorial_modal #' + k).val(v).trigger('change');
+							}else{
+								$('#editorial_modal #' + k).val(v)
+							}
+						};
 					});
 				});
 			}
@@ -2508,10 +3920,20 @@ function view_articles(id, vol, iss, mos, year) {
 			if ($.fn.DataTable.isDataTable("#table-articles")) {
 				$('#table-articles').DataTable().clear().destroy();
 			}
+
+			var table = $('#table-articles').DataTable({
+				columnDefs: [
+					{ width: "200px", targets: 3 }, // Set the width of the first column
+					{ width: "100px", targets: 4 } // Set the width of the first column
+				],
+				// Optional: to ensure the table layout is applied correctly
+				autoWidth: false 
+			});
+
 			if (data.length > '0') {
 				$.each(data, function (key, val) {
 					if (prv_edt == 1) {
-						var btn = "<button type='button' class='btn btn-sm btn-success' onclick='edit_article(" + val.art_id + ")'><span class='oi oi-pencil'></span> Edit Article</button>";
+						var btn = "<button type='button' class='btn btn-sm btn-light text-primary' onclick='edit_article(" + val.art_id + ")'><span class='oi oi-pencil'></span> Edit Article</button>";
 					} else {
 						btn = '';
 					}
@@ -2520,13 +3942,13 @@ function view_articles(id, vol, iss, mos, year) {
 					var absc = count_abstract(val.art_id);
 
 					if (pdfc > '0') {
-						var pdf = "<a href='javascript:void(0);''  class='text-success font-weight-bold' onclick='get_client_info(" + val.art_id + ")'  >" + pdfc + "</a>";
+						var pdf = "<a href='javascript:void(0);''  class='text-success fw-bold' onclick='get_client_info(" + val.art_id + ")'  >" + pdfc + "</a>";
 					} else {
 						var pdf = '0';
 					}
 
 					if (absc > '0') {
-						var abs = "<a href='javascript:void(0);'  class='text-default font-weight-bold' onclick='get_hits_info(" + val.art_id + ")'  >" + absc + "</a>";
+						var abs = "<a href='javascript:void(0);'  class='text-default fw-bold' onclick='get_hits_info(" + val.art_id + ")'  >" + absc + "</a>";
 					} else {
 						var abs = '0';
 					}
@@ -2535,7 +3957,7 @@ function view_articles(id, vol, iss, mos, year) {
 					get_coauthors(val.art_id);
 					coasss = (coas == '') ? val.art_author : val.art_author + ', ' + coas;
 
-					$('#table-articles').dataTable().fnAddData([
+					table.row.add([
 						// c++,
 						'<strong>' + val.art_title + '</strong>, ' + coasss,
 						abs,
@@ -2544,8 +3966,11 @@ function view_articles(id, vol, iss, mos, year) {
 						btn
 					]);
 				});
+
+				table.on('order.dt search.dt').draw();
 			}
 
+			
 			$('#articles .h3').text('Vol. ' + vol + ', Issue ' + iss + ', ' + year);
 			$('#articles').collapse('show');
 			$('html,body').animate({
@@ -2564,7 +3989,7 @@ function view_articles(id, vol, iss, mos, year) {
  * @return  {void}        
  */
 function get_citees(data) {
-	$('#citees-list').trigger('click');
+	$('#v-pills-citees-list-tab').trigger('click');
 	$('#table-citees').DataTable().search('ID:' + data).draw();
 }
 
@@ -2576,7 +4001,7 @@ function get_citees(data) {
  * @return  {void}        
  */
 function get_client_info(data) {
-	$('#client-list').trigger('click');
+	$('#v-pills-client-list-tab').trigger('click');
 	$('#table-clients').DataTable().search('ID:' + data).draw();
 }
 
@@ -2588,7 +4013,7 @@ function get_client_info(data) {
  * @return  {void} 
  */
 function get_hits_info(data) {
-	$('#viewers-list').trigger('click');
+	$('#v-pills-viewers-list-tab').trigger('click');
 	$('#table-viewers').DataTable().search('ID:' + data).draw();
 }
 
@@ -2647,7 +4072,7 @@ function count_pdf(art_id) {
  * @return  {void}   
  */
 function add_article(year, jor_id) {
-	$('#add-article').trigger('click');
+	$('#v-pills-add-article-tab').trigger('click');
 	$('#art_year').val(year).change();
 	setTimeout("$('#art_jor_id').val(" + jor_id + ");", 500);
 }
@@ -2711,29 +4136,34 @@ function edit_article(id) {
 				$.each(data, function (key, val) {
 					c++;
 
-					html = '<div class="form-row " id="form_row' + val.coa_id + '"><div class="form-group autocomplete col-md-4">' +
-						'<label for="jor_coauthors">Co-Author</label>' +
-						'<input type="text" class="form-control" id="coa_name' + c + '" name="coa_affiliation[]" placeholder="Enter affiliation" value="' + val.coa_name + '">' +
-						'</div>' +
-						'<div class="form-group col-md-4">' +
-						'<label for="jor_affiliation">Affiliation <small class="text-warning">(optional)</small></label>' +
-						'<input type="text" class="form-control" id="coa_affiliation' + c + '" name="coa_affiliation[]" placeholder="Enter affiliation" value="' + val.coa_affiliation + '">' +
-						'</div>' +
-						'<div class="form-group col-md-3">' +
-						'<label for="jor_email">Email Address <small class="text-warning">(optional)</small></label>' +
-						'<input type="text" class="form-control" id="coa_email' + c + '" name="coa_email[]" placeholder="Enter a valid email" value="' + val.coa_email + '">' +
-						'</div>' +
-						'<div class="form-group col-md-1 text-center">' +
-						'<label>Remove</label>';
+					
+					html = `<div class="row mb-3" id="form_row${val.coa_id}">
+								<div class="col" >
+									<div class="autocomplete">
+										<label for="jor_coauthors" class="form-label">Co-Author</label>
+										<input type="text" class="form-control" id="coa_name${c}" name="coa_affiliation[]" placeholder="Enter affiliation" value="${val.coa_name}">
+									</div>
+								</div>
+								<div class="col">
+										<label for="jor_affiliation" class="form-label">Affiliation</label>
+										<input type="text" class="form-control" id="coa_affiliation${c}" name="coa_affiliation[]" placeholder="Enter affiliation" value="${val.coa_affiliation}">
+								</div>
+								<div class="col">
+									<label for="jor_email" class="form-label">Email Address</label>
+									<input type="text" class="form-control" id="coa_email${c}" name="coa_email[]" placeholder="Enter a valid email" value="${val.coa_email}">
+								</div>`;
 
+								
+					
 					if (prv_del == 1) {
-						html += '<button type="button" class="btn btn-outline-danger" onclick="_remove(\'delete-coauthor\',\'' + val.coa_id + '\')"><span class="oi oi-trash"></span></button>';
+						html += '<div class="col-1"><button type="button" class="btn btn-outline-danger mt-4" onclick="_remove(\'delete-coauthor\',\'' + val.coa_id + '\')"><span class="oi oi-trash"></span></button></div>';
 					} else {
-						html += 'N/a';
+						html += '';
 					}
 
 
-					html += '</div><div>';
+
+					html += '</div>';
 
 					$('#coa_list').append(html);
 					// $('#coa_name'+c).editableSelect({ effects: 'slide' });
@@ -3138,6 +4568,10 @@ function log_export(log) {
 }
 
 function generate_sex_chart() {
+
+	
+	$('body').loading('start');
+
 	var sex_labels = [];
 	var sex_values = [];
 	var sex_bgcolors = ['#5DADE2', '#F5B7B1'];
@@ -3165,11 +4599,13 @@ function generate_sex_chart() {
 				});
 				i++;
 			});
+			
+			$('body').loading('stop');
 		}
 	});
 
 
-	ejChart = new Highcharts.chart('client_bar', {
+	ejChart = new Highcharts.Chart('client_bar', {
 		chart: {
 			type: 'bar',
 			backgroundColor: '#FFFFFF',
@@ -3233,7 +4669,7 @@ function generate_sex_chart() {
 		}]
 	});
 
-	ejChart = new Highcharts.chart('client_pie', {
+	ejChart = new Highcharts.Chart('client_pie', {
 		chart: {
 			plotBackgroundColor: null,
 			plotBorderWidth: null,
@@ -3321,7 +4757,7 @@ function generate_sex_chart() {
 		}
 	});
 
-	ejChart = new Highcharts.chart('client_monthly_line', {
+	ejChart = new Highcharts.Chart('client_monthly_line', {
 
 		title: {
 			text: 'Clients By Sex, Monthly ' + year_today,
@@ -3422,7 +4858,7 @@ function generate_sex_chart() {
 		}
 	});
 
-	ejChart = new Highcharts.chart('client_line', {
+	ejChart = new Highcharts.Chart('client_line', {
 
 		title: {
 			text: 'Clients By Sex, ' + sex_years[0] + '-' + sex_years[sex_years.length - 1],
@@ -3543,5 +4979,141 @@ function edit_email_content(id) {
 	});
 	$('#emailContentModal').modal('toggle');
 
+
+}
+
+function confirmClearLogs(element){
+
+	$('.btn').attr('disabled', true);
+	$(element).text('Clearing logs...');
+
+    $.ajax({
+		url: base_url + "admin/backup/export_clear_log/",
+        type: 'GET',
+		// dataType: "json",
+        xhrFields: {
+            responseType: 'blob' // Handle binary data
+        },
+        success: function(data) {
+            // Create a downloadable link for the blob
+            let downloadUrl = window.URL.createObjectURL(data);
+            let a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'exported_data.csv';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+			
+			location.reload();
+        },
+        error: function() {
+            alert("Failed to export data.");
+        },
+		finally: function(){
+			location.reload();
+		}
+    });
+
+}
+
+function logout(){
+    current_button_id = '#submit_feedback';
+    $('#feedbackModal').modal('toggle');
+    recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
+        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+        'callback': onRecaptchaSuccess,
+        'expired-callback': onRecaptchaExpired
+    });
+}
+
+function onRecaptchaSuccess(token) {
+	console.log("reCAPTCHA validated!");
+	$(current_button_id).prop('disabled', false); // Enable submit button
+}
+  
+// Callback when reCAPTCHA expires
+function onRecaptchaExpired() {
+	console.log("reCAPTCHA expired.");
+	$(current_button_id).prop('disabled', true);
+}
+
+function destroyUserSession(){
+
+	$.ajax({
+		type: "POST",
+		url: base_url + "oprs/login/destroy_user_session/" ,
+		data: { user_access_token : accessToken },
+		success: function(data) {
+		// console.log(data);
+		}
+	});
+}
+
+function toggleSearch(){
+	$('#searchModal').modal('toggle');
+	setTimeout(function (){
+		$('#search').focus();
+	}, 100);
+}
+
+function disableOnSubmit(element, form, action){
+	$(element).prop('disabled' ,true);
+	$(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Saving');
+	$(form).submit();
+  }
+  
+function togglePassword(elementID, iconID, elementID2){
+	var passwordInput = $(elementID);
+	if(elementID2){
+		var passwordInput2 = $(elementID2);
+		var passwordIcon = $(iconID);
+		if (passwordInput.attr('type') === 'password' && passwordInput2.attr('type') === 'password') {
+		  passwordInput.attr('type', 'text');
+		  passwordInput2.attr('type', 'text');
+		  passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+		} else {
+		  passwordInput.attr('type', 'password');
+		  passwordInput2.attr('type', 'password');
+		  passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+		}
+	}else{
+		var passwordIcon = $(iconID);
+		if (passwordInput.attr('type') === 'password') {
+		  passwordInput.attr('type', 'text');
+		  passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+		} else {
+		  passwordInput.attr('type', 'password');
+		  passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+		}
+	}
+  }
+
+  function getPasswordStrength(password) {
+    // Implement your password strength logic here
+    // For example, you can check for length, uppercase, lowercase, numbers, and special characters
+    var strength = 0;
+    if (password.length >= 8) {
+        strength+=10;
+    }
+    if (password.length >= 12) {
+        strength+=15;
+    }
+    if (password.length >= 16) {
+        strength+=20;
+    }
+    if (/[A-Z]/.test(password)) {
+        strength+=15;
+    }
+    if (/[a-z]/.test(password)) {
+        strength+=10;
+    }
+    if (/[0-9]/.test(password)) {
+        strength+=15;
+    }
+    if   
+    (/[^A-Za-z0-9]/.test(password)) {
+        strength+=15;
+    }
+    return strength;   
 
 }

@@ -14,12 +14,14 @@ class Reports extends OPRS_Controller {
 		$this->load->model('Log_model');
 		$this->load->model('Feedback_model');
 		$this->load->model('Dashboard_model');
+		$this->load->model('Arta_model');
 	}
 	
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8) {
+				// 3-managing editor 20-superadmin 5-technical desk editor
+				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20 || _UserRoleFromSession() == 5) {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/reports";
 					$data['manus'] = $this->Report_model->get_list_manus();
@@ -29,7 +31,8 @@ class Reports extends OPRS_Controller {
 					$data['completed'] = $this->Manuscript_model->get_completed_reviews();
 					$data['criteria'] = $this->Review_model->get_criterias();
 					$data['logs'] = $this->Log_model->count_logs();
-					$data['man_count'] = $this->Manuscript_model->get_manuscripts(0);
+					$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
+					$data['man_all_count'] = count($data['man_all']);
 					$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
 					$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
 					$data['man_reviewed'] = $this->Manuscript_model->get_manuscripts(3);
@@ -37,12 +40,13 @@ class Reports extends OPRS_Controller {
 					$data['man_for_p'] = $this->Manuscript_model->get_manuscripts(5);
 					$data['man_pub'] = $this->Manuscript_model->get_manuscripts(6);	
 					$data['usr_count'] = $this->User_model->count_user();
+					$data['arta_count'] = count($this->Arta_model->get_arta());
 					$data['feed_count'] = $this->Feedback_model->count_feedbacks();
 					$data['lapreq'] = $this->Dashboard_model->get_lap_req();
 					$data['decreq'] = $this->Dashboard_model->get_dec_req();
 					$data['laprev'] = $this->Dashboard_model->get_lap_rev();
 					$this->_LoadPage('common/body', $data);
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
 					redirect('oprs/manuscripts');
 				}else {
 					redirect('oprs/dashboard');

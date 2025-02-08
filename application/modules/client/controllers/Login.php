@@ -3,10 +3,10 @@
 }
 
 /**
- * File Name: Ejournal.php
+ * File Name: Login.php
  * ----------------------------------------------------------------------------------------------------
  * Purpose of this file:
- * To manage data to display in client landing page
+ * To manage login, otp, email.
  * ----------------------------------------------------------------------------------------------------
  * System Name: Online Research Journal System
  * ----------------------------------------------------------------------------------------------------
@@ -23,36 +23,58 @@ class Login extends EJ_Controller {
 	public function __construct() {
 
 		parent::__construct();
-
-		$this->load->model('Login_model');
-		$this->load->model('Client_journal_model');
-		$this->load->model('Library_model');
-		$this->load->library("My_phpmailer");
-		$objMail = $this->my_phpmailer->load();
-		$this->load->helper('string');
-        $this->load->helper('form');
-        $this->load->helper('security');
-        $this->load->library('session'); 
-		$this->load->library('form_validation');
-		error_reporting(0);
-
-		//security headers
-		$this->output->set_header("Content-Security-Policy: 
-			default-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com; 
-			script-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
-			style-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
-			font-src 'self' https://*.gstatic.com;
-			img-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com data:; 
-			frame-src 'self' https://*.google.com;"
-		);
-
-		$this->output->set_header('X-Frame-Options: SAMEORIGIN');
-		$this->output->set_header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
-		$this->output->set_header('X-XSS-Protection: 1; mode=block');
-		$this->output->set_header('X-Content-Type-Options: nosniff');
 		
+		/**
+		 * Helpers, Library, Security headers are all in EJ_controller.php
+		 */
+		
+		 $this->load->model('Client_journal_model');
+		 $this->load->model('Library_model');
+		 $this->load->model('Login_model');
+		 $this->load->model('Search_model');
+		 $this->load->model('CSF_model');
+		 $this->load->model('Oprs/User_model');
+		 $this->load->model('Admin/Journal_model');
+		 $this->load->model('Admin/Email_model');
 	}
     
+
+	/**
+	 * Login page
+	 *
+	 * @return void
+	 */
+	public function index($flag = null){
+
+		if ($this->session->userdata('_ej_logged_in')) {
+			redirect('client/ejournal/');
+		}
+
+		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
+		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
+		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['titles'] = $this->Client_journal_model->getTitles();
+		$data['educations'] = $this->Client_journal_model->getEducations();
+		$data['main_title'] = "eJournal";
+		$data['main_content'] = "client/login";
+
+		if($flag){
+			$this->session->set_flashdata('active_link1', '');
+			$this->session->set_flashdata('active_link2', 'active');
+			$this->session->set_flashdata('active_tab1', '');
+			$this->session->set_flashdata('active_tab2', 'show active');
+		}
+
+		
+		// if ($this->session->flashdata('_ej_session_msg')) { 
+		// 	$this->session->set_flashdata('_ej_session_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
+		// }
+
+		$this->_LoadPage('common/body', $data);
+		
+	}
+
 	/**
 	 * Authenticate user login
 	 *
@@ -75,7 +97,7 @@ class Login extends EJ_Controller {
 
 			// Set flashdata to pass validation errors and form data to the view
 			$this->session->set_flashdata('validation_errors', $errors);
-			redirect('client/ejournal/login');
+			redirect('client/login');
 		}else{
 			
 			$email = $this->input->post('email', TRUE);
@@ -116,14 +138,14 @@ class Login extends EJ_Controller {
 								];
 	
 								$this->Login_model->store_login_attempts($data); 
+								save_log_ej($validateUser[0]->id, 'Account locked for 30 minutes');
 							}
 							else{
-								$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+								$this->session->set_flashdata('error_login', 'Account temporarily locked for '. (30 - $time_remaining).' minutes.');
 							}
 	
-							redirect('client/ejournal/login');
+							redirect('client/login');
 						}else{
-							//TODO:store in system logs
 							//store login attempt
 							$data = [
 								'user_id' => $validateUser[0]->id,
@@ -135,13 +157,13 @@ class Login extends EJ_Controller {
 						}
 	
 						$this->session->set_flashdata('error_login', 'Invalid email or password.');
-						redirect('client/ejournal/login'); 
+						redirect('client/login'); 
 					
 	
 					}
 				}else{
 					$this->session->set_flashdata('error_login', 'Account not activated. Please check your email for a create account verification code.');
-					redirect('client/ejournal/login');
+					redirect('client/login');
 				}
 			} else {
 
@@ -152,7 +174,7 @@ class Login extends EJ_Controller {
 					$last_attempt_time = $this->Login_model->get_login_attempts($email);
 					$last_attempt_time = $last_attempt_time[0]->attempt_time;
 					$current_date = date('Y-m-d H:i:s');
-					//check otp valid 5 minutes
+					// check otp valid 5 minutes
 					$time_remaining = $this->compareDates($last_attempt_time, $current_date);
 
 					$this->send_email_alert($email);
@@ -161,22 +183,22 @@ class Login extends EJ_Controller {
 						$this->Login_model->clear_login_attempts($email);
 						$this->session->set_flashdata('error_login', 'Invalid email or password.');
 						
-						//store login attempt
+						// store login attempt
 						$data = [
 							'user_email' => $email,
 							'attempt_time' => date('Y-m-d H:i:s')
 						];
 
 						$this->Login_model->store_login_attempts($data); 
+						save_log_ej(0, 'Unregistered account locked for 30 minutes');
 					}
 					else{
-						$this->session->set_flashdata('error_login', 'Account temporarily locked for&nbsp;<strong>'.(30 - $time_remaining).' minutes</strong>.');
+						$this->session->set_flashdata('error_login', 'Account temporarily locked for '.(30 - $time_remaining).' minutes.');
 					}
 
-					redirect('client/ejournal/login');
+					redirect('client/login');
 				}else{
-					//TODO:store in system logs
-					//store login attempt
+					// store login attempt
 					$data = [
 						'user_email' => $email,
 						'attempt_time' => date('Y-m-d H:i:s')
@@ -187,7 +209,7 @@ class Login extends EJ_Controller {
 
 			
 				$this->session->set_flashdata('error_login', 'Invalid email or password.');
-				redirect('client/ejournal/login');
+				redirect('client/login');
 			}
 		}
 	}
@@ -382,14 +404,22 @@ class Login extends EJ_Controller {
 	 * @return void
 	 */
 	public function verify_otp($ref){
-		//check if ref code exist
+		// check if ref code exist
 		$ref = $this->security->xss_clean($ref);
 		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
+		
+		$otp_date = $isOtpRefExist[0]->otp_date;
+		$current_date = date('Y-m-d H:i:s');
+		
+		if($this->compareDates($otp_date, $current_date) > 30){
+			// remove otp info if more than 30mins no action
+			$this->Login_model->delete_otp($isOtpRefExist[0]->id);
+			$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
+		}
 
-		//code expired
-		if($isOtpRefExist[0]->otp_ref_code == null){
+		if($isOtpRefExist[0]->otp_ref_code == null){ //link expired
 			$this->session->set_flashdata('otp', '
-			<div class="alert alert-danger d-flex align-items-center">
+			<div class="alert alert-danger d-flex align-items-center w-50">
 				<i class="oi oi-circle-x me-1"></i>Link expired.
 			</div>');
 
@@ -397,21 +427,21 @@ class Login extends EJ_Controller {
 			$data['main_content'] = "client/login_otp";
 			$data['disabled'] = "disabled";
 			$this->_LoadPage('common/body', $data);
-		}else{
-			$otp_date = $isOtpRefExist[0]->otp_date;
-			$current_date = date('Y-m-d H:i:s');
+		}else{ // code expire
+			// $otp_date = $isOtpRefExist[0]->otp_date;
+			// $current_date = date('Y-m-d H:i:s');
 
-			//check if code expired after 5 minutes
-			//code expired
+			// check if code expired after 5 minutes
 			if ($this->compareDates($otp_date, $current_date) > 4) {
 				$this->session->set_flashdata('otp', '
-				<div class="alert alert-danger d-flex align-items-center">
+				<div class="alert alert-danger d-flex align-items-center w-50">
 					<i class="oi oi-circle-x me-1"></i>Code expired.
 				</div>');
 	
+				$data['ref_code'] = $isOtpRefExist[0]->otp_ref_code;
+				$data['disabled'] = "disabled";
 				$data['main_title'] = "eJournal";
 				$data['main_content'] = "client/login_otp";
-				$data['disabled'] = "disabled";
 				$this->_LoadPage('common/body', $data);
 			} else {
 			
@@ -434,19 +464,29 @@ class Login extends EJ_Controller {
 				}else{
 					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
-					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
 					$verifyOTP = $this->Login_model->validate_otp($ref_code);
 					
-					// if ($verifyOTP) {
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
+
+						$id = $verifyOTP[0]->id;
+
+						$last_visit_date = $this->Login_model->get_last_visit_date($id);
+						$last_visit_date = new DateTime($last_visit_date[0]->date_created);
+						$last_visit_date = $last_visit_date->format('F j, Y');
+						
+
 						//set session values
-						$this->session->set_userdata('user_id', $verifyOTP[0]->id);
+						$this->session->set_userdata('_ej_logged_in', true);
+						$this->session->set_userdata('user_id', $id);
 						$this->session->set_userdata('email', $verifyOTP[0]->email);
+						$this->session->set_userdata('name', $verifyOTP[0]->name);
+						$this->session->set_userdata('last_visit_date', $last_visit_date);
+						$this->session->set_userdata('last_activity', time()); // Track the login time
 						$this->session->unset_userdata('otp_ref_code');
-						$this->Login_model->delete_otp($verifyOTP[0]->id);
+						$this->Login_model->delete_otp($id);
 						
 						//save log
-						save_log_ej($verifyOTP[0]->id, 'Login successful.');
+						save_log_ej($id, 'Login successful');
 
 						//create access token
 						$token = uniqid();
@@ -457,22 +497,40 @@ class Login extends EJ_Controller {
 						$expired_at = date('Y-m-d H:i:s', $expiration_time);
 
 						
-						$this->Login_model->delete_access_token($verifyOTP[0]->id);
+						$this->Login_model->delete_access_token($id);
 
 						$tokenData = [
-							'tkn_user_id' => $verifyOTP[0]->id,
+							'tkn_user_id' => $id,
 							'tkn_value' => $token,
 							'tkn_created_at' => date('Y-m-d H:i:s'),
 							'tkn_expired_at' => $expired_at
 						];
 						
 						$this->Login_model->create_user_access_token($tokenData);
+						
+						// check if there is an unaccomplished csf arta
+						$arta_ref_code = $this->CSF_model->get_latest_incomplete_csf_arta($id);
+
+						if($arta_ref_code){
+							$csf_arta = '<div class="alert alert-warning" role="alert">
+								<h4 class="alert-heading h6 fw-bold"><span class="fa fa-exclamation-triangle text-warning"></span> CSF-ARTA</h4>
+								<hr>
+								<p class="mb-3">The system has detected that you have an unsubmitted CSF-ARTA from your most recent article download.</p>
+								
+								<div>
+									<a href="' . base_url() . 'client/ejournal/csf_arta/' . $arta_ref_code . '" class="btn btn-sm btn-warning" target="_blank">View</a>
+								</div>
+							</div>';
+	
+							$this->session->set_userdata('csf_arta', $csf_arta);
+						}
+
 
 						redirect('client/ejournal/');
 					} else {
 						//invalid code
 						$this->session->set_flashdata('otp', '
-															<div class="alert alert-danger d-flex align-items-center">
+															<div class="alert alert-danger d-flex align-items-center w-50">
 																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
 															</div>');
 		
@@ -487,97 +545,6 @@ class Login extends EJ_Controller {
 	}
 	
 	/**
-	 * Verify create account otp
-	 *
-	 * @param string $ref
-	 * @return void
-	 */
-	public function new_account_verify_otp($ref){
-		$ref = $this->security->xss_clean($ref);
-		//check if ref code exist
-		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
-
-		//link expired
-		if($isOtpRefExist[0]->otp_ref_code == null){
-			$this->session->set_flashdata('otp', '
-			<div class="alert alert-danger d-flex align-items-center">
-				<i class="oi oi-circle-x me-1"></i>Link expired.
-			</div>');
-
-			$data['main_title'] = "eJournal";
-			$data['main_content'] = "client/new_account_otp";
-			$data['disabled'] = "disabled";
-			$this->_LoadPage('common/body', $data);
-		}else{
-			$otp_date = $isOtpRefExist[0]->otp_date;
-			$current_date = date('Y-m-d H:i:s');
-
-			//check if code expired after 5 minutes
-			// if ($this->compareDates($otp_date, $current_date)  > 4) {
-			// 	$this->session->set_flashdata('otp', '
-			// 	<div class="alert alert-danger d-flex align-items-center">
-			// 		<i class="oi oi-circle-x me-1"></i>Code expired.
-			// 	</div>');
-	
-			// 	$data['main_title'] = "eJournal";
-			// 	$data['main_content'] = "client/new_account_otp";
-			// 	$data['disabled'] = "disabled";
-			// 	$this->_LoadPage('common/body', $data);
-			// } else {
-			
-				$ref_code = $this->input->post('ref', TRUE);
-			
-				$this->form_validation->set_rules('otp', 'OTP', 'required|trim|min_length[6]|max_length[6]');
-			
-				if($this->form_validation->run() == FALSE){
-					$errors = [];
-		
-					if (form_error('otp')) {
-						$errors['otp'] = strip_tags(form_error('otp'));
-					}
-		
-					// Set flashdata to pass validation errors and form data to the view
-					$this->session->set_flashdata('validation_errors', $errors);
-					$data['main_title'] = "eJournal";
-					$data['main_content'] = "client/new_account_otp";
-					$this->_LoadPage('common/body', $data);
-				}else{
-					$otp = $this->input->post('otp', TRUE);
-					// Check user credentials using your authentication logic
-					// $verifyOTP = $this->Login_model->validate_otp($otp, $ref_code);
-					$verifyOTP = $this->Login_model->validate_otp($ref_code);
-
-					if (password_verify($otp, $verifyOTP[0]->otp)) {
-						// $this->session->set_userdata('user_id', $verifyOTP[0]->id);
-						// $this->session->set_userdata('email',  $verifyOTP[0]->email);
-						$this->session->unset_userdata('otp_ref_code');
-						$this->Login_model->activateAccount($verifyOTP[0]->id);
-						$this->Login_model->delete_otp($verifyOTP[0]->id);
-						
-						
-						$this->session->set_flashdata('success', '
-															<div class="alert alert-success d-flex align-items-center w-50">
-																<i class="oi oi-check me-1"></i>Account created successfully. You can now login.
-															</div>');
-
-						redirect('client/ejournal/login');
-					} else {
-						//invalid code
-						$this->session->set_flashdata('otp', '
-															<div class="alert alert-danger d-flex align-items-center">
-																<i class="oi oi-circle-x me-1"></i>Invalid code. Try again.
-															</div>');
-		
-						$data['main_title'] = "eJournal";
-						$data['main_content'] = "client/new_account_otp";
-						$this->_LoadPage('common/body', $data);
-					}
-				}
-			// }
-		}
-	}
-
-	/**
 	 * Get minutes for otp 5 mins and locked account 30 mins
 	 *
 	 * @param datetime $date1
@@ -589,7 +556,7 @@ class Login extends EJ_Controller {
 		$date2 = new DateTime($date2);
 	
 		$interval = $date1->diff($date2);
-		$minutes = $interval->h * 60 + $interval->i;
+		$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
 		
 		return $minutes;
 	}
@@ -634,7 +601,7 @@ class Login extends EJ_Controller {
 			$validateUser = $this->Login_model->validate_user($email);
 
 			if ($validateUser) {
-				save_log_ej($validateUser[0]->id, 'Temporary password request email sent.');
+				save_log_ej($validateUser[0]->id, 'Temporary password request email sent');
 				//send email
 				$this->send_temp_password($validateUser[0]->email);
 			}else{
@@ -692,7 +659,7 @@ class Login extends EJ_Controller {
 
 		$emailBody = 'Dear <strong>'.$name.'</strong>,
 		<br><br>
-		You have requested a new temporary password for your eJournal account.
+		You have requested a temporary password for your eJournal account.
 		<br><br>
 		Your new temporary password is: 
 		<br><br>
@@ -731,38 +698,6 @@ class Login extends EJ_Controller {
 	}
 
 	/**
-	 * Logout
-	 *
-	 * @return void
-	 */
-	public function logout(){
-		$id = $this->session->userdata('user_id');
-		$this->Login_model->delete_access_token($id);
-		if($id){
-			save_log_ej($id, 'Logout successful.');
-		}
-        $this->session->unset_userdata('user_id');
-        $this->session->unset_userdata('email');
-        $this->session->sess_destroy();
-		redirect('client/ejournal/login');
-	}
-
-	public function destroy_user_session(){
-		$id = $this->session->userdata('user_id');
-		$token = $this->input->post('user_access_token');
-		$output = $this->Login_model->get_access_token($id);
-		if($output[0]->tkn_value == $token){
-			save_log_ej($id, 'Session expired.');
-			$this->Login_model->delete_access_token($id);
-			$this->session->unset_userdata('user_id');
-			$this->session->unset_userdata('email');
-			$this->session->sess_destroy();
-		}else{
-			echo 'Error destroying session.';
-		}
-	}
-
-	/**
 	 * Get existing reference code for resending otp code
 	 *
 	 * @param string $refCode
@@ -781,230 +716,51 @@ class Login extends EJ_Controller {
 	 * @param string $refCode
 	 * @return void
 	 */
-	public function resend_code($refCode){
+	public function resend_login_code($refCode){
 		$refCode = $this->security->xss_clean($refCode);
 		$output = $this->Login_model->get_current_otp($refCode);
 		$email = $output[0]->email;
-		save_log_ej($output[0]->id, 'Resend code.');
+		save_log_ej($output[0]->id, 'Resend login otp code');
 		$this->send_login_otp($email);
 	}
-	
+
 	/**
-	 * User profile page
+	 * Destroy session on idle
 	 *
 	 * @return void
 	 */
-	function profile(){
+	public function destroy_user_session(){
 		$id = $this->session->userdata('user_id');
-
-		if($id){
-			$data['profile'] = $this->Login_model->get_user_profile($id);
-			$data['educations'] = $this->Client_journal_model->getEducations();
-			$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
-			$data['provinces'] = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $data['profile'][0]->region));
-			$data['cities'] = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $data['profile'][0]->province));
-			$data['titles'] = $this->Client_journal_model->getTitles();
-			$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
-			$data['main_title'] = "eJournal";
-			$data['main_content'] = "client/user_profile";
-			$this->_LoadPage('common/body', $data);
+		$token = $this->input->post('user_access_token');
+		$output = $this->Login_model->get_access_token($id);
+		if($output[0]->tkn_value == $token){
+			save_log_ej($id, 'Session expired');
+			$this->Login_model->delete_access_token($id);
+			$this->session->unset_userdata('user_id');
+			$this->session->unset_userdata('email');
+			$this->session->sess_destroy();
 		}else{
-			redirect('/');
+			echo 'Error destroying session.';
 		}
 	}
 
 	/**
-	 * Update profile
+	 * Logout user
 	 *
 	 * @return void
 	 */
-	function update_profile(){
+	public function logout(){
 		$id = $this->session->userdata('user_id');
-
+		$this->Login_model->delete_access_token($id);
 		if($id){
-			$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email');
-			$this->form_validation->set_rules('title', 'Title', 'required|trim');
-			$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
-			$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
-			$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim');
-			$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
-			$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
-			$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
-			$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
-	
-			//require region,province,city for philippines
-			if($this->input->post('country') == 175){
-				$this->form_validation->set_rules('region', 'Region', 'required|trim');
-				$this->form_validation->set_rules('province', 'Province', 'required|trim');
-				$this->form_validation->set_rules('city', 'City', 'required|trim');
-			}
-	
-			$this->form_validation->set_rules('contact', 'Contact', 'required|trim|numeric|exact_length[11]');
-			$this->form_validation->set_rules('new_password', 'Password', 'trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
-			array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
-			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|matches[new_password]');
-	
-			$validations = ['new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
-	
-			if($this->form_validation->run() == FALSE){
-				$errors = [];
-	
-				foreach($validations as $value){
-					//store entered value to display on redirect
-					if($value == 'country'){
-						if($this->input->post($value)){
-							$this->session->set_flashdata($value, $this->input->post($value, TRUE));
-						}else{
-							$this->session->set_flashdata($value, 175);
-						}
-					}else{
-						$this->session->set_flashdata($value, $this->input->post($value, TRUE));
-					}
-	
-					//store errors to display on redirect
-					if (form_error($value)) {
-						$errors[$value] = strip_tags(form_error($value));
-	
-					}
-				}
-		
-				//return password data and strenght data
-				$password = $this->input->post('new_password', TRUE);
-				
-				if (strlen($password) >= 8) {
-					$strength += 10;
-				}
-				if (strlen($password) >= 12) {
-					$strength += 15;
-				}
-				if (strlen($password) >= 16) {
-					$strength += 20;
-				}
-			
-				if (preg_match('/[A-Z]/', $password)) {
-					$strength += 15;
-				}
-				if (preg_match('/[a-z]/', $password)) {
-					$strength += 10;
-				}
-				if (preg_match('/[0-9]/', $password)) {
-					$strength += 15;
-				}
-				if (preg_match('/[^A-Za-z0-9]/', $password)) {
-					$strength += 15;
-				}
-	
-				if ($strength <= 25) {
-					$bar_color = 'red';
-					$password_strength = 'Weak';
-				} else if ($strength <= 50) {
-					$bar_color = 'orange';
-					$password_strength = 'Good';
-				} else if ($strength <= 75) {
-					$bar_color = 'yellow';
-					$password_strength = 'Fair';
-				}else {
-					$bar_color = 'green';
-					$password_strength = 'Excellent';     
-				}
-	
-				$this->session->set_flashdata('bar_style', 'style="width:'. $strength .'%; background-color:'. $bar_color .'"');
-				$this->session->set_flashdata('password_strength', $password_strength);
-	
-				//return province value and options if province has value
-				$region = $this->input->post('region', TRUE);
-	
-				if($region > 0){
-					$provinces = $this->Library_model->get_library('tblprovinces', 'members', array('province_region_id' => $region));
-					$this->session->set_flashdata('provinces', $provinces);
-				}
-	
-				//return city value and options if city has value
-				$province = $this->input->post('province', TRUE);
-	
-				if($province){
-					$cities = $this->Library_model->get_library('tblcities', 'members', array('city_province_id' => $province));
-					$this->session->set_flashdata('cities', $cities);
-				}
-	
-				// Set flashdata to pass validation errors and form data to the view
-				$this->session->set_flashdata('message', '
-				<div class="alert alert-danger d-flex align-items-center">
-					<i class="fa fa-info-circle me-1"></i>Please check the form and make corrections.</div>');
-				$this->session->set_flashdata('signup_validation_errors', $errors);
-				redirect('client/login/profile');
-			}else{
-	
-				$email = $this->input->post('new_email', TRUE);
-				
-				//check if email is exisiting
-				$isExist = $this->Login_model->check_exist_email($id, $email);
-				if($isExist){
-					$this->session->set_flashdata('message', '
-					<div class="alert alert-danger d-flex align-items-center">
-						<i class="fa fa-info-circle me-1"></i>Please check the form and make corrections.</div>');
-					$errors['new_email'] = 'Email already in use. Please use different email.';
-					$this->session->set_flashdata('new_email', $email);
-					$this->session->set_flashdata('signup_validation_errors', $errors);
-					redirect('client/login/profile');
-				}
-	
-				$this->session->set_flashdata('message', '
-								<div class="alert alert-primary d-flex align-items-center">
-									<i class="fa fa-check-circle me-1"></i>Your profile has been update.</div>');
-									
-				
-				//update password
-				$new_password = $this->input->post('new_password', TRUE);
-				
-				$userAuth = [
-					'email' => $email,
-					'updated_at' => date('Y-m-d H:i:s')
-				];
-
-				if (!empty($new_password)) {
-					$userAuth['password'] = password_hash($new_password, PASSWORD_BCRYPT);
-				}
-
-				$whereAuth = array('id' => $id);
-
-				//save log of change password
-
-				$this->Login_model->update_user_auth(array_filter($userAuth), $whereAuth);
-
-
-				//update user profile
-				$userProfile = [
-					'title' => $this->input->post('title', TRUE),
-					'first_name' => $this->input->post('first_name', TRUE),
-					'last_name' => $this->input->post('last_name', TRUE),
-					'middle_name' => $this->input->post('middle_name', TRUE),
-					'extension_name' => $this->input->post('extension_name', TRUE),
-					'sex' => $this->input->post('sex', TRUE),
-					'educational_attainment' => $this->input->post('educational_attainment', TRUE),
-					'affiliation' => $this->input->post('affiliation', TRUE),
-					'country' => $this->input->post('country', TRUE),
-					'region' => $this->input->post('region', TRUE),
-					'province' => $this->input->post('province', TRUE),
-					'city' => $this->input->post('city', TRUE),
-					'contact' => $this->input->post('contact', TRUE),
-					'updated_at' => date('Y-m-d H:i:s')
-				];
-
-				//save log on update
-				$whereProfile = array('user_id' => $id);
-				$this->Login_model->update_user_profile($userProfile, $whereProfile);
-
-				save_log_ej($id, 'Updated Profile.');
-
-				redirect('client/login/profile');
-			}
-
-		}else{
-			redirect('/');
+			save_log_ej($id, 'Logout successful');
 		}
+        $this->session->unset_userdata('user_id');
+        $this->session->unset_userdata('email');
+        $this->session->sess_destroy();
+		redirect('client/login');
 	}
-
+	
 	function get_access_token(){
 		$id = $this->session->userdata('user_id');
 		if ($id) {

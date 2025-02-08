@@ -2,8 +2,8 @@
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
-<div class="container-fluid mt-3 p-4">
-    <div class="row pt-3">
+<div class="container-fluid mt-2 p-4">
+    <div class="row">
         <div class="col col-3 p-3">
             <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">View All Articles</a>
         </div>
@@ -225,7 +225,8 @@
                         <img class="me-3" src="<?=$cover;?>" height="200" width="150" alt="Loading image">
                     </div> -->
                     <div class="flex-grow-1">
-                        <a href="javascript:void(0)" class="mt-0 text-dark mb-0 main-link" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?= $title ?></a>
+                        <a href="<?= base_url() . 'client/ejournal/article/' . $res->art_id ?>" class="mt-0 text-dark mb-0 main-link"><?= $title ?></a>
+                        <!-- <a href="javascript:void(0)" class="mt-0 text-dark mb-0 main-link" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?= $title ?></a> -->
                         
                         <div class="mt-2">
                             <?php $i = 0; foreach($coa_arr as $cr):?>
@@ -256,7 +257,7 @@
                         
                         <div class="text-muted mt-1 small">Pages: <?=$pages?></div>
                         
-                        <div class="text-muted mt-1 small"><?=$res->art_year?></div>
+                        <div class="text-muted mt-1 small">Year Published: <?=$res->art_year?></div>
                         <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/volume/'.$vol.'/'.$res->jor_issue.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div>
                         <!-- <div class="text-muted mt-1 small">Volume <?=$res->jor_volume . ' ' . $issue?></div> -->
                 
@@ -286,12 +287,12 @@
                                 <a  data-bs-toggle="modal" data-bs-target="#client_modal"
                                     class="main-btn btn btn-sm" href="javascript:void(0);"
                                     role="button" onclick="get_download_id('.$res->art_id.')">
-                                    Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                                    Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
                                 <a  data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"
                                     onclick="get_citee_info(\''.addslashes($cite).'\','.$res->art_id.')">
-                                    Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
+                                    Cite this article  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
                                 </div>';
                             }?>
                         </div>
@@ -495,8 +496,8 @@
         </div>
     </div>
 
-    <!-- CITATION MODAL -->
-    <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+   <!-- CITATION MODAL -->
+   <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -504,11 +505,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Please fill up the required fields. Then click SUBMIT to show the APA
+                    <!-- <p>Please fill up the required fields. Then click SUBMIT to show the APA
                         citation</p>
                     <form id="form_citation">
                         
-                    <input type="hidden" id="cite_value" name="cite_value">
+                        <input type="hidden" id="cite_value" name="cite_value">
                         <div class="form-group">
                             <label class="font-weight-bold" for="cite_title">Title<span
                                     class="text-danger font-weight-bold">*</span></label>
@@ -540,13 +541,10 @@
                                     class="text-danger font-weight-bold">*</span></label>
                             <select class="form-control" id="cite_country" name="cite_country"
                                 placeholder="Select Country" style="background-color: white">
-                                <!-- foreach of country -->
                                 <?php foreach ($country as $c): ?>
-                                d
                                 <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-            echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
+                                    echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
                                 <?php endforeach;?>
-                                <!-- /.end of foreach-->
                             </select>
                         </div>
                         <div class="form-group">
@@ -565,9 +563,8 @@
                         </div>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
+                    </form> -->
+
                     <div id="cite_content" class="w-100">
                         <ul class="nav nav-tabs" id="cite_tab" role="tablist">
                             <li class="nav-item">
@@ -579,8 +576,11 @@
                                 <textarea id="apa_format" class="form-control" readonly rows="5"></textarea>
                             </div>
                         </div>
-                        <button type="button" onClick="copyCitationToClipboard('#apa_format')" class="btn btn-outline-primary mt-3 w-100">Copy to clipboard</button>
+                        <button type="button" onClick="copyCitationToClipboard('#apa_format')" class="btn main-btn mt-3 w-100">Copy to clipboard</button>
                     </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>

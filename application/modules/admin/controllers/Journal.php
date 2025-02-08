@@ -31,6 +31,11 @@ class Journal extends EJ_Controller {
 		$this->load->model('Journal_model');
 	}
 	
+	//TODO: add logs
+	//TODO: display last logged in time
+	// save_log_ej($id, 'Submitted UI/UX feedback.',  $this->db->insert_id());
+
+
 	/**
 	 * this function get, save, update and remove an article
 	 *
@@ -396,6 +401,14 @@ class Journal extends EJ_Controller {
 	public function count_pdf($id) {
 		$output = $this->Article_model->count_pdf($id);
 		echo $output;
+	}
+
+	public function search(){
+		$search = $this->input->post('search', TRUE);
+		$filter = $this->input->post('filter', TRUE);
+
+		$output = $this->Article_model->search($search, $filter);
+		echo json_encode($output);
 	}
 
 }

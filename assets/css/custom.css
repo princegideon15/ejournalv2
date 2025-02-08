@@ -127,3 +127,55 @@ font-size: 4rem;
     }
   }
   
+
+.autocomplete-items {
+    max-height: 150px; /* Limit the height */
+    overflow-y: auto; /* Add vertical scroll if needed */
+}
+
+
+.rating-star {
+  font-size: 3rem;
+  cursor: pointer;
+  color: gray;
+  padding-top: 0;
+  margin-top: 0;
+}
+.rating-star.selected {
+  color: gold;
+}
+.character-counter {
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+}
+.character-counter.exceeded {
+  color: red;
+}
+.no-focus-border:focus {
+  outline: none; /* Removes outline */
+  box-shadow: none; /* Removes shadow */
+  border-color: transparent; /* Optional: Makes the border color invisible */
+}
+
+#search_result_list .list-group-item:hover {
+  background-color:#007bff;
+  color: white;
+}
+
+
+#search_result_list .list-group-item {
+  position: relative;
+}
+
+#search_result_list .list-group-item:hover::after {
+  content: "⮨"; /* Unicode for the arrow icon */
+  position: absolute;
+  right: 15px;
+  top:10px;
+  font-size:20px;
+  color: white; /* Adjust arrow color */
+}
+
+#search_result_list:hover{
+  overflow: auto !important;
+}

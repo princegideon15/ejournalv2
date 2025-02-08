@@ -200,7 +200,7 @@ class Certification extends TCPDF {
                         
                         <br/><br/>
                         
-                        <strong>MA. LOUISE ANTONETTE N. DE LAS PEÑAS, Ph.D.</strong>
+                        <strong>MA. LOUISE ANTONETTE N. DE LAS PEï¿½AS, Ph.D.</strong>
                         <br/><em>Chair</em>, Mathematical Sciences
                         
                         <br/><br/>
@@ -517,7 +517,7 @@ class Certification extends TCPDF {
                         
                         <br/><br/>
                         
-                        <strong>KARLO L. QUEAÑO, Ph.D.</strong>
+                        <strong>KARLO L. QUEAï¿½O, Ph.D.</strong>
                         <br/>Chair
                         <br/>Earth and Space Sciences
                         
@@ -572,7 +572,7 @@ class Certification extends TCPDF {
         exit();
         }
         
-        $sql = 'SELECT * FROM tblemail_notif_contents WHERE row_id LIKE 17';
+        $sql = 'SELECT * FROM tblemail_notif_contents WHERE row_id LIKE 20';
         $result = $mysqli->query($sql);
         while($row = $result->fetch_assoc()) {
             $email_content = $row['enc_content'];             
@@ -624,7 +624,7 @@ class Certification extends TCPDF {
 
     
         // $cert_esig = '<br><br><br><br><span style="line-height:40%">
-        //                 <span style="text-align:right;"><h3>MARIETA BAÑEZ SUMAGAYSAY, Ph.D.</h3></span>
+        //                 <span style="text-align:right;"><h3>MARIETA BAï¿½EZ SUMAGAYSAY, Ph.D.</h3></span>
         //                 <span style="text-align:center;"><p>Executive Director</p></span>
         //               </span>';
         

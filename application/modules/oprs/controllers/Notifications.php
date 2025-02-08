@@ -20,13 +20,13 @@ class Notifications extends OPRS_Controller {
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
-				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 8) {
+				if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20) {
 					$data['main_title'] = "OPRS";
 					$data['main_content'] = "oprs/notifications";
 					$data['all_logs'] = $this->Log_model->get_logs('0');
 					$data['logs'] = $this->Log_model->count_logs();
 					$this->_LoadPage('common/body', $data);
-				}else if(_UserRoleFromSession() == 5 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
+				}else if(_UserRoleFromSession() == 12 || _UserRoleFromSession() == 12 || _UserRoleFromSession() == 6){
 					redirect('oprs/manuscripts');
 				}else {
 					redirect('oprs/dashboard');

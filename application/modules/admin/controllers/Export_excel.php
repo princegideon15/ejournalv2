@@ -39,11 +39,11 @@
       public function export_excel($export, $id=null)
       {
           $log = (
-        ($export == 'j') ?  save_log_ej(_UserIdFromSession(), 'just downloaded excel file of journals.') :
-             (($export == 'c') ?  save_log_ej(_UserIdFromSession(), 'just downloaded excel file of clients information.') :
-              (($export == 'e') ?  save_log_ej(_UserIdFromSession(), 'just downloaded excel file of editorial boards.') :
-               (($export == 'v') ?  save_log_ej(_UserIdFromSession(), 'just downloaded excel file of abstract hits.') :
-                                     save_log_ej(_UserIdFromSession(), 'just downloaded excel file of articles.'))))
+        ($export == 'j') ?  save_log_ej(_UserIdFromSession(), 'Downloaded excel file of journals.') :
+             (($export == 'c') ?  save_log_ej(_UserIdFromSession(), 'Downloaded excel file of clients information.') :
+              (($export == 'e') ?  save_log_ej(_UserIdFromSession(), 'Downloaded excel file of editorial boards.') :
+               (($export == 'v') ?  save_log_ej(_UserIdFromSession(), 'Downloaded excel file of abstract hits.') :
+                                     save_log_ej(_UserIdFromSession(), 'Downloaded excel file of articles.'))))
            );
 
           $tableName = (
@@ -186,11 +186,11 @@
           include_once(APPPATH ."/libraries/tcpdf/tcpdf.php");
 
           $log = (
-        ($export == 'j') ?   save_log_ej(_UserIdFromSession(), 'just downloaded pdf file of journals.') :
-             (($export == 'c') ?  save_log_ej(_UserIdFromSession(), 'just downloaded pdf file of clients information.') :
-              (($export == 'e') ?  save_log_ej(_UserIdFromSession(), 'just downloaded excel file of editorial boards.') :
-                (($export == 'v') ? save_log_ej(_UserIdFromSession(), 'just downloaded excel file of abstract hits.') :
-                                     save_log_ej(_UserIdFromSession(), 'just downloaded excel file of articles.'))))
+        ($export == 'j') ?   save_log_ej(_UserIdFromSession(), 'Downloaded pdf file of journals.') :
+             (($export == 'c') ?  save_log_ej(_UserIdFromSession(), 'Downloaded pdf file of clients information.') :
+              (($export == 'e') ?  save_log_ej(_UserIdFromSession(), 'Downloaded excel file of editorial boards.') :
+                (($export == 'v') ? save_log_ej(_UserIdFromSession(), 'Downloaded excel file of abstract hits.') :
+                                     save_log_ej(_UserIdFromSession(), 'Downloaded excel file of articles.'))))
            );
 
           $tableName = (

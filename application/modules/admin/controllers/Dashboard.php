@@ -42,44 +42,8 @@ class Dashboard extends EJ_Controller {
 
 	
 	public function index() {
-
 		if ($this->session->userdata('_oprs_logged_in')) {
-
-			//session expiration and timeout
-				//Start our session.
-				//Expire the session if user is inactive for 15
-				//minutes or more.
-				$expireAfter = 15;
-
-				//Check to see if our "last action" session
-				//variable has been set.
-				if (isset($_SESSION['last_action'])) {
-					//Figure out how many seconds have passed
-					//since the user was last active.
-					$secondsInactive = time() - $_SESSION['last_action'];
-
-					//Convert our minutes into seconds.
-					$expireAfterSeconds = $expireAfter * 60;
-
-					//Check to see if they have been inactive for too long.
-					if ($secondsInactive >= $expireAfterSeconds) {
-						//User has been inactive for too long.
-						//Kill their session.
-						// is_offline(_UserIdFromSession());
-						// session_unset();
-						$array_msg = array('icon' => 'oi-warning', 'class' => 'alert-info', 'msg' => 'Your session has expired.');
-						$this->session->set_flashdata('_oprs_sess_expire_msg', $array_msg);
-						redirect('oprs/login/logout');
-					}
-				}
-
-				// Assign the current timestamp as the user's latest activity
-				$_SESSION['last_action'] = time();
-				
-			
-		if($this->session->userdata('sys_acc') == 1 || $this->session->userdata('sys_acc') == 3 ){
-
-
+			if($this->session->userdata('sys_acc') == 1 || $this->session->userdata('sys_acc') == 3 ){
 				$data['country'] = $this->Library_model->get_library('tblcountries');
 				$data['sex'] = $this->Library_model->get_library('tblsex');
 				$data['journal'] = $this->Journal_model->get_journals();
@@ -106,11 +70,14 @@ class Dashboard extends EJ_Controller {
 				$data['tables'] = $this->Library_model->get_tables();
 				$data['emails'] = $this->Email_model->get_contents();
 				$data['user_roles'] = $this->Email_model->get_email_user_roles();
+				$data['editorial_board_position'] = $this->Library_model->get_editorial_board_position();
+				$data['editorial_policy'] = $this->Library_model->get_editorial_policy_content();
+				$data['guidelines'] = $this->Library_model->get_guidelines_content();
 
 				$acoa_arr = explode(",& ", $this->Coauthor_model->get_author_coauthors_list());
 				sort($acoa_arr, SORT_STRING);
 				$data['authors'] = array_unique($acoa_arr);
-				$data['main_title'] = "eJournal Administrator";
+				$data['main_title'] = "eJournal Admin";
 				$data['main_content'] = "admin/index";
 
 				$this->_LoadPage('common/body', $data);
@@ -259,7 +226,7 @@ class Dashboard extends EJ_Controller {
 			$output = $this->Journal_model->save_journal(array_filter($post));
 			$notif['flag'] = 1;
 			$notif['icon'] = 'oi oi-circle-check';
-			$notif['msg'] = 'Journal saved successfully. Page will reload in 3 seconds.';
+			$notif['msg'] = 'Journal saved successfully!';
 			echo json_encode($notif);
 		}
 	}
@@ -364,7 +331,7 @@ class Dashboard extends EJ_Controller {
 		}
 
 		$notif['icon'] = 'oi oi-circle-check';
-		$notif['msg'] = 'Article added successfully. Page will reload in 3 seconds.';
+		$notif['msg'] = 'Article added successfully!';
 		echo json_encode($notif);
 	}
 
@@ -429,21 +396,33 @@ class Dashboard extends EJ_Controller {
 	public function update_guidelines() {
 
 		// upload guidelines
-		$config_pdf['upload_path'] = './assets/uploads/';
-		$config_pdf['allowed_types'] = 'pdf';
-		$config_pdf['overwrite'] = TRUE;
-		$config_pdf['file_name'] = 'DO_NOT_DELETE_guidelines';
+		// $config_pdf['upload_path'] = './assets/uploads/';
+		// $config_pdf['allowed_types'] = 'pdf';
+		// $config_pdf['overwrite'] = TRUE;
+		// $config_pdf['file_name'] = 'DO_NOT_DELETE_guidelines';
 
-		$this->load->library('upload', $config_pdf);
-		$this->upload->initialize($config_pdf);
+		// $this->load->library('upload', $config_pdf);
+		// $this->upload->initialize($config_pdf);
 
-		if (!$this->upload->do_upload('upload_guidelines')) {
-			$error = $this->upload->display_errors();
-		} else {
-			$data = $this->upload->data();
-		}
+		// if (!$this->upload->do_upload('upload_guidelines')) {
+		// 	$error = $this->upload->display_errors();
+		// } else {
+		// 	$data = $this->upload->data();
+		// }
 
-		save_log_ej(_UserIdFromSession(), 'updated author\'s guidelines.', '0', _UserRoleFromSession());
+		
+		$content = $this->input->post('content', TRUE);
+
+		// save guidelines
+		$data = [
+			'gd_content' => $content,
+			'last_updated' => date('Y-m-d H:i:s')
+		];
+
+		$this->Library_model->update_guidelines($data);
+
+
+		save_log_ej(_UserIdFromSession(), 'Updated Author Guidelines.', '0', _UserRoleFromSession());
 	}
 
 	/**
@@ -453,7 +432,7 @@ class Dashboard extends EJ_Controller {
 	 */
 	public function update_home() {
 		$data = $this->input->post('home_description', TRUE);
-		$filetype = $this->input->post('upload_only', TRUE);
+		$filetype = $this->input->post('upload_call_papers', TRUE);
 
 		if (!write_file('./assets/uploads/DO_NOT_DELETE_description.txt', $data, 'wbr+')) {
 			echo 'Unable to write the file';
@@ -486,7 +465,43 @@ class Dashboard extends EJ_Controller {
 			$data = $this->upload->data();
 		}
 
-		save_log_ej(_UserIdFromSession(), 'updated author\'s home description and call for papers.', '0', _UserRoleFromSession());
+		save_log_ej(_UserIdFromSession(), 'Updated Home/About content', '0', _UserRoleFromSession());
+	}
+
+	public function update_policy() {
+		// upload policy
+		$config_pdf['upload_path'] = './assets/uploads/editorial_policy';
+		$config_pdf['allowed_types'] = 'pdf';
+		$config_pdf['overwrite'] = TRUE;
+		$config_pdf['file_name'] = now() . '_editorial_policy';
+
+		$this->load->library('upload', $config_pdf);
+		$this->upload->initialize($config_pdf);
+
+		if (!$this->upload->do_upload('ep_file')) {
+			$error = $this->upload->display_errors();
+		} else {
+			$data = $this->upload->data();
+		}
+
+		// $content = $this->input->post('content', TRUE);
+
+		// archive old policy
+		$archive['ep_is_archive'] = '1';
+		$where['ep_is_archive'] = '0';
+
+		$this->Library_model->archive_editorial_policy($archive, $where);
+
+		// save new policy
+		$data = [
+			'ep_file' => $config_pdf['file_name'],
+			'ep_is_archive' => 0,
+			'created_at' => date('Y-m-d H:i:s')
+		];
+
+		$this->Library_model->save_editorial_policy($data);
+
+		save_log_ej(_UserIdFromSession(), 'Added Editorial Policy', '0', _UserRoleFromSession());
 	}
 
 	/**

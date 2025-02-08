@@ -8,7 +8,7 @@ $('.right-inner-addon').hide();
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
-<div class="container-fluid mt-3 p-4">
+<div class="container-fluid mt-2 p-4">
     <!-- <div class="row mt-5">
         <div class="col">
             <div class="btn-group" role="group" aria-label="Basic example">
@@ -21,7 +21,7 @@ $('.right-inner-addon').hide();
             </div>
         </div>
     </div> -->
-    <div class="row pt-3">
+    <div class="row">
         <div class="col col-3 p-3">
             <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
         </div>
@@ -63,7 +63,7 @@ $('.right-inner-addon').hide();
                             </ul>
                     </div>
                 </div>
-                <hr class="mt-2 pb-2">
+                <hr class="mt-2">
             <?php } ?>
 
             <?php if($this->session->flashdata('email_message')){
@@ -95,7 +95,6 @@ $('.right-inner-addon').hide();
                         // $author = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_author) : $res->art_author;
                         // $affiliation = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("%20"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_affiliation) : $res->art_affiliation;
                         // $keywords = ($search) ? preg_replace("/\p{L}*?".preg_quote(str_replace("+"," ",$search))."\p{L}*/ui", "<b>$0</b>", $res->art_keywords) : $res->art_keywords;
-                        $file =  $res->art_abstract_file;
                         $get_cover = $this->Search_model->get_cover($res->art_jor_id);
                         $cover = ($get_cover > 0) ? base_url('assets/uploads/cover/'.$get_cover) : base_url('assets/images/unavailable.jpg');
                         $coas  = $this->Search_model->get_coauthors($res->art_id);
@@ -143,7 +142,8 @@ $('.right-inner-addon').hide();
                         <img class="me-3" src="<?=$cover;?>" height="200" width="150" alt="Loading image">
                     </div> -->
                     <div class="flex-grow-1">
-                        <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?= $title ?></a>
+                        <a class="mt-0 text-dark mb-0 main-link" href="<?= base_url() . 'client/ejournal/article/' . $res->art_id ?>"><?= $title ?></a>
+                        <!-- <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $res->art_id ?>','hits','<?= $file ?>')"><?= $title ?></a> -->
 
                         <div class="mt-2">
                             <?php $i = 0; foreach($coa_arr as $cr):?>
@@ -173,7 +173,7 @@ $('.right-inner-addon').hide();
                         
                         <div class="text-muted mt-1 small">Pages: <?=$pages?></div>
                         
-                        <div class="text-muted mt-1 small"><?=$res->art_year?></div>
+                        <div class="text-muted mt-1 small">Year Published: <?=$res->art_year?></div>
                         
                         <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/volume/'.$vol.'/'.$res->jor_issue.'');?>">Volume <?=$res->jor_volume . ' ' . $issue?></a></div>
                         <!-- <div class="text-muted mt-1 small">Volume <?=$res->jor_volume . ' ' . $issue?></div> -->
@@ -198,15 +198,13 @@ $('.right-inner-addon').hide();
                                echo '<div class="d-flex gap-1">
                                 <a class="main-btn btn btn-sm" href="'.base_url('client/ejournal/download_file/'. $res->art_id .'/'.$res->art_full_text_pdf).'"
                                     role="button">
-                                    Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                                    Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
                                 <a  data-bs-toggle="modal" data-bs-target="#citationModal"
                                     class="main-btn btn-sm btn " href="javascript:void(0);"
                                     role="button"
                                     onclick="get_citee_info(\''.addslashes($cite).'\','.$res->art_id.')">
-                                    Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
+                                    Cite this article  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
                                 </div>';
-                                //  onclick="download_pdf('.$res->art_id.')"
-                                // get_citee_info
                             }?>
                         </div>
                     </div>

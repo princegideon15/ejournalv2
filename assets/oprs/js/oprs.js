@@ -6,6 +6,7 @@ var mem_id = [];
 var mem_exp = [];
 var mem_aff = [];
 var mem_prf = [];
+var mem_type = [];
 var acoa = [];
 var man_id;
 var maxx;
@@ -22,14 +23,548 @@ var remove_man_id;
 var mail_content;
 var mail_title = '';
 var editor_mail_content;
+var sst,sstt,abst,sm; // statistics
+var arta_table,arta_age_table,arta_reg_table,arta_cc_table,arta_sqd_table; // arta
+var uiux_table, uiux_sex_table; // uiux
 
+var minutes = 5,          // otp timer
+seconds = 0,          // otp timer
+intervalId,           // otp timer
+isStartTimer = false, // otp timer
+refCode,              // reference code for otp
+accessToken,          // user access token generated on logged in   
+current_button_id;    // button to enable/disable for catpcha  
+
+var recaptchaWidgetId_logout; // recaptcha widget 
+
+var inpIncr = 0; // added peer reviewer count
+var suggIncr = 1; // added peer reviewer count
 
 $(document).ready(function() {
+    
+
+    var currentUrl = window.location.href; // Get current path
+    var lastPart = currentUrl.split('/').pop(); 
+
+    $(".oprs-nav a").each(function () {
+        var link = $(this).attr("href");
+        // Check if the current URL matches the link
+
+        if (/\?/.test(lastPart)) {
+        
+            if (currentUrl === link || (currentUrl === "/" && link === "home")) {
+                $(this).addClass("active");
+            }
+        } else {
+        
+            if (lastPart === link || (lastPart === "/" && link === "home")) {
+                $(this).addClass("active");
+            }
+        }
+    });
+
+    // get user account info
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/user/get_account_info",
+        async:false,
+        crossDomain: true,
+        dataType: 'json',
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#form_update_account #usr_username').val(val.usr_username);
+                $('#form_update_account #usr_full_name').val(val.usr_full_name);
+                $('#form_update_account #usr_sex').val(val.usr_sex);
+                $('#form_update_account #usr_contact').val(val.usr_contact);
+            });
+        },
+        error: function(xhr, status, error) {
+        reject(error);
+        }
+    }); 
+
+    // get user access token
+    accessToken = $.ajax({
+        type: "GET",
+        url: base_url + "oprs/login/get_access_token",
+        async:false,
+        crossDomain: true,
+        success: function(data) {
+            // console.log("🚀 ~ $ ~ data:", data)
+            if(data != 0){
+                return data;
+            }
+        },
+        error: function(xhr, status, error) {
+        reject(error);
+        }
+    }); 
+
+    accessToken = (accessToken.responseText).trim();
+
+    // feedback suggestion box character limit
+    var $textArea = $("#fb_suggest_ui");
+    var $charCount = $("#char_count_ui");
+    var maxLength = $textArea.attr("maxlength");
+
+    $textArea.on("input", function () {
+        var currentLength = $(this).val().length;
+        $charCount.text(`${currentLength} / ${maxLength} characters`);
+
+        if (currentLength > maxLength) {
+            $charCount.addClass("exceeded");
+        } else {
+            $charCount.removeClass("exceeded");
+        }
+    });
+
+    var $textArea2 = $("#fb_suggest_ux");
+    var $charCount2 = $("#char_count_ux");
+    var maxLength2 = $textArea2.attr("maxlength");
+
+    $textArea2.on("input", function () {
+        var currentLength = $(this).val().length;
+        $charCount2.text(`${currentLength} / ${maxLength2} characters`);
+
+        if (currentLength > maxLength2) {
+            $charCount2.addClass("exceeded");
+        } else {
+            $charCount2.removeClass("exceeded");
+        }
+    });
+
+    // process duration number
+
+    $(".duration").keyup(function() {
+        var minValue = 0; // Minimum allowed value
+        var maxValue = 365; // Maximum allowed value
+        var currentValue = parseInt($(this).val());
+
+        if (currentValue < minValue) {
+        $(this).val(minValue);
+        } else if (currentValue > maxValue) {
+        $(this).val(maxValue);
+        }
+    });
+
+    // csf ui ux star rating
+    var selectedRatingUI = 0;
+    var selectedRatingUX = 0;
+
+    $('.rate-ui').on('mouseover', function () {
+        const value = $(this).data('value');
+        $('.rate-ui').each(function () {
+            $(this).toggleClass('selected', $(this).data('value') <= value);
+        });
+    });
+
+    $('.rate-ui').on('mouseleave', function () {
+        $('.rate-ui').each(function () {
+            $(this).toggleClass('selected', $(this).data('value') <= selectedRatingUI);
+        });
+    });
+
+    $('.rate-ui').on('click', function () {
+        selectedRatingUI = $(this).data('value');
+        
+        // Remove 'selected' class from all stars and add it to the clicked star and previous stars
+        $(".rate-ui").removeClass("selected");
+        $(".rate-ui").each(function () {
+          if ($(this).data("value") <= selectedRatingUI) {
+            $(this).addClass("selected");
+            $('.rate-ui-validation').text('');
+          }
+        });
+    });
+    
+    $('.rate-ux').on('mouseover', function () {
+        const value = $(this).data('value');
+        $('.rate-ux').each(function () {
+            $(this).toggleClass('selected', $(this).data('value') <= value);
+        });
+    });
+
+    $('.rate-ux').on('mouseleave', function () {
+        $('.rate-ux').each(function () {
+            $(this).toggleClass('selected', $(this).data('value') <= selectedRatingUX);
+        });
+    });
+
+    $('.rate-ux').on('click', function () {
+        selectedRatingUX = $(this).data('value');
+        
+        // Remove 'selected' class from all stars and add it to the clicked star and previous stars
+        $(".rate-ux").removeClass("selected");
+        $(".rate-ux").each(function () {
+          if ($(this).data("value") <= selectedRatingUX) {
+            $(this).addClass("selected");
+            $('.rate-ux-validation').text('');
+          }
+        });
+    });
+
+    // $("#feedback_form").validate({
+    //     debug: true,
+    //     errorClass: 'text-danger',
+    //     rules: {
+    //         non_title: {
+    //             required: true,
+    //             minlength: 2
+    //         },
+     
+    //     },
+    //     messages: {
+    //         usr_captcha: {
+    //             equalTo: "Incorrect verification code"
+    //         },
+    //         non_email: {
+    //             remote: "Email already in use"
+    //         }
+    //     },
+    //     submitHandler: function() {
+    //         $.ajax({
+    //             type: "POST",
+    //             url: base_url + "oprs/signup/sign_up",
+    //             data: $('#form_sign_up').serializeArray(),
+    //             cache: false,
+    //             crossDomain: true,
+    //             success: function(data) {
+    //                 $.notify({
+    //                     icon: 'fa fa-check-circle',
+    //                     message: 'Thank you for signing up. You can now log in.'
+    //                 }, {
+    //                     type: 'success',
+    //                     timer: 3000,
+    //                 });
+
+    //                 $('#form_sign_up')[0].reset();
+    //                 $('#refresh_captcha').click();
+    //             }
+    //         });
+    //     }
+    // });
+
+    // tech rev criteria process
+    $("#tech_rev_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            tr_remarks: {
+                required: {
+                    depends: function () {
+                        return $("#tr_final").val() === "2";
+                    }
+                }
+            }
+        },
+        submitHandler: function() {
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    $('body').loading('start');
+                    $('#tedEdCriteriaModal').modal('toggle');
+                    $('#submit_tech_rev_crit').prop('disabled', true);
+                    var formdata = new FormData($('#tech_rev_form')[0]);
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/technical_review_process",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            
+                            $('#tech_rev_form')[0].reset();
+                            $('body').loading('stop');
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    // eic publish to ejournal
+    $("#pub_to_e_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            man_page_position: {
+                required: true
+            }
+        },
+        submitHandler: function() {
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    $('body').loading('start');
+                    $('#publishModal').modal('toggle');
+                    var formdata = new FormData($('#pub_to_e_form')[0]);
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/publish",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            
+                            $('#pub_to_e_form')[0].reset();
+                            $('body').loading('stop');
+                            Swal.fire({
+                            title: "Published to eJournal successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    $('#submit_feedback').on('click', function(){
+        if ($(".rate-ui.selected").length > 0 && $(".rate-ux.selected").length > 0) {
+
+            var uiSuggestion = $('#fb_suggest_ui').val();
+            var uxSuggestion = $('#fb_suggest_ux').val();
+            
+            var data = {
+                'ui' : selectedRatingUI,
+                'ux' : selectedRatingUX,
+                'ui_sug' : uiSuggestion,
+                'ux_sug' : uxSuggestion,
+                'csf_system' : 'eReview'
+            };
+    
+            const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
+    
+            if (captcha) {
+            $(this).prop('disabled', true);
+                // alert("reCAPTCHA is checked and valid!");
+                $.ajax({
+                type: "POST",
+                url: base_url + 'oprs/feedbacks/submit_csf_ui_ux',
+                data:  data,
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#feedbackModal').modal('toggle');
+                    if(data == 1){
+                    var timerInterval;
+                    Swal.fire({
+                        title: "Thank you for your feedback.",
+                        html: "Logging out...",
+                        icon: "success",
+                        allowOutsideClick: false, // Prevent closing by clicking outside
+                        allowEscapeKey: false,   // Prevent closing with the Escape key
+                        allowEnterKey: false,    // Prevent closing with the Enter key
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                        Swal.showLoading();
+                        // const timer = Swal.getPopup().querySelector("b");
+                        // timerInterval = setInterval(() => {
+                        //   timer.textContent = `${Swal.getTimerLeft()}`;
+                        // }, 100);
+                        },
+                        willClose: () => {
+                        clearInterval(timerInterval);
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                        window.location.href = base_url + "oprs/login/logout";
+                        }
+                    });
+                    }else{
+                    console.log('Something went wrong.');
+                    }
+                }
+                });
+            } else {
+                console.log("Please complete the reCAPTCHA!");
+            }
+    
+        } else {
+            if($(".rate-ui.selected").length == 0){
+                $('.rate-ui-validation').text('Please select at least one star.');
+            }
+
+            if($(".rate-ux.selected").length == 0){
+                $('.rate-ux-validation').text('Please select at least one star.');
+            }
+
+            return;
+        }
+    });
+
+    $('#search').on('keypress', function (event) {
+        if (event.which === 13) { // 13 is the key code for Enter
+            event.preventDefault(); // Prevent form submission
+            var search_value = $(this).val();
+            var search_filter = $('input[name="search_filter"]:checked').val();
+
+            if(search_value){
+
+                
+                var data = {
+                    search: search_value,
+                    filter: search_filter
+                };
+                
+                $.ajax({
+                    url: base_url + "oprs/manuscripts/search",
+                    data: data,
+                    cache: false,
+                    crossDomain: true,
+					dataType: 'json',
+                    type: "POST",
+                    success: function(data) {
+						$('#search_result').empty();
+
+                        if(data.length > 0){
+                            $('#searchModal .alert').addClass('d-none');
+
+
+							var html = '<div class="list-group overflow-hidden" style="max-height:65vh" id="search_result_list">';
+							$.each(data, function(key, val){
+								var coas = (val.coas) ? ', ' + val.coas : '';
+                                var keywords = (val.man_keywords) ? val.man_keywords : '';
+								html += `<a href="javscript:void(0);" class="list-group-item list-group-item-action p-3 pe-5" aria-current="true" onclick="view_manus('${val.row_id}')">
+										<h6 class="mb-1 fw-bold text-truncate">${val.man_title}</h6>
+										<p class="mb-1 text-truncate">${val.man_author}${coas}</p>
+										<p class="small text-truncate">${keywords}</p>
+										</a>`;
+							});
+
+							html += '</div>';
+							
+							$('#search_result').append(html);
+								
+                        }else{
+                            $('#searchModal .alert').removeClass('d-none');
+                            $('#searchModal .alert').html('<span class="oi oi-warning"></span>Sorry, no results found.');
+                        }
+                    }
+                });
+
+            }
+
+
+            
+        }
+    });
+
+    var idleTime = 0;
+
+    if(accessToken != 0){
+      $(document).on('mousemove keydown scroll', function() {
+          idleTime = 0;
+      });
+  
+      var timerInterval = setInterval(function() {
+          idleTime += 1;
+          
+        //   console.log("🚀 ~ timerInterval ~ idleTime:", idleTime)
+          if (idleTime >= 1200) { // 20 minutes in seconds
+  
+              Swal.fire({
+                title: "Session Expired",
+                text: "You have been idle for 20 minutes. Please log in again.",
+                icon: "info",
+                confirmButtonColor: "#0c6bcb",
+              
+              }).then(function () {
+                window.location = base_url + "oprs/login";
+              });
+              
+              // Trigger logout or other actions
+              clearInterval(timerInterval); // Stop the timer
+              destroyUserSession();
+          }
+      }, 1000); // Check every 1 second
+    }
+
+    // 5 mins timer for otp
+    var url = window.location.pathname; // Get the current path
+    var segments = url.split('/'); // Split the path by '/'
+    // Make sure there are enough segments
+    if (segments.length > 2) {
+      var secondToLastSegment = segments[segments.length - 2];
+      refCode = url.split('/').pop();
+      
+      if(secondToLastSegment == 'verify_otp'){ // login otp, create client account otp
+        getCurrentOTP(refCode);
+      }else if(secondToLastSegment == 'csf_arta'){
+        current_button_id = "#submit_csf_arta";
+      }
+    } else {
+        // console.log("Not enough segments in the URL.");
+    }
 
     // get members info
     $.ajax({
         type: "GET",
-        url: base_url + "oprs/manuscripts/members/",
+        url: base_url + "oprs/manuscripts/members",
         dataType: "json",
         crossDomain: true,
         success: function(data) {
@@ -42,15 +577,15 @@ $(document).ready(function() {
                 mem_exp.push(val.pp_first_name + ' ' + val.pp_middle_name + ' ' + val.pp_last_name + ' (' + val.mpr_gen_specialization + ')');
                 mem_aff.push(val.bus_name);
                 mem_prf.push(val.title_name);
+                mem_type.push((val.usr_grp_id == 3) ? 'Member' : 'Non-Member');
             });
-
         }
     });
 
     // get email content for add reviewer
     $.ajax({    
         type: "GET",
-        url: base_url + "oprs/emails/get_email_content/"+2,
+        url: base_url + "oprs/emails/get_email_content/"+5,
         dataType: "json",
         crossDomain: true,
         success: function(data) {
@@ -120,13 +655,13 @@ $(document).ready(function() {
 
         $.ajax({
             type: "GET",
-            url: base_url + "oprs/notifications/notif_tracker/",
+            url: base_url + "oprs/notifications/notif_tracker",
             dataType: "json",
             crossDomain: true,
             success: function(data) {  
                 // console.log(data);
                 var html = '<div class="list-group" style="font-size:14px"> \
-                <a class="list-group-item font-weight-bold pl-3 pb-1 pt-1 h4">Notifications</a>';
+                <a class="list-group-item fw-bold pl-3 pb-1 pt-1 h4">Notifications</a>';
                        $.each(data, function(key, val)
                        {
                             // var proc = get_member(val.trk_processor);
@@ -181,7 +716,7 @@ $(document).ready(function() {
         //                                                                                             ' + val.man_title + '</strong>\
         //                     <small class="d-flex mt-1">'+ moment(val.date_created).fromNow() + '</small></a>';
         //            }else if(key == 7){
-        //                html += '<a href="notifications" class="text-center p-1 text-primary"><small class="font-weight-bold">See All</small></a>';
+        //                html += '<a href="notifications" class="text-center p-1 text-primary"><small class="fw-bold">See All</small></a>';
         //            }
                    
              
@@ -199,9 +734,13 @@ $(document).ready(function() {
         return this.optional(element) || (element.files[0].size <= param)
     }, 'File size must be less than 20 MB');
 
+    $.validator.addMethod("texFile", function (value, element) {
+        return this.optional(element) || /\.(tex)$/i.test(value);
+    }, "Please upload a valid .tex file.");
+
     // unused upload manuscript (author only)
-    jQuery(function ($) {
-        "use strict";
+    // jQuery(function ($) {
+        // "use strict";
         //validate upload manuscript form
         $("#manuscript_form").validate({
             debug: true,
@@ -209,6 +748,10 @@ $(document).ready(function() {
             rules: {
                 man_title: {
                     required: true,
+                    remote: {
+                        url: base_url + "oprs/manuscripts/unique_title",
+                        type: "post"
+                    }
                 },
                 man_author: {
                     required: true,
@@ -218,23 +761,31 @@ $(document).ready(function() {
                 },
                 man_abs : {
                     required: true,
-                    // extension: "pdf",
-                    // filesize : 20000000,
+                    extension: "pdf",
+                    filesize : 20000000,
                 },
                 man_file: {
                     required: true,
-                    // extension: "pdf",
-                    // filesize : 20000000,
+                    extension: "pdf",
+                    filesize : 20000000,
                 },
                 man_word: {
                     required: true,
-                    // extension: "doc|docx",
-                    // filesize : 20000000,
+                    extension: "doc|docx",
+                    filesize : 20000000,
                 },
+                man_latex: {
+                    texFile: true, // Use the custom rule
+                    filesize : 20000000,
+                },
+                man_type: {
+                    required: true,
+                },
+                
                 man_page_position: {
                     required: true,
                 },
-                optradio: {
+                man_author_type: {
                     required: true,
                 },
                 man_affiliation: {
@@ -242,34 +793,116 @@ $(document).ready(function() {
                 },
                 man_email: {
                     required: true,
+                },
+                man_keywords: {
+                    required: true,
                 }
             },
+            messages: {
+                man_title: {
+                    remote: "Manuscript title already exist."
+                }
+            },
+            errorPlacement: function (error, element) {
+              if (element.attr("name") === "man_author_type") {
+                error.appendTo("#author_type_error"); // Place the error below the radio buttons
+              } else {
+                error.insertAfter(element); // Default behavior for other inputs
+              }
+            },
             submitHandler: function() {
-                var full = $('#man_file')[0].files[0].size;
-                var abs = $('#man_abs')[0].files[0].size;
-                var word = $('#man_word')[0].files[0].size;
-                if(full < 20000000) {
-                    $('#badge_full').next('.badge-danger').hide();
-                }else if(abs < 20000000){
-                    $('#badge_abs').next('.badge-danger').hide();
-                }else if(word < 20000000){
-                    $('#badge_word').next('.badge-danger').hide();
-                }
+                // var full = $('#man_file')[0].files[0].size;
+                // var abs = $('#man_abs')[0].files[0].size;
+                // var word = $('#man_word')[0].files[0].size;
+                // var latex = $('#man_latex')[0].files[0].size;
+                // if(full < 20000000) {
+                //     $('#badge_full').next('.bg-danger').hide();
+                // }else if(abs < 20000000){
+                //     $('#badge_abs').next('.bg-danger').hide();
+                // }else if(word < 20000000){
+                //     $('#badge_word').next('.bg-danger').hide();
+                // }else if(latex < 20000000){
+                //     $('#badge_latex').next('.bg-danger').hide();
+                // }
 
-                if (full >= 20000000) {
-                    $('#badge_full').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-                }else if(abs >= 20000000){
-                    $('#badge_abs').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-                }else if(word >= 20000000){
-                    $('#badge_word').after(' <span class="badge badge-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
-                }else {
-                    $('#confirmUploadModal').modal('toggle');
-                }
+                // if (full >= 20000000) {
+                //     $('#badge_full').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                // }else if(abs >= 20000000){
+                //     $('#badge_abs').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                // }else if(word >= 20000000){
+                //     $('#badge_word').after(' <span class="badge rounded-pill bg-danger"><span class="oi oi-warning"></span> File size must not exceed 20 MB</span>');
+                // }else {
+                // }
+                // $('#confirmUploadModal').modal('toggle');
+
+                
+                Swal.fire({
+                    title: "Are you sure?",
+                    // text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#007bff",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Submit"
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $('body').loading('start');
+                        $('#uploadModal').modal('toggle');
+                        
+                        var formdata = new FormData($('#manuscript_form')[0]);
+        
+                        $.ajax({
+                            url: base_url + "oprs/manuscripts/upload",
+                            data: formdata,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            crossDomain: true,
+                            type: 'POST',
+                            success: function(data) {
+                                $('body').loading('stop');
+                                Swal.fire({
+                                title: "Manuscript submitted successfully!",
+                                icon: 'success',
+                                // html: "I will close in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                    location.reload();
+                                }
+                                }).then((result) => {
+                                    /* Read more about handling dismissals below */
+                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                        console.log("I was closed by the timer");
+                                    }
+                                    location.reload();
+                                });
+                            }
+                        });
+                    }
+                  });
+
+                // var form = $('#manuscript_form');
+                // var formdata = false;
+        
+                // if (window.FormData) {
+                //     formdata = new FormData(form[0]);
+                // }
+
 
             }
         });
 
-    });
+    // });
 
     // submit manuscript if author account (unused)
     $('#submit_upload_manuscript').click(function(){
@@ -289,7 +922,7 @@ $(document).ready(function() {
         var formAction = form.attr('action');
         
         $.ajax({
-            url: base_url + "oprs/manuscripts/upload/",
+            url: base_url + "oprs/manuscripts/upload",
             data: formdata ? formdata : form.serialize(),
             cache: false,
             contentType: false,
@@ -372,10 +1005,767 @@ $(document).ready(function() {
         }
     );
 
+    // user types 
+    var utt = $('#user_types_table').DataTable();
+ 
+    utt.on( 'order.dt search.dt', function () {
+        utt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // process time duration 
+    var pdt = $('#process_duration_table').DataTable();
+ 
+    pdt.on( 'order.dt search.dt', function () {
+        pdt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+    
+    // status types 
+    var utt = $('#status_types_table').DataTable();
+ 
+    utt.on( 'order.dt search.dt', function () {
+        utt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // publication types 
+    var utt = $('#publication_types_table').DataTable();
+ 
+    utt.on( 'order.dt search.dt', function () {
+        utt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+    
+    // criteria 
+    var ct = $('#criteria_table').DataTable();
+ 
+    ct.on( 'order.dt search.dt', function () {
+        ct.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+    
+    // submission summary 
+    sst = $('#sub_sum_table').DataTable({
+        "pageLength": -1, // Show all rows
+        "lengthChange": false, // Disable the entries display (Show 10 entries)
+        "language": {
+            "lengthMenu": "" // This hides the "Show entries" text
+        },
+        "order": [
+            [0, "asc"]
+        ],
+        "columnDefs": [
+            // { "className": "center-text", "targets": "_all" }, // Apply to all columns
+            // { "className": "", "targets": 1}, // Remove centering from the first column
+            { "targets": 0, "visible": false } // Hide the first column
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ],
+        "drawCallback": function(settings) {
+            var api = this.api();
+            var lastRow = $('#sub_sum_table tbody tr:last');
+            lastRow.css({
+                "font-weight": "bold",
+                "background-color": "#f8f9fa" // Optional: Light background to highlight the row
+            });
+        }
+    });
+    
+    // submission statistics 
+    sstt = $('#sub_stats_table').DataTable({
+        "pageLength": -1, // Show all rows
+        "lengthChange": false, // Disable the entries display (Show 10 entries)
+        "language": {
+            "lengthMenu": "" // This hides the "Show entries" text
+        },
+        "order": [
+            [0, "asc"]
+        ],
+        columnDefs: [
+            {
+                targets: 0, // Target the first column (ID column)
+                visible: false // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ],
+        "drawCallback": function(settings) {
+            var api = this.api();
+            var lastRow = $('#sub_stats_table tbody tr:last');
+            lastRow.css({
+                "font-weight": "bold",
+                "background-color": "#f8f9fa" // Optional: Light background to highlight the row
+            });
+        }
+    });
+    
+    // author by sex statistics 
+    abst = $('#auth_by_sex_table').DataTable({
+        "order": [
+            [0, "desc"]
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'Submission Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+    
+    // arta 
+    arta_table = $('#arta_table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        columnDefs: [
+            {
+                targets: '_all',
+                className: 'dt-center'
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+    
+    // arta age 
+    arta_age_table = $('#arta_age_table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        paging: false,
+        columnDefs: [
+            {
+                targets: 0, // Target the first column (ID column)
+                visible: false // Hide the ID column
+            },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents by Age',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents by Age',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents by Age',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents by Age',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+
+    // arta region 
+    arta_reg_table = $('#arta_reg_table').DataTable({
+        "order": [
+            [0, "asc"]
+        ],
+        paging: false,
+        columnDefs: [
+            {
+                targets: 0, // Target the first column (ID column)
+                visible: false // Hide the ID column
+            },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents by Region',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents by Region',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents by Region',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents by Region',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+
+    // arta cc 
+    arta_cc_table = $('#arta_cc_table').DataTable({
+        // "order": [
+        //     [0, "asc"]
+        // ],
+        paging: false,
+        columnDefs: [
+            // {
+            //     targets: 0, // Target the first column (ID column)
+            //     visible: false // Hide the ID column
+            // },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents by Citizen Charter',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents by Citizen Charter',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents by Citizen Charter',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents by Citizen Charter',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+
+    // arta sqd 
+    arta_sqd_table = $('#arta_sqd_table').DataTable({
+        // "order": [
+        //     [0, "asc"]
+        // ],
+        paging: false,
+        columnDefs: [
+            // {
+            //     targets: 0, // Target the first column (ID column)
+            //     visible: false // Hide the ID column
+            // },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF-ARTA Respondents by SQD',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF-ARTA Respondents by SQD',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF-ARTA Respondents by SQD',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF-ARTA Respondents by SQD',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+
+    // ui/ux sex
+    uiux_sex_table = $('#uiux_sex_table').DataTable({
+        "order": [
+            [0, "desc"]
+        ],
+        paging: false,
+        columnDefs: [
+            // {
+            //     targets: 0, // Target the first column (ID column)
+            //     visible: false // Hide the ID column
+            // },
+            {
+                targets: '_all', // Target the first column (ID column)
+                className: 'dt-center' // Hide the ID column
+            }
+        ],
+        autowidth: true,
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'CSF UI/UX by Sex',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'CSF UI/UX by Sex',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'CSF UI/UX by Sex',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'CSF UI/UX by Sex',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ]
+    });
+    
+    // author table manuscripts;
+    var aut = $('#author_table').DataTable({
+        "order": [[ 2, "asc" ]],
+        "columnDefs" : [
+            {"targets":2, "type":"date"},
+        ]
+    });
+ 
+    aut.on( 'order.dt search.dt', function () {
+        aut.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // peer reviewer table
+    var prt = $('#dataTable_rev').DataTable({
+        "order": [[ 2, "asc" ]],
+        "columnDefs" : [
+            {"targets":2, "type":"date"},
+        ]
+    });
+ 
+    prt.on( 'order.dt search.dt', function () {
+        prt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    
+    $('#collapse_new_table').DataTable({
+        columnDefs: [
+            { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+    });
+
+    $('#collapse_lapreq_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+    });
+
+    $('#collapse_decreq_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+    });
+
+    $('#collapse_laprev_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+    });
+
+    $('#controls_table').DataTable();
+    // $('#uiux_table').DataTable();
+    $('#cfs_table').DataTable();
+
+    
+
     // all manuscripts;
-    var amt = $('#dataTable').DataTable({
-        "order": [[ 2, "desc" ]],
-        "columnDefs" : [{"targets":2, "type":"date"}]
+    var amt = $('#all-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
     });
  
     amt.on( 'order.dt search.dt', function () {
@@ -384,18 +1774,12 @@ $(document).ready(function() {
         } );
     } ).draw();
 
-    $('#collapse_new_table').DataTable();
-    $('#collapse_lapreq_table').DataTable();
-    $('#collapse_decreq_table').DataTable();
-    $('#collapse_laprev_table').DataTable();
-    $('#controls_table').DataTable();
-    // $('#uiux_table').DataTable();
-    $('#cfs_table').DataTable();
-
     // new manuscripts
-    var nmt = $('#new_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
-        "columnDefs" : [{"targets":2, "type":"date"}]
+    var nmt = $('#new-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
     });
  
     nmt.on( 'order.dt search.dt', function () {
@@ -405,9 +1789,11 @@ $(document).ready(function() {
     } ).draw();
 
     // on-review manuscripts
-    var ort = $('#onreview_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
-        "columnDefs" : [{"targets":2, "type":"date"}]
+    var ort = $('#onreview-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
     });
  
     ort.on( 'order.dt search.dt', function () {
@@ -416,12 +1802,14 @@ $(document).ready(function() {
         } );
     } ).draw();
 
-    // reviewed manuscripts
-    var rmt = $('#reviewed_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
-        "columnDefs" : [{"targets":2, "type":"date"}]
+    // consolidated reviews
+    var rmt = $('#review-consolidated-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
     });
- 
+
     rmt.on( 'order.dt search.dt', function () {
         rmt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
@@ -430,7 +1818,7 @@ $(document).ready(function() {
 
     // completed manuscripts
     var cmt = $('#completed_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -442,7 +1830,7 @@ $(document).ready(function() {
 
     // editorial review manuscripts
     var erm = $('#editorial_reviews_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -454,7 +1842,7 @@ $(document).ready(function() {
 
     // final manuscripts
     var fmt = $('#final_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -466,7 +1854,7 @@ $(document).ready(function() {
 
     // for publication manuscripts
     var fpmt = $('#for_p_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -478,7 +1866,7 @@ $(document).ready(function() {
 
     // for layout manuscripts
     var flmt = $('#for_l_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -490,7 +1878,7 @@ $(document).ready(function() {
 
     // publishable manuscripts
     var pt = $('#publishables_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -502,7 +1890,7 @@ $(document).ready(function() {
 
     // published manuscripts
     var pbdt = $('#pub_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -520,7 +1908,7 @@ $(document).ready(function() {
 
     // published manuscripts to other journal platforms
     var emt = $('#existing_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -530,11 +1918,94 @@ $(document).ready(function() {
         } );
     } ).draw();
 
+    // statistics manuscripts
+    sm = $('#stats-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [{"targets":4, "type":"date"}],
+        dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
+             "<'row'<'col-sm-12'tr>>" +   // Table itself
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",   // Info and Pagination
+        buttons: [
+            {
+                extend: 'colvis',
+                text: 'Column Visibility'
+            },
+            {
+                extend: 'copy',
+                text: 'Copy to clipboard',
+                messageTop: 'Manuscript Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('copied activity logs to clipboard');
+                    $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'excel',
+                text: 'Export as Excel',
+                messageTop: 'Manuscript Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as excel');
+                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'pdf',
+                text: 'Export as PDF',
+                messageTop: 'Manuscript Statistics',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES' + '\n' + 'NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('exported activity logs as pdf');
+                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                }
+            },
+            {
+                extend: 'print',
+                messageTop: 'Submission Summary',
+                title: 'NATIONAL RESEARCH COUNCIL OF THE PHILIPPINES - NRCP Research Journal',
+                action: function (e, dt, node, config) {
+                    // action saved to logs table
+                    // log_export('printed activity logs');
+                    window.print();
+                }
+            }
+        ],
+    });
+ 
+    sm.on( 'order.dt search.dt', function () {
+        sm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
     $('#reviews_table').DataTable();
     $('#layout_table').DataTable();
-    $('#collapse_reviewed_table').DataTable();
-    $('#collapse_complete_table').DataTable();
-    $('#collapse_reviewers_table').DataTable();
+    $('#collapse_reviewed_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
+    $('#collapse_complete_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
+    $('#collapse_reviewers_table').DataTable({
+        columnDefs: [
+          { width: "10px", targets: 0 } // Set the width of the first column
+        ],
+        // Optional: to ensure the table layout is applied correctly
+        autoWidth: false 
+      });
     $('#email_contents_table').DataTable();
 
     // activity logs datatable
@@ -587,9 +2058,20 @@ $(document).ready(function() {
 
     // manuscript datatable in reports
     if (prv_exp == 0) {
-        $('#report_manuscript_table').DataTable();
+        $('#report_manuscript_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_manuscript_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -628,9 +2110,20 @@ $(document).ready(function() {
 
     // reviewers datatable in reports
     if (prv_exp == 0) {
-        $('#report_reviewer_table').DataTable();
+        $('#report_reviewer_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_reviewer_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -673,9 +2166,20 @@ $(document).ready(function() {
 
     // lapsed request datatable in reports
     if (prv_exp == 0) {
-        $('#report_lapreq_table').DataTable();
+        $('#report_lapreq_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_lapreq_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -718,9 +2222,20 @@ $(document).ready(function() {
 
     // declined request datatable in reports
     if (prv_exp == 0) {
-        $('#report_decreq_table').DataTable();
+        $('#report_decreq_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_decreq_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -763,9 +2278,20 @@ $(document).ready(function() {
 
     // lapsed review datatable in reports
     if (prv_exp == 0) {
-        $('#report_laprev_table').DataTable();
+        $('#report_laprev_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_laprev_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -808,9 +2334,20 @@ $(document).ready(function() {
 
     // reviewed manuscripts datatable 
     if (prv_exp == 0) {
-        $('#report_revman_table').DataTable();
+        $('#report_revman_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_revman_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -853,9 +2390,20 @@ $(document).ready(function() {
 
     // completed reviews datatable in reports
     if (prv_exp == 0) {
-        $('#report_comrev_table').DataTable();
+        $('#report_comrev_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_comrev_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -898,9 +2446,20 @@ $(document).ready(function() {
 
     // ui/ux datatable in reports
     if (prv_exp == 0) {
-        $('#uiux_table').DataTable();
+        uiux_table = $('#uiux_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
-        $('#uiux_table').DataTable({
+        uiux_table = $('#uiux_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -910,6 +2469,20 @@ $(document).ready(function() {
                 action: function(e, dt, node, config) {
                     log_export('Copy to clipboard', 'List of UI/UX Feedbacks');
                     $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, node, config);
+                },
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Replace stars with numerical rating
+                            if ($(node).find('.star-icon').length) {
+                                // Count the number of stars or extract the rating
+                                return $(node).find('.star-icon').length;
+                            }
+                            // Return plain text if not stars
+                            return data;
+                        }
+                    }
                 }
             }, {
                 extend: 'excel',
@@ -919,6 +2492,20 @@ $(document).ready(function() {
                 action: function(e, dt, node, config) {
                     log_export('Export as Excel', 'List of UI/UX Feedbacks');
                     $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                },
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Replace stars with numerical rating
+                            if ($(node).find('.star-icon').length) {
+                                // Count the number of stars or extract the rating
+                                return $(node).find('.star-icon').length;
+                            }
+                            // Return plain text if not stars
+                            return data;
+                        }
+                    }
                 }
             }, {
                 extend: 'pdf',
@@ -928,6 +2515,20 @@ $(document).ready(function() {
                 action: function(e, dt, node, config) {
                     log_export('Export as PDF', 'List of UI/UX Feedbacks');
                     $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+                },
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Replace stars with numerical rating
+                            if ($(node).find('.star-icon').length) {
+                                // Count the number of stars or extract the rating
+                                return $(node).find('.star-icon').length;
+                            }
+                            // Return plain text if not stars
+                            return data;
+                        }
+                    }
                 }
             }, {
                 extend: 'print',
@@ -936,6 +2537,20 @@ $(document).ready(function() {
                 action: function(e, dt, node, config) {
                     log_export('Print', 'List of UI/UX Feedbacks');
                     window.print();
+                },
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Replace stars with numerical rating
+                            if ($(node).find('.star-icon').length) {
+                                // Count the number of stars or extract the rating
+                                return $(node).find('.star-icon').length;
+                            }
+                            // Return plain text if not stars
+                            return data;
+                        }
+                    }
                 }
             }]
         });
@@ -943,9 +2558,20 @@ $(document).ready(function() {
 
     // NDA in reports
     if (prv_exp == 0) {
-        $('#report_nda_table').DataTable();
+        $('#report_nda_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false 
+        });
     } else {
         $('#report_nda_table').DataTable({
+            columnDefs: [
+                { width: "10px", targets: 0 } // Set the width of the first column
+            ],
+            // Optional: to ensure the table layout is applied correctly
+            autoWidth: false ,
             dom: 'lBfrtip',
             buttons: [{
                 extend: 'copy',
@@ -1009,9 +2635,10 @@ $(document).ready(function() {
     });
 
     // slide effect of initial reviewer title
-    $('#trk_title1, #editor_title1').editableSelect({
+    $('#eic_suggested_peer_rev_title1, #assoc_suggested_peer_rev_title1, #suggested_peer_rev_title1, #trk_title1, #editor_title1').editableSelect({
         effects: 'slide'
     });
+    
 
     // slide effect of journal volume
     $('#process_manuscript_form #jor_volume, #edit_manuscript_form #jor_volume').editableSelect({
@@ -1042,24 +2669,36 @@ $(document).ready(function() {
     // });
 
     // get authors info
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/authors/",
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val) {
-                acoa.push(val);
-            });
-            acoa.sort();
-            $.unique(acoa);
-        }
-    });
+    // $.ajax({
+    //     type: "GET",
+    //     url: base_url + "oprs/manuscripts/authors",
+    //     dataType: "json",
+    //     crossDomain: true,
+    //     success: function(data) {
+    //         $.each(data, function(key, val) {
+    //             acoa.push(val);
+    //         });
+    //         acoa.sort();
+    //         $.unique(acoa);
+    //     }
+    // });
+
+    // show member name on keyup
+    if ($('#eic_suggested_peer_rev1').length){
+        autocomplete(document.getElementById("eic_suggested_peer_rev1"), mem_exp, '#eic_suggested_peer_rev_email1', '#eic_suggested_peer_rev_num1', '#eic_suggested_peer_rev_id1', '1', '#eic_suggested_peer_rev_spec1', '#eic_suggested_peer_rev_title1');
+    }
+    if ($('#assoc_suggested_peer_rev1').length){
+        autocomplete(document.getElementById("assoc_suggested_peer_rev1"), mem_exp, '#assoc_suggested_peer_rev_email1', '#assoc_suggested_peer_rev_num1', '#assoc_suggested_peer_rev_id1', '1', '#assoc_suggested_peer_rev_spec1', '#assoc_suggested_peer_rev_title1');
+    }
+    if ($('#suggested_peer_rev1').length){
+        autocomplete(document.getElementById("suggested_peer_rev1"), mem_exp, '#suggested_peer_rev_email1', '#suggested_peer_rev_num1', '#suggested_peer_rev_id1', '1', '#suggested_peer_rev_spec1', '#suggested_peer_rev_title1');
+    }
 
     // show member name on keyup
     if ($('#trk_rev1').length){
         autocomplete(document.getElementById("trk_rev1"), mem_exp, '#trk_rev_email1', '#trk_rev_num1', '#trk_rev_id1', '1', '#trk_rev_spec1', '#trk_title1');
     }
+
     // show member name on keyup
     if ($('#editor_rev1').length){
         autocomplete_editor(document.getElementById("editor_rev1"), mem_exp, '#editor_rev_email1', '#editor_rev_num1', '#editor_rev_id1', '1', '#editor_rev_spec1', '#editor_title1');
@@ -1067,7 +2706,7 @@ $(document).ready(function() {
         
     // show aythir name on keyup
     if ($('#man_author').length){
-        autocomplete_acoa(document.getElementById("man_author"), mem_exp, '#man_affiliation', '#man_email', '#man_usr_id');
+        autocomplete_acoa(document.getElementById("man_author"), mem_exp, '#man_affiliation', '#man_email', '#man_usr_id', '#author_status');
     }
 
     $('body').tooltip({
@@ -1110,7 +2749,7 @@ $(document).ready(function() {
                 required: true,
                 email: true,
                 remote: {
-                    url: base_url + "oprs/signup/verify_email/",
+                    url: base_url + "oprs/signup/verify_email",
                     type: "post"
                 }
             },
@@ -1139,7 +2778,7 @@ $(document).ready(function() {
         submitHandler: function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/signup/sign_up/",
+                url: base_url + "oprs/signup/sign_up",
                 data: $('#form_sign_up').serializeArray(),
                 cache: false,
                 crossDomain: true,
@@ -1159,26 +2798,87 @@ $(document).ready(function() {
         }
     });
 
+    $('#form_add_user #add_usr_password').on('keyup', function() {
+        $("#account_password_strength_container").removeClass('d-none');
+        if($(this).val().length > 0){
+          var password = $(this).val();
+          var strength = getPasswordStrength(password);
+          var barColor, passwordStrength;
+          if (strength <= 25) {
+              barColor = 'red';
+              passwordStrength = 'Weak';
+          } else if (strength <= 50) {
+              barColor = 'orange';
+              passwordStrength = 'Good';
+          } else if (strength <= 75) {
+              barColor = 'yellow';
+              passwordStrength = 'Fair';
+          }else {
+            barColor = 'green';
+            passwordStrength = 'Excellent';
+          }
+          $('#account-password-strength').text(passwordStrength);
+          $('#account-password-strength-bar').css('width' , strength + '%');
+          $('#account-password-strength-bar').css('background-color', barColor);
+        }
+      });
+
+      $('#form_change_pass #usr_password').on('keyup', function() {
+        $("#change_password_strength_container").removeClass('d-none');
+        if($(this).val().length > 0){
+          var password = $(this).val();
+          var strength = getPasswordStrength(password);
+          var barColor, passwordStrength;
+          if (strength <= 25) {
+              barColor = 'red';
+              passwordStrength = 'Weak';
+          } else if (strength <= 50) {
+              barColor = 'orange';
+              passwordStrength = 'Good';
+          } else if (strength <= 75) {
+              barColor = 'yellow';
+              passwordStrength = 'Fair';
+          }else {
+            barColor = 'green';
+            passwordStrength = 'Excellent';
+          }
+          $('#change-password-strength').text(passwordStrength);
+          $('#change-password-strength-bar').css('width' , strength + '%');
+          $('#change-password-strength-bar').css('background-color', barColor);
+        }
+      });
+
+
+      // Add custom validation method for password
+      $.validator.addMethod("passwordCheck", function(value, element) {
+        return this.optional(element) || 
+            /[A-Za-z]/.test(value) && // At least 1 letter
+            /\d/.test(value) &&      // At least 1 number
+            /[!@#$%^&*(),.?":{}|<>]/.test(value); // At least 1 special character
+    }, "Password must contain at least 1 letter, 1 number, and 1 special character.");
+
     // add user validation
     $("#form_add_user").validate({
         debug: true,
         errorClass: 'text-danger',
         rules: {
+            usr_full_name: {
+                required: true,
+            },
             usr_password: {
                 required: true,
-                minlength: 5
+                minlength: 8,
+                passwordCheck: true
             },
             usr_rep_password: {
                 required: true,
-                minlength: 5,
-                equalTo: "#form_add_user #usr_password"
+                equalTo: "#form_add_user #add_usr_password"
             },
             usr_username: {
                 required: true,
-                minlength: 3,
                 email: true,
                 remote: {
-                    url: base_url + "oprs/user/verify_email/",
+                    url: base_url + "oprs/user/verify_email",
                     type: "post",
                     data: {
                         role: function() {
@@ -1194,37 +2894,73 @@ $(document).ready(function() {
             usr_role: {
                 required: true,
             },
+            usr_sex: {
+                required: true,
+            },
         },
         messages: {
             usr_password: {
-                required: "Please provide a password",
-                minlength: "Your password must be at least 5 characters long"
+                // required: "Please provide a password",
+                minlength: "Your password must be at least 8 characters long"
             },
             usr_rep_password: {
-                required: "Please provide a password",
+                // required: "Please provide a password",
                 minlength: "Your password must be at least 5 characters long",
-                equalTo: "Please enter the same password entered previously"
+                equalTo: "The Repeast Password field does not match the Password field."
             },
             usr_username: {
-                required: "Please provide a username",
-                minlength: "Your username must be at least 3 characters long",
-                remote: "Email already used",
+                // required: "Please provide a username",
+                // minlength: "Your username must be at least 3 characters long",
+                remote: "Email already use",
             },
             usr_role: {
-                required: "Please select user role",
+                // required: "Please select user role",
             },
+            usr_sex: {
+                // required: "Please select sex",
+            },
+        },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "usr_password" || element.attr("name") === "usr_rep_password") {
+                error.insertAfter(element.closest("[name='" + element.attr("name") + "']").parent());
+            } else {
+                error.insertAfter(element);
+            }
         },
         submitHandler: function() {
 
-            $('body').loading('start');
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/user/add_user/",
+                url: base_url + "oprs/user/add_user",
                 data: $('#form_add_user').serializeArray(),
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    location.reload();
+                    Swal.fire({
+                        title: "New user added successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
                 }
             });
         }
@@ -1257,10 +2993,9 @@ $(document).ready(function() {
             usr_role: {
                 required: true,
             },
-            // usr_email: {
-            // 	email: true,
-            // 	required: true,
-            // }
+            usr_esx: {
+                required: true,
+            }
         },
         messages: {
             usr_password: {
@@ -1289,12 +3024,395 @@ $(document).ready(function() {
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
-                    // console.log(data);
-                    location.reload();
+                    $('#editUserModal').modal('toggle');
+                    Swal.fire({
+                        title: "User updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
                 }
             });
         }
     });
+
+    // edit user type validation
+    $("#form_edit_user_type").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            role_name: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/roles/check_unique_role",
+                    type: "POST",
+                    data: {
+                        role: function () {
+                            return $("#form_edit_user_type #role_name").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_user_type #row_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+        },
+        messages: {
+            role_name: {
+                remote: "This user type is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/roles/update",
+                data: $('#form_edit_user_type').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editUserTypeModal').modal('toggle');
+                    Swal.fire({
+                        title: "User type updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
+                }
+            });
+        }
+    });
+
+    // edit status type validation
+    $("#form_edit_status_type").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            status_desc: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/status/check_unique_status",
+                    type: "POST",
+                    data: {
+                        status: function () {
+                            return $("#form_edit_status_type #status_desc").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_status_type #id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+        },
+        messages: {
+            status_desc: {
+                remote: "This status type is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/status/update",
+                data: $('#form_edit_status_type').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editStatusTypeModal').modal('toggle');
+                    Swal.fire({
+                        title: "Status type updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
+                }
+            });
+        }
+    });
+
+    // edit publication type validation
+    $("#form_edit_publication_type").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            publication_desc: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/publication_types/check_unique_publication_type",
+                    type: "POST",
+                    data: {
+                        publication: function () {
+                            return $("#form_edit_publication_type #publication_desc").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_publication_type #id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+        },
+        messages: {
+            publication_desc: {
+                remote: "This publication type is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/publication_types/update",
+                data: $('#form_edit_publication_type').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editPublicationTypeModal').modal('toggle');
+                    Swal.fire({
+                        title: "Publication type updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
+                }
+            });
+        }
+    });
+
+    // edit tech rev criteria validation
+    $("#form_edit_tech_rev_crit").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            crt_code: {
+                required:true,
+                remote: {
+                    url: base_url + "oprs/criterion/check_unique_criteria_code/1",
+                    type: "POST",
+                    data: {
+                        code: function () {
+                            return $("#form_edit_tech_rev_crit #crt_code").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_tech_rev_crit #crt_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+            crt_desc: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/criterion/check_unique_criteria_desc/1",
+                    type: "POST",
+                    data: {
+                        desc: function () {
+                            return $("#form_edit_tech_rev_crit #crt_desc").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_tech_rev_crit #crt_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+        },
+        messages: {
+            crt_code: {
+                remote: "This Criteria code is already taken."
+            },
+            crt_desc: {
+                remote: "This Criteria description is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/criterion/update/1",
+                data: $('#form_edit_tech_rev_crit').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editTRCModal').modal('toggle');
+                    Swal.fire({
+                        title: "Criteria updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
+                }
+            });
+        }
+    });
+
+    // edit peer rev criteria validation
+    $("#form_edit_peer_rev_crit").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            pcrt_code: {
+                required:true,
+                remote: {
+                    url: base_url + "oprs/criterion/check_unique_criteria_code/2",
+                    type: "POST",
+                    data: {
+                        code: function () {
+                            return $("#form_edit_peer_rev_crit #pcrt_code").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_peer_rev_crit #pcrt_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+            pcrt_desc: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/criterion/check_unique_criteria_desc/2",
+                    type: "POST",
+                    data: {
+                        desc: function () {
+                            return $("#form_edit_peer_rev_crit #pcrt_desc").val(); // Name field value
+                        },
+                        id: function () {
+                            return $("#form_edit_peer_rev_crit #pcrt_id").val(); // Current record ID
+                        },
+                    },
+                }
+            },
+            pcrt_score: {
+                required: true,
+            }
+        },
+        messages: {
+            pcrt_code: {
+                remote: "This Criteria code is already taken."
+            },
+            pcrt_desc: {
+                remote: "This Criteria description is already taken."
+            },
+        },
+        submitHandler: function() {
+            $.ajax({
+                type: "POST",
+                url: base_url + "oprs/criterion/update/2",
+                data: $('#form_edit_peer_rev_crit').serializeArray(),
+                cache: false,
+                crossDomain: true,
+                success: function(data) {
+                    $('#editPRCModal').modal('toggle');
+                    Swal.fire({
+                        title: "Criteria updated successfully!",
+                        icon: 'success',
+                        // html: "I will close in <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                            location.reload();
+                        });
+                }
+            });
+        }
+    });
+
 
     // // upload manuscript validation
     // $("#manuscript_form").validate({
@@ -1331,7 +3449,7 @@ $(document).ready(function() {
     //     submitHandler: function() {
 
     //         var form = $('#manuscript_form');
-    //         var fromdata = false;
+    //         var formdata = false;
 
     //         if (window.FormData) {
     //             formdata = new FormData(form[0]);
@@ -1382,6 +3500,9 @@ $(document).ready(function() {
                 required: true,
             },
             trk_request_timer: {
+                required: true,
+            },
+            trk_remarks: {
                 required: true,
             },
             jor_volume: {
@@ -1436,7 +3557,59 @@ $(document).ready(function() {
             }
 
             if (req.length == 0) {
-                $('#processReviewModal').modal('toggle');
+                // $('#processReviewModal').modal('toggle');
+                
+                Swal.fire({
+                    title: "Are you sure?",
+                    // text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#007bff",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Submit"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('body').loading('start');
+                        $('#processModal').modal('toggle');
+                        var formdata = new FormData($('#process_manuscript_form')[0]);
+                        
+                        $.ajax({
+                            url: base_url + "oprs/manuscripts/process/" + man_id,
+                            data: formdata,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            type: 'POST',
+                            crossDomain: true,
+                            success: function(data, textStatus, jqXHR) {
+                                Swal.fire({
+                                    title: "Manuscript review request submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                            }
+                        });
+                    }
+                });
             } else {
 
                 var alert = '	<div class="alert alert-danger" role="alert"><h6 class="alert-heading"><span class="fa fa-times-circle"></span> Please enter missing information:</h6>';
@@ -1591,14 +3764,14 @@ $(document).ready(function() {
             $('#committeeModal .modal-footer button').addClass('disabled');
 
             var form = $('#final_review_form');
-            var fromdata = false;
+            var formdata = false;
             if (window.FormData) {
                 formdata = new FormData(form[0]);
             }
             var formAction = form.attr('action');
 
             $.ajax({
-                url: base_url + "oprs/manuscripts/final_review/",
+                url: base_url + "oprs/manuscripts/final_review",
                 data: formdata ? formdata : form.serialize(),
                 cache: false,
                 contentType: false,
@@ -1693,7 +3866,7 @@ $(document).ready(function() {
         }
     });
 
-    // send to reviewers and send email
+    // send to reviewers and send email (UNUSED)
     $('#submit_final_process').click(function() {
 
         $('.modal').modal('hide');
@@ -1701,7 +3874,7 @@ $(document).ready(function() {
         $('body').loading('start');
 
         var form = $('#process_manuscript_form');
-        var fromdata = false;
+        var formdata = false;
         if (window.FormData) {
             formdata = new FormData(form[0]);
         }
@@ -1716,8 +3889,30 @@ $(document).ready(function() {
             type: 'POST',
             crossDomain: true,
             success: function(data, textStatus, jqXHR) {
-                location.reload();
-                // console.log(data);
+                Swal.fire({
+                    title: "Manuscript review request submitted successfully!",
+                    icon: 'success',
+                    // html: "I will close in <b></b> milliseconds.",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                        location.reload();
+                    }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        location.reload();
+                    });
             }
         });
     });
@@ -1730,7 +3925,7 @@ $(document).ready(function() {
         $('body').loading('start');
 
         var form = $('#edit_manuscript_form');
-        var fromdata = false;
+        var formdata = false;
         if (window.FormData) {
             formdata = new FormData(form[0]);
         }
@@ -1779,7 +3974,7 @@ $(document).ready(function() {
         submitHandler: function() {
 
             var form = $('#final_manuscript_form');
-            var fromdata = false;
+            var formdata = false;
 
             if (window.FormData) {
                 formdata = new FormData(form[0]);
@@ -1808,52 +4003,52 @@ $(document).ready(function() {
     });
 
     // forgot password email verification
-    $("#form_forgot").validate({
-        debug: true,
-        errorClass: 'text-danger',
-        rules: {
-            get_email: {
-                required: true,
-                email: true,
-                remote: {
-                    url: base_url + "support/forgot/check_email/",
-                    type: "post"
-                }
-            },
-            usr_role: {
-                required: true,
-            }
-        },
-        messages: {
-            get_email: {
-                remote: "Email not found"
-            },
-            usr_role: {
-                required: "Please select one",
-            }
-        },
-        submitHandler: function() {
-            $.ajax({
-                type: "POST",
-                url: base_url + "support/forgot/send_password/",
-                data: $('#form_forgot').serializeArray(),
-                cache: false,
-                crossDomain: true,
-                success: function(data) {
-                    $.notify({
-                        icon: 'fa fa-check-circle',
-                        message: 'Email sent! Please check your inbox.'
-                    }, {
-                        type: 'success',
-                        timer: 3000,
-                    });
+    // $("#form_forgot").validate({
+    //     debug: true,
+    //     errorClass: 'text-danger',
+    //     rules: {
+    //         get_email: {
+    //             required: true,
+    //             email: true,
+    //             remote: {
+    //                 url: base_url + "support/forgot/check_email/",
+    //                 type: "post"
+    //             }
+    //         },
+    //         usr_role: {
+    //             required: true,
+    //         }
+    //     },
+    //     messages: {
+    //         get_email: {
+    //             remote: "Email not found"
+    //         },
+    //         usr_role: {
+    //             required: "Please select one",
+    //         }
+    //     },
+    //     submitHandler: function() {
+    //         $.ajax({
+    //             type: "POST",
+    //             url: base_url + "support/forgot/send_password/",
+    //             data: $('#form_forgot').serializeArray(),
+    //             cache: false,
+    //             crossDomain: true,
+    //             success: function(data) {
+    //                 $.notify({
+    //                     icon: 'fa fa-check-circle',
+    //                     message: 'Email sent! Please check your inbox.'
+    //                 }, {
+    //                     type: 'success',
+    //                     timer: 3000,
+    //                 });
 
-                    $('#form_forgot')[0].reset();
-                    $('#user_option').empty();
-                }
-            });
-        }
-    });
+    //                 $('#form_forgot')[0].reset();
+    //                 $('#user_option').empty();
+    //             }
+    //         });
+    //     }
+    // });
 
     // dynamic adding of co-author
     var inpIncr = 0;
@@ -1861,35 +4056,38 @@ $(document).ready(function() {
         var html = '';
         inpIncr++;
 
-        html = '<div id="added_coa"><div class="form-group autocomplete w-100">' +
-            '<label class="font-weight-bold" for="coa_name">Co-author ' + inpIncr + '</label> <small><a href="javascript:void(0);" class="text-danger"> Remove</a></small>' +
-            '<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="Search/Type by Name/Specialization/Non-member/Non-account">' +
-            '</div>' +
-            '<div class="form-group">' +
-            '<div class="form-row">' +
-            '<div class="col">' +
-            '<input type="text" class="form-control" placeholder="Affiliation" id="coa_affiliation' + inpIncr + '"" name="coa_affiliation[]">' +
-            '</div>' +
-            '<div class="col">' +
-            '<input type="email" class="form-control" placeholder="Email" id="coa_email' + inpIncr + '"" name="coa_email[]">' +
-            '</div>' +
-            '</div>' +
-            '</div></div>';
-
+        
+		html = '<div class="row mb-3">' +
+                    '<p class="fw-bold">Co-author: <span id="coauthor_status' + inpIncr + '" class="text-primary"></span></p>'+
+                    '<div class="col-4 autocomplete">' +
+                        '<label for="coa_name' + inpIncr + '" class="fw-bold form-label">Full Name</label>' +
+                        '<input class="form-control" id="coa_name' + inpIncr + '" name="coa_name[]" placeholder="First Name M.I. Last name">' +
+                    '</div>' +
+                    '<div class="col-3">' +
+                        '<label for="coa_affiliation' + inpIncr + '" class="fw-bold form-label">Affiliation</label>' +
+                        '<input type="text" class="form-control" id="coa_affiliation' + inpIncr + '" name="coa_affiliation[]" placeholder="Enter affiliation">' +
+                    '</div>' +
+                    '<div class="col-4">' +
+                        '<label for="coa_email' + inpIncr + '" class="fw-bold form-label">Email Address</label>' +
+                        '<input type="text" class="form-control" id="coa_email' + inpIncr + '" name="coa_email[]" placeholder="Enter a valid email">' +
+                    '</div>' +
+                    '<div class="col-1">' +
+                        '<button type="button" class="btn btn-outline-danger mt-4"><span class="oi oi-x"></span></button>' +
+                    '</div>' +
+                '<div>';
 
         $('#coauthors').append(html);
-        // autocomplete_acoa(document.getElementById("coa_name" + inpIncr), acoa);
-        autocomplete_acoa(document.getElementById("coa_name" + inpIncr), mem_exp, '#coa_affiliation' + inpIncr, '#coa_email' + inpIncr);
+        autocomplete_acoa(document.getElementById("coa_name" + inpIncr), mem_exp, '#coa_affiliation' + inpIncr, '#coa_email' + inpIncr, '', '#coauthor_status' + inpIncr);
     });
 
     // remove added co-author
     $('#report_reviewer_table').on('click', 'button', function() {
-        $(this).closest('button').replaceWith("<span class='badge badge-success'><span class='fas fa-check-circle'> eCertification</span<");
+        $(this).closest('button').replaceWith("<span class='badge bg-success'><span class='fas fa-check-circle'> eCertification</span<");
     });
 
     // change button on send ecretification
-    $('#coauthors').on('click', 'a', function() {
-        $(this).closest('#added_coa').remove();
+    $('#coauthors').on('click', 'button', function() {
+		$(this).closest('.row').remove();
     });
 
     // add reviewers
@@ -1909,36 +4107,36 @@ $(document).ready(function() {
         var html = '';
 
         html = '<div class="card" id="added_rev">' +
-            '<div class="card-header p-0" id="heading' + revIncr + '"  data-toggle="collapse" data-target="#collapse' + revIncr + '">' +
+            '<div class="card-header d-flex align-items-center p-0" id="heading' + revIncr + '"  data-toggle="collapse" data-target="#collapse' + revIncr + '">' +
             '<h5 class="mb-0">' +
-            '<button class="btn btn-link" type="button">' +
+            '<button class="btn btn-link text-decoration-none" type="button">' +
             '<span class="fa fa-address-card"></span> Reviewer ' + revIncr + ' : <span id="rev_header' + revIncr + '"></span>' +
             '</button>' +
-            '<button type="button" class="btn btn-link float-right text-danger"><span class="fa fa-trash" id="' + revIncr + '"></span></button>' +
             '</h5>' +
+            '<button type="button" class="btn btn-link ms-auto text-danger"><span class="fa fa-trash" id="' + revIncr + '"></span></button>' +
             '</div>' +
             '<div id="collapse' + revIncr + '" class="collapse show" data-parent="#rev_acc">' +
             '<div class="card-body">' +
-            '<div class="form-row mb-2">' +
+            '<div class="row mb-3">' +
             '<div class="col-3">' +
             '<select class="form-control" id="trk_title' + revIncr + '" name="trk_title[]" placeholder="Title">' +
             select +
             '</select>' +
             '</div>' +
             '<div class="col autocomplete">' +
-            '<input type="text" class="form-control " id="trk_rev' + revIncr + '" name="trk_rev[]" placeholder="Search by Name/Specialization/Non-member/Non-account">' +
+            '<input type="text" class="form-control " id="trk_rev' + revIncr + '" name="trk_rev[]" placeholder="Search by Name or Specialization">' +
             '</div>' +
             '</div>' +
-            '<div class="form-row mb-2">' +
-            '<div class="col">' +
+            '<div class="row mb-2">' +
+            '<div class="col mb-3">' +
             '<input type="text" class="form-control" placeholder="Email" id="trk_rev_email' + revIncr + '" name="trk_rev_email[]">' +
             '</div>' +
-            '<div class="col">' +
+            '<div class="col mb-3">' +
             '<input type="text" class="form-control" placeholder="Contact" id="trk_rev_num' + revIncr + '" name="trk_rev_num[]">' +
             '</div>' +
             '<input type="hidden" id="trk_rev_id' + revIncr + '" name="trk_rev_id[]">' +
             '</div>' +
-            '<div class="form-row">' +
+            '<div class="row">' +
             '<div class="col">' +
             '<input type="text" class="form-control" placeholder="Specialization" id="trk_rev_spec' + revIncr + '" name="trk_rev_spec[]">' +
             '</div>' +
@@ -2039,6 +4237,12 @@ $(document).ready(function() {
         });
 
         $("#crt_total").val(sum);
+
+        if(sum <= 75){
+            $('#overall_rating').empty().append('<span class="fw-bold text-white bg-danger p-2">FAILED</span>');
+        }else{
+            $('#overall_rating').empty().append('<span class="fw-bold text-white bg-success p-2">PASSED</span>');
+        }
     });
 
     // validate review of manuscript
@@ -2062,9 +4266,9 @@ $(document).ready(function() {
                 required: true,
                 max: parseInt($('#scr_crt_4').closest('td').prev('td').text()),
             },
-            scr_status: {
-                required: true,
-            },
+            // scr_status: {
+            //     required: true,
+            // },
             scr_rem_1: {
                 required: true,
             },
@@ -2100,37 +4304,93 @@ $(document).ready(function() {
         },
         submitHandler: function() {
 
-            $('#confirmSubmitReviewModal').modal('toggle');
+            // $('#confirmSubmitReviewModal').modal('toggle');
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    $('body').loading('start');
+                    $('#startReviewModal').modal('toggle');
+                    $('#submit_peer_review').prop('disabled', true);
+                    var formdata = new FormData($('#submit_review_form')[0]);
+        
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/review/" + man_id,
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        type: 'POST',
+                        crossDomain: true,
+                        success: function(data, textStatus, jqXHR) {
+                            $('#submit_review_form')[0].reset();
+                            $('body').loading('stop');
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
         }
     });
 
     // submit review manuscript
-    $('#submit_review_manuscript').click(function(){
-        $('#confirmSubmitReviewModal').modal('toggle');
-        $('#startReviewModal').modal('toggle');
-            $('body').loading('start');
+    // $('#submit_review_manuscript').click(function(){
+    //     $('#confirmSubmitReviewModal').modal('toggle');
+    //     $('#startReviewModal').modal('toggle');
+    //         $('body').loading('start');
 
-            var form = $('#submit_review_form');
-            var fromdata = false;
-            if (window.FormData) {
-                formdata = new FormData(form[0]);
-            }
-            var formAction = form.attr('action');
+    //         var form = $('#submit_review_form');
+    //         var formdata = false;
+    //         if (window.FormData) {
+    //             formdata = new FormData(form[0]);
+    //         }
+    //         var formAction = form.attr('action');
 
-            $.ajax({
-                url: base_url + "oprs/manuscripts/review/" + man_id,
-                data: formdata ? formdata : form.serialize(),
-                cache: false,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                crossDomain: true,
-                success: function(data, textStatus, jqXHR) {
-                    location.reload();
-                    // console.log(data);
-                }
-            });
-    });
+    //         $.ajax({
+    //             url: base_url + "oprs/manuscripts/review/" + man_id,
+    //             data: formdata ? formdata : form.serialize(),
+    //             cache: false,
+    //             contentType: false,
+    //             processData: false,
+    //             type: 'POST',
+    //             crossDomain: true,
+    //             success: function(data, textStatus, jqXHR) {
+    //                 location.reload();
+    //                 // console.log(data);
+    //                 //TODO: add alert
+    //             }
+    //         });
+    // });
 
     $(document).on('hide.bs.modal', '#reviewerModal', function() {
         for (i = 0; i < 100; i++) {
@@ -2142,7 +4402,7 @@ $(document).ready(function() {
     $('#refresh_captcha').click(function() {
         $.ajax({
             type: "GET",
-            url: base_url + "oprs/signup/refresh_captcha/",
+            url: base_url + "oprs/signup/refresh_captcha",
             dataType: "json",
             crossDomain: true,
             success: function(data) {
@@ -2380,73 +4640,84 @@ $(document).ready(function() {
     // });
 
     // check if multiple email in one manuscript
-    $('#get_email').change(function() {
-        if ($(this).val() != '')
-            $.ajax({
-                type: "GET",
-                url: base_url + "support/forgot/check_multiple_account/" + $(this).val(),
-                dataType: "json",
-                crossDomain: true,
-                success: function(data) {
-                    $('#user_option').empty();
-                    if (data.length > 1) {
-                        $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
+    // $('#get_email').change(function() {
+    //     if ($(this).val() != '')
+    //         $.ajax({
+    //             type: "GET",
+    //             url: base_url + "support/forgot/check_multiple_account/" + $(this).val(),
+    //             dataType: "json",
+    //             crossDomain: true,
+    //             success: function(data) {
+    //                 console.log(data);
+    //                 $('#user_option').empty();
+    //                 if (data.length > 1) {
+    //                     $('#user_option').append('<p class="fw-bold small">You have multiple account. Select (1) account only.</p>');
 
-                        $.each(data, function(key, val) {
-                            var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
+    //                     $.each(data, function(key, val) {
+    //                         var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
 
-                            $('#user_option').append('<div class="custom-control custom-radio">' +
-                                '<input type="radio" value="' + val.usr_id + '" id="' + role + '' + val.usr_role + '" name="usr_id" class="custom-control-input">' +
-                                '<label class="custom-control-label pt-1" for="' + role + '' + val.usr_role + '"> ' + val.usr_username + ' (' + role + ')</label>' +
-                                '</div>');
-                        });
-                    } else {
+    //                         $('#user_option').append('<div class="custom-control custom-radio">' +
+    //                             '<input type="radio" value="' + val.usr_id + '" id="' + role + '' + val.usr_role + '" name="usr_id" class="custom-control-input">' +
+    //                             '<label class="custom-control-label pt-1" for="' + role + '' + val.usr_role + '"> ' + val.usr_username + ' (' + role + ')</label>' +
+    //                             '</div>');
+    //                     });
+    //                 } else {
 
-                        $('#user_option').append('<p class="font-weight-bold small">Current account:</p>');
+    //                     $('#user_option').append('<p class="fw-bold small">Current account:</p>');
 
-                        $.each(data, function(key, val) {
-                            var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
+    //                     $.each(data, function(key, val) {
+    //                         var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
 
-                            $('#user_option').append('<div class="custom-control custom-radio">' +
-                                '<input type="radio" checked value="' + val.usr_id + '" id="' + role + '' + val.usr_role + '" name="usr_id" class="custom-control-input">' +
-                                '<label class="custom-control-label pt-1" for="' + role + '' + val.usr_role + '"> ' + val.usr_username + ' (' + role + ')</label>' +
-                                '</div>');
-                        });
-                    }
-                }
-            });
-    });
+    //                         $('#user_option').append('<div class="custom-control custom-radio">' +
+    //                             '<input type="radio" checked value="' + val.usr_id + '" id="' + role + '' + val.usr_role + '" name="usr_id" class="custom-control-input">' +
+    //                             '<label class="custom-control-label pt-1" for="' + role + '' + val.usr_role + '"> ' + val.usr_username + ' (' + role + ')</label>' +
+    //                             '</div>');
+    //                     });
+    //                 }
+    //             }
+    //         });
+    // });
+
+    $('#form_forgot input[name="user_id"]').on('change', function(){
+        $('#reset_password_btn').prop('disabled', false);
+    })
+
+    $('#loginForm input[name="user_id"]').on('change', function(){
+        $('#admin_login').prop('disabled', false);
+    })
+
+    
 
     // for author/reviewer multiple account validation (unused)
-    $('.login #usr_username').change(function() {
-        if ($(this).val() != '')
-            $.ajax({
-                type: "GET",
-                url: base_url + "oprs/login/check_multiple_account/" + $(this).val(),
-                dataType: "json",
-                crossDomain: true,
-                success: function(data) {
-                    // console.log(data);
-                    $('#user_option').empty();
-                    if (data.length > 1) {
-                        $('#user_option').append('<p class="font-weight-bold small">You have multiple account. Select (1) account only.</p>');
+    // $('.login #usr_username').change(function() {
+    //     if ($(this).val() != '')
+    //         $.ajax({
+    //             type: "GET",
+    //             url: base_url + "oprs/login/check_multiple_account/" + $(this).val(),
+    //             dataType: "json",
+    //             crossDomain: true,
+    //             success: function(data) {
+    //                 // console.log(data);
+    //                 $('#user_option').empty();
+    //                 if (data.length > 1) {
+    //                     $('#user_option').append('<p class="fw-bold small">You have multiple account. Select (1) account only.</p>');
 
-                        $.each(data, function(key, val) {
-                            // var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
-                            var usr_id = (val.usr_grp_id > 0) ? val.usr_id : val.usr_id;
-                            var role = (val.usr_grp_id > 0) ? 'Author' : (val.usr_role == 1) ? 'Author' : 'Reviewer';
-                            var usr_role = (val.usr_grp_id > 0) ? '1' : (val.usr_role == 1) ? '1' : '5';
-                            var usr_username = (val.usr_grp_id > 0) ? val.usr_name : val.usr_username;
+    //                     $.each(data, function(key, val) {
+    //                         // var role = (val.usr_role == 1) ? 'Author' : 'Reviewer';
+    //                         var usr_id = (val.usr_grp_id > 0) ? val.usr_id : val.usr_id;
+    //                         var role = (val.usr_grp_id > 0) ? 'Author' : (val.usr_role == 1) ? 'Author' : 'Reviewer';
+    //                         var usr_role = (val.usr_grp_id > 0) ? '1' : (val.usr_role == 1) ? '1' : '5';
+    //                         var usr_username = (val.usr_grp_id > 0) ? val.usr_name : val.usr_username;
 
-                            $('#user_option').append('<div class="custom-control custom-radio">' +
-                                '<input type="radio" value="' + usr_role + '" id="' + role + '' + usr_id + '" name="usr_role" class="custom-control-input">' +
-                                '<label class="custom-control-label pt-1" for="' + role + '' + usr_id + '"> ' + usr_username + ' (' + role + ')</label>' +
-                                '</div>');
-                        });
-                    }
-                }
-            });
-    });
+    //                         $('#user_option').append('<div class="custom-control custom-radio">' +
+    //                             '<input type="radio" value="' + usr_role + '" id="' + role + '' + usr_id + '" name="usr_role" class="custom-control-input">' +
+    //                             '<label class="custom-control-label pt-1" for="' + role + '' + usr_id + '"> ' + usr_username + ' (' + role + ')</label>' +
+    //                             '</div>');
+    //                     });
+    //                 }
+    //             }
+    //         });
+    // });
 
     // unused
     $('#revise_review').click(function() {
@@ -2465,57 +4736,182 @@ $(document).ready(function() {
         rules: {
             usr_password: {
                 required: true,
-                minlength: 5
+                minlength: 8,
+                maxlength: 20
             },
             old_password: {
                 required: true,
-                minlength: 5,
                 remote: {
-                    url: base_url + "oprs/user/verify_old_password/",
+                    url: base_url + "oprs/user/verify_old_password",
                     type: "post"
                 }
             },
             repeat_password: {
                 required: true,
-                minlength: 5,
-                equalTo: "#usr_password"
+                minlength: 8,
+                maxlength: 20,
+                equalTo: "#form_change_pass #usr_password"
             }
         },
         messages: {
             usr_password: {
-                required: "Please enter old password",
-                minlength: "Your password must be at least 5 characters long"
+                required: "Please enter new password",
+                minlength: "Your password must be at least 8 characters long",
+                maxlength: "Your password must be 20 characters long max"
             },
             old_password: {
-                required: "Please enter new password",
-                minlength: "Your password must be at least 5 characters long",
+                required: "Please enter current password",
                 remote: "Incorrect password"
             },
             repeat_password: {
                 required: "Please repeat new password",
-                minlength: "Your password must be at least 5 characters long",
-                equalTo: "Please enter the same password as above"
+                minlength: "Your password must be 8-20 characters long",
+                equalTo: "Please enter the same password as above",
+                maxlength: "Your password must be 20 characters long max"
+            }
+        },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "usr_password" || element.attr("name") === "old_password") {
+                error.insertAfter(element.closest("[name='" + element.attr("name") + "']").parent());
+            } else {
+                error.insertAfter(element);
             }
         },
         submitHandler: function() {
-            $.ajax({
-                type: "POST",
-                url: base_url + "oprs/user/change_password/",
-                data: $('#form_change_pass').serializeArray(),
-                cache: false,
-                crossDomain: true,
-                success: function(data) {
 
-                    $('#form_change_pass')[0].reset();
+            Swal.fire({
+                title: "Apply changes?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
                     $('#changePassModal').modal('toggle');
-                    $.notify({
-                        icon: 'fa fa-check-circle',
-                        message: 'Password changed successfull.'
-                    }, {
-                        type: 'success',
-                        timer: 3000,
-                    });
 
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "oprs/user/change_password",
+                        data: $('#form_change_pass').serializeArray(),
+                        cache: false,
+                        crossDomain: true,
+                        success: function(data) {
+
+                            $('body').loading('stop');
+                            $('#form_change_pass')[0].reset();
+
+                            
+
+                            Swal.fire({
+                                title: "Password updated successfully!",
+                                icon: 'success',
+                                // html: "I will close in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    // update account
+    $("#form_update_account").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            usr_full_name: {
+                required: true,
+            },
+            usr_username: {
+                required: true,
+                remote: {
+                    url: base_url + "oprs/user/verify_email_except_self",
+                    type: "post"
+                }
+            },
+            usr_sex: {
+                required: true,
+            },
+        },
+        messages: {
+            usr_username: {
+                remote: "Email already in use"
+            }
+        },
+        submitHandler: function() {
+            Swal.fire({
+                title: "Apply changes?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#accountSettingModal').modal('toggle');
+
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "oprs/user/udpate_account",
+                        data: $('#form_update_account').serializeArray(),
+                        cache: false,
+                        crossDomain: true,
+                        success: function(data) {
+
+                            $('body').loading('stop');
+                            $('#form_update_account')[0].reset();
+
+                            Swal.fire({
+                                title: "Account updated successfully!",
+                                icon: 'success',
+                                // html: "I will close in <b></b> milliseconds.",
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                    location.reload();
+                                }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
                 }
             });
         }
@@ -2540,7 +4936,7 @@ $(document).ready(function() {
     $('#default_auth').click(function() {
         $.ajax({
             type: "POST",
-            url: base_url + "oprs/manuscripts/default_auth/",
+            url: base_url + "oprs/manuscripts/default_auth",
             dataType: "json",
             cache: false,
             crossDomain: true,
@@ -2565,30 +4961,43 @@ $(document).ready(function() {
     });
 
     // dynamicallly show user role per system access
-    $('#usr_sys_acc').change(function() {
-        $('#usr_role').prop('disabled', false);
+    // $('#usr_sys_acc').change(function() {
+    //     $('#usr_role').prop('disabled', false);
 
-        $('#usr_role').empty();
+    //     $('#usr_role').empty();
 
-        if ($(this).val() == 1) {
-            $('#usr_role').append('<option value="" selected>Select User Role</option>' +
-                '<option value="7">Admin</option>' +
-                '<option value="6">Manager</option>');
-        }else if($(this).val() == 2) {
-            $('#usr_role').append('<option value="" selected>Select User Role</option>' +
-                '<option value="7">Admin</option>' +
-                '<option value="9">Publication Committee</option>' +
-                '<option value="3">Managing Editor</option>' +
-                '<option value="6">Manager</option>' +
-                '<option value="10">Editor</option>' +
-                '<option value="11">Guest Editor</option>' +
-                '<option value="12">Editor-in-Chief</option> '+
-                '<option value="13">Layout</option>');
-        }else{
-            $('#usr_role').append('<option value="" selected>Select User Role</option>' +
-                '<option value="3">Managing Editor</option>');
-        }
-    });
+            
+    //     $.ajax({
+    //         method: 'GET',
+    //         url: base_url + "oprs/user/get_user_types",
+    //         async: false,
+    //         dataType: "json",
+    //         success: function (data) {
+    //             $.each(data, function(key,val){
+    //                 if ($(this).val() == 1) { // eJournal
+    //                     if(val.)
+    //                     $('#usr_role').append('<option value="" selected>Select User Role</option>' +
+    //                         '<option value="7">Admin</option>' +
+    //                         '<option value="6">Manager</option>');
+    //                 }else if($(this).val() == 2) { // oprs only
+    //                     $('#usr_role').append('<option value="" selected>Select User Role</option>' +
+    //                         '<option value="7">Admin</option>' +
+    //                         '<option value="9">Publication Committee</option>' +
+    //                         '<option value="3">Managing Editor</option>' +
+    //                         '<option value="6">Manager</option>' +
+    //                         '<option value="10">Editor</option>' +
+    //                         '<option value="11">Guest Editor</option>' +
+    //                         '<option value="12">Editor-in-Chief</option> '+
+    //                         '<option value="13">Layout</option>');
+    //                 }else{ //both
+    //                     $('#usr_role').append('<option value="" selected>Select User Role</option>' +
+    //                         '<option value="3">Managing Editor</option>');
+    //                 }
+    //             });
+
+    //         }
+    //     });
+    // });
 
     // edit user
     $('#editUserModal #usr_sys_acc').change(function() {
@@ -2616,6 +5025,53 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('change', '.form-switch .form-check-input', function() {
+        var name = $(this).attr('name');  // Get the checkbox name
+        var user_id = $(this).val();        // Get the checkbox value
+        var checked = ($(this).prop("checked") == true) ? 1 : 0; // Check if it is checked
+
+        var data = {
+            module : name,
+            user_id : user_id,
+            value : checked
+        };
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "oprs/user/set_module_access",
+            data: data,
+            dataType: "json",
+            cache: false,
+            crossDomain: true,
+            success: function(data) {
+                Swal.fire({
+                    title: "Menu access control updated successfully!",
+                    icon: 'success',
+                    // html: "I will close in <b></b> milliseconds.",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                        
+                    }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        
+                    });
+            }
+        });
+    });
+
     // show users privileges
     $('#user_control').change(function() {
         var usr_grp = $(this).val();
@@ -2626,11 +5082,20 @@ $(document).ready(function() {
             dataType: "json",
             crossDomain: true,
             success: function(data) {
+            console.log("🚀 ~ $ ~ data:", data)
 
                 
                 if ($.fn.DataTable.isDataTable("#controls_table")) {
                     $('#controls_table').DataTable().clear().destroy();
                 }
+
+                var table = $('#controls_table').DataTable({
+                    columnDefs: [
+                        { width: "10px", targets: 0 } // Set the width of the first column
+                    ],
+                    // Optional: to ensure the table layout is applied correctly
+                    autoWidth: false 
+                });
 
                 if(data.length > 0){
                     $.each(data, function(key, val) {
@@ -2642,32 +5107,35 @@ $(document).ready(function() {
                                 var check_delete = (val.prv_delete == 1) ? 'checked' : '';
                                 var check_view = (val.prv_view == 1) ? 'checked' : '';
                                 var check_export = (val.prv_export == 1) ? 'checked' : '';
-                                var access = (val.usr_sys_acc == 1) ? 'eJournal' : (val.usr_sys_acc == 2) ? 'eReview' : 'eJournal-eReview';
+                                var access = (val.usr_sys_acc == 1) ? '<span class="badge rounded-pill bg-primary">eJournal</span>' : (val.usr_sys_acc == 2) ? '<span class="badge rounded-pill bg-dark">eReview</span>' : '<span class="badge rounded-pill bg-primary">eJournal</span> <span class="badge rounded-pill bg-dark">eReview</span>';
 
-                                var html = "<div class='form-check form-check-inline'> \
+                                var html = "<div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_add[]' value='" + val.usr_id + "' " + check_add + "> \
-                                            <label class='form-check-label'>Add</label> \
+                                            <label class='form-check-label mt-2'>Add</label> \
                                         </div> \
-                                        <div class='form-check form-check-inline'> \
+                                        <div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_edit[]' value='" + val.usr_id + "' " + check_edit + "> \
-                                            <label class='form-check-label'>Edit</label> \
+                                            <label class='form-check-label mt-2'>Edit</label> \
                                         </div> \
-                                        <div class='form-check form-check-inline'> \
+                                        <div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_delete[]' value='" + val.usr_id + "' " + check_delete + "> \
-                                            <label class='form-check-label'>Delete</label> \
+                                            <label class='form-check-label mt-2'>Delete</label> \
                                         </div> \
-                                        <div class='form-check form-check-inline'> \
+                                        <div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_view[]' value='" + val.usr_id + "' " + check_view + " disabled> \
-                                            <label class='form-check-label'>View</label> \
+                                            <label class='form-check-label mt-2'>View</label> \
                                         </div> \
-                                        <div class='form-check form-check-inline'> \
+                                        <div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_export[]' value='" + val.usr_id + "' " + check_export + "> \
-                                            <label class='form-check-label'>Export</label> \
+                                            <label class='form-check-label mt-2'>Export</label> \
                                         </div>";
 
-                                $('#controls_table').dataTable().fnAddData([
+
+                                table.row.add([
                                     c++,
                                     val.usr_username,
+                                    val.usr_desc,
+                                    access,
                                     access,
                                     html
                                 ]);
@@ -2676,9 +5144,9 @@ $(document).ready(function() {
 
 
 
-                            var t = $('#controls_table').DataTable();
-                            t.on('order.dt search.dt', function() {
-                                t.column(0, {
+                            
+                            table.on('order.dt search.dt', function() {
+                                table.column(0, {
                                     search: 'applied',
                                     order: 'applied'
                                 }).nodes().each(function(cell, i) {
@@ -2687,15 +5155,14 @@ $(document).ready(function() {
                             }).draw();
                     });
                 }else{
-                    var t = $('#controls_table').DataTable();
-                            t.on('order.dt search.dt', function() {
-                                t.column(0, {
-                                    search: 'applied',
-                                    order: 'applied'
-                                }).nodes().each(function(cell, i) {
-                                    cell.innerHTML = i + 1;
-                                });
-                            }).draw();
+                    table.on('order.dt search.dt', function() {
+                        table.column(0, {
+                            search: 'applied',
+                            order: 'applied'
+                        }).nodes().each(function(cell, i) {
+                            cell.innerHTML = i + 1;
+                        });
+                    }).draw();
                 }
             }
         });
@@ -2798,19 +5265,27 @@ $(document).ready(function() {
                 extension: 'xls|csv',
             },
         },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "import_backup") {
+                error.insertAfter(element.closest("[name='" + element.attr("name") + "']").parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
         submitHandler: function() {
             
             $('body').loading('start');
 
             var form = $('#import_backup_form');
-            var fromdata = false;
+            var formdata = false;
             if (window.FormData) {
                 formdata = new FormData(form[0]);
             }
             var formAction = form.attr('action');
 
             $.ajax({
-                url: base_url + "oprs/logs/import_backup/",
+                url: base_url + "oprs/logs/import_backup",
                 data: formdata ? formdata : form.serialize(),
                 cache: false,
                 contentType: false,
@@ -2832,7 +5307,7 @@ $(document).ready(function() {
         $('body').loading('start');
 
         $.ajax({
-            url: base_url + "oprs/logs/clear_logs/",
+            url: base_url + "oprs/logs/clear_logs",
             cache: false,
             contentType: false,
             processData: false,
@@ -2845,20 +5320,21 @@ $(document).ready(function() {
         });
     });
 
-    // non member
-    $('input:radio[name="non_member"]').change(function(){
+    // author type
+    $('input:radio[name="man_author_type"]').change(function(){
         var val = $(this).val();
-        $('.principal').find('span').empty();
+        $('#coauthors').empty();
         if(val == 1){
-            $('.principal').append(' <span class="badge badge-primary">Type Non-Member</span>');
-            $('#man_usr_id').val('');
+            // $('#add_coauthors').removeClass('d-none');
+            $('#add_main_author').addClass('d-none');
         }else{
-            $('.principal').append(' <span class="badge badge-danger">Search Member</span>');
+            // $('#add_coauthors').addClass('d-none');
+            $('#add_main_author').removeClass('d-none');
         }
 
-        $('#man_author').val('');
-        $('#man_affiliation').val('');
-        $('#man_email').val('');
+        // $('#man_author').val('');
+        // $('#man_affiliation').val('');
+        // $('#man_email').val('');
     });
 
     // save feedback
@@ -2877,7 +5353,7 @@ $(document).ready(function() {
         }
     });
     
-    // submit ui/ux feedback form
+    // submit ui/ux feedback form (unused)
     $('#feedback_form').on('submit', function(e){
 
     e.preventDefault();
@@ -2916,7 +5392,7 @@ $(document).ready(function() {
                 $('#feedback_form').remove();
 
                 var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
-                                <p class="text-center btn-link font-weight-bold"><u><a href="'+ base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
+                                <p class="text-center btn-link fw-bold"><u><a href="'+ base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
                             
                 
                 $(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
@@ -3031,7 +5507,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: base_url + "oprs/manuscripts/add_remarks/",
+            url: base_url + "oprs/manuscripts/add_remarks",
             data : formdata ? formdata :form.serialize(),
             cache: false,
             contentType: false,
@@ -3071,6 +5547,7 @@ $(document).ready(function() {
             processData: false,
             success: function(response) {
                 window.location.reload();
+                //TODO::add alert
             }
         });
     });
@@ -3082,51 +5559,600 @@ $(document).ready(function() {
         
         $.ajax({
             type: "POST",
-            url: base_url + 'oprs/emails/update_email_content/',
+            url: base_url + 'oprs/emails/update_email_content',
             data:  formData,
             cache: false,
             crossDomain: true,
             success: function(data) {
+                
+                $('#emailContentModal').modal('toggle');
+                
+                Swal.fire({
+                    title: "Email notification updated successfully!",
+                    icon: 'success',
+                    // html: "I will close in <b></b> milliseconds.",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                        location.reload();
+                    }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        location.reload();
+                    });
             }
         });
-
-        location.reload();
     });
 
-
-    $("#submit_editorial_review_form").validate({
+    $("#submit_consolidation_form").validate({
         debug: true,
         errorClass: 'text-danger',
         rules: {
-            edit_file: {
+            cons_file: {
+                required: true,
+                // extension: "doc|docx|pdf",
+                extension: "pdf",
+            },
+            cons_remarks: {
+                required: true,
+            },
+            cons_revise: {
                 required: true,
             },
         },
-        messages: {},
-        errorElement : 'div',
-        errorLabelContainer: '.errorTxt',
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "cons_revise") {
+                error.insertAfter("#cons_revise");
+            } else {
+                error.insertAfter(element);
+            }
+        },
         submitHandler: function() {
 
-            var form = $('#submit_editorial_review_form');
-            var formdata = false;
-    
-            if(window.FormData)
-            {
-                formdata = new FormData(form[0]);
-            }
-    
-            $.ajax({
-                type: "POST",
-                url: base_url + 'oprs/manuscripts/editorial_review',
-                data : formdata ? formdata :form.serialize(),
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    location.reload();
-                }
-            });
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
 
-            $('#editorialModal').modal('toggle');
+                    $('body').loading('start');
+                    $('#consolidationModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_consolidation_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/consolidation_review",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_consolidation_form')[0].reset();
+                            Swal.fire({
+                            title: "Consolidated reviews submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+    
+    $("#submit_revision_endorsement_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            cons_remarks: {
+                required: true,
+            },
+            cons_check_revise: {
+                required: true,
+            },
+        },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "cons_check_revise") {
+                error.insertAfter("#cons_check_revise");
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#checkRevisionModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_revision_endorsement_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/check_revision",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_revision_endorsement_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#submit_coped_process_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            coped_file: {
+                // required: true,
+                extension: "pdf",
+            },
+            coped_remarks: {
+                required: true,
+            },
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#copEdProcessModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_coped_process_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_coped_process",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_coped_process_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#submit_final_review_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            final_remarks: {
+                required: true,
+            },
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#finalReviewModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_final_review_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_final_review",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_final_review_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#submit_layout_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            lay_file: {
+                required: true,
+                extension: "pdf",
+            },
+            lay_remarks: {
+                required: true,
+            },
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#layoutProcessModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_layout_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_layout",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_layout_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#manuscript_revision_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            man_matrix : {
+                // required: true,
+                extension: "pdf|doc|docx",
+                filesize : 20000000,
+            },
+            man_abs : {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_file: {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_word: {
+                required: true,
+                extension: "doc|docx",
+                filesize : 20000000,
+            },
+            man_latex: {
+                texFile: true, // Use the custom rule
+                filesize : 20000000,
+            },
+            man_pages: {
+                required: true,
+            }
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#uploadRevisionModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#manuscript_revision_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/author_revision",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#manuscript_revision_form')[0].reset();
+                            Swal.fire({
+                            title: "Revision submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#submit_proofread_revision_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            man_abs : {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_file: {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_word: {
+                required: true,
+                extension: "doc|docx",
+                filesize : 20000000,
+            },
+            man_latex: {
+                texFile: true, // Use the custom rule
+                filesize : 20000000,
+            },
+            man_pages: {
+                required: true,
+            }
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#uploadProofreadRevisionModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_proofread_revision_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_final_revision",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_proofread_revision_form')[0].reset();
+                            Swal.fire({
+                            title: "Revision submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
         }
     });
 
@@ -3137,7 +6163,7 @@ $(document).ready(function() {
         submitHandler: function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "oprs/manuscripts/for_publication/",
+                url: base_url + "oprs/manuscripts/for_publication",
                 data: $('#publication_form').serializeArray(),
                 cache: false,
                 crossDomain: true,
@@ -3171,31 +6197,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // publish to ejournal 
-    $('#pub_to_e_form').on('submit', function(e){
-        var form = $('#pub_to_e_form');
-        var formdata = false;
-
-        if(window.FormData)
-        {
-            formdata = new FormData(form[0]);
-        }
-
-        $.ajax({
-            type: "POST",
-            url: base_url + 'oprs/manuscripts/publish',
-            data : formdata ? formdata :form.serialize(),
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                // window.location.reload();
-                console.log(response);
-            }
-        });
-    });
-
-
 });
 
 // count character for limited input in remarks
@@ -3245,6 +6246,36 @@ function process_man(id) {
            
             });
 
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_suggested_peer/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $('#suggested_peers').empty();
+            if(data.length > 0){
+                $('#suggested_peer_count').removeClass('d-none');
+                $('#suggested_peer_count').text(data.length);
+
+                var html = '<ol class="list-group list-group-numbered list-group-flush">';
+                
+                $.each(data, function(key, val) {
+                    
+                    html += `<li class="list-group-item"><b>${val.peer_name}</b> (<em>${val.peer_specialization}</em>)</li>`;
+                    
+                });
+
+                html += '</ol>';
+
+                $('#suggested_peers').append(html);
+            }else{
+                $('#suggested_peer_count').addClass('d-none');
+                $('#suggested_peer_count').text('');
+                $('#suggested_peers').append('No suggested peer reviewer.');
+            }
         }
     });
 
@@ -3302,19 +6333,25 @@ function edit_man(id) {
 
     
 }
-
 // show tracking modal
+// function tracking(id, role, title, status) {
+
 function tracking(id, role, title, status) {
-    
 
-    if(status == 1){
-        $('#trackingModal .dropdown').show();
-    }else{
-        $('#trackingModal .dropdown').hide();
+    if(role == 2000){
+     $('#trackingModal').css('z-index', role);
     }
+    
+    $('#trackingModal').modal('toggle');
+
+    // if(status == 1){
+    //     $('#trackingModal .dropdown').show();
+    // }else{
+    //     $('#trackingModal .dropdown').hide();
+    // }
 
 
-    var manuscript_title = decodeURIComponent(title);
+    // var manuscript_title = decodeURIComponent(title);
     man_id = id;
     $.ajax({
         type: "GET",
@@ -3325,7 +6362,7 @@ function tracking(id, role, title, status) {
             $('#track_list').empty();
             var html = '';
             var trk_c = 0;
-            if (data.length > 0) {
+            // if (data.length > 0) {
 
                 $.each(data, function(key, val) {
                     trk_c++;
@@ -3380,11 +6417,12 @@ function tracking(id, role, title, status) {
 
                     html = '<li class="list-group-item list-group-item-secondary flex-column align-items-start">' +
                         '<div class="d-flex w-100 justify-content-between">' +
-                        '<h6 class="mb-1 font-weight-bold">' + user + ' (' + user_role + ')</h6>' +
+                        // '<h6 class="mb-1 fw-bold">' + user + ' (' + user_role + ')</h6>' +
+                        '<h6 class="mb-1 fw-bold">' + val.role_name + '</h6>' +
                         '<small>' + moment(val.trk_process_datetime, 'YYYY-MM-DD HH:mm').format("MMMM D, h:mm a") + '</small>' +
                         '</div>' +
-                        '<small class="mb-1">' + user_action + '</small><br/>' +
-                        '<span class="usr' + trk_c + '"></span>' +
+                        '<small class="mb-1">' + val.trk_description + '</small><br/>' +
+                        // '<span class="usr' + trk_c + '"></span>' +
                         '</li>';
 
                     $('#track_list').append(html);
@@ -3396,18 +6434,18 @@ function tracking(id, role, title, status) {
                 $('#track_list .list-group-item-secondary').first().addClass('list-group-item-primary').removeClass('list-group-item-secondary');
 
 
-            } else {
+            // } else {
 
                 
 
-                html = '<li class="list-group-item list-group-item-secondary flex-column align-items-start">' +
-                    '<div class="d-flex w-100 justify-content-between">' +
-                    '<h6 class="mb-1 font-weight-bold">Pending action from Managing Editor</h6>' +
-                    '</div>' +
-                    '<small class="mb-1">You have just submitted manuscript.</small><br/>' +
-                    '</li>';
-                $('#track_list').append(html);
-            }
+            //     html = '<li class="list-group-item list-group-item-secondary flex-column align-items-start">' +
+            //         '<div class="d-flex w-100 justify-content-between">' +
+            //         '<h6 class="mb-1 fw-bold">Pending action from Technical Desk Editor</h6>' +
+            //         '</div>' +
+            //         '<small class="mb-1">You have just submitted manuscript.</small><br/>' +
+            //         '</li>';
+            //     $('#track_list').append(html);
+            // }
         }
     });
 }
@@ -3529,13 +6567,17 @@ function unique(array) {
 }
 
 // get all info of uploaded manuscript
-function view_manus(id, hide) {
+function view_manus(id, hide, file) {
 
-    $('#uploadModal .table-borderless > tbody').empty();
+    if(hide == 2000){
+        $('#manuscriptModal').css('z-index', hide);
+    }
+
+    $('#manuscriptModal .table-bordered > tbody').empty();
 
     var coa = [];
     var html = '';
-
+ 
     $.ajax({
         type: "GET",
         url: base_url + "oprs/manuscripts/authors/get/" + id,
@@ -3547,71 +6589,104 @@ function view_manus(id, hide) {
                     coa.push(val.coa_name + ', ' + val.coa_affiliation + ', ' + val.coa_email + '<br/>');
                 });
             }
-        }
-    });
 
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/manuscript/" + id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
+            $.ajax({
+                type: "GET",
+                url: base_url + "oprs/manuscripts/manuscript/" + id,
+                dataType: "json",
+                crossDomain: true,
+                success: function(data) {
+                    $.each(data, function(key, val) {
 
-            $.each(data, function(key, val) {
+                        var vol = (val.man_volume != null) ? val.man_volume : 'N/a';
+                        var iss = (val.man_issue != null) ? val.man_issue : 'N/a';
+                        var iss = (iss >= 5) ? 'Special Issue No. ' + (iss - 4) : iss;
+                        var yer = (val.man_year != null) ? val.man_year : 'N/a';
+                        var rem = (val.man_remarks != null) ? val.man_remarks : 'N/a';
+                        var coas = (coa.length > 0) ? coa.join('') : 'N/a';
+                        var prim = (hide == 1) ? '<em>Undisclosed</em>' : val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
+                        var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
+                        var man_type = (val.man_type) ? val.publication_desc : 'N/a'; 
 
-                var vol = (val.man_volume != null) ? val.man_volume : '-';
-                var iss = (val.man_issue != null) ? val.man_issue : '-';
-                var iss = (iss >= 5) ? 'Special Issue No. ' + (iss - 4) : iss;
-                var yer = (val.man_year != null) ? val.man_year : '-';
-                var rem = (val.man_remarks != null) ? val.man_remarks : '-';
-                var coas = (coa.length > 0) ? coa.join('') : '-';
-                var prim = (hide == 1) ? '<em>Undisclosed</em>' : val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
-                var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
+                        var dir = (val.man_revision_status == 1) ? 'revised' : ((val.man_revision_status == 2) ? 'final' : 'initial');
+                      
+                        var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
+                        var keywords = val.man_keywords ?? 'N/A';
 
-                html += '<tr>' +
-                    '<th>Title</th>' +
-                    '<td>' + val.man_title + '</td>' +
-                    '</tr>';
+                        html += '<tr>' +
+                                    '<th>Title</th>' +
+                                    '<td>' + val.man_title + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>No. of Pages</th>' +
+                                    '<td>' + val.man_pages + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Type of Publication</th>'+
+                                    '<td>' + man_type + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Keywords</th>'+
+                                    '<td>' + keywords + '</td>' +
+                                '</tr>';
 
-                html += '<tr>' +
-                    '<th>Primary Author</th>' +
-                    '<td>' + prim + '</td>' +
-                    '</tr>';
 
-                html += '<tr>' +
-                    '<th>Co-authors</th>' +
-                    '<td>' + coas + '</td>' +
-                    '</tr>';
+                                if(val.man_author_type == 1){
+                                    html += '<tr>' +
+                                            '<th>Corresponding Author</th>' +
+                                            '<td>' + prim + ' (Main Author)</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<th>Co-authors</th>' +
+                                            '<td>' + coas + '</td>' +
+                                        '</tr>';
+                                }
+                                
+                                if(val.man_author_type == 2){
+                                    html += '<tr>' +
+                                            '<th>Corresponding Author</th>' +
+                                            '<td>' + coas + ' (Co-author)</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<th>Main Author</th>' +
+                                            '<td>' + prim + '</td>' +
+                                        '</tr>';
+                                }
 
-                html += '<tr>' +
-                    '<th>Volume</th>' +
-                    '<td>' + vol + '</td>' +
-                    '</tr>';
+                        html +=  '<tr>'+
+                                    '<th>Abstract</th>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/" + dir + "_abstracts_pdf/" + val.man_abs + '" target="_blank">PDF</a></td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Full Text Manuscript</th>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/" + dir + "_manuscripts_pdf/" + val.man_file + '" target="_blank">PDF</a> | <a href="' + base_url + "assets/oprs/uploads/" + dir + "_manuscripts_word/" + val.man_word + '" download>WORD</a></td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Latex</th>' +
+                                    '<td>' + latex + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Volume</th>' +
+                                    '<td>' + vol + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Issue</th>' +
+                                    '<td>' + iss + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Year</th>' +
+                                    '<td>' + yer + '</td>' +
+                                '</tr>';
+                                // '<tr>' +
+                                //     '<th>Remarks</th>' +
+                                //     '<td>' + rem + '</td>' +
+                                // '</tr>';
+                    });
 
-                html += '<tr>' +
-                    '<th>Issue</th>' +
-                    '<td>' + iss + '</td>' +
-                    '</tr>';
-
-                html += '<tr>' +
-                    '<th>Year</th>' +
-                    '<td>' + yer + '</td>' +
-                    '</tr>';
-
-                html += '<tr>' +
-                    '<th>Remarks</th>' +
-                    '<td>' + rem + '</td>' +
-                    '</tr>';
+                    $('#manuscriptModal .table-bordered > tbody').html(html);
+                    $('#manuscriptModal').modal('toggle');
+                }
             });
-
-            $('#uploadModal .table-borderless > tbody').append(html);
-            $('#uploadModal').modal('toggle');
-            $('#man_file_div').hide();
-            $('#man_abs_div').hide();
-            $('#man_key_div').hide();
-            $('#uploadModal .modal-footer .btn').hide();
-            $('#manuscript_form').hide();
-            $('.table-borderless').show();
         }
     });
 
@@ -3621,19 +6696,23 @@ function view_manus(id, hide) {
 function show_hidden_manus() {
     $('#manuscript_form')[0].reset();
     $('#coauthors').empty();
-    $('#man_file_div').show();
-    $('#man_abs_div').show();
-    $('#man_word_div').show();
-    $('#uploadModal .modal-footer #btn_add_coa').show();
-    $('#uploadModal .modal-footer .btn_cancel').show();
-    $('#uploadModal .modal-footer #btn_save').show();
-    $('#uploadModal .modal-footer .btn_close').hide();
-    $('#manuscript_form').show();
-    $('.table-borderless').hide();
+    // $('#man_file_div').show();
+    // $('#man_abs_div').show();
+    // $('#man_word_div').show();
+    // $('#uploadModal .modal-footer #btn_add_coa').show();
+    // $('#uploadModal .modal-footer .btn_cancel').show();
+    // $('#uploadModal .modal-footer #btn_save').show();
+    // $('#uploadModal .modal-footer .btn_close').hide();
+    // $('#manuscript_form').show();
+    // $('.table-bordered').hide();
+    // $('#author_status').text('');
+    // $('#add_main_author').addClass('d-none');
 }
 
 // show all reviewers per manuscript
 function view_reviewers(id, time, title, status) {
+    
+    $('#view_review_results').attr('onclick', "view_reviews(" + id + ",'" + title + "')");
 
     var manuscript_title = decodeURIComponent(title);
     // if(status == 5 || status == 4 || status == 6){ $('#new_rev').hide(); }else{ $('#new_rev').show(); }
@@ -3657,6 +6736,14 @@ function view_reviewers(id, time, title, status) {
             }
 
             if (data.length > 0) {
+
+                var table = $('#table-reviewers').DataTable({
+                    columnDefs: [
+                        { width: "10px", targets: 0 } // Set the width of the first column
+                    ],
+                    // Optional: to ensure the table layout is applied correctly
+                    autoWidth: false 
+                });
               
                 revs = [];
                 var c = 0;
@@ -3666,19 +6753,19 @@ function view_reviewers(id, time, title, status) {
 
                     revs.push(val.rev_email);
                     var date = (val.rev_date_respond != null) ? moment(val.rev_date_respond, 'YYYY-MM-DD HH:mm').format("MMMM D, YYYY h:mm a") : '-';
-                    var req_status = (val.rev_status == 1) ? '<span class="badge badge-pill badge-success">ACCEPTED</span>' :
-                        (val.rev_status == 9) ? '<span class="badge badge-pill badge-danger">DECLINED</span>' :
-                        (val.rev_status == 2) ? '<span class="badge badge-pill badge-secondary">PENDING REQUEST</span>' :
-                        '<span class="badge badge-pill badge-danger">LAPSED REQUEST</span>';
+                    var req_status = (val.rev_status == 1) ? '<span class="badge rounded-pill  bg-success">ACCEPTED</span>' :
+                        (val.rev_status == 9) ? '<span class="badge rounded-pill bg-danger">DECLINED</span>' :
+                        (val.rev_status == 2) ? '<span class="badge rounded-pill bg-secondary">PENDING REQUEST</span>' :
+                        '<span class="badge rounded-pill  bg-danger">LAPSED REQUEST</span>';
 
                     var stat = get_review_status(val.rev_id);
 
-                    var label = ((stat == 4) ? '<span class="badge badge-pill badge-success">Recommended as submitted</span>' :
-                        ((stat == 5) ? '<span class="badge badge-pill badge-warning">Recommended with minor revisions</span>' :
-                        ((stat == 6) ? '<span class="badge badge-pill badge-warning">Recommended with major revisions</span>' :
-                        ((stat == 7) ? '<span class="badge badge-pill badge-danger">Not recommended</span>' :
-                        ((stat == 3) ? '<span class="badge badge-pill badge-danger">LAPSED REVIEW</span>' :
-                        ((stat == 2) ? '<span class="badge badge-pill badge-secondary">PENDING REVIEW</span>' :
+                    var label = ((stat == 4) ? '<span class="badge rounded-pill bg-success">PASSED</span>' :
+                        ((stat == 5) ? '<span class="badge rounded-pill bg-warning">Recommended with minor revisions</span>' :
+                        ((stat == 6) ? '<span class="badge rounded-pill bg-warning">Recommended with major revisions</span>' :
+                        ((stat == 7) ? '<span class="badge rounded-pill bg-danger">FAILED</span>' :
+                        ((stat == 3) ? '<span class="badge rounded-pill bg-danger">LAPSED REVIEW</span>' :
+                        ((stat == 2) ? '<span class="badge rounded-pill bg-secondary">PENDING REVIEW</span>' :
                         '-'))))));
 
                     if (val.rev_status == 3) {
@@ -3707,7 +6794,7 @@ function view_reviewers(id, time, title, status) {
                         var name = val.rev_name;
                     }
 
-                    $('#table-reviewers').dataTable().fnAddData([
+                    table.row.add([
                         c++,
                         name,
                         val.rev_email,
@@ -3722,9 +6809,8 @@ function view_reviewers(id, time, title, status) {
 
 
 
-                var t = $('#table-reviewers').DataTable();
-                t.on('order.dt search.dt', function() {
-                    t.column(0, {
+                table.on('order.dt search.dt', function() {
+                    table.column(0, {
                         search: 'applied',
                         order: 'applied'
                     }).nodes().each(function(cell, i) {
@@ -3760,6 +6846,15 @@ function view_editors(id, title) {
             }
 
             if (data.length > 0) {
+
+                
+                var table = $('#table-editors').DataTable({
+                    columnDefs: [
+                        { width: "10px", targets: 0 } // Set the width of the first column
+                    ],
+                    // Optional: to ensure the table layout is applied correctly
+                    autoWidth: false 
+                });
               
                 revs = [];
                 var c = 0;
@@ -3769,7 +6864,7 @@ function view_editors(id, title) {
                     var date = moment(val.date_created, 'YYYY-MM-DD HH:mm').format("MMMM D, YYYY h:mm a");
                     
 
-                    $('#table-editors').dataTable().fnAddData([
+                    table.row.add([
                         c++,
                         val.edit_name,
                         val.edit_specialization,
@@ -3781,9 +6876,8 @@ function view_editors(id, title) {
 
 
 
-                var t = $('#table-editors').DataTable();
-                t.on('order.dt search.dt', function() {
-                    t.column(0, {
+                table.on('order.dt search.dt', function() {
+                    table.column(0, {
                         search: 'applied',
                         order: 'applied'
                     }).nodes().each(function(cell, i) {
@@ -3800,6 +6894,9 @@ function view_editors(id, title) {
 // show all reviewers per manuscript
 function view_reviews(id, title) {
 
+    $('#reviewsModal').modal('toggle');
+    $('#reviewerModal').modal('toggle');
+
     var manuscript_title = decodeURIComponent(title);
 
     $('#reviewsModal p').text('TITLE : ' + manuscript_title);
@@ -3813,7 +6910,6 @@ function view_reviews(id, title) {
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-
             if ($.fn.DataTable.isDataTable("#reviews_table")) {
                 $('#reviews_table ').DataTable().clear().destroy();
             }
@@ -3826,15 +6922,12 @@ function view_reviews(id, title) {
                 var status = val.scr_status;
                 var rem = (val.scr_remarks == '' || val.scr_remarks == null) ? '-' : val.scr_remarks;
                 var file = (val.scr_file == null || val.scr_file == '') ? 'N/A' : '<a class="text-primary" href="' + base_url + "assets/oprs/uploads/reviewersdoc/" + val.scr_file + '" target="_blank" download>Downlod</a>';
+                var reco = (status == 4) ? '<span class="badge rounded-pill bg-success">SUCCESS</span>' : '<span class="badge rounded-pill bg-danger">FAILED</span>';
+ 
 
-                var reco = ((status == 4) ? '<span class="badge badge-pill badge-success">Recommended as submitted</span>' :
-                    ((status == 5) ? '<span class="badge badge-pill badge-warning">Recommended with minor revisions</span>' :
-                    ((status == 6) ? '<span class="badge badge-pill badge-warning">Recommended with major revisions</span>' :
-                        '<span class="badge badge-pill badge-danger">Not recommended</span>')));
-                
                 $('#reviews_table tbody').append('<tr><td>' + i +'</td> \
                                                 <td>' + name + '</td> \
-                                                <td>' + score + '</td> \
+                                                <td><a href="javascript:void(0);" onclick="view_score(\'' + val.rev_id + '\',\'' + man_id + '\',\'' + val.rev_name + '\')">' + score + '</a></td> \
                                                 <td>' + reco + ' \
                                                 <td>' + file +'</td> \
                                                 <td>' + rem +'</td></tr>');
@@ -3921,13 +7014,13 @@ function review(id, trk, rev_name) {
         success: function(data) {
 
             $.each(data, function(key, val) {
-                var status = ((val.scr_status == 4) ? '<span class="badge badge-success mr-1">Recommended as submitted</span>' :
-                    ((val.scr_status == 5) ? '<span class="badge badge-warning mr-1">Recommended with minor revisions</span>' :
-                    ((val.scr_status == 6) ? '<span class="badge badge-warning mr-1">Recommended with major revisions</span>' :
-                    ((val.scr_status == 7) ? '<span class="badge badge-danger mr-1">Not recommended</span>' : ''))));
+                var status = ((val.scr_status == 4) ? '<span class="badge rounded-pill bg-success mr-1">Recommended as submitted</span>' :
+                    ((val.scr_status == 5) ? '<span class="badge rounded-pill bg-warning mr-1">Recommended with minor revisions</span>' :
+                    ((val.scr_status == 6) ? '<span class="badge rounded-pill bg-warning mr-1">Recommended with major revisions</span>' :
+                    ((val.scr_status == 7) ? '<span class="badge rounded-pill bg-danger mr-1">Not recommended</span>' : ''))));
 
 
-                $('.usr' + trk).append('<a href="javascript:void(0);" onclick="view_score(\'' + id + '\',\'' + man_id + '\',\'' + rev_name + '\')" data-toggle="modal" data-target="#scoreModal"><span class="badge badge-info mr-1" >Score : ' + val.scr_total + '/100</span></a>' +
+                $('.usr' + trk).append('<a href="javascript:void(0);" onclick="view_score(\'' + id + '\',\'' + man_id + '\',\'' + rev_name + '\')" data-toggle="modal" data-target="#scoreModal"><span class="badge rounded-pill bg-info mr-1" >Score : ' + val.scr_total + '/100</span></a>' +
                     status);
 
                 if (val.scr_remarks != '' && val.scr_remarks != null)
@@ -3956,7 +7049,6 @@ function generate_email(rid, mid) {
         crossDomain: true,
         success: function(data) {
 
-            console.log(data);
             $.each(data, function(key, val) {
                 t = val.man_title;
                 a = val.man_author;
@@ -3969,7 +7061,6 @@ function generate_email(rid, mid) {
                 var new_mail = '';
                 
                 var mail = moment().format('MMMM D, YYYY') + '<br/><br/>' + mail_content;
-console.log(mail);
                 $('#rev_header' + mid).text($('#trk_rev' + mid).val());
                 $('#rev_header_mail' + mid).text($('#trk_rev' + mid).val());
 
@@ -3980,7 +7071,6 @@ console.log(mail);
                     crossDomain: true,
                     success: function(data) {
 
-                        console.log(data);
                         $.each(data, function(key, val) {
 
                             var emp_pos = (val.emp_pos != null && (val.emp_pos).length > 0) ? val.emp_pos : '[POSITION]';
@@ -4026,9 +7116,6 @@ console.log(mail);
                             new_mail = new_mail.replace('[YEAR]', jor_year);
                         }
 
-                        
-                        console.log(new_mail);
-                        
                         tinymce.remove('tiny_mail' + mid);
                         tinymce.init({
                             selector: '#tiny_mail' + mid,
@@ -4056,8 +7143,6 @@ function generate_editor_email(rid, mid) {
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-
-            console.log(data);
             $.each(data, function(key, val) {
                 t = val.man_title;
                 a = val.man_author;
@@ -4070,7 +7155,7 @@ function generate_editor_email(rid, mid) {
                 var new_mail = '';
                 
                 var mail = moment().format('MMMM D, YYYY') + '<br/><br/>' + editor_mail_content;
-console.log(mail);
+
                 $('#rev_header' + mid).text($('#trk_rev' + mid).val());
                 $('#rev_header_mail' + mid).text($('#trk_rev' + mid).val());
 
@@ -4080,8 +7165,6 @@ console.log(mail);
                     dataType: "json",
                     crossDomain: true,
                     success: function(data) {
-
-                        console.log(data);
                         $.each(data, function(key, val) {
 
                             var emp_pos = (val.emp_pos != null && (val.emp_pos).length > 0) ? val.emp_pos : '[POSITION]';
@@ -4222,7 +7305,7 @@ function load_email_content(num = 1) {
             prefix = jor_iss >= 5 ? 'Special Issue No. ' + (jor_iss - 4) : 'Issue ' + jor_iss;
             new_mail = mail.replace('[VOLUME]', 'Volume ' + jor_vol + ' ');
         new_mail = new_mail.replace('[ISSUE]', prefix);
-        new_mail = new_mail.replace('[YEAR],', jor_year);
+        new_mail = new_mail.replace('[YEAR]', jor_year);
     }
 
     new_mail = new_mail.replace('[MANUSCRIPT]', mail_title);
@@ -4254,7 +7337,7 @@ function load_editor_email_content(num = 1) {
             prefix = jor_iss >= 5 ? 'Special Issue No. ' + (jor_iss - 4) : 'Issue ' + jor_iss;
             new_mail = mail.replace('[VOLUME]', 'Volume ' + jor_vol + ' ');
         new_mail = new_mail.replace('[ISSUE]', prefix);
-        new_mail = new_mail.replace('[YEAR],', jor_year);
+        new_mail = new_mail.replace('[YEAR]', jor_year);
     }
 
     new_mail = new_mail.replace('[MANUSCRIPT]', mail_title);
@@ -4273,7 +7356,7 @@ function load_editor_email_content(num = 1) {
 function approve_manus(id) {
     man_id = id;
 
-    $(' .table-borderless > tbody').empty();
+    $(' .table-bordered > tbody').empty();
     var coa = [];
 
     $.ajax({
@@ -4363,12 +7446,12 @@ function approve_manus(id) {
                     '</tr>';
             });
 
-            $(' .table-borderless > tbody').append(html);
+            $(' .table-bordered > tbody').append(html);
             $('#uploadModal').modal('toggle');
             $('#man_file_div').hide();
             $('#uploadModal .modal-footer .btn').hide();
             $('#manuscript_form').hide();
-            $('.table-borderless').show();
+            $('.table-bordered').show();
             $('#btn_approve').show();
             $('#btn_cancel').show();
         }
@@ -4377,6 +7460,8 @@ function approve_manus(id) {
 
 // show score from tracking when score is clicked
 function view_score(id, manus_id, reviewer) {
+
+    $('#scoreModal').modal('toggle');
 
     $.ajax({
         type: "GET",
@@ -4406,7 +7491,7 @@ function edit_user(id) {
     user_id = id;
     $('#editUserModal').modal('toggle');
     $('#form_edit_user')[0].reset();
-    $('#editUserModal #usr_role').empty();
+    // $('#editUserModal #usr_role').empty();
 
     $.ajax({
         type: "GET",
@@ -4415,34 +7500,35 @@ function edit_user(id) {
         crossDomain: true,
         success: function(data) {
 
+            console.log(data);
             $.each(data, function(key, val) {
                 
-                if(val.usr_sys_acc == 1){
-                    $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
-                        '<option value="7">Admin</option>' +
-                        '<option value="6">Manager</option>');
-                }else if(val.usr_sys_acc == 2){
-                    $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
-                        '<option value="7">Admin</option>' +
-                        '<option value="9">Publication Committee</option>' +
-                        '<option value="3">Managing Editor</option>' +
-                        '<option value="6">Manager</option>' +
-                        '<option value="10">Editor</option>' +
-                        '<option value="11">Guest Editor</option>' +
-                        '<option value="12">Editor-in-Chief</option> '+
-                        '<option value="13">Layout</option>');
-                }else{
-                    $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
-                    '<option value="3">Managing Editor</option>');
-                }
+                // if(val.usr_sys_acc == 1){
+                //     $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
+                //         '<option value="7">Admin</option>' +
+                //         '<option value="6">Manager</option>');
+                // }else if(val.usr_sys_acc == 2){
+                //     $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
+                //         '<option value="7">Admin</option>' +
+                //         '<option value="9">Publication Committee</option>' +
+                //         '<option value="3">Managing Editor</option>' +
+                //         '<option value="6">Manager</option>' +
+                //         '<option value="10">Editor</option>' +
+                //         '<option value="11">Guest Editor</option>' +
+                //         '<option value="12">Editor-in-Chief</option> '+
+                //         '<option value="13">Layout</option>');
+                // }else{
+                //     $('#editUserModal #usr_role').append('<option value="" selected>Select User Role</option>' +
+                //     '<option value="3">Managing Editor</option>');
+                // }
 
-                if(val.usr_role == 5 || val.usr_role == 1){
-                    $('#editUserModal #usr_role').attr('disabled', 'disabled')
-                    $('#editUserModal #usr_sys_acc').attr('disabled', 'disabled')
-                }else{
-                    $('#editUserModal #usr_role').attr('disabled', false)
-                    $('#editUserModal #usr_sys_acc').attr('disabled', false)
-                }
+                // if(val.usr_role == 5 || val.usr_role == 1){
+                //     $('#editUserModal #usr_role').attr('disabled', 'disabled')
+                //     $('#editUserModal #usr_sys_acc').attr('disabled', 'disabled')
+                // }else{
+                //     $('#editUserModal #usr_role').attr('disabled', false)
+                //     $('#editUserModal #usr_sys_acc').attr('disabled', false)
+                // }
 
                 $.each(val, function(k, v) {
                     if (k != 'usr_password')
@@ -4516,16 +7602,16 @@ function publish_articles(c, id)
         $.each(publishables, function(key, val)
         {
             html += '<li class="list-group-item"> \
-                        <p class="font-weight-bold"> \
+                        <p class="fw-bold"> \
                         ' + val['title'] + ' \
                         </p> \
                         <div class="form-group"> \
-                        <label>Upload Final Manuscript</label> <span class="badge badge-danger">PDF</span></label>\
+                        <label>Upload Final Manuscript</label> <span class="badge rounded-pill bg-danger">PDF</span></label>\
                         <input type="hidden" name="man_id[]" value="' + val['id'] + '"> \
                         <input type="file" class="form-control upload_file" id="man_file'+val['id']+'" name="man_file['+val['id']+']" accept="application/pdf"> \
                         </div> \
                         <div class="form-group"> \
-                        <label>Page(s)</label>\
+                        <label>Pages</label>\
                         <input type="number" class="form-control  col-3 upload_page" id="man_page_position'+val['id']+'" name="man_page_position['+val['id']+'] min="1" placeholder="ex. 1-3"> \
                         </div> \
                      </li>';
@@ -4656,7 +7742,7 @@ function notifications(){
 
         $.ajax({
             type: "GET",
-            url: base_url + "oprs/notifications/notif_tracker/",
+            url: base_url + "oprs/notifications/notif_tracker",
             dataType: "json",
             crossDomain: true,
             success: function(data) {  
@@ -4669,7 +7755,7 @@ function notifications(){
                 
                 if(notif_count > 0)
                 {
-                    $('.oprs_notif').append('<span class="badge badge-danger font-weight-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
+                    $('.oprs_notif').append('<span class="badge rounded-pill bg-danger fw-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
                 }
             }
             
@@ -4679,7 +7765,7 @@ function notifications(){
         var a = moment().format('MMMM DD YYYY hh:mm:ss');
         $.ajax({
             type: "GET",
-            url: base_url + "oprs/notifications/notif_tracker/",
+            url: base_url + "oprs/notifications/notif_tracker",
             dataType: "json",
             crossDomain: true,
             success: function(data) {
@@ -4693,7 +7779,7 @@ function notifications(){
                 
                 if(notif_count > 0)
                 {
-                    $('.oprs_notif').append('<span class="badge badge-danger font-weight-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
+                    $('.oprs_notif').append('<span class="badge rounded-pill bg-danger fw-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
                 }
             }
         });
@@ -4736,7 +7822,7 @@ function notifications2()
            $('.notif_count').empty();
            if(notif_count > 0)
            {
-            $('.notif_count').append('<span class="badge badge-danger font-weight-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
+            $('.notif_count').append('<span class="badge rounded-pill bg-danger fw-bold notif_count" style="font-size:11px;position:fixed; margin-left:-5px;margin-top:2px">' + notif_count + '</span');
            }
            
            
@@ -4747,23 +7833,23 @@ function notifications2()
 }
 
 // for final review of editor (for finalization)
-function final_review(id){
-    $('#committeeModal').modal('toggle');
+// function final_review(id){
+//     $('#committeeModal').modal('toggle');
     
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/manuscripts/get_manuscript_by_id/" + id,
-        dataType: "json",
-        crossDomain: true,
-        success: function(data) {
-            $.each(data, function(key, val){
-                $('#manus_title').val(val.man_title);
-                $('#manus_author').val(val.man_author);
-                $('#com_man_id').val(id);
-            });
-        }
-    });
-}
+//     $.ajax({
+//         type: "GET",
+//         url: base_url + "oprs/manuscripts/get_manuscript_by_id/" + id,
+//         dataType: "json",
+//         crossDomain: true,
+//         success: function(data) {
+//             $.each(data, function(key, val){
+//                 $('#manus_title').val(val.man_title);
+//                 $('#manus_author').val(val.man_author);
+//                 $('#com_man_id').val(id);
+//             });
+//         }
+//     });
+// }
 
 // show publication committee review in tracking (for finalization)
 function com_review(id, trk){
@@ -4775,10 +7861,10 @@ function com_review(id, trk){
         success: function(data) {console.log(data);
             $.each(data, function(key, val) {
 
-                var status = ((val.com_review == 1) ? '<span class="badge badge-success mr-1">No Revisions, Approve</span>' 
-                : ((val.com_review == 2 ? '<span class="badge badge-info mr-1">Recommended with Minor Revisions</span>' 
-                : ((val.com_review == 3) ? '<span class="badge badge-warning mr-1">Recommended with Major Revisions</span>' 
-                : '<span class="badge badge-danger mr-1">Disapprove</span>'))));
+                var status = ((val.com_review == 1) ? '<span class="badge rounded-pill bg-success mr-1">No Revisions, Approve</span>' 
+                : ((val.com_review == 2 ? '<span class="badge rounded-pill bg-info mr-1">Recommended with Minor Revisions</span>' 
+                : ((val.com_review == 3) ? '<span class="badge rounded-pill bg-warning mr-1">Recommended with Major Revisions</span>' 
+                : '<span class="badge rounded-pill bg-danger mr-1">Disapprove</span>'))));
         
         
                 $('.usr' + trk).append(status);
@@ -4792,23 +7878,30 @@ function com_review(id, trk){
     });
 }
 
-// verify if feedback is submited already
-function verify_feedback(){
-    $('#logoutModal').modal('toggle');
-  
-    var jqXHR = $.ajax({
-        type: "GET",
-        url: base_url + "admin/feedback/verify/999999",
-        async: false,
-        crossDomain: true,
+// verify if feedback is submited already (unused)
+function logout(){
+    current_button_id = '#submit_feedback';
+    $('#feedbackModal').modal('toggle');
+    recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
+        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+        'callback': onRecaptchaSuccess,
+        'expired-callback': onRecaptchaExpired
     });
+
+    
+    // var jqXHR = $.ajax({
+    //     type: "GET",
+    //     url: base_url + "admin/feedback/verify/999999",
+    //     async: false,
+    //     crossDomain: true,
+    // });
   
-    var stat = jqXHR.responseText.replace(/\"/g, '');
-    if(stat == 0){
-        $('#feedbackModal').modal('toggle');
-    }else{
-      window.location.href = base_url + 'oprs/login/logout';
-    }
+    // var stat = jqXHR.responseText.replace(/\"/g, '');
+    // if(stat == 0){
+    //     $('#feedbackModal').modal('toggle');
+    // }else{
+    //   window.location.href = base_url + 'oprs/login/logout';
+    // }
   }
 
 // view feedback
@@ -4884,8 +7977,13 @@ function generate_uiux_graph(){
       dataType: "json",
       success: function (response) {
             $.each(response, function(key, val){
-            ui_values.push(val.total);
-                ui_labels.push(val.label);
+                ui_values.push(val.total_ratings);
+                // var star = '';
+                // for (let i = 0; i < val.star_count; i++) {
+                //     // Append a star icon (can be an image or a Unicode character)
+                //     star += '★'; // Unicode for a filled star
+                // }
+                ui_labels.push(val.star_count + ' Stars');
             });
     
             
@@ -4905,6 +8003,10 @@ function generate_uiux_graph(){
                     legend: {
                         display: false,
                         position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'User Interface Rating'
                     },
                     scales: {
                         yAxes: [{
@@ -4933,15 +8035,8 @@ function generate_uiux_graph(){
                 maintainAspectRatio: false,
                 legend: {
                     display: true,
-                    position: 'top',
+                    position: 'bottom',
                 },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true,
-                        },
-                    }],
-                }
                 }
             });
         }
@@ -4955,8 +8050,13 @@ function generate_uiux_graph(){
         dataType: "json",
         success: function (response) {
               $.each(response, function(key, val){
-              ux_values.push(val.total);
-                  ux_labels.push(val.label);
+                ux_values.push(val.total_ratings);
+                // var star = '';
+                // for (let i = 0; i < val.star_count; i++) {
+                //     // Append a star icon (can be an image or a Unicode character)
+                //     star += '★'; // Unicode for a filled star
+                // }
+                ux_labels.push(val.star_count + ' Stars');
               });
       
               
@@ -4976,6 +8076,10 @@ function generate_uiux_graph(){
                       legend: {
                           display: false,
                           position: 'top',
+                      },
+                      title: {
+                          display: true,
+                          text: 'User Experience Rating',
                       },
                       scales: {
                           yAxes: [{
@@ -5004,15 +8108,8 @@ function generate_uiux_graph(){
                   maintainAspectRatio: false,
                   legend: {
                       display: true,
-                      position: 'top',
+                      position: 'bottom',
                   },
-                  scales: {
-                      yAxes: [{
-                          ticks: {
-                              beginAtZero:true,
-                          },
-                      }],
-                  }
                   }
               });
           }
@@ -5263,26 +8360,127 @@ function submit_publishable(id){
 }
 
 function publish_to_ejournal(id){
+
+    $('#publishModal #pub_man_id').val(id);
+    $('#publishModal .table-bordered > tbody').empty();
+
+    var coa = [];
+    var html = '';
+ 
     $.ajax({
         type: "GET",
-        url: base_url + "oprs/manuscripts/manuscript/" + id,
+        url: base_url + "oprs/manuscripts/authors/get/" + id,
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            console.log(data);
-            $.each(data, function(key, val) {
-                $.each(val, function(k, v){
-                    if(k == 'man_issue'){
-
-                        var iss = (v >= 5) ? 'Special Issue No. ' + (v - 4) : v;
-                        $('#pub_to_e_table #' + k).text(iss);
-                    }else{
-                        $('#pub_to_e_table #' + k).text(v);
-                    }
-                    $('#pub_to_e_form #man_id').val(id);
-                    $('#pub_to_e_form #man_id').val(id);
-
+            if (data.length > 0) {
+                $.each(data, function(key, val) {
+                    coa.push(val.coa_name + ', ' + val.coa_affiliation + ', ' + val.coa_email + '<br/>');
                 });
+            }
+
+            $.ajax({
+                type: "GET",
+                url: base_url + "oprs/manuscripts/manuscript/" + id,
+                dataType: "json",
+                crossDomain: true,
+                success: function(data) {
+                    $.each(data, function(key, val) {
+
+                        var vol = (val.man_volume != null) ? val.man_volume : 'N/a';
+                        var iss = (val.man_issue != null) ? val.man_issue : 'N/a';
+                        var iss = (iss >= 5) ? 'Special Issue No. ' + (iss - 4) : iss;
+                        var yer = (val.man_year != null) ? val.man_year : 'N/a';
+                        var rem = (val.man_remarks != null) ? val.man_remarks : 'N/a';
+                        var coas = (coa.length > 0) ? coa.join('') : 'N/a';
+                        var prim =  val.man_author + ', ' + val.man_affiliation + ', ' + val.man_email;
+                        // var hide_coas = (hide == 1) ? '<em>Undisclosed</em>' : coas;
+                        var man_type = (val.man_type) ? val.publication_desc : 'N/a'; 
+
+                        var dir = (val.man_revision_status == 1) ? 'revised' : ((val.man_revision_status == 2) ? 'final' : 'initial');
+                      
+                        var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
+                        var keywords = val.man_keywords ?? 'N/A';
+
+                        html += '<tr>' +
+                                    '<th>Title</th>' +
+                                    '<td>' + val.man_title + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>No. of Pages</th>' +
+                                    '<td>' + val.man_pages + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Type of Publication</th>'+
+                                    '<td>' + man_type + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Keywords</th>'+
+                                    '<td>' + keywords + '</td>' +
+                                '</tr>';
+
+
+                                if(val.man_author_type == 1){
+                                    html += '<tr>' +
+                                            '<th>Corresponding Author</th>' +
+                                            '<td>' + prim + ' (Main Author)</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<th>Co-authors</th>' +
+                                            '<td>' + coas + '</td>' +
+                                        '</tr>';
+                                }
+                                
+                                if(val.man_author_type == 2){
+                                    html += '<tr>' +
+                                            '<th>Corresponding Author</th>' +
+                                            '<td>' + coas + ' (Co-author)</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<th>Main Author</th>' +
+                                            '<td>' + prim + '</td>' +
+                                        '</tr>';
+                                }
+
+                        html +=  '<tr>'+
+                                    '<th>Abstract</th>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/" + dir + "_abstracts_pdf/" + val.man_abs + '" target="_blank">PDF</a></td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Full Text Manuscript</th>' +
+                                    '<td><a href="' + base_url + "assets/oprs/uploads/" + dir + "_manuscripts_pdf/" + val.man_file + '" target="_blank">PDF</a> | <a href="' + base_url + "assets/oprs/uploads/" + dir + "_manuscripts_word/" + val.man_word + '" download>WORD</a></td>' +
+                                '</tr>' +
+                                '<tr>'+
+                                    '<th>Latex</th>' +
+                                    '<td>' + latex + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Volume</th>' +
+                                    '<td>' + vol + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Issue</th>' +
+                                    '<td>' + iss + '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                    '<th>Year</th>' +
+                                    '<td>' + yer + '</td>' +
+                                '</tr>'+
+                                '<tr>'+
+                                '<th scope="row">Page no.</th>'+
+                                    '<td>'+
+                                        '<input type="text" class="form-control" id="man_page_position" name="man_page_position" placeholder="ex. 1-3" required></td>'+
+                                        '<input type="hidden" id="man_id" name="man_id">'+
+                                '</tr>';
+                                // '<tr>' +
+                                //     '<th>Remarks</th>' +
+                                //     '<td>' + rem + '</td>' +
+                                // '</tr>';
+                    });
+
+                    $('#publishModal .table-bordered > tbody').html(html);
+                    $('#publishModal').modal('toggle');
+                }
             });
         }
     });
@@ -5319,4 +8517,1937 @@ function send_cert(rev, man){
 
         }
     });
+}
+
+  
+function togglePassword(elementID, iconID, elementID2){
+	var passwordInput = $(elementID);
+	if(elementID2){
+		var passwordInput2 = $(elementID2);
+		var passwordIcon = $(iconID);
+		if (passwordInput.attr('type') === 'password' && passwordInput2.attr('type') === 'password') {
+		  passwordInput.attr('type', 'text');
+		  passwordInput2.attr('type', 'text');
+		  passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+		} else {
+		  passwordInput.attr('type', 'password');
+		  passwordInput2.attr('type', 'password');
+		  passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+		}
+	}else{
+		var passwordIcon = $(iconID);
+		if (passwordInput.attr('type') === 'password') {
+		  passwordInput.attr('type', 'text');
+		  passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+		} else {
+		  passwordInput.attr('type', 'password');
+		  passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+		}
+	}
+  }
+function disableOnSubmit(element, form, action){
+    var newButtonText = (action == 'verify') ? 'Verifying' : 'Loading';
+
+    $(element).prop('disabled' ,true);
+    $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>' + newButtonText);
+    $(form).submit();
+}
+
+function getCurrentOTP(refCode){
+    // console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
+    var currentDate = new Date();
+    var otpDate;
+    // var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : base_url + "client/signup/get_current_otp_oprs/" + refCode;
+    
+    
+    $.ajax({
+      type: "GET",
+      url: base_url + "oprs/login/get_current_otp/" + refCode,
+      dataType: "json",
+      crossDomain: true,
+      success: function(data) {
+        // console.log("🚀 ~ getCurrentOTP ~ data:", data)
+        try{
+          otpDate = new Date(data[0]['otp_date']);
+           
+          var diff = currentDate.getTime() - otpDate.getTime();
+          var diffHours = Math.floor(diff / (1000 * 60 * 60));
+          var diffMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          var diffSeconds = Math.floor((diff % (1000 * 60)) / 1000);   
+    
+          if(diffHours == 0){
+            if(diffMinutes < 5 && diffSeconds <= 60){
+              minutes = 4 - diffMinutes;
+              seconds = 60 - diffSeconds;
+              startTimer();
+              $('#resend_code').addClass('disabled');
+              $('#verify_code').removeClass('disabled');
+            }else{
+              clearInterval(intervalId);
+              minutes = 5;
+              seconds = 0;
+              
+              var url = window.location.pathname; // Get the current path
+              var segments = url.split('/'); // Split the path by '/'
+              var secondToLastSegment = segments[segments.length - 2];
+      
+              refCode = url.split('/').pop();
+              if(secondToLastSegment == 'verify_otp'){ // login otp
+                $('#resend_code').attr('href', base_url + 'oprs/login/resend_login_code/' + refCode);
+              }
+              
+              $('#resend_code').removeClass('disabled');
+              $('#verify_code').addClass('disabled');
+            }
+          }else{
+            clearInterval(intervalId);
+            minutes = 5;
+            seconds = 0;
+            $('#resend_code').removeClass('disabled');
+            $('#verify_code').addClass('disabled');
+          }
+        }catch(err){
+          // console.log('No Login Request, No code exist.');
+          $('#resend_code').addClass('d-none');
+        }
+      }
+    });
+}
+
+function startTimer() {
+intervalId = setInterval(function() {
+    if (seconds === 0) {
+        minutes--;
+        seconds = 59;
+    } else {
+        seconds--;
+    }
+
+    var minutesStr = minutes < 10 ? '0' + minutes : minutes;
+    var secondsStr = seconds < 10 ? '0' + seconds : seconds;
+
+    $('#resend_code').text('Resend Code (' + minutesStr + ':' + secondsStr + ')');
+    if (minutes === 0 && seconds === 0) {
+        clearInterval(intervalId);
+        // Perform action when countdown is finished
+        $('#resend_code').removeClass('disabled');
+        $('#verify_code').addClass('disabled');
+        $('#resend_code').text('Resend Code');
+
+        var url = window.location.pathname; // Get the current path
+        var segments = url.split('/'); // Split the path by '/'
+        var secondToLastSegment = segments[segments.length - 2];
+
+        refCode = url.split('/').pop();
+        if(secondToLastSegment == 'verify_otp'){ // login otp
+        $('#resend_code').attr('href', base_url + 'oprs/login/resend_login_code/' + refCode);
+        }
+    }
+}, 1000);
+}
+
+function destroyUserSession(){
+
+    $.ajax({
+    type: "POST",
+    url: base_url + "oprs/login/destroy_user_session" ,
+    data: { user_access_token : accessToken },
+    success: function(data) {
+        // console.log(data);
+    }
+    });
+}
+
+function onRecaptchaSuccess(token) {
+console.log("reCAPTCHA validated!");
+$(current_button_id).prop('disabled', false); // Enable submit button
+}
+
+// Callback when reCAPTCHA expires
+function onRecaptchaExpired() {
+console.log("reCAPTCHA expired.");
+$(current_button_id).prop('disabled', true);
+}
+
+function toggleSearch(){
+$('#searchModal').modal('toggle');
+setTimeout(function (){
+    $('#searchModal #search').focus();
+}, 100);
+}
+
+function edit_user_type(id){
+$('#editUserTypeModal').modal('toggle');
+$.ajax({
+    type: "GET",
+    url: base_url + "oprs/user/get_user_types/"+id,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+        $.each(data, function(key, val) {
+            $.each(val, function(k, v){
+                $('#form_edit_user_type #'+k).val(v);
+            });
+        });
+    }
+});
+}
+
+function edit_status_type(id){
+$('#editStatusTypeModal').modal('toggle');
+$.ajax({
+    type: "GET",
+    url: base_url + "oprs/status/get_status_types/"+id,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+        $.each(data, function(key, val) {
+            $.each(val, function(k, v){
+                $('#form_edit_status_type #'+k).val(v);
+            });
+        });
+    }
+});
+}
+
+function edit_publication_type(id){
+$('#editPublicationTypeModal').modal('toggle');
+$.ajax({
+    type: "GET",
+    url: base_url + "oprs/publication_types/get_publication_types/"+id,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+        $.each(data, function(key, val) {
+            $.each(val, function(k, v){
+                $('#form_edit_publication_type #'+k).val(v);
+            });
+        });
+    }
+});
+}
+
+
+function edit_criteria(id, criteria){
+var url = '', form = '';
+
+if(criteria == 1){ // tech rev criteria
+    $('#editTRCModal').modal('toggle');
+    url = base_url + "oprs/criterion/get_criteria/"+id+"/"+criteria;
+    form = '#form_edit_tech_rev_crit';
+}else{ // peer rev criteria
+    $('#editPRCModal').modal('toggle');
+    url = base_url + "oprs/criterion/get_criteria/"+id+"/"+criteria;
+    form = '#form_edit_peer_rev_crit';
+}
+
+$.ajax({
+    type: "GET",
+    url: url,
+    dataType: "json",
+    crossDomain: true,
+    success: function(data) {
+
+        $.each(data, function(key, val) {
+            if(criteria == 1){ // tech rev criteria
+                $(form + ' #crt_id').val(val.id);
+                $(form + ' #crt_code').val(val.code);
+                $(form + ' #crt_desc').val(val.desc);
+            }else{ // peer rev criteria
+                $(form + ' #pcrt_id').val(val.id);
+                $(form + ' #pcrt_code').val(val.code);
+                $(form + ' #pcrt_desc').val(val.desc);
+                $(form + ' #pcrt_score').val(val.score);
+            }
+        });
+    }
+});
+}
+
+function filter_submission_summary(action){
+
+    var from = $('#sub_sum #date_from').val();
+    var to = $('#sub_sum #date_to').val();
+
+    if(action){
+        $('#sub_sum #date_from').val('')
+        $('#sub_sum #date_to').val('');
+        from = '';
+        to = '';
+    }
+
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_sub_sum",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+
+            sst.clear();
+                $.each(data, function(key, val){
+                    sst.row.add([
+                        val.pub_id,
+                        val.publication_desc,
+                        (val.subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',null)" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
+                        (val.rej_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',14)" class="pe-auto text-decoration-none">' + val.rej_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.rej_count > 0) ? ((val.rej_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.pass_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',12)" class="pe-auto text-decoration-none">' + val.pass_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.pass_count > 0) ? ((val.pass_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',1)" class="pe-auto text-decoration-none">' + val.process_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.process_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_sum`,'+ val.pub_id +',16)" class="pe-auto text-decoration-none">' + val.publ_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.publ_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                    ]);
+                });
+            sst.draw();
+
+            $('#sub_sum_table tbody tr').each(function () {
+                $(this).find('td:not(:first-child)').addClass('text-center');
+            });
+        }
+    });
+}
+
+function filter_submission_statistics(action){
+    var from = $('#sub_stat #date_from').val();
+    var to = $('#sub_stat #date_to').val();
+
+    if(action){
+        $('#sub_stat #date_from').val('')
+        $('#sub_stat #date_to').val('');
+        from = '';
+        to = '';
+    }
+
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_sub_stat",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+
+            sstt.clear();
+                $.each(data, function(key, val){
+
+                    sstt.row.add([
+                        val.pub_id,
+                        val.publication_desc,
+                        (val.subm_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',null)" class="pe-auto text-decoration-none">' + val.subm_count + '</a>' : 0,
+                        (val.rej_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',2,`technical`)" class="pe-auto text-decoration-none">' + val.rej_teded_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.rej_teded_count > 0) ? ((val.rej_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.pass_teded_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',1,`technical`)" class="pe-auto text-decoration-none">' + val.pass_teded_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.pass_teded_count > 0) ? ((val.pass_teded_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.rej_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',15,`associate`)" class="pe-auto text-decoration-none">' + val.rej_assoced_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.rej_assoced_count > 0) ? ((val.rej_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.pass_assoced_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',14,`associate`)" class="pe-auto text-decoration-none">' + val.pass_assoced_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.pass_assoced_count > 0) ? ((val.pass_assoced_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.process_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',1)" class="pe-auto text-decoration-none">' + val.process_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.process_count > 0) ? ((val.process_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                        (val.publ_count > 0) ? '<a href="javascript:void(0);" onclick="view_stats_info(`#sub_stat`,'+ val.pub_id +',16)" class="pe-auto text-decoration-none">' + val.publ_count + '</a>' : 0,
+                        (val.subm_count > 0 && val.publ_count > 0) ? ((val.publ_count / val.subm_count) * 100).toFixed(2) + '%' : '0%',
+                    ]);
+                });
+            sstt.draw();
+
+            $('#sub_stat_table tbody tr').each(function () {
+                $(this).find('td:not(:first-child)').addClass('text-center');
+            });
+        }
+    });
+}
+
+function filter_author_by_sex(action){
+    var from = $('#auth_sex #date_from').val();
+    var to = $('#auth_sex #date_to').val();
+
+    if(action){
+        $('#auth_sex #date_from').val('')
+        $('#auth_sex #date_to').val('');
+        from = '';
+        to = '';
+    }
+
+    var data = {
+        from: from,
+        to: to
+    };
+
+    $.ajax({
+        url: base_url + "oprs/statistics/filter_auth_by_sex",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            console.log(data);
+            abst.clear();
+            var total_auth = 0;
+            var total_coa = 0;
+            var author_row_array = [];
+            var coauthor_row_array = [];
+
+            author_row_array.push('Primary Author');
+                $.each(data['authors'], function(key, val){
+                    total_auth += parseInt(val.total);
+                    author_row_array.push(val.total);
+                });
+                author_row_array.push(total_auth);
+            abst.row.add(author_row_array);
+            
+            coauthor_row_array.push('Co-Authors');
+                $.each(data['coauthors'], function(key, val){
+                    total_coa += parseInt(val.total);
+                    coauthor_row_array.push(val.total);
+                });
+            coauthor_row_array.push(total_coa);
+            abst.row.add(coauthor_row_array);
+
+            abst.draw();
+        }
+    });
+}
+
+function filter_uiux(action){
+    var from = $('#uiux #date_from').val();
+    var to = $('#uiux #date_to').val();
+
+    if(action){
+        $('#uiux #date_from').val('')
+        $('#uiux #date_to').val('');
+        from = '';
+        to = '';
+    }
+
+    var data = {
+        from: from,
+        to: to
+    };
+
+    uiux_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/feedbacks/filter_uiux",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            var i = 1;
+            $.each(data, function(key, val){
+
+                var ui_star = '', ux_star = '';
+                for(var x=0;x<val.csf_rate_ui;x++){
+                    ui_star += '<span class="text-warning fs-5 star-icon">★</span>';
+                }
+                for(var x=0;x<val.csf_rate_ux;x++){
+                    ux_star += '<span class="text-warning fs-5 star-icon">★</span>';
+                }
+
+                uiux_table.row.add([
+                    i++,
+                    val.email,
+                    ui_star,
+                    val.csf_ui_suggestions,
+                    ux_star,
+                    val.csf_ux_suggestions,
+                    val.csf_system,
+                    moment(val.csf_created_at).format('MMMM D, YYYY h:mm a')
+                ]);
+            });
+            uiux_table.draw();
+        }
+    });
+}
+
+function filter_uiux_sex(action){
+    
+    var from = $('#uiux-sex #date_from').val();
+    var to = $('#uiux-sex #date_to').val();
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    if(action){
+        $('#uiux-sex #date_from').val('')
+        $('#uiux-sex #date_to').val('');
+        from = '';
+        to = '';
+    }
+
+    uiux_sex_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/feedbacks/filter_uiux_sex",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            $.each(data, function(key, val){
+                uiux_sex_table.row.add([
+                    val.sex_label,
+                    val.total_count
+                ]);
+            });
+
+            uiux_sex_table.draw();
+        }
+    });
+}
+
+function filter_arta(action){
+    
+    var from = $('#arta-tab #date_from').val();
+    var to = $('#arta-tab #date_to').val();
+    var region = $('#arta-tab #region').val();
+    var ctype = $('#arta-tab #customer_type').val();
+    var sex = $('#arta-tab #sex').val();
+    
+    if(action){    
+        $('#arta-tab #date_from').val('');
+        $('#arta-tab #date_to').val('');
+        $('#arta-tab #region').val('');
+        $('#arta-tab #customer_type').val('');
+        $('#arta-tab #sex').val('');
+        
+        from = '';
+        to = '';
+        region = '';
+        ctype = '';
+        sex = '';
+    }
+
+    var data = {
+        from: from,
+        to: to,
+        region: region,
+        ctype: ctype,
+        sex: sex
+    };
+
+    arta_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            var i = 1;
+            $.each(data, function(key, val){
+                arta_table.row.add([
+                    i++,
+                    val.name,
+                    val.arta_age,
+                    val.sex_name,
+                    val.region_name,
+                    val.arta_agency,
+                    val.arta_service,
+                    val.ctype_desc,
+                    val.arta_cc1,
+                    val.arta_cc2,
+                    val.arta_cc3,
+                    val.arta_sqd1,
+                    val.arta_sqd2,
+                    val.arta_sqd3,
+                    val.arta_sqd4,
+                    val.arta_sqd5,
+                    val.arta_sqd6,
+                    val.arta_sqd7,
+                    val.arta_sqd8,
+                    val.arta_suggestion,
+                    moment(val.arta_created_at).format('MMMM D, YYYY h:mm a')
+                ]);
+            });
+
+            arta_table.draw();
+        }
+    });
+}
+
+function filter_arta_age(action){
+    
+    var from = $('#arta-age-tab #date_from').val();
+    var to = $('#arta-age-tab #date_to').val();
+    
+    if(action){    
+        $('#arta-age-tab #date_from').val('');
+        $('#arta-age-tab #date_to').val('');
+        
+        from = '';
+        to = '';
+    }
+
+    var data = {
+        from: from,
+        to: to
+    };
+
+    arta_age_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta_age",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            var i = 1;
+            var total_male = 0, total_female = 0;
+            $.each(data, function(key, val){
+                total_male += parseInt(val.male);
+                total_female += parseInt(val.female);
+                arta_age_table.row.add([
+                    i++,
+                    (val.age_range == '70-100') ? 'Above 70' : ((val.age_range == '1-19') ? 'Below 19' : val.age_range),
+                    val.male,
+                    val.female
+                ]);
+            });
+            
+            arta_age_table.row.add([
+                i++,
+                'Total',
+                total_male,
+                total_female
+            ]);
+
+            arta_age_table.draw();
+            arta_age_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+            arta_age_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
+        }
+    });
+}
+
+function filter_arta_region(action){
+
+var from = $('#arta-reg-tab #date_from').val();
+var to = $('#arta-reg-tab #date_to').val();
+    
+if(action){    
+    $('#arta-reg-tab #date_from').val('');
+    $('#arta-reg-tab #date_to').val('');
+    
+    from = '';
+    to = '';
+}
+
+var data = {
+    from: from,
+    to: to
+};
+
+arta_reg_table.clear();
+
+$.ajax({
+    url: base_url + "oprs/arta/filter_arta_region",
+    data: data,
+    cache: false,
+    crossDomain: true,
+    dataType: 'json',
+    type: "POST",
+    success: function(data) {
+        var i = 1;
+        var total_male = 0, total_female = 0, total_per_region = 0, total_region = 0;
+        $.each(data, function(key, val){
+            total_male += parseInt(val.male);
+            total_female += parseInt(val.female);
+            total_per_region == parseInt(val.female) + parseInt(val.male);
+            total_region += parseInt(total_per_region);
+            arta_reg_table.row.add([
+                i++,
+                val.region_name,
+                val.male,
+                val.female,
+                total_per_region
+            ]);
+        });
+        
+        arta_reg_table.row.add([
+            i++,
+            'Total',
+            total_male,
+            total_female,
+            total_region
+        ]);
+
+        arta_reg_table.draw();
+        arta_reg_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+        arta_reg_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
+    }
+});
+}
+
+function filter_arta_cc(action){
+    
+    var from = $('#arta-cc-tab #date_from').val();
+    var to = $('#arta-cc-tab #date_to').val();
+    
+    if(action){    
+        $('#arta-cc-tab #date_from').val('');
+        $('#arta-cc-tab #date_to').val('');
+        
+        from = '';
+        to = '';
+    }
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    arta_cc_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta_cc",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            $.each(data, function(key, val){
+                arta_cc_table.row.add([
+                    val.cc,
+                    val.c1,
+                    val.c2,
+                    val.c3,
+                    val.c4,
+                    val.c5,
+                ]);
+            });
+            
+            arta_cc_table.draw();
+            arta_cc_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+            arta_cc_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
+        }
+    });
+}
+
+function filter_arta_sqd(action){
+    
+    var from = $('#arta-sqd-tab #date_from').val();
+    var to = $('#arta-sqd-tab #date_to').val();
+    
+    if(action){    
+        $('#arta-sqd-tab #date_from').val('');
+        $('#arta-sqd-tab #date_to').val('');
+        
+        from = '';
+        to = '';
+    }
+    
+    var data = {
+        from: from,
+        to: to
+    };
+
+    arta_sqd_table.clear();
+
+    $.ajax({
+        url: base_url + "oprs/arta/filter_arta_sqd",
+        data: data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+            var sqd1 = 0, sqd2 = 0, sqd3 = 0, sqd4 = 0, sqd5 = 0, sqdna = 0;
+            $.each(data, function(key, val){
+                sqd1 += parseInt(sqd1);
+                sqd2 += parseInt(sqd2);
+                sqd3 += parseInt(sqd3);
+                sqd4 += parseInt(sqd4);
+                sqd5 += parseInt(sqd5);
+                sqdna += parseInt(sqdna);
+                arta_sqd_table.row.add([
+                    val.sqd,
+                    val.sqd1,
+                    val.sqd2,
+                    val.sqd3,
+                    val.sqd4,
+                    val.sqd5,
+                    val.sqdna
+                ]);
+            });
+            
+            
+            arta_sqd_table.row.add([
+                'Total',
+                sqd1,
+                sqd2,
+                sqd3,
+                sqd4,
+                sqd5,
+                sqdna
+            ]);
+
+            arta_sqd_table.draw();
+            arta_sqd_table.rows().nodes().to$().find('td:first-child').addClass('fw-bold');
+            arta_sqd_table.rows().nodes().to$().find('td:first-child').addClass('bg-light');
+        }
+    });
+}
+
+function getPasswordStrength(password) {
+    // Implement your password strength logic here
+    // For example, you can check for length, uppercase, lowercase, numbers, and special characters
+    var strength = 0;
+    if (password.length >= 8) {
+        strength+=10;
+    }
+    if (password.length >= 12) {
+        strength+=15;
+    }
+    if (password.length >= 16) {
+        strength+=20;
+    }
+    if (/[A-Z]/.test(password)) {
+        strength+=15;
+    }
+    if (/[a-z]/.test(password)) {
+        strength+=10;
+    }
+    if (/[0-9]/.test(password)) {
+        strength+=15;
+    }
+    if   
+    (/[^A-Za-z0-9]/.test(password)) {
+        strength+=15;
+    }
+    return strength;   
+
+}
+
+function tech_rev_criterion(id, status){
+    $('#tedEdCriteriaModal').modal('toggle');
+    $('#tr_man_id').val(id);
+}
+
+function eic_process(id, title) {
+
+    man_id = id;
+
+    var manuscript_title = decodeURIComponent(title);
+    $('#eicProcessModal #man_title').text('').text(manuscript_title);
+
+    $('#eic_table #tr_remarks').text('');
+
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_tech_rev_score/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+
+            $.each(data, function(key, val){
+                $.each(val, function(k, v){
+                    var status_class = (v == 1) ? 'text-success' : 'text-danger';
+                    var status_bg_class = (v == 1) ? 'bg-success' : 'bg-danger';
+                    var status_text = (v == 1) ? 'Passed' : 'Failed';
+
+                    if(k == 'tr_final'){
+                        $('#eic_table #' +k).text(status_text);
+                        $('#eic_table #' +k).addClass(status_bg_class);
+                    }else if(k == 'tr_remarks'){
+                        $('#eic_table #'+k).text(val.tr_remarks ?? 'No remarks.');
+                    }else{
+                        $('#eic_table #' +k).text(status_text);
+                        $('#eic_table #' +k).addClass(status_class);
+                    }
+                });
+
+
+            });
+        }
+    });
+}
+
+function update_process_time_duration(element,id){
+
+    var days = $(element).closest('tr').find('input').val();
+
+    var data = {
+        id: id,
+        days: days
+    };
+    
+    Swal.fire({
+        title: "Apply changes?",
+        // text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#007bff",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Submit"
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: base_url + "oprs/emails/update_process_time_duration",
+                data: data,
+                cache: false,
+                crossDomain: true,
+                type: "POST",
+                success: function(data) {
+                    Swal.fire({
+                    title: "Process time duration updated successfully!",
+                    icon: 'success',
+                    // html: "I will close in <b></b> milliseconds.",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                        location.reload();
+                    }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                        location.reload();
+                    });
+                }
+            });
+        }
+    });
+}
+
+function editor_action(action,editor_type){
+
+    if(editor_type == 'editor_chief'){
+        if(action == 'endorse'){
+            $("#endorse_associate_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    associate_editor: {
+                        required: true,
+                    },
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Endorse review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#eicProcessModal').modal('toggle');
+                            $('#endorse_associate_form').prop('disabled', true);
+
+                            var status = 3;
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#endorse_associate_form #man_remarks').val(),
+                                associate_editor: $('#endorse_associate_form #associate_editor').val()
+                            };
+
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/eic_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    
+                                    $('body').loading('stop');
+                                    $('#endorse_associate_form')[0].reset();
+
+                                    Swal.fire({
+                                    title: "Associate editor review request submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#endorse_associate_form").submit();
+        }else if(action == 'suggest'){
+            
+            $("#eicProcessModal #suggest_peer_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    "suggested_peer_rev_title[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev_email[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev_spec[]": {
+                        required: true,
+                    },
+                    man_remarks: {
+                        required: true,
+                    },
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Endorse review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#eicProcessModal').modal('toggle');
+                            $('#eicProcessModal #suggest_peer_form').prop('disabled', true);
+
+                            // Serialize the form data
+                            var formData = $('#eicProcessModal #suggest_peer_form').serialize();
+
+                            var status = '0';
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#eicProcessModal #suggest_peer_form #man_remarks').val(),
+                                suggested_peer: formData
+                            };
+
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/eic_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    
+                                    $('body').loading('stop');
+                                    $('#eicProcessModal #suggest_peer_form')[0].reset();
+
+                                    Swal.fire({
+                                    title: "Suggested peer reviewers submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#eicProcessModal #suggest_peer_form").submit();
+        }else{
+            $("#eic_review_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Submit review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#eicProcessModal').modal('toggle');
+                            $('#eic_review_form').prop('disabled', true);
+                            
+                            // 14-rejected
+                            var status = (action == 'accept') ? '15' : ((action == 'revise') ? '10' : '14');
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#eic_review_form #man_remarks').val()
+                            };
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/eic_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    $('#eic_review_form')[0].reset();
+                                    Swal.fire({
+                                    title: "Review submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#eic_review_form").submit();
+        }
+    }else if(editor_type == 'associate'){
+        if(action == 'endorse'){
+
+            // Add custom validation rule
+            $.validator.addMethod("atLeastOneChecked", function (value, element) {
+                return $('input[name="cluster_editor[]"]:checked').length > 0;
+            }, "Please select at least one cluster editor.");
+            
+            $("#endorse_cluster_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    "cluster_editor[]": {
+                        atLeastOneChecked: true
+                    },
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                messages: {
+                    "options[]": {
+                        atLeastOneChecked: "Please select at least one cluster editor."
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    // Place error message below the group of checkboxes
+                    if (element.attr("name") === "cluster_editor[]") {
+                        error.insertAfter("#cluster_editors");
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Endorse review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#assocEdProcessModal').modal('toggle');
+                            $('#endorse_cluster_form').prop('disabled', true);
+
+                            var cluster_editor = $('input[name="cluster_editor[]"]:checked')
+                            .map(function () {
+                                return $(this).val();
+                            })
+                            .get(); // Convert to an array
+
+                            var status = 4;
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#endorse_cluster_form #man_remarks').val(),
+                                cluster_editor: cluster_editor
+                            };
+
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/assoc_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    $('#endorse_cluster_form')[0].reset();
+
+                                    Swal.fire({
+                                    title: "Cluster editor review request submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#endorse_cluster_form").submit();
+        }else if(action == 'suggest'){
+            
+            $("#assocEdProcessModal #suggest_peer_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    "suggested_peer_rev_title[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev_email[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev_spec[]": {
+                        required: true,
+                    },
+                    // man_remarks: {
+                    //     required: true,
+                    // },
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Endorse review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#assocEdProcessModal').modal('toggle');
+                            $('#assocEdProcessModal #suggest_peer_form').prop('disabled', true);
+
+                            // Serialize the form data
+                            var formData = $('#assocEdProcessModal #suggest_peer_form').serialize();
+
+                            var status = '0';
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#assocEdProcessModal #suggest_peer_form #man_remarks').val(),
+                                suggested_peer: formData
+                            };
+
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/assoc_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    
+                                    $('body').loading('stop');
+                                    $('#assocEdProcessModal #suggest_peer_form')[0].reset();
+
+                                    Swal.fire({
+                                    title: "Suggested peer reviewers submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#assocEdProcessModal #suggest_peer_form").submit();
+        }else{
+            $("#assoc_review_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    man_remarks: {
+                        required: true,
+                    },
+                
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Submit review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#assocEdProcessModal').modal('toggle');
+                            $('#assoc_review_form').prop('disabled', true);
+                            
+                            // 14-rejected
+                            var status = (action == 'accept') ? '15' : ((action == 'revise') ? '10' : '14');
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#assoc_review_form #man_remarks').val()
+                            };
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/assoc_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    $('#assoc_review_form')[0].reset();
+                                    Swal.fire({
+                                    title: "Review submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#assoc_review_form").submit();
+        }
+    }else{ // cluster editor
+        if(action == 'endorse'){
+            $("#cluEdProcessModal #suggest_peer_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    "suggested_peer_rev_title[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev_email[]": {
+                        required: true,
+                    },
+                    "suggested_peer_rev_spec[]": {
+                        required: true,
+                    },
+                    man_remarks: {
+                        required: true,
+                    },
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Endorse review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#cluEdProcessModal').modal('toggle');
+                            $('#cluEdProcessModal #suggest_peer_form').prop('disabled', true);
+
+                            // Serialize the form data
+                            var formData = $('#cluEdProcessModal #suggest_peer_form').serialize();
+
+                            var status = '0';
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#cluEdProcessModal #suggest_peer_form #man_remarks').val(),
+                                suggested_peer: formData
+                            };
+
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/cluster_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    
+                                    $('body').loading('stop');
+                                    $('#cluEdProcessModal #suggest_peer_form')[0].reset();
+
+                                    Swal.fire({
+                                    title: "Suggested peer reviewers submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#cluEdProcessModal #suggest_peer_form").submit();
+        }else{
+            $("#cluster_review_form").validate({
+                debug: true,
+                errorClass: 'text-danger',
+                rules: {
+                    man_remarks: {
+                        required: true,
+                    },
+                },
+                submitHandler: function() {
+                
+                    Swal.fire({
+                        title: "Submit review?",
+                        // text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#007bff",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Submit"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+        
+                            $('body').loading('start');
+                            $('#cluEdProcessModal').modal('toggle');
+                            $('#cluster_review_form').prop('disabled', true);
+                            
+                            // 14-rejected
+                            var status = (action == 'accept') ? '15' : ((action == 'revise') ? '10' : '14');
+                            var data = {
+                                id: man_id,
+                                status: status,
+                                remarks: $('#cluster_review_form #man_remarks').val()
+                            };
+                            
+                            $.ajax({
+                                url: base_url + "oprs/manuscripts/cluster_review_process",
+                                data: data,
+                                cache: false,
+                                crossDomain: true,
+                                type: "POST",
+                                success: function(data) {
+                                    $('body').loading('stop');
+                                    $('#cluster_review_form')[0].reset();
+                                    Swal.fire({
+                                    title: "Review submitted successfully!",
+                                    icon: 'success',
+                                    // html: "I will close in <b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup().querySelector("b");
+                                        timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                        }, 100);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        location.reload();
+                                    }
+                                    }).then((result) => {
+                                        /* Read more about handling dismissals below */
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            console.log("I was closed by the timer");
+                                        }
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+        
+                }
+            });
+        
+            $("#cluster_review_form").submit();
+        }
+    }
+
+}
+
+
+function assoced_process(id, title) {
+
+    man_id = id;
+    var manuscript_title = decodeURIComponent(title);
+    $('#assocEdProcessModal #man_title').text('').text(manuscript_title);
+
+    $('#eic_remarks').text('');
+    // get editor in chief remarks
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_editors_review/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#eic_remarks').append(val.edit_remarks ?? 'No remarks.');
+            });
+        }
+    });
+}
+
+function clued_process(id, title) {
+
+    man_id = id;
+    var manuscript_title = decodeURIComponent(title);
+    $('#cluEdProcessModal #man_title').text('').text(manuscript_title);
+
+    // $('#assoc_remarks').text('');
+    // get editor in chief remarks
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_editors_review/"+id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#assoc_remarks').append(val.edit_remarks ?? 'No remarks.');
+            });
+        }
+    });
+}
+
+function suggest_peer(editor){
+
+    var prefix = (editor == 'editor_chief') ? 'eic_' : ((editor == 'associate') ? 'assoc_' : '');
+    var modal = (editor == 'editor_chief') ? '#eicProcessModal' : ((editor == 'associate') ? '#assocEdProcessModal' : '#cluEdProcessModal');
+
+    var select;
+    $.each(array_prf, function(key, val) {
+        select += '<option value="' + val + '">' + val + '</option>';
+    });
+    
+
+    // if(suggIncr <= 4){
+        suggIncr++;
+    
+        var html = '';
+    
+        html = `<div class="accordion-item">
+                    <h2 class="accordion-header" id="heading${suggIncr}">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${suggIncr}" aria-expanded="true" aria-controls="collapse${suggIncr}">
+                        Peer Reviewer ${suggIncr}
+                    </button>
+                    </h2>
+                    <div id="collapse${suggIncr}" class="accordion-collapse collapse show" aria-labelledby="heading${suggIncr}" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <select class="form-select" id="${prefix}suggested_peer_rev_title${suggIncr}" name="suggested_peer_rev_title[]" placeholder="Title">
+                                        <option value="">Select Title</option>
+                                        ${select}
+                                    </select>
+                                </div>
+                                <div class="col autocomplete">
+                                <input type="text" class="form-control " id="${prefix}suggested_peer_rev${suggIncr}" name="suggested_peer_rev[]" placeholder="Search by Name or Specialization">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <input type="text" class="form-control" placeholder="Email" id="${prefix}suggested_peer_rev_email${suggIncr}" name="suggested_peer_rev_email[]">
+                                </div>
+                                <div class="col mb-3">
+                                    <input type="text" class="form-control" placeholder="Contact" id="${prefix}suggested_peer_rev_num${suggIncr}" name="suggested_peer_rev_num[]">
+                                </div>
+                                <input type="hidden" id="${prefix}suggested_peer_rev_id${suggIncr}" name="suggested_peer_rev_id[]">
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Specialization" id="${prefix}suggested_peer_rev_spec${suggIncr}" name="suggested_peer_rev_spec[]">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-outline-danger w-100" onclick="remove_suggest_peer(${suggIncr})"><span class="fa fa-minus me-1"></span>Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+    
+        $(modal + ' #suggest_peer_accordion').append(html);
+
+        
+        $('#'+prefix+'suggested_peer_rev_title' + suggIncr).editableSelect({
+            effects: 'slide'
+        });
+
+        autocomplete(document.getElementById(prefix + "suggested_peer_rev"+suggIncr), mem_exp, '#'+prefix+'suggested_peer_rev_email'+suggIncr, '#'+prefix+'suggested_peer_rev_num'+suggIncr, '#'+prefix+'suggested_peer_rev_id'+suggIncr,  suggIncr , '#'+prefix+'suggested_peer_rev_spec'+suggIncr, '#'+prefix+'suggested_peer_rev_title'+suggIncr);
+    // }
+}
+
+function remove_suggest_peer(id){
+    $('#heading'+id).closest('div').remove();
+}
+
+function submit_consolidation(){
+    $('#consolidationModal').modal('toggle');
+    $('#reviewsModal').modal('toggle');
+    $('#cons_man_id').val(man_id);
+}
+
+function checkOnlyOne(checkbox) {
+    let name = $(checkbox).attr('name');
+    const checkboxes = document.querySelectorAll('input[name="' + name + '"]');
+    checkboxes.forEach((cb) => {
+      if (cb !== checkbox) cb.checked = false;
+    });
+}
+
+function upload_revision(man_id){
+
+    $('#uploadRevisionModal').modal('toggle');
+    $('#revision_consolidations').empty();
+    $('#revision_remarks').text('');
+    $('#manuscript_revision_form #man_id').val(man_id);
+
+    // get criteria review results
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_tech_rev_score/"+man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                if(val.tr_final == 2){
+                    $('#criteria_review_result').removeClass('d-none');
+                    $('#criteria_review_result_value').text('Failed');
+                    $('#revision_remarks').text(val.tr_remarks);
+                    $('#revision_consolidations_row').hide();
+                    $('#revision_matrix_template').hide();
+                    $('#div_man_matrix').hide();
+                    $('#criteria_status').val(2);
+                }
+            });
+        }
+    });
+
+    // get editors review if for revision
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_last_editors_review/"+man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                if(val.edit_status == 10){
+                    $('#revision_remarks').text(val.edit_remarks);
+                    $('#revision_consolidations_row').hide();
+                    $('#revision_matrix_template').hide();
+                    $('#div_man_matrix').hide();
+                    $('#editor_review_status').val(10);
+                }
+            });
+        }
+    });
+    
+    // get consolidation
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_consolidation/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            console.log(data);
+            $.each(data, function(key, val){    
+                // technical desk editor consolidate peer review results
+                $('#revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'" target="_blank">Download</a>');
+                $('#revision_remarks').text(val.cons_remarks);
+                $('#revision_status').text(val.cons_status);
+
+                if(val.cons_status == 3){
+                    $('#revision_matrix_template').hide();
+                    $("#div_man_matrix").hide();
+                }
+            });
+        }
+    });
+}
+
+function upload_proofread_revision(man_id){
+
+    $('#uploadProofreadRevisionModal').modal('toggle');
+    $('#layout_file').empty();
+    $('#layout_remarks').text('');
+    $('#submit_proofread_revision_form #man_id').val(man_id);
+    
+    //get layout
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_layout/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){    
+                // technical desk editor consolidate peer review results
+                $('#layout_file').append('<a href="'+ base_url + 'assets/oprs/uploads/layouts/' + val.lay_file +'" target="_blank">Download</a>');
+                $('#layout_remarks').text(val.lay_remarks);
+            });
+        }
+    });
+}
+
+function coped_process(man_id){
+
+    $('#submit_coped_process_form #coped_man_id').val(man_id);
+      //get remarks of previous processor
+      $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_revision_matrix/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){    
+                $('#uploaded_revision_matrix').append('<a href="'+ base_url + 'assets/oprs/uploads/revision_matrix/' + val.mtx_file +'" download>Download</a>');
+            });
+        }
+    });
+}
+
+function final_review(man_id){
+    $('#submit_final_review_form #final_man_id').val(man_id);
+}
+
+function layout_process(man_id){
+    $('#submit_layout_form #lay_man_id').val(man_id);
+}
+
+function view_stats_info(stat_id, pub_id, man_status, editor_type){
+
+    var from = $(stat_id + ' #date_from').val();
+    var to = $(stat_id + ' #date_to').val();
+
+    var data = {
+        from: from,
+        to: to,
+        pub_id: pub_id,
+        man_status: man_status,
+        editor_type: editor_type
+    };
+
+    $('#statsModal').modal('toggle');
+
+    $.ajax({
+        url: base_url + "oprs/manuscripts/get_manuscripts_publication_status",
+        data:  data,
+        cache: false,
+        crossDomain: true,
+        dataType: 'json',
+        type: "POST",
+        success: function(data) {
+             console.log(data)
+             sm.clear();
+                $.each(data, function(key, val){
+
+                    var coauthors = (val.coauthors) ? val.coauthors : '';
+                    var authors = (coauthors) ? val.man_author + ', ' + coauthors : val.man_author;
+
+                    sm.row.add([
+                        val.row_id,
+                        val.man_title,
+                        authors,
+                        moment(val.date_created, 'YYYY-MM-DD HH:mm').format("MMMM D, YYYY h:mm a"),
+                        '<span class="badge rounded-pill bg-' + val.status_class + '">' + val.status + '</span>',
+                        '<a href="javascript:void(0)" onclick="tracking(' + val.row_id + ', 2000)">' + val.man_trk_no + '</a>',
+                        val.man_remarks ?? 'No remarks',
+                        '<button rel="tooltip" data-bs-placement="top" title="View Details" class="btn btn-light" onclick="view_manus(' + val.row_id + ',2000)"><span class="fa fa-eye"></span></button>'
+                    ]);
+                });
+            sm.draw();
+
+        }
+    });
+
 }

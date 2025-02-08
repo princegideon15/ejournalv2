@@ -48,7 +48,7 @@ class Email extends OPRS_Controller {
 				$post['rev_status'] = 3;
 				$where['row_id'] = $val->row_id;
 				$this->Manuscript_model->update_reviewer(array_filter($post), $where);
-				$this->email_lapsed($val->rev_man_id, $val->rev_id,6); // request lapsed
+				$this->email_lapsed($val->rev_man_id, $val->rev_id,10); // request lapsed
 			}
 		}
 	}
@@ -89,7 +89,7 @@ class Email extends OPRS_Controller {
 				$where_lapsed['scr_man_rev_id'] = $val->rev_id;
 				$post_scr['scr_status'] = 3;
 				$this->Review_model->update_score_lapse(array_filter($post_scr), $where_lapsed);
-				$this->email_lapsed($val->rev_man_id, $val->rev_id,7); // review lapsed
+				$this->email_lapsed($val->rev_man_id, $val->rev_id,10); // review lapsed
 			} 
 		}
 	}

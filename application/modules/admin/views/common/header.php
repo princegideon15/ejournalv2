@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="<?php echo base_url("assets/css/jquery-editable-select.min.css"); ?>">
     <link rel="stylesheet" href="<?php echo base_url("assets/css/dataTables.bootstrap4.min.css"); ?>">
     <link rel="stylesheet" href="<?php echo base_url("assets/css/select.dataTables.min.css"); ?>">
+    <link rel="stylesheet" href="<?php echo base_url("assets/css/buttons.dataTables.min.css"); ?>">
     <link rel="stylesheet" href="<?php echo base_url("assets/css/animate.min.css"); ?>">
     <link rel="stylesheet" href="<?php echo base_url("assets/css/jquery.loading.admin.css"); ?>">
     <link rel="stylesheet" href="<?php echo base_url("assets/admin/vendor/font-awesome/css/font-awesome.min.css"); ?>">
-    <link rel="stylesheet" href="<?php echo base_url("assets/css/buttons.dataTables.min.css"); ?>">
     <link href="<?php echo base_url(); ?>assets/css/sh-autocomplete.min.css" rel="stylesheet">
     <link rel="icon" href="<?php echo base_url("assets/images/ejicon-07.png"); ?>">       
   </head>

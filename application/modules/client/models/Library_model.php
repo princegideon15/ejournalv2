@@ -70,6 +70,55 @@ class Library_model extends CI_Model {
 		$query = $skms->get();
 		return $query->result();
     }
+
+    public function get_csf_client_types(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_client_type');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+   
+    public function get_csf_cc1(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_cc1');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function get_csf_cc2(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_cc2');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function get_csf_cc3(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_cc3');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function get_csf_sqd(){
+        $this->db->select('*');
+        $this->db->from('tblcsf_sqd');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    public function get_editorial_policy_content(){
+		$this->db->select("ep_file");
+		$this->db->from('tbleditorial_policy');
+        $this->db->where('ep_is_archive', '0');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result[0]['ep_file'];
+	}
+
+    
+	public function get_guidelines_content(){
+		$this->db->select("gd_content");
+		$this->db->from('tblguidelines');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result[0]['gd_content'];
+	}
 }
 
 /* End of file Library_model.php */

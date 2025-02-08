@@ -1,5 +1,5 @@
 <?php error_reporting(0);?>
-<div class="container-fluid" class="mt-3 p4">
+<div class="container-fluid mt-2 p-4">
 	<div class="row">
 		<!-- SIDE NAVIGATION -->
         <div class="col col-3 p-3">
@@ -14,9 +14,7 @@
 				<?php endforeach;}?>
 			</div> -->
 		<div class="col col-7 p-3">
-			<div class="tab-content" id="nav-tabContent">
-
-				<!-- ABOUT -->
+			<div class="tab-content bg-white rounded border p-5" id="nav-tabContent">
 				<div class="tab-pane fade show active " id="home" role="tabpanel" aria-labelledby="home">
 					
 						<!-- <div class="row">

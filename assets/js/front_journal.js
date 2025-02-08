@@ -13,24 +13,195 @@
 * Copyright Notice:
 * Copyright (C) 2019 By the Department of Science and Technology - National Research Council of the Philippines
 */
-let apa_format,       //apa format for article
-apa_id,               //article id
-fb_clt_id,            //feedback client id
-fn_clt_email,         //feedback client email
-minutes = 5,          //otp timer
-seconds = 0,          //otp timer
-intervalId,           //otp timer
-isStartTimer = false, //otp timer
-refCode,              //reference code for otp
-accessToken,          //user access token generated on logged in
-article_id;           //article id 
+var apa_format,       // apa format for article
+apa_id,               // article id
+fb_clt_id,            // feedback client id
+fn_clt_email,         // feedback client email
+minutes = 5,          // otp timer
+seconds = 0,          // otp timer
+intervalId,           // otp timer
+isStartTimer = false, // otp timer
+refCode,              // reference code for otp
+accessToken,          // user access token generated on logged in
+article_id,           // article id 
+article_page_timeout, // article page timeout for saving abstract hits         
+current_button_id = "#create_account";    // button to enable/disable for catpcha        
 
 $(document).ready(function()
 {
-  //get user access token
+
+  var currentUrl = window.location.href; // Get current path
+
+  $(".custom-nav a").each(function () {
+      var link = $(this).attr("href");
+      // Check if the current URL matches the link
+      if (currentUrl === link || (currentUrl === "/" && link === "home")) {
+          $(this).addClass("active");
+      }
+  });
+
+  $('#arta_age').on('keypress', function(e) {
+    var charCode = (e.which) ? e.which : e.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      e.preventDefault(); // Prevent any non-numeric input
+    }
+  });
+
+  // feedback suggestion box character limit
+  let $textArea = $("#fb_suggest_ui");
+  let $charCount = $("#char_count_ui");
+  let maxLength = $textArea.attr("maxlength");
+
+  $textArea.on("input", function () {
+      let currentLength = $(this).val().length;
+      $charCount.text(`${currentLength} / ${maxLength} characters`);
+
+      if (currentLength > maxLength) {
+          $charCount.addClass("exceeded");
+      } else {
+          $charCount.removeClass("exceeded");
+      }
+  });
+
+  let $textArea2 = $("#fb_suggest_ux");
+  let $charCount2 = $("#char_count_ux");
+  let maxLength2 = $textArea2.attr("maxlength");
+
+  $textArea2.on("input", function () {
+      let currentLength = $(this).val().length;
+      $charCount2.text(`${currentLength} / ${maxLength2} characters`);
+
+      if (currentLength > maxLength2) {
+          $charCount2.addClass("exceeded");
+      } else {
+          $charCount2.removeClass("exceeded");
+      }
+  });
+
+  // csf ui ux star rating
+  let selectedRatingUI = 0;
+  let selectedRatingUX = 0;
+
+  $('.rate-ui').on('mouseover', function () {
+      const value = $(this).data('value');
+      $('.rate-ui').each(function () {
+          $(this).toggleClass('selected', $(this).data('value') <= value);
+      });
+  });
+
+  $('.rate-ui').on('mouseleave', function () {
+      $('.rate-ui').each(function () {
+          $(this).toggleClass('selected', $(this).data('value') <= selectedRatingUI);
+      });
+  });
+
+  $('.rate-ui').on('click', function () {
+      selectedRatingUI = $(this).data('value');
+        
+      // Remove 'selected' class from all stars and add it to the clicked star and previous stars
+      $(".rate-ui").removeClass("selected");
+      $(".rate-ui").each(function () {
+        if ($(this).data("value") <= selectedRatingui) {
+          $(this).addClass("selected");
+          $('.rate-ux-validation').text('');
+        }
+      });
+  });
+  
+  $('.rate-ux').on('mouseover', function () {
+      const value = $(this).data('value');
+      $('.rate-ux').each(function () {
+          $(this).toggleClass('selected', $(this).data('value') <= value);
+      });
+  });
+
+  $('.rate-ux').on('mouseleave', function () {
+      $('.rate-ux').each(function () {
+          $(this).toggleClass('selected', $(this).data('value') <= selectedRatingUX);
+      });
+  });
+
+  $('.rate-ux').on('click', function () {
+      selectedRatingUX = $(this).data('value');
+        
+      // Remove 'selected' class from all stars and add it to the clicked star and previous stars
+      $(".rate-ux").removeClass("selected");
+      $(".rate-ux").each(function () {
+        if ($(this).data("value") <= selectedRatingUX) {
+          $(this).addClass("selected");
+          $('.rate-ux-validation').text('');
+        }
+      });
+  });
+
+  $('#submit_feedback').on('click', function(){
+
+    let uiSuggestion = $('#fb_suggest_ui').val();
+    let uxSuggestion = $('#fb_suggest_ux').val();
+    
+    let data = {
+      'ui' : selectedRatingUI,
+      'ux' : selectedRatingUX,
+      'ui_sug' : uiSuggestion,
+      'ux_sug' : uxSuggestion,
+      'csf_system' : 'eJournal Client',
+    };
+
+    const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
+
+    if (captcha) {
+      $(this).prop('disabled', true);
+        // alert("reCAPTCHA is checked and valid!");
+        $.ajax({
+          type: "POST",
+          url: base_url + 'client/feedback/submit_csf_ui_ux',
+          data:  data,
+          cache: false,
+          crossDomain: true,
+          success: function(data) {
+            $('#feedbackModal').modal('toggle');
+            if(data == 1){
+              let timerInterval;
+              Swal.fire({
+                title: "Thank you for your feedback.",
+                html: "Logging out...",
+                icon: "success",
+                allowOutsideClick: false, // Prevent closing by clicking outside
+                allowEscapeKey: false,   // Prevent closing with the Escape key
+                allowEnterKey: false,    // Prevent closing with the Enter key
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: () => {
+                  Swal.showLoading();
+                  // const timer = Swal.getPopup().querySelector("b");
+                  // timerInterval = setInterval(() => {
+                  //   timer.textContent = `${Swal.getTimerLeft()}`;
+                  // }, 100);
+                },
+                willClose: () => {
+                  clearInterval(timerInterval);
+                }
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  window.location.href = base_url + "client/login/logout/";
+                }
+              });
+            }else{
+              console.log('Something went wrong.');
+            }
+          }
+        });
+    } else {
+        console.log("Please complete the reCAPTCHA!");
+    }
+
+  });
+  
+  // get user access token
   accessToken = $.ajax({
     type: "GET",
-    url: base_url + "client/login/get_access_token/",
+    url: base_url + "/client/login/get_access_token/",
     async:false,
     crossDomain: true,
     success: function(data) {
@@ -47,40 +218,87 @@ $(document).ready(function()
   
   $('body').tooltip({ selector: '[data-bs-toggle=tooltip]' });
 
+  $('#share_link').on('click', function(){
+    $(this).html('Copied <span class="fa fa-check"></span>');
+
+    // Get the input element
+    let textToCopy = $('#share_link_article').val();
+    navigator.clipboard.writeText(textToCopy);
+
+    const tooltipInstance = bootstrap.Tooltip.getInstance(this);
+    if (tooltipInstance) {
+        tooltipInstance.dispose(); // Completely removes the tooltip
+    }
+
+    setTimeout(() => $(this).html('Share <span class="oi oi-share ms-1"></span>'), 3000); // Hide after 1 second
+  });
+
+  $('#my-downloads-table').DataTable();
+
+  // 5 minutes timer for otp
   var url = window.location.pathname; // Get the current path
   var segments = url.split('/'); // Split the path by '/'
   // Make sure there are enough segments
   if (segments.length > 2) {
     var secondToLastSegment = segments[segments.length - 2];
-    if(secondToLastSegment == 'verify_otp'){
-      refCode = url.split('/').pop();
-      getCurrentOTP(refCode)
+    refCode = url.split('/').pop();
+    
+    if(secondToLastSegment == 'verify_otp' || secondToLastSegment == 'new_account_verify_otp'){ // login otp, create client account otp
+      getCurrentOTP(refCode, 1);
+    }else if(secondToLastSegment == 'author_account_verify_otp'){ // create author account otp
+      getCurrentOTP(refCode, 2);
+    }else if(secondToLastSegment == 'article'){ // save hits if page is viewed for more than 5 seconds
+      let art_id = url.split('/').pop();
+      let article_page_view_time = new Date().getTime();
+  
+      article_page_timeout = setTimeout(function() {
+        let currentTime = new Date().getTime();
+        let elapsedTime = currentTime - article_page_view_time;
+        let seconds = elapsedTime / 1000;
+        if (seconds >= 5) {
+          // console.log('page has been open for more than 5 seconds');
+          //save hits
+          save_hits(art_id);
+        }
+      }, 5000); // Check after 5 seconds
+    }else if(secondToLastSegment == 'csf_arta'){
+      current_button_id = "#submit_csf_arta";
+    }else{
+      // clear only if timeout exists
+      if(article_page_timeout){
+        clearTimeout(article_page_timeout);
+      }
     }
   } else {
       // console.log("Not enough segments in the URL.");
   }
 
 
-  $('#abstract_modal').on('show.bs.modal', function() {
-    var modalOpenTime = new Date().getTime();
-    var modalTimeout;
-
-    modalTimeout = setTimeout(function() {
-      var currentTime = new Date().getTime();
-      var elapsedTime = currentTime - modalOpenTime;
-      var seconds = elapsedTime / 1000;
-      if (seconds >= 5) {
-        // console.log('Modal has been open for more than 5 seconds');
-        //save hits
-        save_hits(article_id);
-      }
-    }, 5000); // Check after 5 seconds
-
-    $('#abstract_modal').on('hidden.bs.modal', function() {
-      clearTimeout(modalTimeout);
-      // console.log('Modal has been closed');
-    });
+  $('#resend_code').on('click', function(){
+    $(this).addClass('disabled').html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading');
   });
+
+
+  // $('#abstract_modal').on('show.bs.modal', function() {
+  //   var modalOpenTime = new Date().getTime();
+  //   var modalTimeout;
+
+  //   modalTimeout = setTimeout(function() {
+  //     var currentTime = new Date().getTime();
+  //     var elapsedTime = currentTime - modalOpenTime;
+  //     var seconds = elapsedTime / 1000;
+  //     if (seconds >= 5) {
+  //       // console.log('Modal has been open for more than 5 seconds');
+  //       //save hits
+  //       save_hits(article_id);
+  //     }
+  //   }, 5000); // Check after 5 seconds
+
+  //   $('#abstract_modal').on('hidden.bs.modal', function() {
+  //     clearTimeout(modalTimeout);
+  //     // console.log('Modal has been closed');
+  //   });
+  // });
 
 
   let volumeList = $('#volume_list');
@@ -99,20 +317,22 @@ $(document).ready(function()
     }
   });
 
-  $('#signUpForm #country').on('change', function(){
+  $(' #country').on('change', function(){
+    let form = $(this).closest('form').attr('id');
     if($(this).val() != 175){
-      $('#signUpForm #region').prop('disabled', true);
-      $('#signUpForm #province').prop('disabled', true);
-      $('#signUpForm #city').prop('disabled', true);
+      $('#' + form + ' #region').prop('disabled', true);
+      $('#' + form + ' #province').prop('disabled', true);
+      $('#' + form + ' #city').prop('disabled', true);
     }else{
-      $('#signUpForm #region').prop('disabled', false);
-      $('#signUpForm #province').prop('disabled', false);
-      $('#signUpForm #city').prop('disabled', false);
+      $('#' + form + ' #region').prop('disabled', false);
+      $('#' + form + ' #province').prop('disabled', false);
+      $('#' + form + ' #city').prop('disabled', false);
       
     }
   });
 
-  $('#signUpForm #region').on('change', function(){
+  $('#region').on('change', function(){
+    let form = $(this).closest('form').attr('id');
     let region = $(this).val()
     
 		$.ajax({
@@ -125,7 +345,7 @@ $(document).ready(function()
 				$.each(data, function(key, val) {
           html += '<option value="'+ val.province_id +  '">'+ val.province_name +'</option>';
 				});
-        $('#signUpForm #province').empty().append(html);
+        $('#' + form + ' #province').empty().append(html);
 			},
       error: function(xhr, status, error) {
           console.error('Error:', error);
@@ -133,7 +353,8 @@ $(document).ready(function()
 		});
   });
 
-  $('#signUpForm #province').on('change', function(){
+  $('#province').on('change', function(){
+    let form = $(this).closest('form').attr('id');
     let province = $(this).val()
 		$.ajax({
 			type: "GET",
@@ -145,12 +366,13 @@ $(document).ready(function()
 				$.each(data, function(key, val) {
           html += '<option value="'+ val.city_id +  '">'+ val.city_name +'</option>';
 				});
-        $('#city').empty().append(html);
+        $('#' + form + ' #city').empty().append(html);
 			}
 		});
   });
 
-  $('#signUpForm #new_password').on('keyup', function() {
+  $('#new_password').on('keyup', function() {
+    $("#password_strength_container").removeClass('d-none');
     if($(this).val().length > 0){
       var password = $(this).val();
       var strength = getPasswordStrength(password);
@@ -691,13 +913,13 @@ $('#citationModal .close').click(function(){
   let idleTime = 0;
 
   if(accessToken != 0){
-
     $(document).on('mousemove keydown scroll', function() {
         idleTime = 0;
     });
 
     let timerInterval = setInterval(function() {
         idleTime += 1;
+        
         if (idleTime >= 1200) { // 20 minutes in seconds
             // Trigger logout or other actions
             clearInterval(timerInterval); // Stop the timer
@@ -711,14 +933,166 @@ $('#citationModal .close').click(function(){
               confirmButtonColor: "#0c6bcb",
             
             }).then(function () {
-              window.location = base_url + "client/ejournal/login/";
+              window.location = base_url + "client/login/";
             });
         }
     }, 1000); // Check every 1 second
   }
 
+  $('input[name="author_type"]').on('click', function(){
+    let authType = this.value;
+
+    if(authType == 1){
+      // disabled some fields
+      $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
+        let inputType = $(this).attr('type');
+        let inputID = $(this).attr('id');
+        var label = $('label[for="' + inputID + '"]');
+        if(inputType != 'radio' && inputType != 'password' && inputType != 'email'){
+          // $(this).attr('disabled', true);
+          label.closest('div.mb-3').addClass('d-none');
+        }
+      });
+    }else{
+      // enabled some fields
+      $('#authorSignUpForm input, #authorSignUpForm select').each(function(){
+        let inputID = $(this).attr('id');
+        var label = $('label[for="' + inputID + '"]');
+        // if(inputID != 'region' && inputID != 'province' && inputID != 'city'){
+          label.closest('div.mb-3').removeClass('d-none');
+        // }
+      });
+
+      // check if email exist as client in ejournal
+      let email = $('#new_email').val();
+      let member = authType;
+  
+      if(email && member){
+        
+        let formData = {
+          'email' : email,
+          'member' : member
+        };
+  
+        checkEmail(formData);
+      }
+    }
+
+    $('#create_account').removeClass('disabled');
+  })
+
+  $('#authorSignUpForm #new_email').on('blur', function(){
+    
+    let email = $(this).val();
+    let member = $('input[name="author_type"]:checked').val();
+
+    if(email && member){
+      
+      let formData = {
+        'email' : email,
+        'member' : member
+      };
+
+      checkEmail(formData);
+    }
+
+  });
 });
 
+
+function checkEmail(formData){
+  $.ajax({
+    type: 'POST',
+    url: base_url + "oprs/signup/check_author_email/",
+    dataType: 'json',
+    data: formData,
+    success: function (response) {
+      if(formData['member'] == 1){
+        if(response == 1){ // nrcp member and not oprs author
+          $('#new_email').removeClass('is-invalid')
+          $('.invalid-feedback').text();
+          $('#create_account').removeClass('disabled');
+        }else if(response == 2){
+          $('#new_email').addClass('is-invalid')
+          $('.invalid-feedback').text('Email already in use.');
+          $('#create_account').addClass('disabled');
+        }else{
+          $('#new_email').addClass('is-invalid')
+          $('.invalid-feedback').text('Email does not exist.');
+          $('#create_account').addClass('disabled');
+        }
+      }else{
+        if(response['ej'] == 1 && response['op'] == 0){
+  
+          Swal.fire({
+            title: "Email already exists in eJournal",
+            text: "Do you want to register this account as author?",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonColor: "#adb5bd",
+            confirmButtonColor: "#0c6bcb",
+            confirmButtonText: "Proceed"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              register_author_acccount(formData);
+            } else {
+              $('#authorSignUpForm')[0].reset();
+              $('form input, select').removeClass('is-invalid');
+              $('.alert-danger').alert('close');
+            }
+          });
+  
+          $('#create_account').addClass('disabled');
+        }else if(response['ej'] >= 1 && response['op'] >= 1){
+          let oprs_url = base_url + "oprs/login";
+          $('#new_email').addClass('is-invalid')
+          $('.invalid-feedback').html('Email already exist as Author. Click <a class="text-danger text-decoration-underline fw-bold" href="' + oprs_url +'">here</a> to login as Author.');
+          $('#create_account').addClass('disabled');
+        }else{
+          $('#new_email').removeClass('is-invalid')
+          $('.invalid-feedback').text();
+          $('#create_account').removeClass('disabled');
+        }
+      }
+    }
+  });
+
+}
+
+function register_author_acccount(formData){
+  $.ajax({
+    type: 'POST',
+    url: base_url + "client/signup/register_author_account",
+    data: formData,
+    success: function (response) {
+      
+      Swal.fire({
+        title: "Redirecting",
+        icon: 'success',
+        // html: "I will close in <b></b> milliseconds.",
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup().querySelector("b");
+            timerInterval = setInterval(() => {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+            window.location.href = response;
+        }
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log("I was closed by the timer");
+            }
+            window.location.href = response;
+        });
+    }
+  });
+}
 
 /**
  * get all articles per journal
@@ -993,6 +1367,7 @@ function get_download_id(id, flag=null, file=null, logged_in = null)
 }
 
 function save_hits(id){
+  console.log("🚀 ~ save_hits ~ id:", id)
   $.ajax({
     type:"POST",
     url: base_url + "client/ejournal/abstract_hits/"+id,
@@ -1121,7 +1496,7 @@ function get_coauthors(id)
  */
 function top_article(id, flag, file, modalTitle)
 {
-  $('#top_abstract_view').attr('src', base_url+('assets/uploads/abstract/'+file+'#toolbar=0&navpanes=0&scrollbar=0&menubar=0'));
+  $('#top_abstract_view').attr('src', base_url+('assets/uploads/abstract/'+file+'.pdf#toolbar=0&navpanes=0&scrollbar=0&menubar=0'));
   $('#top_download_pdf').attr('onClick', 'get_download_id('+id+')');
   $('#top_modal .modal-title').text(modalTitle);
   $('#top_modal').modal('toggle');
@@ -1388,7 +1763,7 @@ function save_cite(apa_id){
 
 
 function disableOnSubmit(element, form, action){
-  let newButtonText = (action == 'reset') ? 'Submitting' : (action == 'verify' ? 'Verifying' : 'Loading');
+  let newButtonText = (action == 'verify') ? 'Verifying' : 'Loading';
 
   $(element).prop('disabled' ,true);
   $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>' + newButtonText);
@@ -1445,7 +1820,21 @@ function startTimer() {
         $('#resend_code').removeClass('disabled');
         $('#verify_code').addClass('disabled');
         $('#resend_code').text('Resend Code');
-        $('#resend_code').attr('href', base_url + '/client/login/resend_code/' + refCode);
+
+        var url = window.location.pathname; // Get the current path
+        var segments = url.split('/'); // Split the path by '/'
+        var secondToLastSegment = segments[segments.length - 2];
+
+        refCode = url.split('/').pop();
+        if(secondToLastSegment == 'verify_otp'){ // login otp
+          $('#resend_code').attr('href', base_url + 'client/login/resend_login_code/' + refCode);
+        }else if(secondToLastSegment == 'new_account_verify_otp'){ // create ejournal client account otp
+          $('#resend_code').attr('href', base_url + 'client/signup/resend_new_client_account_code/' + refCode);
+        }else{
+          $('#resend_code').attr('href', base_url + 'client/signup/author_account_verify_otp/' + refCode);
+        }
+
+        
       }
 
       
@@ -1453,16 +1842,20 @@ function startTimer() {
   }, 1000);
 }
 
-function getCurrentOTP(refCode){
+function getCurrentOTP(refCode, otpType){
+  // console.log("🚀 ~ getCurrentOTP ~ refCode, otpType:", refCode, otpType)
   var currentDate = new Date();
   var otpDate;
+  var url = (otpType == 1) ? base_url + "client/login/get_current_otp/" + refCode : base_url + "client/signup/get_current_otp_oprs/" + refCode;
+  
   
   $.ajax({
     type: "GET",
-    url: base_url + "client/login/get_current_otp/" + refCode,
+    url: url,
     dataType: "json",
     crossDomain: true,
     success: function(data) {
+      // console.log("🚀 ~ getCurrentOTP ~ data:", data)
       try{
         otpDate = new Date(data[0]['otp_date']);
          
@@ -1482,6 +1875,20 @@ function getCurrentOTP(refCode){
             clearInterval(intervalId);
             minutes = 5;
             seconds = 0;
+            
+            var url = window.location.pathname; // Get the current path
+            var segments = url.split('/'); // Split the path by '/'
+            var secondToLastSegment = segments[segments.length - 2];
+    
+            refCode = url.split('/').pop();
+            if(secondToLastSegment == 'verify_otp'){ // login otp
+              $('#resend_code').attr('href', base_url + 'client/login/resend_login_code/' + refCode);
+            }else if(secondToLastSegment == 'new_account_verify_otp'){ // create ejournal client account otp
+              $('#resend_code').attr('href', base_url + 'client/signup/resend_new_client_account_code/' + refCode);
+            }else{ // author_account_verify_otp
+              $('#resend_code').attr('href', base_url + 'client/signup/resend_author_account_code/' + refCode);
+            }
+            
             $('#resend_code').removeClass('disabled');
             $('#verify_code').addClass('disabled');
           }
@@ -1493,7 +1900,7 @@ function getCurrentOTP(refCode){
           $('#verify_code').addClass('disabled');
         }
       }catch(err){
-        console.log('No Login Request, No code exist.');
+        // console.log('No Login Request, No code exist.');
         $('#resend_code').addClass('d-none');
       }
     }
@@ -1558,28 +1965,32 @@ function clearAdvanceSearch(element){
   }
 }
 
-function getUserAccessToken(){
-
- 
-  $.ajax({
-    type: "GET",
-    url: base_url + "client/login/get_access_token/",
-    crossDomain: true,
-    success: function(data) {
-      if(data != 0){
-        accessToken = data;
-        console.log('start timer');
-      }else{
-        console.log('do not start timer');
-      }
-    },
-    error: function(xhr, status, error) {
-      reject(error);
-    }
-  }); 
-
+function logout(){
+  $('#feedbackModal').modal('toggle');
+  current_button_id = '#submit_feedback';
 }
 
+// function getUserAccessToken(){
+
+ 
+//   $.ajax({
+//     type: "GET",
+//     url: base_url + "/client/login/get_access_token/",
+//     crossDomain: true,
+//     success: function(data) {
+//       if(data != 0){
+//         accessToken = data;
+//         console.log('start timer');
+//       }else{
+//         console.log('do not start timer');
+//       }
+//     },
+//     error: function(xhr, status, error) {
+//       reject(error);
+//     }
+//   }); 
+
+// }
 
 // data: {
 //   'csrf_test_name': '<?= $this->security->get_csrf_hash(); ?>', // Token
@@ -1592,7 +2003,27 @@ function destroyUserSession(){
     url: base_url + "client/login/destroy_user_session/" ,
     data: { user_access_token : accessToken },
     success: function(data) {
-      console.log(data);
+      // console.log(data);
     }
+  });
+}
+
+function onRecaptchaSuccess(token) {
+  console.log("reCAPTCHA validated!");
+  $(current_button_id).prop('disabled', false); // Enable submit button
+}
+
+// Callback when reCAPTCHA expires
+function onRecaptchaExpired() {
+  console.log("reCAPTCHA expired.");
+  $(current_button_id).prop('disabled', true);
+}
+
+
+function checkOnlyOne(checkbox) {
+  let name = $(checkbox).attr('name');
+  const checkboxes = document.querySelectorAll('input[name="' + name + '"]');
+  checkboxes.forEach((cb) => {
+    if (cb !== checkbox) cb.checked = false;
   });
 }
