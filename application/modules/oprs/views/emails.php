@@ -7,12 +7,12 @@
             <a href="javascript:void(0);">Email Notifications</a></li>
             <li class="breadcrumb-item active"><?php echo $this->session->userdata('_oprs_type'); ?>  (<?php echo $this->session->userdata('_oprs_username'); ?>)</li>
         </ol> -->
+        <h3 class="fw-bold">Library</h3>
         <div class="card border border-dark">
-          <!-- <div class="card-header font-weight-bold">
-            <i class="fas fa-envelope-open"></i> Email notifications
-          </div> -->
+            <div class="card-header">
+              <i class="fas fa-envelope-open me-1"></i>Email Notifications
+            </div>
           <div class="card-body">
-          <h3 class="fw-bold">Email Notifications</h3>
             <div class="table-responsive">
               <table class="table table-hover" id="email_contents_table" width="100%" cellspacing="0">
                 <thead>

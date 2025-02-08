@@ -41,6 +41,28 @@ var inpIncr = 0; // added peer reviewer count
 var suggIncr = 1; // added peer reviewer count
 
 $(document).ready(function() {
+    
+
+    var currentUrl = window.location.href; // Get current path
+    var lastPart = currentUrl.split('/').pop(); 
+
+    $(".oprs-nav a").each(function () {
+        var link = $(this).attr("href");
+        // Check if the current URL matches the link
+
+        if (/\?/.test(lastPart)) {
+        
+            if (currentUrl === link || (currentUrl === "/" && link === "home")) {
+                $(this).addClass("active");
+            }
+        } else {
+        
+            if (lastPart === link || (lastPart === "/" && link === "home")) {
+                $(this).addClass("active");
+            }
+        }
+    });
+
     // get user account info
     $.ajax({
         type: "GET",
@@ -1673,7 +1695,7 @@ $(document).ready(function() {
     
     // author table manuscripts;
     var aut = $('#author_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [
             {"targets":2, "type":"date"},
         ]
@@ -1687,7 +1709,7 @@ $(document).ready(function() {
 
     // peer reviewer table
     var prt = $('#dataTable_rev').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [
             {"targets":2, "type":"date"},
         ]
@@ -1740,7 +1762,7 @@ $(document).ready(function() {
 
     // all manuscripts;
     var amt = $('#all-manuscript').DataTable({
-        "order": [[ 4, "desc" ]],
+        "order": [[ 4, "asc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1754,7 +1776,7 @@ $(document).ready(function() {
 
     // new manuscripts
     var nmt = $('#new-manuscript').DataTable({
-        "order": [[ 4, "desc" ]],
+        "order": [[ 4, "asc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1768,7 +1790,7 @@ $(document).ready(function() {
 
     // on-review manuscripts
     var ort = $('#onreview-manuscript').DataTable({
-        "order": [[ 4, "desc" ]],
+        "order": [[ 4, "asc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1782,7 +1804,7 @@ $(document).ready(function() {
 
     // consolidated reviews
     var rmt = $('#review-consolidated-manuscript').DataTable({
-        "order": [[ 4, "desc" ]],
+        "order": [[ 4, "asc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1796,7 +1818,7 @@ $(document).ready(function() {
 
     // completed manuscripts
     var cmt = $('#completed_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -1808,7 +1830,7 @@ $(document).ready(function() {
 
     // editorial review manuscripts
     var erm = $('#editorial_reviews_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -1820,7 +1842,7 @@ $(document).ready(function() {
 
     // final manuscripts
     var fmt = $('#final_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -1832,7 +1854,7 @@ $(document).ready(function() {
 
     // for publication manuscripts
     var fpmt = $('#for_p_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -1844,7 +1866,7 @@ $(document).ready(function() {
 
     // for layout manuscripts
     var flmt = $('#for_l_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -1856,7 +1878,7 @@ $(document).ready(function() {
 
     // publishable manuscripts
     var pt = $('#publishables_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -1868,7 +1890,7 @@ $(document).ready(function() {
 
     // published manuscripts
     var pbdt = $('#pub_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -1886,7 +1908,7 @@ $(document).ready(function() {
 
     // published manuscripts to other journal platforms
     var emt = $('#existing_manus_table').DataTable({
-        "order": [[ 2, "desc" ]],
+        "order": [[ 2, "asc" ]],
         "columnDefs" : [{"targets":2, "type":"date"}]
     });
  
@@ -1898,7 +1920,7 @@ $(document).ready(function() {
 
     // statistics manuscripts
     sm = $('#stats-manuscript').DataTable({
-        "order": [[ 4, "desc" ]],
+        "order": [[ 4, "asc" ]],
         "columnDefs" : [{"targets":4, "type":"date"}],
         dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
              "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
@@ -2850,7 +2872,7 @@ $(document).ready(function() {
             },
             usr_rep_password: {
                 required: true,
-                equalTo: "#form_add_user #usr_password"
+                equalTo: "#form_add_user #add_usr_password"
             },
             usr_username: {
                 required: true,
@@ -4728,7 +4750,7 @@ $(document).ready(function() {
                 required: true,
                 minlength: 8,
                 maxlength: 20,
-                equalTo: "#usr_password"
+                equalTo: "#form_change_pass #usr_password"
             }
         },
         messages: {
@@ -5003,6 +5025,30 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('change', '.form-switch .form-check-input', function() {
+        var name = $(this).attr('name');  // Get the checkbox name
+        var user_id = $(this).val();        // Get the checkbox value
+        var checked = ($(this).prop("checked") == true) ? 1 : 0; // Check if it is checked
+
+        var data = {
+            module : name,
+            user_id : user_id,
+            value : checked
+        };
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "oprs/user/set_module_access",
+            data: data,
+            dataType: "json",
+            cache: false,
+            crossDomain: true,
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    });
+
     // show users privileges
     $('#user_control').change(function() {
         var usr_grp = $(this).val();
@@ -5013,6 +5059,7 @@ $(document).ready(function() {
             dataType: "json",
             crossDomain: true,
             success: function(data) {
+            console.log("🚀 ~ $ ~ data:", data)
 
                 
                 if ($.fn.DataTable.isDataTable("#controls_table")) {
@@ -5037,7 +5084,7 @@ $(document).ready(function() {
                                 var check_delete = (val.prv_delete == 1) ? 'checked' : '';
                                 var check_view = (val.prv_view == 1) ? 'checked' : '';
                                 var check_export = (val.prv_export == 1) ? 'checked' : '';
-                                var access = (val.usr_sys_acc == 1) ? 'eJournal' : (val.usr_sys_acc == 2) ? 'eReview' : 'eJournal-eReview';
+                                var access = (val.usr_sys_acc == 1) ? '<span class="badge rounded-pill bg-primary">eJournal</span>' : (val.usr_sys_acc == 2) ? '<span class="badge rounded-pill bg-dark">eReview</span>' : '<span class="badge rounded-pill bg-primary">eJournal</span> <span class="badge rounded-pill bg-dark">eReview</span>';
 
                                 var html = "<div class='form-check'> \
                                             <input class='form-check-input' type='checkbox' name='prv_add[]' value='" + val.usr_id + "' " + check_add + "> \
@@ -5064,6 +5111,8 @@ $(document).ready(function() {
                                 table.row.add([
                                     c++,
                                     val.usr_username,
+                                    val.usr_desc,
+                                    access,
                                     access,
                                     html
                                 ]);

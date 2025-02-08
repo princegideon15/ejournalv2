@@ -124,6 +124,8 @@ class User extends OPRS_Controller {
 		}
 		$post['date_created'] = date('Y-m-d H:i:s');
 		$this->User_model->add_user(array_filter($post));
+
+		// add privilege
 		$priv['prv_usr_id'] = $id;
 		$priv['prv_add'] = 1;
 		$priv['prv_edit'] = 1;
@@ -132,6 +134,28 @@ class User extends OPRS_Controller {
 		$priv['prv_export'] = 1;
 		$priv['date_created'] = date('Y-m-d H:i:s');
 		$this->User_model->add_privilege(array_filter($priv));
+
+		// add module access
+		$role = $this->input->post('usr_role', TRUE);
+
+		if($role == 1 || $role == 16){
+			// manuscript view only
+		}else{
+			$access['acc_dashboard'] = 1;
+			$access['acc_reports'] = 1;
+			$access['acc_user_mgt'] = 1;
+			$access['acc_lib'] = 1;
+			$access['acc_settings'] = 1;
+			$access['acc_feedbacks'] = 1;
+			$access['acc_logs'] = 1;
+			$access['acc_usr_id'] = $id;
+			$access['acc_date_created'] = date('Y-m-d H:i:s');
+			$this->User_model->add_module_access(array_filter($access));
+		}
+		
+
+
+
 		// $array_msg = array('icon' => 'fa fa-check-circle-o', 'class' => 'alert-success', 'msg' => 'User Saved.');
 		// $this->session->set_flashdata('_oprs_usr_message', $array_msg);
 	}
@@ -295,6 +319,18 @@ class User extends OPRS_Controller {
 
 	public function get_account_info(){
 		$output = $this->User_model->get_user_info(_UserIdFromSession());
+		echo json_encode($output);
+	}
+
+	public function set_module_access(){
+		$module = $this->input->post('module', TRUE);
+		$user_id = $this->input->post('user_id', TRUE);
+		$value = $this->input->post('value', TRUE);
+
+		$post[$module] = $value;
+		$where['acc_usr_id'] = $user_id;
+
+		$output = $this->User_model->set_module_access($post, $where);
 		echo json_encode($output);
 	}
 

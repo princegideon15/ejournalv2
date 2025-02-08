@@ -1562,6 +1562,93 @@ class Ejournal extends EJ_Controller {
 		}
 	}
 
+	/**
+	 * Retrieve articles by journal id
+	 *
+	 * @param [int] $id
+	 * @return void
+	 */
+	// public function get_index($index = null, $search = null) {
+	// 	// $data['articles'] = $this->Client_journal_model->get_index($index);
+	// 	// $data['journals'] = $this->Client_journal_model->get_journals();
+		
+		
+
+	// 	// initialize pagination with page, start_index and per page
+	// 	$this->load->library('pagination');
+	// 	$perPage = 10;
+	// 	$page = 0;
+
+	// 	if($this->input->get('per_page')){
+	// 		$page =  $this->input->get('per_page', TRUE);
+	// 	}
+
+	// 	$start_index = 0;
+
+	// 	if($page != 0){
+	// 		$start_index = $perPage * ($page - 1);
+	// 	}
+
+	// 	// search query
+	// 	if($search){
+	// 		// $search = $this->input->get('search', TRUE);
+	// 		$clean_search = str_replace('%C3%B1','ñ',str_replace('%2C',',',str_replace('+',' ',$search)));
+	// 		$output = $this->Search_model->search_ejournal_by_index($index, $perPage, $start_index, $clean_search);
+	// 		$totalRows = $this->Search_model->search_ejournal_by_index($index, null, null, $clean_search);
+	// 	}else{
+	// 		$output = $this->Search_model->search_ejournal_by_index($index, $perPage, $start_index, null);
+	// 		$totalRows = $this->Search_model->search_ejournal_by_index($index, null, null, null);
+	// 	}
+
+	// 	// pagination config
+	// 	$config['base_url'] = base_url('client/ejournal/articles');
+	// 	$config['total_rows'] = count($totalRows);
+	// 	$config['per_page'] = $perPage;
+	// 	$config['enable_query_strings'] = true;
+	// 	$config['use_page_numbers'] = true;
+	// 	$config['page_query_string'] = true;
+	// 	$config['page_query_segment'] = 'page';
+	// 	$config['reuse_query_string'] = true;
+	// 	$config['first_link'] = 'First';
+	// 	$config['last_link'] = 'Last';
+	// 	$config['first_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['first_tag_close'] = '</span></li>';
+	// 	$config['prev_link'] = 'Previous';
+	// 	$config['prev_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['prev_tag_close'] = '</span></li>';
+	// 	$config['next_link'] = 'Next';
+	// 	$config['next_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['next_tag_close'] = '</span></li>';
+	// 	$config['last_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['last_tag_close'] = '</span></li>';
+	// 	$config['cur_tag_open'] = '<li class="page-item"><span class="page-link text-white main-bg-color">';
+	// 	$config['cur_tag_close'] = '</span></li>';
+	// 	$config['num_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['num_tag_close'] = '</span></li>';
+
+
+	// 	// pagination data to display
+	// 	$this->pagination->initialize($config);
+	// 	$data['total_rows'] = count($totalRows);
+	// 	$data['pagination'] = $this->pagination->create_links();
+	// 	$data['page'] = ($page > 0) ? $page : 1;
+	// 	$data['start_index'] = $start_index;
+	// 	$data['per_page'] = $perPage;
+
+	// 	// search result to display
+	// 	$data['result'] = $output;
+	// 	$data['search'] = $search;
+	// 	$data['journals'] = $this->Client_journal_model->get_journals();
+	// 	$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+	// 	$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+	// 	$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
+	// 	$data['main_title'] = "eJournal";
+	// 	$data['main_content'] = "client/search_results";
+	// 	$this->_LoadPage('common/body', $data);
+
+	// }
+
+
 }
 /* End of file Ejournal.php */
 
@@ -1681,22 +1768,7 @@ class Ejournal extends EJ_Controller {
 	// }
 	
 
-	/**
-	 * Retrieve articles by journal id
-	 *
-	 * @param [int] $id
-	 * @return void
-	 */
-	// public function get_index($id = null) {
-	// 	$data['main_title'] = "eJournal";
-	// 	$data['main_content'] = "client/indexes";
-	// 	//$data['main_content'] = "client/maintenance";
-	// 	$data['articles'] = $this->Client_journal_model->get_index($id);
-	// 	$data['journals'] = $this->Client_journal_model->get_journals();
-	// 	$data['article_index'] = $id;
-	// 	$this->_LoadPage('common/body', $data);
-	// }
-
+	
 	/**
 	 * About page
 	 *

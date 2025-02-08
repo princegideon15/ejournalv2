@@ -1,7 +1,7 @@
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid pt-3">
-            <h3 class="fw-bold">Manage Database</h3>
+            <h3 class="fw-bold">Settings</h3>
             <?php if ($this->session->flashdata('_oprs_usr_message')) {
             $msg = $this->session->flashdata('_oprs_usr_message');
             $message = $msg['msg'];
@@ -23,9 +23,9 @@
                 <li class="breadcrumb-item active"><?php echo $this->session->userdata('_oprs_type'); ?>  (<?php echo $this->session->userdata('_oprs_username'); ?>)</li>
             </ol> -->
             <!-- /.BREADCRUMBS -->
-            <div class="card mb-3">
+            <div class="card mb-3 border border-dark">
                     <div class="card-header">
-                        Backup Database
+                        <i class="fas fa-database me-1"></i>Backup Database
                     </div>
                     <div class="card-body">
                         <form id="export_db_form" action="<?php echo site_url('oprs/backup/export');?>" method="POST">
@@ -103,13 +103,18 @@
                             </form>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card border border-dark">
                     <div class="card-header">
-                        Import Backup
+                        <i class="fas fa-database me-1"></i>Import Backup
                     </div>
                     <div class="card-body">
                         <form id="import_db_form" method="POST" enctype="multipart/form-data">
-                            <div class="input-group is-invalid w-50">
+                            <div class="input-group">
+                                <input type="file" class="custom-file-input" id="import_file" name="import_file">
+                                <button class="btn btn-dark" type="submit" id="inputGroupFileAddon04">Go</button>
+                            </div>
+
+                            <!-- <div class="input-group is-invalid w-50">
                                 <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="import_file" name="import_file">
                                 <label class="custom-file-label" for="import_file">Choose file...</label>
@@ -117,7 +122,7 @@
                                 <div class="input-group-append">
                                 <button type="submit" class="btn btn-dark" >Go</button>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="invalid-feedback">
                             </div>
                         </form>

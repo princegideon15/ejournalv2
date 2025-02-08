@@ -1,7 +1,7 @@
 <div id="layoutSidenav_content">
     <main>
 		  <div class="container-fluid pt-3">
-        <h3 class="fw-bold">Activity Logs</h3>
+        <h3 class="fw-bold">Logs</h3>
         <!-- Breadcrumbs-->
         <!-- <ol class="breadcrumb">
           <li class="breadcrumb-item">
@@ -9,8 +9,8 @@
             <li class="breadcrumb-item active"><?php echo $this->session->userdata('_oprs_type'); ?>  (<?php echo $this->session->userdata('_oprs_username'); ?>)</li>
         </ol> -->
         <div class="card border border-dark">
-          <div class="card-header font-weight-bold">
-            <i class="fa fa-table"></i> Activity Logs
+          <div class="card-header">
+            <i class="fa fa-table me-1"></i>Activity Logs
           </div>
           <div class="card-body">
             <div class="table-responsive">

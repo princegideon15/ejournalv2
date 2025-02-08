@@ -7,9 +7,12 @@
             <a href="javascript:void(0);">Feedbacks</a></li>
             <li class="breadcrumb-item active"><?php echo $this->session->userdata('_oprs_type'); ?>  (<?php echo $this->session->userdata('_oprs_username'); ?>)</li>
         </ol> -->
+        <h3 class="fw-bold">Feedbacks</h3>
         <div class="card border border-dark">
+          <div class="card-header">
+          <i class="fas fa-edit me-1"></i>CSF ARTA
+          </div>
           <div class="card-body">
-            <h3 class="fw-bold">CSF ARTA</h3>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item" role="presentation">
                 <a class="nav-link active" data-bs-toggle="tab" href="#arta-tab" role="tab" aria-controls="arta-tab" aria-selected="true">Respondents</a>

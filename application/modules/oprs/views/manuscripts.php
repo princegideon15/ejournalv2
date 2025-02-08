@@ -13,12 +13,12 @@
 			</ol> -->
 
 			<!-- Manuscript Table -->
+			<h3 class="fw-bold">Manuscripts</h3>
 			<div class="card mb-3 border border-dark">
-				<!-- <div class="card-header fw-bold">
-					<i class="fa fa-table"></i> List of Manuscripts
+				<!-- <div class="card-header">
+					<i class="fas fa-scroll me-1"></i>Manuscripts
 				</div> -->
 				<div class="card-body">
-				<h3 class="fw-bold">Manuscripts</h3>
 					<div class="table-responsive">
 						<!-- AUTHOR -->
 						<?php if(_UserRoleFromSession() == 1){ ?>

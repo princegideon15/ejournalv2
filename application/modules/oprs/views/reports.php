@@ -29,7 +29,7 @@
               <div id="collapseManuscripts" class="collapse show" data-bs-parent="#collapseParentReports">
                 <div class="card border border-dark">
                   <div class="card-header fw-bold">
-                    <i class="fa fa-table"></i> List of Manuscripts
+                    <i class="fa fa-table"></i> List of Submitted Manuscripts
                   </div>
                   <div class="card-body">
                     <div class="table-responsive">

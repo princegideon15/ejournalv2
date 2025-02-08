@@ -9,6 +9,7 @@ class User_model extends CI_Model {
 	private $roles = 'tblroles';
 	private $publication_types = 'tblpublication_types';
 	private $status_types = 'tblstatus_types';
+	private $modules = 'tblmodule_access';
 	// skms
 	private $skms_users = 'tblusers';
 	private $personal = 'tblpersonal_profiles';
@@ -447,15 +448,27 @@ class User_model extends CI_Model {
 	 * @param [int] $role		usr_role
 	 * @return void
 	 */
-	public function get_user_by_role($role) {
+	public function get_user_by_role($role = null) {
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('p.*, a.usr_id, a.usr_username, a.usr_sys_acc');
+		$oprs->select('p.*, a.usr_id, a.usr_username, a.usr_sys_acc, a.usr_desc, m.*');
 		$oprs->from($this->oprs_users . ' a');
 		$oprs->join($this->privileges . ' p', 'a.usr_id = p.prv_usr_id');
-		$oprs->where_not_in('a.row_id', _UserIdFromSession());
-		$oprs->where('a.usr_role', $role);
+		$oprs->join($this->modules . ' m', 'a.usr_id = m.acc_usr_id', 'left');
+		$oprs->where('a.row_id !=', _UserIdFromSession());
+		$oprs->where_not_in('a.usr_role', [1,16]);
+
+		if($role > 0){
+			$oprs->where('a.usr_role', $role);
+		}
+
 		$query = $oprs->get();
 		return $query->result();
+	}
+
+	public function add_module_access($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->modules, $data);
+		return $oprs->affected_rows();
 	}
 
 	/**
@@ -665,6 +678,12 @@ class User_model extends CI_Model {
 	public function update_account($data, $where){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->update($this->oprs_users, $data, $where);
+	}
+
+	public function set_module_access($data, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->modules, $data, $where);
+		return $oprs->affected_rows();
 	}
 
 	

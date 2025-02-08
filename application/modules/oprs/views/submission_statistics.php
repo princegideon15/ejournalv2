@@ -1,9 +1,9 @@
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid pt-3">
+        <h3 class="fw-bold">Statistics</h3>
         <div class="card border border-dark">
           <div class="card-body">
-            <h3 class="fw-bold">Statistics</h3>
 
             <!-- <ul class="nav nav-underline" id="myTab" role="tablist"> -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">

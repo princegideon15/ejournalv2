@@ -1,9 +1,12 @@
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid pt-3">
+        <h3 class="fw-bold">Library</h3>
         <div class="card border border-dark">
+          <div class="card-header">
+          <i class="fas fa-book me-2"></i>Publication Types
+          </div>
           <div class="card-body">
-          <h3 class="fw-bold">Publication Types</h3>
             <div class="table-responsive">
               <table class="table table-hover" id="publication_types_table" width="100%" cellspacing="0">
                 <thead>

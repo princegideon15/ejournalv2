@@ -21,6 +21,7 @@
             <a href="javascript:void(0);">Users</a></li>
           <li class="breadcrumb-item active"><?php echo $this->session->userdata('_oprs_type'); ?>  (<?php echo $this->session->userdata('_oprs_username'); ?>)</li>
         </ol> -->
+        <h3 class="fw-bold">User Management</h3>
         <div class="row">
           <div class="col-3">
             <!-- ADD USER -->

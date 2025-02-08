@@ -307,7 +307,7 @@
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark pt-5" id="sidenavAccordion">
             <div class="sb-sidenav-menu overflow-hidden">
-                <div class="nav pt-3">
+                <div class="nav pt-3 oprs-nav">
                     <div class="sb-sidenav-menu-heading">Main</div>
                     <?php if ($role == 19 || $role == 20 || $role == 3 || $role == 5 || $role == 6) {?>
                         
@@ -355,18 +355,10 @@
                         <i class="fas fa-fw fa-chart-bar me-2"></i>
                         <span>Reports</span>
                         </a>
-                        <a class="nav-link" href="<?php echo base_url('oprs/statistics'); ?>">
+                        <a class="nav-link" href="statistics">
                         <i class="fas fa-fw fa-chart-bar me-2"></i>
                         <span>Statistics</span>
                         </a>
-                        <!-- <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=1'); ?>">
-                        <i class="fas fa-fw fa-chart-bar me-2"></i>
-                        <span>Submission Statistics</span>
-                        </a>
-                        <a class="nav-link" href="<?php echo base_url('oprs/statistics?type=2'); ?>">
-                        <i class="fas fa-fw fa-chart-bar me-2"></i>
-                        <span>Author by Sex</span>
-                        </a> -->
                     
                     <?php }?>
 
@@ -423,7 +415,7 @@
 
                         <a class="nav-link" href="controls">
                         <i class="fas fa-fw fa-cogs me-2"></i>
-                        <span>Control Panel</span>
+                        <span>Menu Access Control Panel</span>
                         </a>
 
                         <a class="nav-link" href="backup">

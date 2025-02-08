@@ -1,9 +1,12 @@
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid pt-3">
+          <h3 class="fw-bold">Library</h3>
         <div class="card border border-dark">
+          <div class="card-header">
+            <i class="fas fa-pencil-square me-1"></i><?= $crit_name ?>
+          </div>
           <div class="card-body">
-          <h3 class="fw-bold"><?= $crit_name ?></h3>
             <div class="table-responsive">
               <table class="table table-hover" id="criteria_table" width="100%" cellspacing="0">
                 <thead>

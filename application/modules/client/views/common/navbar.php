@@ -37,7 +37,7 @@
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
 <nav class="navbar navbar-expand-lg fixed-topx custom-border">
-  <div class="container-fluid p-0">
+  <div class="container-fluid p-0 d-flex align-items-center">
     
     <div class="d-flex gap-1 align-items-center me-3">
       <a href="https://skms.nrcp.dost.gov.ph/" target="_blank">
@@ -56,7 +56,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse align-items-center" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto custom-nav">
         <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" id="nav_home" href="<?php echo base_url();?>">Home</a>
@@ -98,16 +98,15 @@
                 </li>';
         } ?>
 
-        
-
-        
       </ul>
-       
-      <span class="navbar-text">
-        <span class="badge badge-issn rounded-0 fs-6">ISSN: 2980 - 4728</span>
-      </span>
     </div>
-  </div>
+
+    <!-- ISSN -->
+    <div class="d-flex flex-column ">
+      <p class="badge badge-issn rounded-0 fs-6 mb-1 rounded-start">EISSN: 2980-4728</p>
+      <p class="badge badge-issn rounded-0 fs-6 rounded-start">ISSN: 0116-3294</p>
+    </div>
+
   </div>
 </nav>
 

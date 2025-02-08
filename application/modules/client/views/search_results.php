@@ -63,7 +63,7 @@ $('.right-inner-addon').hide();
                             </ul>
                     </div>
                 </div>
-                <hr class="mt-2 pb-2">
+                <hr class="mt-2">
             <?php } ?>
 
             <?php if($this->session->flashdata('email_message')){

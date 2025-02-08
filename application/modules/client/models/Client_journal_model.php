@@ -274,18 +274,18 @@ class Client_journal_model extends CI_Model {
 	}
 
 	/** this function get all articles */
-	public function get_index($id) {
-		$this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn');
-		$this->db->from($this->articles.' a');
-		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
+	// public function get_index($id) {
+	// 	$this->db->select('a.*, j.jor_volume, j.jor_issue, jor_issn');
+	// 	$this->db->from($this->articles.' a');
+	// 	$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
 
-		if($id != null){
-		$this->db->LIKE('a.art_title',  $id , 'after');
-		}
-		$this->db->order_by('a.art_title', 'asc');
-		$query = $this->db->get();
-		return $query->result();
-	}
+	// 	if($id != null){
+	// 	$this->db->LIKE('a.art_title',  $id , 'after');
+	// 	}
+	// 	$this->db->order_by('a.art_title', 'asc');
+	// 	$query = $this->db->get();
+	// 	return $query->result();
+	// }
 
 	/** this function get coauthors */
 	public function get_coauthors($id) {

@@ -1,12 +1,12 @@
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid pt-3">
+        <h3 class="fw-bold">Library</h3>
         <div class="card border border-dark">
-          <!-- <div class="card-header font-weight-bold">
-            <i class="fas fa-envelope-open"></i> User Types
-          </div> -->
+          <div class="card-header">
+          <i class="fas fa-fw fa-user-cog me-1"></i>User Types
+          </div>
           <div class="card-body">
-          <h3 class="fw-bold">User Types</h3>
             <div class="table-responsive">
               <table class="table table-hover" id="user_types_table" width="100%" cellspacing="0">
                 <thead>

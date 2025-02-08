@@ -7,9 +7,12 @@
             <a href="javascript:void(0);">Feedbacks</a></li>
             <li class="breadcrumb-item active"><?php echo $this->session->userdata('_oprs_type'); ?>  (<?php echo $this->session->userdata('_oprs_username'); ?>)</li>
         </ol> -->
+        <h3 class="fw-bold">Feedbacks</h3>
         <div class="card border border-dark">
+          <div class="card-header">
+          <i class="fas fa-star me-1"></i>CSF UI/UX
+          </div>
           <div class="card-body">
-            <h3 class="fw-bold">CSF UI/UX</h3>
             <h6 class="mb-3">Customer Service Feedback - User Interface / User Experience</h6>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item" role="presentation">
