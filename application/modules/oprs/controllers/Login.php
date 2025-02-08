@@ -569,27 +569,24 @@ class Login extends OPRS_Controller {
 								}
 							}
 
-					
-							
-							$this->Login_model->create_user_access_token($tokenData);
 
 							// remember me
-							$expire = time() + 3600;
-							if (!empty($_POST['oprs_remember'])) {
-								$this->input->set_cookie('oprs_cookie_user',
-									$usr_name,
-									3600);
-								$this->input->set_cookie('oprs_cookie_pass',
-									$usr_password,
-									3600);
-								$this->input->set_cookie('oprs_remember_me',
-									$remember,
-									3600);
-							} else {
-								delete_cookie('oprs_cookie_user');
-								delete_cookie('oprs_cookie_pass');
-								delete_cookie('oprs_remember_me');
-							}
+							// $expire = time() + 3600;
+							// if (!empty($_POST['oprs_remember'])) {
+							// 	$this->input->set_cookie('oprs_cookie_user',
+							// 		$usr_name,
+							// 		3600);
+							// 	$this->input->set_cookie('oprs_cookie_pass',
+							// 		$verifyOTP[0]->usr_username,
+							// 		3600);
+							// 	$this->input->set_cookie('oprs_remember_me',
+							// 		$remember,
+							// 		3600);
+							// } else {
+							// 	delete_cookie('oprs_cookie_user');
+							// 	delete_cookie('oprs_cookie_pass');
+							// 	delete_cookie('oprs_remember_me');
+							// }
 
 							// $x = 0;
 			
@@ -1354,16 +1351,20 @@ class Login extends OPRS_Controller {
 			$user_info = $this->User_model->get_user_info_by_email($email);
 
 			if($user_info[0]->usr_category == 1){ // nrcp member
-				$name = $nrcp_member_info['title_name'] . ' ' . $nrcp_member_info['pp_first_name'] . ' ' .  $nrcp_member_info['pp_last_name'];
+				$nrcp_member_info = $this->User_model->get_nrcp_member_info($email);
+				$name = $nrcp_member_info[0]->title_name . ' ' . $nrcp_member_info[0]->pp_first_name . ' ' .  $nrcp_member_info[0]->pp_last_name;
 			}else if($user_info[0]->usr_category == 2){ // ejournal client and oprs non member author 
+				$ejournal_client_info = $this->Client_journal_model->get_client_info_email($email);
 				$name = $ejournal_client_info[0]->title . ' ' . $ejournal_client_info[0]->first_name . ' ' . $ejournal_client_info[0]->last_name;
 			}else{ // oprs user
-				if( $user_info[0]->usr_role == 12 ){
+				if( $user_info[0]->usr_role == 16){
 					// reviewer
+					$reviewer_info = $this->User_model->get_reviewer_info_by_email($email);
 					$name = $reviewer_info[0]->rev_title . ' ' . $reviewer_info[0]->rev_name;
 				}else{
 					// oprs orejournal admin/supderamin
-					$name = 'Admin Account';
+					$name = $user_info[0]->usr_full_name ? $user_info[0]->usr_full_name : 'Name not available';
+					$name = $name . ' ('. $user_info[0]->usr_desc .')';
 				}
 			}
 		}else{
@@ -1401,7 +1402,9 @@ class Login extends OPRS_Controller {
 
 		$date = date("F j, Y") . '<br/><br/>';
 
-		$emailBody = 'Dear Admin,
+		
+
+		$emailBody = 'Dear Super Admin,
 		<br><br>
 		There have been multiple unsuccessful login attempts.
 		<br><br>

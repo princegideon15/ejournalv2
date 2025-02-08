@@ -85,7 +85,7 @@
                           <span class="input-group-text bg-white text-muted rounded-end" id="inputGroupPrepend3"><a class="text-muted cursor-pointer" href="javascript:void(0);" onclick="togglePassword('#usr_password', '#password_icon')"><i class="fa fa-eye-slash" id="password_icon"></i></a></span>
                           <span class="invalid-feedback"><?= $this->session->flashdata('validation_errors')['usr_password'] ?></span>
                       </div>
-                      <div class="mb-3 d-flex gap-1 align-items-center">
+                      <!-- <div class="mb-3 d-flex gap-1 align-items-center">
                         <input type="checkbox" class="form-check-input" value="1" name="oprs_remember" id="oprs_remember" 
                           <?php if (isset($_COOKIE['oprs_remember_me'])) {
                             echo 'checked';
@@ -94,7 +94,7 @@
                         <label class="form-check-label mt-1" for="oprs_remember">
                           Remember me
                         </label>
-                      </div>
+                      </div> -->
                     
                   <?php } ?>
 
