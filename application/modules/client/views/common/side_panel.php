@@ -31,3 +31,10 @@
             echo '<div class="sticky-top pt-3"><a type="button" class="btn main-btn w-100 login-btn" href="'.base_url('client/login').'" >
             Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a></div>';
     }?>
+
+    
+    <img class="mt-4 border rounded" src="<?php echo base_url("assets/oprs/img/logos/agpci.png"); ?>" alt="agpci" width="100%" height="50px">
+    <img class="mt-3 border rounded" src="<?php echo base_url("assets/oprs/img/logos/crossref.jfif"); ?>" alt="crossref" width="100%" height="50px">
+    <img class="mt-3 border rounded" src="<?php echo base_url("assets/oprs/img/logos/ebscohost.gif"); ?>" alt="ebscohost" width="100%" height="50px">
+    <img class="mt-3 border rounded" src="<?php echo base_url("assets/oprs/img/logos/pej.png"); ?>" alt="pej" width="100%" height="50px">
+    <img class="mt-3 border rounded" src="<?php echo base_url("assets/oprs/img/logos/tuv_nord_iso.png"); ?>" alt="tub_nord_iso" width="100%" height="200px"> 

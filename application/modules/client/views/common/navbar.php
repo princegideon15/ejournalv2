@@ -35,7 +35,6 @@
 </script>
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
-
 <nav class="navbar navbar-expand-lg fixed-topx custom-border">
   <div class="container-fluid p-0 d-flex align-items-center">
     

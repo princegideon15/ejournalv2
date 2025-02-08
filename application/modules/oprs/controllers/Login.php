@@ -459,6 +459,7 @@ class Login extends OPRS_Controller {
 
 							// privilege session
 							$priv = $this->User_model->get_privilege($id);
+							
 
 							if($priv){
 								foreach ($priv as $row) {
@@ -478,8 +479,29 @@ class Login extends OPRS_Controller {
 							}
 							
 							$this->session->set_userdata($priv_sess);
-
 							
+							// module access session
+							$mod_acc = $this->User_model->get_module_access($id);
+							$mod_acc_sess = [];
+
+							if($mod_acc){
+								foreach ($mod_acc as $row) {
+									foreach ($row as $key => $value) {
+										// Skip 'prv_id' if you don't want to store it
+										if ($key === 'acc_id' || $key === 'acc_usr_id' || $key === 'acc_date_created' || $key === 'acc_last_updated') continue;
+	
+										// Generate a dynamic session key
+										$session_key = "_{$row->acc_usr_id}_{$key}";
+	
+										// Store key-value pair in the session array
+										$mod_acc_sess[$session_key] = $value;
+									}
+								}
+								
+								$this->session->set_userdata($mod_acc_sess);
+							}
+
+							// get last date visited
 							$last_visit_date = $this->Login_model->get_last_visit_date($id);
 							$last_visit_date = new DateTime($last_visit_date[0]->date_created);
 							$last_visit_date = $last_visit_date->format('F j, Y');

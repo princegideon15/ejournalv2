@@ -682,8 +682,31 @@ class User_model extends CI_Model {
 
 	public function set_module_access($data, $where){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->update($this->modules, $data, $where);
-		return $oprs->affected_rows();
+		// $oprs->update($this->modules, $data, $where);
+		// return $oprs->affected_rows();
+
+		$oprs->where($where);
+		$query = $oprs->get($this->modules);
+	
+		if ($query->num_rows() > 0) {
+			// Record exists, update it
+			$oprs->where($where);
+			$oprs->update($this->modules, $data);
+			return $oprs->affected_rows();
+		} else {
+			// Record does not exist, insert it
+			$oprs->insert($this->modules, array_merge($data, $where));
+			return $oprs->insert_id();
+		}
+	}
+
+	public function get_module_access($user_id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->modules);
+		$oprs->where('acc_usr_id', $user_id);
+		$query = $oprs->get();
+		return $query->result();
 	}
 
 	

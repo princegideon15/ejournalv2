@@ -50,6 +50,7 @@
 
 
 <?php $role = $this->session->userdata('_oprs_type_num');?>
+<?php $user_id = $this->session->userdata('_oprs_user_id');?>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark fixed-top">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="javascript:void(0);">
@@ -309,12 +310,16 @@
             <div class="sb-sidenav-menu overflow-hidden">
                 <div class="nav pt-3 oprs-nav">
                     <div class="sb-sidenav-menu-heading">Main</div>
-                    <?php if ($role == 19 || $role == 20 || $role == 3 || $role == 5 || $role == 6) {?>
+                    <?php if ($role != 1 || $role != 16) {?>
+
+                        <?php if($this->session->userdata('_' . $user_id . '_acc_dashboard') == 1):?>
                         
-                        <a class="nav-link" href="dashboard">
-                        <i class="fas fa-fw fa-tachometer-alt me-2"></i>
-                        <span>Dashboard</span>
-                        </a>
+                            <a class="nav-link" href="dashboard">
+                            <i class="fas fa-fw fa-tachometer-alt me-2"></i>
+                            <span>Dashboard</span>
+                            </a>
+
+                        <?php endif ?>
                     
                     <?php }?>
 
@@ -335,126 +340,145 @@
 
 
                     
-                    <?php if ($role == 19 || $role == 20) {?>
-                    
-                    <div class="sb-sidenav-menu-heading">User Management</div>
-                    
-                        <a class="nav-link" href="user">
-                        <i class="fas fa-fw fa-user me-2"></i>
-                        Users<span class="ms-2 badge text bg-danger"><?php echo $usr_count; ?></span>
-                        </a>
+                    <?php if ($role != 1 && $role != 16) {?>
 
+                        <?php if($this->session->userdata('_' . $user_id . '_acc_user_mgt') == 1):?>
+
+                            <div class="sb-sidenav-menu-heading">User Management</div>
+                            
+                            <a class="nav-link" href="user">
+                            <i class="fas fa-fw fa-user me-2"></i>
+                            Users<span class="ms-2 badge text bg-danger"><?php echo $usr_count; ?></span>
+                            </a>
+
+                        <?php endif ?>
                     
                     
                     <?php }?>
-                    <?php if ($role == 20 || $role == 3 || $role == 19 || $role == 5 || $role == 6) {?>
+                    <?php if ($role != 1 || $role != 16) {?>
                         
-                        <div class="sb-sidenav-menu-heading">Reports and Statisttics</div>
+                        <?php if($this->session->userdata('_' . $user_id . '_acc_reports') == 1):?>
+                        
+                            <div class="sb-sidenav-menu-heading">Reports and Statisttics</div>
 
-                        <a class="nav-link" href="reports">
-                        <i class="fas fa-fw fa-chart-bar me-2"></i>
-                        <span>Reports</span>
-                        </a>
-                        <a class="nav-link" href="statistics">
-                        <i class="fas fa-fw fa-chart-bar me-2"></i>
-                        <span>Statistics</span>
-                        </a>
-                    
+                            <a class="nav-link" href="reports">
+                            <i class="fas fa-fw fa-chart-bar me-2"></i>
+                            <span>Reports</span>
+                            </a>
+                            <a class="nav-link" href="statistics">
+                            <i class="fas fa-fw fa-chart-bar me-2"></i>
+                            <span>Statistics</span>
+                            </a>
+
+                        <?php endif ?>
+
                     <?php }?>
 
-                    <?php if ($role == 20 || $role == 5) {?>
+                    <?php if ($role != 1 || $role != 16) {?>
+                        
+                        <?php if($this->session->userdata('_' . $user_id . '_acc_lib') == 1):?>
                     
-                    
-                        <div class="sb-sidenav-menu-heading">Library</div>
+                            <div class="sb-sidenav-menu-heading">Library</div>
 
-                        <a class="nav-link" href="roles">
-                        <i class="fas fa-fw fa-user-cog me-2"></i>
-                        User Types</span>
-                        </a>
+                            <a class="nav-link" href="roles">
+                            <i class="fas fa-fw fa-user-cog me-2"></i>
+                            User Types</span>
+                            </a>
 
-                        <a class="nav-link" href="status">
-                        <i class="fas fa-bullhorn me-2"></i>
-                        Status Types
-                        </a>
+                            <a class="nav-link" href="status">
+                            <i class="fas fa-bullhorn me-2"></i>
+                            Status Types
+                            </a>
 
-                        <a class="nav-link" href="<?php echo base_url('oprs/criterion?type=1'); ?>">
-                        <i class="fas fa-pencil-square me-2"></i>
-                        Technical Review Criterion
-                        </a>
+                            <a class="nav-link" href="<?php echo base_url('oprs/criterion?type=1'); ?>">
+                            <i class="fas fa-pencil-square me-2"></i>
+                            Technical Review Criterion
+                            </a>
 
-                        <a class="nav-link" href="<?php echo base_url('oprs/criterion?type=2'); ?>">
-                        <i class="fas fa-pencil-square me-2"></i>
-                        Peer Review Criterion
-                        </a>
+                            <a class="nav-link" href="<?php echo base_url('oprs/criterion?type=2'); ?>">
+                            <i class="fas fa-pencil-square me-2"></i>
+                            Peer Review Criterion
+                            </a>
 
-                        <a class="nav-link" href="publication_types">
-                        <i class="fas fa-book me-2"></i>
-                        Publication Types
-                        </a>
+                            <a class="nav-link" href="publication_types">
+                            <i class="fas fa-book me-2"></i>
+                            Publication Types
+                            </a>
 
-                        <a class="nav-link" href="emails">
-                        <i class="fas fa-envelope-open me-2"></i>
-                        Email Notificatiions
-                        </a>
+                            <a class="nav-link" href="emails">
+                            <i class="fas fa-envelope-open me-2"></i>
+                            Email Notificatiions
+                            </a>
 
-                        <a class="nav-link" href="process">
-                        <i class="fas fa-clock me-2"></i>
-                        Process Time Duration
-                        </a>
-
-                        <!-- <a class="nav-link" href="emails">
-                        <i class="fas fa-envelope-open me-2"></i>
-                        Publication Committee
-                        </a> -->
+                            <a class="nav-link" href="process">
+                            <i class="fas fa-clock me-2"></i>
+                            Process Time Duration
+                            </a>
+                        
+                        <?php endif ?>
 
                     <?php } ?>
 
-                    <?php if ($role == 20) {?>
+                    <?php if ($role != 1 || $role != 16) {?>
                         
-                        <div class="sb-sidenav-menu-heading">Settings</div>
+                        <?php if($this->session->userdata('_' . $user_id . '_acc_settings') == 1):?>
+                        
+                            <div class="sb-sidenav-menu-heading">Settings</div>
 
-                        <a class="nav-link" href="controls">
-                        <i class="fas fa-fw fa-cogs me-2"></i>
-                        <span>Menu Access Control Panel</span>
-                        </a>
+                            <a class="nav-link" href="controls">
+                            <i class="fas fa-fw fa-cogs me-2"></i>
+                            <span>Menu Access Control Panel</span>
+                            </a>
 
-                        <a class="nav-link" href="backup">
-                        <i class="fas fa-database me-2"></i>
-                        <span>Database</span>
-                        </a>
+                            <a class="nav-link" href="backup">
+                            <i class="fas fa-database me-2"></i>
+                            <span>Database</span>
+                            </a>
+
+                        <?php endif ?>
 
                     <?php } ?>
                         
                         
-                    <?php if ($role == 20 || $role == 19 || $role == 5) {?>
-
-                        <div class="sb-sidenav-menu-heading">Feedback</div>
-                    
-                        <a class="nav-link" href="feedbacks">
-                        <i class="fas fa-star me-2"></i>
-                        CSF UI/UX<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
-                        </a>
-
-                        <a class="nav-link" href="arta">
-                        <i class="fas fa-edit me-2"></i>
-                        CSF ARTA<span class="ms-2 badge text bg-danger"><?php echo $arta_count; ?></span>
-                        </a>
-
+                    <?php if ($role != 1 || $role != 16) {?>
                         
-                        <div class="sb-sidenav-menu-heading">Logs</div>
-                    
-                        <a class="nav-link" href="logs">
-                        <i class="fas fa-fw fa-clipboard-list me-2"></i>
-                        <span>Activity Logs</span>
-                        </a>
+                        <?php if($this->session->userdata('_' . $user_id . '_acc_feedbacks') == 1):?>
+
+                            <div class="sb-sidenav-menu-heading">Feedback</div>
+                        
+                            <a class="nav-link" href="feedbacks">
+                            <i class="fas fa-star me-2"></i>
+                            CSF UI/UX<span class="ms-2 badge text bg-danger"><?php echo $feed_count; ?></span>
+                            </a>
+
+                            <a class="nav-link" href="arta">
+                            <i class="fas fa-edit me-2"></i>
+                            CSF ARTA<span class="ms-2 badge text bg-danger"><?php echo $arta_count; ?></span>
+                            </a>
+
+                            
+                            <div class="sb-sidenav-menu-heading">Logs</div>
+                        
+                            <a class="nav-link" href="logs">
+                            <i class="fas fa-fw fa-clipboard-list me-2"></i>
+                            <span>Activity Logs</span>
+                            </a>
+
+                        <?php endif ?>
                     
                     <?php }?>
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                <?php if ($role == 20 || $role == 3) {?>
-                    <a class="btn btn-info w-100" href="<?php echo base_url('../../admin/dashboard'); ?>"><i class="fa fa-sync me-2"></i>eJournal Admin</a>
-                    <hr class="text-light h-10 fw-bold">
+                <?php if ($role != 1 || $role != 16) {?>
+                    
+                    <?php if($this->session->userdata('_' . $user_id . '_acc_logs') == 1):?>
+
+                        <a class="btn btn-info w-100" href="<?php echo base_url('../../admin/dashboard'); ?>"><i class="fa fa-sync me-2"></i>eJournal Admin</a>
+                        <hr class="text-light h-10 fw-bold">
+
+                    <?php endif ?>
+
                 <?php }?>
                 <div class="small">Logged in as:</div>
                 <?php echo $this->session->userdata('_oprs_type'); ?>
