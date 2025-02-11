@@ -122,13 +122,13 @@
       <div class="modal-body">
         <form id="form_edit_user">
           <div class="mb-3">
+            <label for="usr_full_name">Full Name</label>
+            <input type="text" class="form-control" id="usr_full_name" name="usr_full_name" placeholder="Your username">
+          </div>
+          <div class="mb-3">
             <label for="usr_username" class="form-label">Email</label>
             <input type="email" class="form-control" id="usr_username" name="usr_username" placeholder="Your email address">
           </div>
-          <!-- <div class="mb-3">
-            <label for="usr_username">Username</label>
-            <input type="text" class="form-control" id="usr_username" name="usr_username" placeholder="Your username">
-          </div> -->
           <div class="mb-3">
             <label for="usr_password" class="form-label">New Password (If any)</label>
             <input type="password" class="form-control" id="usr_password" name="usr_password" placeholder="Your password">

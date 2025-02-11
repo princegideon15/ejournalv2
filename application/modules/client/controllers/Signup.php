@@ -45,15 +45,17 @@ class Signup extends EJ_Controller {
 	 */
 	public function create_account(){
 		
+		// text field validation ---> |regex_match[/^[a-zA-Z0-9._-]+$/]
+		
 		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email|is_unique[tblusers.email]', array('is_unique' => 'Email already in use. Please use different email.'));
 		$this->form_validation->set_rules('title', 'Title', 'required|trim');
-		$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
-		$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
-		$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim');
-		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
+		$this->form_validation->set_rules('first_name', 'First Name', 'required|trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
+		$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
+		$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
+		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
 		$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
-		$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
-		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
+		$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
+		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
 
 		// require region,province,city for philippines
 		if($this->input->post('country') == 175){
@@ -67,7 +69,7 @@ class Signup extends EJ_Controller {
 		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
 
-		$validations = ['new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
+		$validations = ['new_email', 'title', 'first_name', 'middle_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
 
 		if($this->form_validation->run() == FALSE){
 			$errors = [];
@@ -520,6 +522,7 @@ class Signup extends EJ_Controller {
 	 * @return void
 	 */
 	public function create_author_account(){
+		// text field validation ---> |regex_match[/^[a-zA-Z0-9._-]+$/]
 		
 		$member = $this->input->post('author_type', TRUE);
 		if(empty($member)){
@@ -532,13 +535,13 @@ class Signup extends EJ_Controller {
 
 		if($member == 2){
 			$this->form_validation->set_rules('title', 'Title', 'required|trim');
-			$this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
-			$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
-			$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim');
-			$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim');
+			$this->form_validation->set_rules('first_name', 'First Name', 'required|trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
+			$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
+			$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
+			$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
 			$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
 			$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
-			$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim');
+			$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim|regex_match[/^[a-zA-Z0-9._-]+$/]');
 	
 			//require region,province,city for philippines
 			if($this->input->post('country') == 175){
@@ -555,7 +558,7 @@ class Signup extends EJ_Controller {
 		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
 
-		$validations = ['author_type', 'new_email', 'title', 'first_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
+		$validations = ['author_type', 'new_email', 'title', 'first_name', 'middle_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
 
 		if($this->form_validation->run() == FALSE){
 			$errors = [];

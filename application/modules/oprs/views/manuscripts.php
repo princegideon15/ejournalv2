@@ -372,6 +372,58 @@
 														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
 														<td>
 															<div class="btn-groupx d-flex gap-1" role="group">
+
+															
+																<!-- TECHNICAL DESK EDITOR -->
+																<?php if (_UserRoleFromSession() == 5) { 
+																	if($m->man_status == 1){ ?>
+																		<!-- process manuscript -->
+																		<button type="button" class="btn btn-outline-primary"
+																			onclick="tech_rev_criterion(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)" rel="tooltip"
+																			data-bs-placement="top" title="Process"><span
+																				class="fas fa-gear"></span></button>
+																	
+
+																		<?php }else if($m->man_status == 15){ ?>
+																		<!-- process manuscript -->
+																		<button type="button" class="btn btn-outline-success"
+																			onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
+																			data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
+																			data-bs-placement="top" title="Add Reviewers"><span
+																				class="fas fa-user-plus"></span></button>
+																		<?php }else if($m->man_status == 5){ ?>
+																		<!-- view reviewers -->
+																		<button type="button" class="btn border border-1 btn-light text-info"
+																			onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																			data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																			data-bs-placement="top" title="View Reviewers"><span
+																				class="fas fa-users"></span></button>
+																		<!-- <button type="button" class="btn btn-light btn-sm"
+																			onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo rawurlencode($title); ?>')"
+																			data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
+																			title="View Reviews"><span class="fa fa-eye"></span> View Reviews
+																		</button> -->
+																		<?php }else if($m->man_status == 6){ ?>
+																			<button type="button" class="btn btn-outline-primary"
+																			onclick="endorse_coped('<?php echo $m->row_id; ?>')"
+																			data-bs-toggle="modal" data-bs-target="#checkRevisionModal" rel="tooltip"
+																			data-bs-placement="top" title="Endorse to Copy Editor"><span
+																				class="fas fa-gear"></span></button>
+																		<?php }else if($m->man_status == 8){ ?>
+																			<!-- publish to ejournal -->
+																			<!-- <button type="button" class="btn border border-1 btn-light text-success"
+																			onclick="publish_to_ejournal('<?php echo $m->row_id; ?>')"
+																			data-bs-toggle="modal" data-bs-target="#publishModal" rel="tooltip"
+																			data-bs-placement="top" title="Publish to eJournal"><span
+																				class="fas fa-paper-plane"></span></button> -->
+																		<?php } ?>
+
+																	
+																		<!-- view manuscript details -->
+																		<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																<?php } ?>
+
 																<!-- SUPERADMIN -->
 																<?php if (_UserRoleFromSession() == 20 ) { ?>
 																	<!-- view reviewers -->
@@ -1139,8 +1191,8 @@
 										<th>Date Submitted</th>
 										<th>Date Reviewed</th>
 										<th>Status</th>
-										<th>Action</th>
-										<th>Upload NDA</th>
+										<th width="10%">Action</th>
+										<th width="25%">Upload NDA</th>
 									</tr>
 								</thead>
 								<tbody>

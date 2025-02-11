@@ -80,6 +80,7 @@ class User extends OPRS_Controller {
 	 * @return  void
 	 */
 	public function edit_user($id) {
+		$post['usr_full_name'] = $this->input->post('usr_full_name', TRUE);
 		$post['usr_username'] = $this->input->post('usr_username', TRUE);
 		if ($this->input->post('usr_password', TRUE)) {
 			$post['usr_password'] = password_hash($this->input->post('usr_password', true), PASSWORD_BCRYPT);

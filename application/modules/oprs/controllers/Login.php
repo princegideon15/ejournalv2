@@ -509,8 +509,6 @@ class Login extends OPRS_Controller {
 							
 							if ($sys == 1) { // ejournal admin
 
-								
-
 								// login session
 								$sess = array('_oprs_logged_in' => true,
 									'_oprs_username' => $usr_name,

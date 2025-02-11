@@ -262,21 +262,26 @@ class User extends EJ_Controller {
 	 */
 	public function downloads(){
 		$id = $this->session->userdata('user_id');
-		$output = $this->Client_journal_model->get_client_downloads($id);
-		
-		$data['results'] = $output;
-		$data['journals'] = $this->Client_journal_model->get_journals();
-		$data['popular'] = $this->Client_journal_model->top_five();
-		$data['client_count'] = $this->Client_journal_model->all_client();
-		$data['hits_count'] = $this->Client_journal_model->all_hits();
-		$data['latest'] = $this->Client_journal_model->latest_journal();
-		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
-		// $data['divisions'] = $this->Client_journal_model->getDivisions();
-		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
-		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
-		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/downloads";
-		$this->_LoadPage('common/body', $data);
+
+		if($id){
+			$output = $this->Client_journal_model->get_client_downloads($id);
+			
+			$data['results'] = $output;
+			$data['journals'] = $this->Client_journal_model->get_journals();
+			$data['popular'] = $this->Client_journal_model->top_five();
+			$data['client_count'] = $this->Client_journal_model->all_client();
+			$data['hits_count'] = $this->Client_journal_model->all_hits();
+			$data['latest'] = $this->Client_journal_model->latest_journal();
+			$data['adv_publication'] = $this->Client_journal_model->advancePublication();
+			// $data['divisions'] = $this->Client_journal_model->getDivisions();
+			$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+			$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+			$data['main_title'] = "eJournal";
+			$data['main_content'] = "client/downloads";
+			$this->_LoadPage('common/body', $data);
+		}else{
+			redirect('/');
+		}
 	}
 
 

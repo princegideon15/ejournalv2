@@ -5660,6 +5660,9 @@ class Manuscripts extends OPRS_Controller {
 	 */
 	public function publish(){
 		$pages = $this->input->post('man_page_position');
+		$new_volume = $this->input->post('man_volume');
+		$new_issue = $this->input->post('man_issue');
+		$new_year = $this->input->post('man_year');
 		$man_id = $this->input->post('pub_man_id');
 
 		// get manus info
@@ -5720,7 +5723,7 @@ class Manuscripts extends OPRS_Controller {
 			$post_art['art_email'] = $email;
 			$post_art['art_abstract_file'] = $abs;
 			$post_art['art_full_text_pdf'] = $file;
-			$post_art['art_year'] = $year;
+			$post_art['art_year'] = $new_year;
 			$post_art['art_page'] = $pages;
 			$post_art['art_keywords'] = $keys;
 			$post_art['art_jor_id'] = $jor_id;
@@ -5731,10 +5734,10 @@ class Manuscripts extends OPRS_Controller {
 		} else {
 			// if journal not exist create journal
 			$post_jor = array();
-			$post_jor['jor_volume'] = $volume;
-			$post_jor['jor_issue'] = $issue;
-			$post_jor['jor_year'] = $year;
-			$post_jor['jor_issn'] = '0117-3294';
+			$post_jor['jor_volume'] = $new_volume;
+			$post_jor['jor_issue'] = $new_issue;
+			$post_jor['jor_year'] = $new_year;
+			$post_jor['jor_issn'] = '2980-4728'; //eissn
 			$post_jor['jor_cover'] = 'unavailable.jpg';
 			$post_jor['date_created'] = date('Y-m-d H:i:s');
 			$jor_new_id = $this->Manuscript_model->create_journal(array_filter($post_jor));
@@ -5748,7 +5751,7 @@ class Manuscripts extends OPRS_Controller {
 			$post_art['art_keywords'] = $keys;
 			$post_art['art_jor_id'] = $jor_new_id;
 			$post_art['date_created'] = date('Y-m-d H:i:s');
-			$post_art['art_year'] = $year;
+			$post_art['art_year'] = $new_year;
 			$post_art['art_page'] = $pages;		
 			$post_art['art_usr_id'] = $user_id;
 				// echo json_encode($post_art);exit;
@@ -5771,6 +5774,9 @@ class Manuscripts extends OPRS_Controller {
 		// update manuscript
 		$post['man_status'] = 16;
 		$post['man_page_position'] = $pages;
+		$post['man_volume'] = $new_volume;
+		$post['man_issue'] = $new_issue;
+		$post['man_year'] = $new_year;
 		$post['last_updated'] = date('Y-m-d H:i:s');
 		$where['row_id'] = $man_id;
 		// $this->Manuscript_model->process_manuscript(array_filter($post), $where, 3);
@@ -5936,6 +5942,10 @@ class Manuscripts extends OPRS_Controller {
 		echo json_encode($output);
 	}
 
+	function get_unique_journal(){
+		$output = $this->Manuscript_model->get_unique_journal();
+		echo json_encode($output);
+	}
 
 }
 

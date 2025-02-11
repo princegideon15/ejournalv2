@@ -68,10 +68,10 @@
                       </select>
                   </div>
                   <div class="col mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-3" onclick="filter_arta()">Apply Filter</button>
+                      <button class="btn btn-primary" onclick="filter_arta()">Apply Filter</button>
                   </div>
                   <div class="col mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light" onclick="filter_arta('clear')">Clear</button>
+                      <button class="btn btn-light border border-1" onclick="filter_arta('clear')">Clear</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -141,10 +141,10 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-3" onclick="filter_arta_age()">Apply Filter</button>
+                      <button class="btn btn-primary" onclick="filter_arta_age()">Apply Filter</button>
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light" onclick="filter_arta_age('clear')">Clear</button>
+                      <button class="btn btn-light border border-1" onclick="filter_arta_age('clear')">Clear</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -189,10 +189,10 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-3" onclick="filter_arta_region()">Apply Filter</button>
+                      <button class="btn btn-primary" onclick="filter_arta_region()">Apply Filter</button>
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light" onclick="filter_arta_region('clear')">Clear</button>
+                      <button class="btn btn-light border border-1" onclick="filter_arta_region('clear')">Clear</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -243,10 +243,10 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-3" onclick="filter_arta_cc()">Apply Filter</button>
+                      <button class="btn btn-primary" onclick="filter_arta_cc()">Apply Filter</button>
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light" onclick="filter_arta_cc('clear')">Clear</button>
+                      <button class="btn btn-light border border-1" onclick="filter_arta_cc('clear')">Clear</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">
@@ -290,10 +290,10 @@
                       <input type="date" id="date_to" class="form-control">
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light border border-3" onclick="filter_arta_sqd()">Apply Filter</button>
+                      <button class="btn btn-primary" onclick="filter_arta_sqd()">Apply Filter</button>
                   </div>
                   <div class="mb-1 d-flex flex-column justify-content-end">
-                      <button class="btn btn-light" onclick="filter_arta_sqd('clear')">Clear</button>
+                      <button class="btn btn-light border border-1" onclick="filter_arta_sqd('clear')">Clear</button>
                   </div>
                 </div>
                 <div class="table-responsive mt-3">

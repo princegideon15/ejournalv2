@@ -322,9 +322,15 @@ $(document).ready(function() {
         rules: {
             man_page_position: {
                 required: true
+            },
+            man_year: {
+                required: true
             }
         },
         submitHandler: function() {
+            
+            $('#pub_to_e_form #man_year').valid();
+
             Swal.fire({
                 title: "Are you sure?",
                 // text: "You won't be able to revert this!",
@@ -398,7 +404,7 @@ $(document).ready(function() {
             const captcha = grecaptcha.getResponse(recaptchaWidgetId_logout);
     
             if (captcha) {
-            $(this).prop('disabled', true);
+                $(this).prop('disabled', true);
                 // alert("reCAPTCHA is checked and valid!");
                 $.ajax({
                 type: "POST",
@@ -2989,6 +2995,9 @@ $(document).ready(function() {
             usr_username: {
                 required: true,
                 minlength: 3
+            },
+            usr_full_name: {
+                required: true,
             },
             usr_role: {
                 required: true,
@@ -6910,6 +6919,7 @@ function view_reviews(id, title) {
         dataType: "json",
         crossDomain: true,
         success: function(data) {
+            console.log("🚀 ~ view_reviews ~ data:", data)
             if ($.fn.DataTable.isDataTable("#reviews_table")) {
                 $('#reviews_table ').DataTable().clear().destroy();
             }
@@ -8366,6 +8376,23 @@ function publish_to_ejournal(id){
 
     var coa = [];
     var html = '';
+    var select_volume = '<select class="form-select" id="man_volume" name="man_volume">';
+
+    // get volume
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_unique_journal",
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                select_volume += '<option value="'+ val.jor_volume +'">' + val.jor_volume +'</option>';
+            });
+
+            select_volume += '</select>';
+        }
+    });
+
  
     $.ajax({
         type: "GET",
@@ -8385,11 +8412,17 @@ function publish_to_ejournal(id){
                 dataType: "json",
                 crossDomain: true,
                 success: function(data) {
+
+                    var issue, volume;
+
                     $.each(data, function(key, val) {
 
-                        var vol = (val.man_volume != null) ? val.man_volume : 'N/a';
-                        var iss = (val.man_issue != null) ? val.man_issue : 'N/a';
-                        var iss = (iss >= 5) ? 'Special Issue No. ' + (iss - 4) : iss;
+                        issue = val.man_issue;
+                        volume = val.man_volume;
+
+                        // var vol = (val.man_volume != null) ? val.man_volume : 'N/a';
+                        // var iss = (val.man_issue != null) ? val.man_issue : 'N/a';
+                        // var iss = (iss >= 5) ? 'Special Issue No. ' + (iss - 4) : iss;
                         var yer = (val.man_year != null) ? val.man_year : 'N/a';
                         var rem = (val.man_remarks != null) ? val.man_remarks : 'N/a';
                         var coas = (coa.length > 0) ? coa.join('') : 'N/a';
@@ -8401,6 +8434,24 @@ function publish_to_ejournal(id){
                       
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
                         var keywords = val.man_keywords ?? 'N/A';
+
+                        var select_issue = `<select class="form-select" id="man_issue" name="man_issue">
+                                                <option value="">Select Issue no.</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">Special Issue No. 1</option>
+                                                <option value="6">Special Issue No. 2</option>
+                                                <option value="7">Special Issue No. 3</option>
+                                                <option value="8">Special Issue No. 4</option>
+                                            </select>`;
+
+                    //     <select class="form-select" id="jor_volume" name="jor_volume" placeholder="Select existing or Type new Volume no." style="background-color:white">
+                    //     <?php foreach ($u_journal as $j): ?>
+                    //     <?php echo '<option value=' . $j->jor_volume . '>' . $j->jor_volume . '</option>'; ?>
+                    //     <?php endforeach;?>
+                    //   </select>
 
                         html += '<tr>' +
                                     '<th>Title</th>' +
@@ -8456,20 +8507,20 @@ function publish_to_ejournal(id){
                                 '</tr>' +
                                 '<tr>' +
                                     '<th>Volume</th>' +
-                                    '<td>' + vol + '</td>' +
+                                    '<td>' + select_volume + '</td>' +
                                 '</tr>' +
                                 '<tr>' +
                                     '<th>Issue</th>' +
-                                    '<td>' + iss + '</td>' +
+                                    '<td>' + select_issue + '</td>' +
                                 '</tr>' +
                                 '<tr>' +
                                     '<th>Year</th>' +
-                                    '<td>' + yer + '</td>' +
+                                    '<td><input type="text" class="form-control bg-white" id="man_year" name="man_year" value="' + yer + '" required></td>' +
                                 '</tr>'+
                                 '<tr>'+
                                 '<th scope="row">Page no.</th>'+
                                     '<td>'+
-                                        '<input type="text" class="form-control" id="man_page_position" name="man_page_position" placeholder="ex. 1-3" required></td>'+
+                                        '<input type="text" class="form-control bg-white" id="man_page_position" name="man_page_position" placeholder="ex. 1-3" required></td>'+
                                         '<input type="hidden" id="man_id" name="man_id">'+
                                 '</tr>';
                                 // '<tr>' +
@@ -8478,7 +8529,10 @@ function publish_to_ejournal(id){
                                 // '</tr>';
                     });
 
+                    
                     $('#publishModal .table-bordered > tbody').html(html);
+                    $('#pub_to_e_form #man_issue').val(issue);
+                    $('#pub_to_e_form #man_volume').val(volume);
                     $('#publishModal').modal('toggle');
                 }
             });
