@@ -47,6 +47,7 @@ class Manuscripts extends OPRS_Controller {
 				$data['man_all'] = $this->Manuscript_model->get_manus(_UserRoleFromSession());
 				$data['man_new'] = $this->Manuscript_model->get_manuscripts(1);
 				$data['man_onreview'] = $this->Manuscript_model->get_manuscripts(2);
+				$data['man_peer'] = $this->Manuscript_model->get_manuscripts(15);
 				$data['man_rej'] = $this->Manuscript_model->get_manuscripts(14);
 				$data['rev_cons'] = $this->Manuscript_model->get_manuscripts(6);
 				$data['prf_cop'] = $this->Manuscript_model->get_manuscripts(7);
@@ -58,6 +59,7 @@ class Manuscripts extends OPRS_Controller {
 				$data['publ'] = $this->Manuscript_model->get_manuscripts(16);
 
 				$data['man_all_count'] = count($data['man_all']);
+				$data['man_peer_count'] = count($data['man_peer']);
 				$data['man_new_count'] = count($data['man_new']);
 				$data['man_onreview_count'] = count($data['man_onreview']);
 				$data['man_rej_count'] = count($data['man_rej']);

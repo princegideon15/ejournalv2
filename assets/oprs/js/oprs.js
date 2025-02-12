@@ -1808,6 +1808,20 @@ $(document).ready(function() {
         } );
     } ).draw();
 
+    // endorsement to peer manuscripts
+    var etp = $('#peer-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+ 
+    etp.on( 'order.dt search.dt', function () {
+        etp.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
     // consolidated reviews
     var rmt = $('#review-consolidated-manuscript').DataTable({
         "order": [[ 4, "asc" ]],
@@ -1818,6 +1832,118 @@ $(document).ready(function() {
 
     rmt.on( 'order.dt search.dt', function () {
         rmt.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // copy editor proofread manuscripts
+    var cop = $('#coped-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+
+    cop.on( 'order.dt search.dt', function () {
+        cop.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // final review eic manuscripts
+    var frm = $('#fin-rev-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+
+    frm.on( 'order.dt search.dt', function () {
+        frm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // proofread author manuscripts
+    var prfam = $('#prf-auth-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+
+    prfam.on( 'order.dt search.dt', function () {
+        prfam.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // layout  manuscripts
+    var laym = $('#layout-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+
+    laym.on( 'order.dt search.dt', function () {
+        laym.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // final approval  manuscripts
+    var fapm = $('#fin-app-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+
+    fapm.on( 'order.dt search.dt', function () {
+        fapm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // published  manuscripts
+    var pubm = $('#published-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+
+    pubm.on( 'order.dt search.dt', function () {
+        pubm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // rejected  manuscripts
+    var rejm = $('#rejected-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+
+    rejm.on( 'order.dt search.dt', function () {
+        rejm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+    // revision manuscripts
+    var revm = $('#revision-manuscript').DataTable({
+        "order": [[ 4, "asc" ]],
+        "columnDefs" : [
+            {"targets":4, "type":"date"},
+        ]
+    });
+
+    revm.on( 'order.dt search.dt', function () {
+        revm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
         } );
     } ).draw();
