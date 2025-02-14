@@ -115,8 +115,8 @@ class Login_model extends CI_Model {
       return $query->result();
   }
   
-  public function clear_login_attempts($id){
-      $this->db->delete($this->attempts, ['user_id' => $id]);
+  public function clear_login_attempts($email){
+      $this->db->delete($this->attempts, ['user_email' => $email]);
   }
 
   public function update_password($data, $where){

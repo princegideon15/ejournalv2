@@ -213,9 +213,9 @@ class Login_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function clear_login_attempts($id){
+	public function clear_login_attempts($email){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->delete($this->attempts, ['user_id' => $id]);
+		$oprs->delete($this->attempts, ['user_email' => $email]);
 	}
 
 	public function create_user_access_token($data){

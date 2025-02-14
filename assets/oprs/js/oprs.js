@@ -5489,53 +5489,53 @@ $(document).ready(function() {
     });
     
     // submit ui/ux feedback form (unused)
-    $('#feedback_form').on('submit', function(e){
+    // $('#feedback_form').on('submit', function(e){
 
-    e.preventDefault();
+    // e.preventDefault();
 
-    var alert = '<div class="alert alert-danger w-100" role="alert"> \
-                        Please select your rating. \
-                        </div>';
+    // var alert = '<div class="alert alert-danger w-100" role="alert"> \
+    //                     Please select your rating. \
+    //                     </div>';
 
-    if (!$("input[name='fb_rate_ui']").is(':checked')) {
-        $(".ui-container .alert-danger").remove();
-        $(alert).hide().appendTo(".ui-container").fadeIn();
-    }
+    // if (!$("input[name='fb_rate_ui']").is(':checked')) {
+    //     $(".ui-container .alert-danger").remove();
+    //     $(alert).hide().appendTo(".ui-container").fadeIn();
+    // }
     
-    if (!$("input[name='fb_rate_ux']").is(':checked')) {
-        $(".ux-container .alert-danger").remove();
-        $(alert).hide().appendTo(".ux-container").fadeIn();
-    }
+    // if (!$("input[name='fb_rate_ux']").is(':checked')) {
+    //     $(".ux-container .alert-danger").remove();
+    //     $(alert).hide().appendTo(".ux-container").fadeIn();
+    // }
 
-    if($("input[name='fb_rate_ui']").is(':checked') && $("input[name='fb_rate_ux']").is(':checked')){
-        $.ajaxSetup({
-            headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+    // if($("input[name='fb_rate_ui']").is(':checked') && $("input[name='fb_rate_ux']").is(':checked')){
+    //     $.ajaxSetup({
+    //         headers: {
+    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         }
+    //     });
 
-        var formdata = $(this).serializeArray();
-        // console.log(formdata);
-        $.ajax({
-            type: "POST",
-            url: base_url + 'admin/feedback/submit/2',
-            data:  formdata,
-            cache: false,
-            crossDomain: true,
-            success: function(data) {
-                // console.log(data);return false;
-                $('#feedback_form').remove();
+    //     var formdata = $(this).serializeArray();
+    //     // console.log(formdata);
+    //     $.ajax({
+    //         type: "POST",
+    //         url: base_url + 'admin/feedback/submit/2',
+    //         data:  formdata,
+    //         cache: false,
+    //         crossDomain: true,
+    //         success: function(data) {
+    //             // console.log(data);return false;
+    //             $('#feedback_form').remove();
 
-                var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
-                                <p class="text-center btn-link fw-bold"><u><a href="'+ base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
+    //             var thanks = '<p class="text-center h2">Thank you for your feedback.</p> \
+    //                             <p class="text-center btn-link fw-bold"><u><a href="'+ base_url + 'oprs/login/logout");">Proceed to logout</a></u></p>';
                             
                 
-                $(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
+    //             $(thanks).hide().appendTo("#feedbackModal .modal-body").fadeIn();
 
-            }
-        });
-    }
-    });
+    //         }
+    //     });
+    // }
+    // });
 
     // select all structure only for backup
     $("#select_all_structure").change(function() {

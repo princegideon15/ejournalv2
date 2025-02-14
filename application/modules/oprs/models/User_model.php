@@ -454,7 +454,7 @@ class User_model extends CI_Model {
 		$oprs->from($this->oprs_users . ' a');
 		$oprs->join($this->privileges . ' p', 'a.usr_id = p.prv_usr_id');
 		$oprs->join($this->modules . ' m', 'a.usr_id = m.acc_usr_id', 'left');
-		$oprs->where('a.row_id !=', _UserIdFromSession());
+		$oprs->where('a.usr_id !=', _UserIdFromSession());
 		$oprs->where_not_in('a.usr_role', [1,16]);
 
 		if($role > 0){

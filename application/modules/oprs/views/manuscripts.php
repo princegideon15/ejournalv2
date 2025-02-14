@@ -177,7 +177,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -321,7 +321,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -342,7 +342,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -441,7 +441,13 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>
+															<?php if($m->man_status == 14 || $m->man_status == 16){?>
+																-
+															<?php }else{ ?>
+																Process Duration here
+															<?php } ?>
+														</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -462,7 +468,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -510,7 +516,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -531,7 +537,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -629,7 +635,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -650,7 +656,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -689,7 +695,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -710,7 +716,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -749,7 +755,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -770,7 +776,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -809,7 +815,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -830,7 +836,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -869,7 +875,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -890,7 +896,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -929,7 +935,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -950,7 +956,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -989,7 +995,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -1010,7 +1016,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
+														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -1049,7 +1055,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+														<!-- <td>Process Duration here</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -1070,7 +1076,6 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -1109,7 +1114,6 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -1130,7 +1134,6 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -1169,7 +1172,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<td>Process Duration here</td>
+												
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
