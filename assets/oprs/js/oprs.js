@@ -10480,6 +10480,7 @@ function upload_revision(man_id){
         dataType: "json",
         crossDomain: true,
         success: function(data) {
+            console.log("🚀 ~ upload_revision ~ data:", data)
             $.each(data, function(key, val){
                 if(val.tr_final == 2){
                     $('#criteria_review_result').removeClass('d-none');

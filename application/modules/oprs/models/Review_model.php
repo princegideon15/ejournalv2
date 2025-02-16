@@ -5,7 +5,7 @@ class Review_model extends CI_Model {
 	private $criterias = 'tblcriterias';
 	private $scores = 'tblscores';
 	private $manus = 'tblmanuscripts';
-	private $user = 'tblusers';
+	private $oprs_users = 'tblusers';
 	private $reviewers = 'tblreviewers';
 	private $non = 'tblnonmembers';
 	private $tech_rev_score = 'tbltech_rev_score';
@@ -14,6 +14,7 @@ class Review_model extends CI_Model {
 	private $consolidations = 'tblconsolidations';
 	private $revision_matrix = 'tblrevision_matrix';
 	private $layouts = 'tbllayouts';
+	private $process_status = 'tblprocess_status';
 	// skms
 	private $business = 'tblbusiness_address';
 	private $specs = 'tblmembership_profiles';
@@ -371,6 +372,40 @@ class Review_model extends CI_Model {
 		$oprs->select('*');
 		$oprs->from($this->layouts);
 		$oprs->where('lay_man_id', $man_id);
+		$query = $oprs->get();
+		return $query->result();
+	}
+
+	
+	public function save_process_status($data){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->insert($this->process_status, $data);
+	}
+
+	public function update_process_status($post, $where){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->update($this->process_status, $post, $where);
+	}
+
+	public function get_process_status(){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->process_status);
+		$oprs->where('ps_status', 0);
+		$oprs->where('ps_action_date', NULL);
+		$query = $oprs->get();
+		return $query->
+		result();
+	}
+
+	public function get_cluster_editor_status($id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('e.*');
+		$oprs->from($this->editors_review . ' e');
+		$oprs->join($this->oprs_users . ' u', 'e.edit_usr_id = usr_id');
+		$oprs->where('edit_man_id', $id);
+		$oprs->where_in('usr_role', [11,12,13,14]);
+		// $oprs->where('edit_status', NULL);
 		$query = $oprs->get();
 		return $query->result();
 	}

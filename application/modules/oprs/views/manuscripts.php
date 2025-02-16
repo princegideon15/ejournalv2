@@ -177,7 +177,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -321,7 +321,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -342,7 +342,6 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
 													</tr>
 												</thead>
 												<tbody>
@@ -441,13 +440,6 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>
-															<?php if($m->man_status == 14 || $m->man_status == 16){?>
-																-
-															<?php }else{ ?>
-																Process Duration here
-															<?php } ?>
-														</td> -->
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -468,7 +460,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -481,6 +473,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -516,7 +526,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -537,7 +547,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -550,6 +560,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -635,7 +663,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -656,7 +684,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -669,6 +697,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -695,7 +741,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -716,7 +762,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -729,6 +775,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -755,7 +819,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -776,7 +840,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -789,6 +853,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -815,7 +897,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -836,7 +918,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -849,6 +931,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -875,7 +975,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -896,7 +996,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -909,6 +1009,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -935,7 +1053,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -956,7 +1074,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -969,6 +1087,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -995,7 +1131,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -1016,7 +1152,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
-														<!-- <th>Fraction of Process Turnaround</th> -->
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -1029,6 +1165,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -1055,7 +1209,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
-														<!-- <td>Process Duration here</td> -->
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -1076,6 +1230,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -1088,6 +1243,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -1114,6 +1287,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 													</tr>
 													<?php endforeach; ?>
 												</tbody>
@@ -1134,6 +1308,7 @@
 														<th>Tracking No.</th>
 														<th>Actions</th>
 														<th>Remarks</th>
+														<th>Fraction of Process Turnaround</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -1146,6 +1321,25 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
+													
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -1172,6 +1366,7 @@
 															</div>
 														</td>
 														<td><em><?php echo ($m->man_remarks == NULL) ? '-' : $m->man_remarks;?></em></td>
+														<td><?= $m->man_process_date > 0 ? $fraction : 'N/a' ?></td>
 												
 													</tr>
 													<?php endforeach; ?>
