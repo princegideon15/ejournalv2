@@ -885,7 +885,10 @@ class Manuscript_model extends CI_Model {
 		if($status > 0){
 			if($status == 2){
 				$oprs->where_in('m.man_status', [2,3,4,5]);
-			}else{
+			}else if($status == 10){
+				$oprs->where_in('m.man_status', [10,17]);
+			}
+			else{
 				$oprs->where('m.man_status', $status);
 			}
 		}

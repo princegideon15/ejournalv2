@@ -8,7 +8,7 @@
             <h6 class="card-title fw-bold d-block">Journal Information</h6>
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/editorial');?>"
             class="text-dark text-decoration-underline">Editorial Board</a></p>
-            <!-- <p class="mb-0"><a href="#" class="text-dark text-decoration-underline" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">International Editorial Board</a></p> -->
+            <p class="mb-0"><a href="#" class="text-dark text-decoration-underline" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">International Editorial Board</a></p>
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark text-decoration-underline">Editorial Policy</a></p>
         </div>
     </div>
@@ -33,8 +33,8 @@
     }?>
 
     
-    <img class="mt-4 border rounded" src="<?php echo base_url("assets/images/logos/agpci.png"); ?>" alt="agpci" width="100%" height="50px">
-    <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/crossref.jfif"); ?>" alt="crossref" width="100%" height="50px">
+    <!-- <img class="mt-4 border rounded" src="<?php echo base_url("assets/images/logos/agpci.png"); ?>" alt="agpci" width="100%" height="50px"> -->
+    <!-- <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/crossref.jfif"); ?>" alt="crossref" width="100%" height="50px"> -->
     <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/ebscohost.gif"); ?>" alt="ebscohost" width="100%" height="50px">
     <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/pej.png"); ?>" alt="pej" width="100%" height="50px">
     <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/tuv_nord_iso.png"); ?>" alt="tub_nord_iso" width="100%" height="200px"> 

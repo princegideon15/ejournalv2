@@ -66,8 +66,8 @@
                         <?php foreach($accounts as $row){ 
                           $role = ($row->usr_role == 1) ? 'Author' : 'Reviewer';
                           echo '<div class="form-check form-check-inline pe-2">
-                                  <input type="radio" value="'. $row->usr_id . '" name="user_id" class="form-check-input" id="' . $role . '' . $row->usr_role . '">
-                                  <label class="form-check-label pt-1 ms-1" for="' . $role . '' . $row->usr_role . '"> ' . $role . '</label>
+                                  <input type="radio" value="'. $row->usr_id . '" name="user_id" class="form-check-input" id="account_' . $row_usr_id . '">
+                                  <label class="form-check-label pt-1 ms-1" for="account_' . $row_usr_id . '"> ' . $row->usr_desc . '</label>
                                 </div>';
                         } ?>
                       </div>

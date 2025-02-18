@@ -21,7 +21,7 @@ class Forgot extends OPRS_Controller {
 
 	public function check_email() {
 		$this->Forgot_model->check_email($this->input->post('get_email', true));
-		echo $output;
+		// echo $output;
 	}
 
 	public function check_multiple_account($email) {
@@ -52,7 +52,7 @@ class Forgot extends OPRS_Controller {
 				$email = $user_category[0]->usr_username;
 
 			}else{ // oprs user
-				if( $user_category[0]->usr_role == 5 ){
+				if( $user_category[0]->usr_role == 16){
 					// reviewer
 					$reviewer_info = $this->User_model->get_reviewer_info_by_id($id);
 					$user_id = $reviewer_info[0]->rev_id;

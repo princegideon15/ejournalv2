@@ -524,155 +524,155 @@ class Email extends OPRS_Controller {
 	public function check_process_status(){
 		$output = $this->Review_model->get_process_status();
 		$author_name = '';
-
-		var_dump($output);exit;
-
+		// var_dump($output);exit;
 		if($output){
 			foreach ($output as $row) {
-	//TODO: fix email reminder for cluster or do not add process status if cluster review is not completed
+				
 				$info = $this->Manuscript_model->get_manus_info($row->ps_man_id);
-				// $manuscript = $info[0]->man_title;
 
-				// if($row->ps_role_id == NULL){
-				// 	// var_dump($info);exit;
-				// 	// check if has current cluster editor review pending
-				// 	$cluster_editors = $this->Review_model->get_cluster_editor_status($row->ps_man_id);
+				$manuscript = $info[0]->man_title;
 
-				// 	if($cluster_editors){
+				// for cluster only
+				if($row->ps_role_id == NULL && $row->ps_processor_id != 1){
+					// check if has current cluster editor review pending
+					$cluster_editors = $this->Review_model->get_cluster_editor_status($row->ps_man_id);
 
-				// 		$count_no_cluster_review_status = 0;
-				// 		foreach($cluster_editors as $clued){
+					var_dump($cluster_editors);exit;
+					if($cluster_editors){
 
-				// 			if($clued->edit_status == NULL){
-				// 				$count_no_cluster_review_status++;
-				// 			}
-				// 		}
+						$count_no_cluster_review_status = 0;
+						foreach($cluster_editors as $clued){
 
-				// 		if(count($cluster_editors) != $count_no_cluster_review_status){
+							if($clued->edit_status == NULL){
+								$count_no_cluster_review_status++;
+							}
+						}
+
+						if(count($cluster_editors) != $count_no_cluster_review_status){
 		
-				// 			$next_processor_info = $this->User_model->get_processor_by_id($cluster_editors[0]->edit_usr_id);
-				// 			$next_processor_email = $next_processor_info[0]->usr_username;
+							$next_processor_info = $this->User_model->get_processor_by_id($cluster_editors[0]->edit_usr_id);
+							$next_processor_email = $next_processor_info[0]->usr_username;
 							
-				// 			// refer to tblemail_notif_contents
-				// 			$email_content_id = 23;
+							// refer to tblemail_notif_contents
+							$email_content_id = 23;
 
-				// 			// email config
-				// 			// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
-				// 			$link_to = base_url() . 'oprs/login';
-				// 			$sender = 'eReview';
-				// 			$sender_email = 'nrcp.ejournal@gmail.com';
-				// 			$password = 'fpzskheyxltsbvtg';
+							// email config
+							// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
+							$link_to = base_url() . 'oprs/login';
+							$sender = 'eReview';
+							$sender_email = 'nrcp.ejournal@gmail.com';
+							$password = 'fpzskheyxltsbvtg';
 				
-				// 			$mail = new PHPMailer;
-				// 			$mail->isSMTP();
-				// 			$mail->Host = "smtp.gmail.com";
-				// 			// Specify main and backup server
-				// 			$mail->SMTPAuth = true;
-				// 			$mail->Port = 465;
-				// 			// Enable SMTP authentication
-				// 			$mail->Username = $sender_email;
-				// 			// SMTP username
-				// 			$mail->Password = $password;
-				// 			// SMTP password
-				// 			$mail->SMTPSecure = 'ssl';
-				// 			// Enable encryption, 'ssl' also accepted
-				// 			$mail->From = $sender_email;
-				// 			$mail->FromName = $sender;
-				// 			$mail->AddAddress($next_processor_email);
+							$mail = new PHPMailer;
+							$mail->isSMTP();
+							$mail->Host = "smtp.gmail.com";
+							// Specify main and backup server
+							$mail->SMTPAuth = true;
+							$mail->Port = 465;
+							// Enable SMTP authentication
+							$mail->Username = $sender_email;
+							// SMTP username
+							$mail->Password = $password;
+							// SMTP password
+							$mail->SMTPSecure = 'ssl';
+							// Enable encryption, 'ssl' also accepted
+							$mail->From = $sender_email;
+							$mail->FromName = $sender;
+							$mail->AddAddress($next_processor_email);
 				
-				// 			$email_contents = $this->Email_model->get_email_content($email_content_id);
+							$email_contents = $this->Email_model->get_email_content($email_content_id);
 				
-				// 			foreach($email_contents as $row){
-				// 				$email_subject = $row->enc_subject;
-				// 				$email_body = $row->enc_content;
+							foreach($email_contents as $row){
+								$email_subject = $row->enc_subject;
+								$email_body = $row->enc_content;
 					
-				// 				if( strpos($row->enc_cc, ',') !== false ) {
-				// 					$email_cc = explode(',', $row->enc_cc);
-				// 				}else{
-				// 					$email_cc = array();
-				// 					array_push($email_cc, $row->enc_cc);
-				// 				}
+								if( strpos($row->enc_cc, ',') !== false ) {
+									$email_cc = explode(',', $row->enc_cc);
+								}else{
+									$email_cc = array();
+									array_push($email_cc, $row->enc_cc);
+								}
 					
-				// 				if( strpos($row->enc_bcc, ',') !== false ) {
-				// 					$email_bcc = explode(',', $row->enc_bcc);
-				// 				}else{
-				// 					$email_bcc = array();
-				// 					array_push($email_bcc, $row->enc_bcc);
-				// 				}
+								if( strpos($row->enc_bcc, ',') !== false ) {
+									$email_bcc = explode(',', $row->enc_bcc);
+								}else{
+									$email_bcc = array();
+									array_push($email_bcc, $row->enc_bcc);
+								}
 					
-				// 				if( strpos($row->enc_user_group, ',') !== false ) {
-				// 					$email_user_group = explode(',', $row->enc_user_group);
-				// 				}else{
-				// 					$email_user_group = array();
-				// 					array_push($email_user_group, $row->enc_user_group);
-				// 				}
+								if( strpos($row->enc_user_group, ',') !== false ) {
+									$email_user_group = explode(',', $row->enc_user_group);
+								}else{
+									$email_user_group = array();
+									array_push($email_user_group, $row->enc_user_group);
+								}
 								
-				// 			}
+							}
 					
-				// 			// add exisiting email as cc
-				// 			if(count($email_user_group) > 0){
-				// 				$user_group_emails = array();
-				// 				foreach($email_user_group as $grp){
-				// 					$username = $this->Email_model->get_user_group_emails($grp);
-				// 					array_push($user_group_emails, $username);
-				// 				}
-				// 			}
+							// add exisiting email as cc
+							if(count($email_user_group) > 0){
+								$user_group_emails = array();
+								foreach($email_user_group as $grp){
+									$username = $this->Email_model->get_user_group_emails($grp);
+									array_push($user_group_emails, $username);
+								}
+							}
 					
-				// 			// add cc if any
-				// 			if(count($email_cc) > 0){
-				// 				foreach($email_cc as $cc){
-				// 					$mail->AddCC($cc);
-				// 				}
-				// 			}
+							// add cc if any
+							if(count($email_cc) > 0){
+								foreach($email_cc as $cc){
+									$mail->AddCC($cc);
+								}
+							}
 					
-				// 			// add bcc if any
-				// 			if(count($email_bcc) > 0){
-				// 				foreach($email_bcc as $bcc){
-				// 					$mail->AddBCC($bcc);
-				// 				}
-				// 			}
+							// add bcc if any
+							if(count($email_bcc) > 0){
+								foreach($email_bcc as $bcc){
+									$mail->AddBCC($bcc);
+								}
+							}
 					
-				// 			// add existing as cc
-				// 			if(count($user_group_emails) > 0){
-				// 				foreach($user_group_emails as $grp){
-				// 					$mail->AddCC($grp);
-				// 				}
-				// 			}
+							// add existing as cc
+							if(count($user_group_emails) > 0){
+								foreach($user_group_emails as $grp){
+									$mail->AddCC($grp);
+								}
+							}
 					
-				// 			// replace reserved words
-				// 			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
-				// 			https://researchjournal.nrcp.dost.gov.ph</a>";
-				// 			$emailBody = str_replace('[LINK]', $link, $email_body);
-				// 			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+							// replace reserved words
+							$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+							https://researchjournal.nrcp.dost.gov.ph</a>";
+							$emailBody = str_replace('[LINK]', $link, $email_body);
+							$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+					
+							// send email
+							$mail->Subject = $email_subject . ' (REMINDER)';
+							$mail->Body = $emailBody;
+							$mail->IsHTML(true);
+							$mail->smtpConnect([
+								'ssl' => [
+									'verify_peer' => false,
+									'verify_peer_name' => false,
+									'allow_self_signed' => true,
+								],
+							]);
+					
+							if (!$mail->Send()) {
+								echo '</br></br>Message could not be sent.</br>';
+								echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
+								exit;
+							}
 
-				// 			// add author info
-				// 			if($author_name){
-				// 				$emailBody = str_replace('[FULL NAME]', $author_name, $emailBody);
-				// 				$emailBody = str_replace('[TITLE]', $title, $emailBody);
-				// 			}
+							
+							$mail->ClearAllRecipients();
+						}
 
+					}
+				}
+				
+				// other processor
+				if(isset($row->ps_role_id) || isset($row->ps_processor_id)){
 					
-				// 			// send email
-				// 			$mail->Subject = $email_subject . ' (REMINDER)';
-				// 			$mail->Body = $emailBody;
-				// 			$mail->IsHTML(true);
-				// 			$mail->smtpConnect([
-				// 				'ssl' => [
-				// 					'verify_peer' => false,
-				// 					'verify_peer_name' => false,
-				// 					'allow_self_signed' => true,
-				// 				],
-				// 			]);
-					
-				// 			if (!$mail->Send()) {
-				// 				echo '</br></br>Message could not be sent.</br>';
-				// 				echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
-				// 				exit;
-				// 			}
-				// 		}
-
-				// 	}
-				// }
 					foreach ($info as $value) {
 						$manuscript = $value->man_title;
 						if($value->man_status == 1){ // new, on-review tedeed
@@ -738,7 +738,15 @@ class Email extends OPRS_Controller {
 							$author_name = $author[0]->man_author;
 							$title = $author[0]->man_author_title;
 		
-						} else if($value->man_status == 10){ // author revision
+						} else if($value->man_status == 18){ // submited revision
+		
+							$next_processor_info = $this->User_model->get_processor_by_role($row->ps_role_id);
+							$next_processor_email = $next_processor_info[0]->usr_username;
+							
+							// refer to tblemail_notif_contents
+							$email_content_id = 14;
+		
+						}  else if($value->man_status == 10){ // author revision
 	
 							// get man author email
 							$author = $this->Review_model->get_manus_author_info($row->ps_man_id);
@@ -769,13 +777,6 @@ class Email extends OPRS_Controller {
 		
 						}  
 					}
-					
-		
-					$next_processor_info = $this->User_model->get_processor_by_id($cluster_editors[0]->edit_usr_id);
-					$next_processor_email = $next_processor_info[0]->usr_username;
-					
-					// refer to tblemail_notif_contents
-					$email_content_id = 23;
 
 					// email config
 					// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
@@ -866,7 +867,7 @@ class Email extends OPRS_Controller {
 					$emailBody = str_replace('[LINK]', $link, $email_body);
 					$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
 
-					// add author info
+					// // add author info
 					if($author_name){
 						$emailBody = str_replace('[FULL NAME]', $author_name, $emailBody);
 						$emailBody = str_replace('[TITLE]', $title, $emailBody);
@@ -890,6 +891,9 @@ class Email extends OPRS_Controller {
 						echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
 						exit;
 					}
+				}
+					
+				// echo 'here';
 			}
 		}
 	}

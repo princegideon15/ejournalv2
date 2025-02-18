@@ -520,6 +520,14 @@ class Manuscripts extends OPRS_Controller {
 			$post['man_status'] = 5;
 		}
 
+		// update process status
+		$process['ps_status'] = 1;
+		$process['ps_action_date'] = date('Y-m-d H:i:s');
+		$where_process['ps_man_id'] = $id;
+		$where_process['ps_role_id'] = 5;
+		$where_process['ps_status'] = 0;
+		$this->Review_model->update_process_status(array_filter($process), $where_process);
+
 		// if($status == 1){
 		// 	// send email on-review
 		// 	$this->notify_author_on_review($id);
@@ -1773,6 +1781,17 @@ class Manuscripts extends OPRS_Controller {
 		$man_id = $this->input->post('cons_man_id', true);
 		$status = $this->input->post('cons_revise', TRUE);
 
+				
+		// update process status
+		$process['ps_status'] = 1;
+		$process['ps_action_date'] = date('Y-m-d H:i:s');
+		$where_process['ps_man_id'] = $man_id;
+		$where_process['ps_role_id'] = 5;
+		$where_process['ps_status'] = 0;
+		$this->Review_model->update_process_status(array_filter($process), $where_process);
+
+		$process = array(); $where_process = array();
+
 		$post['cons_man_id'] = $man_id; 
 		$post['cons_usr_id'] = _UserIdFromSession(); 
 		$post['cons_remarks'] = $this->input->post('cons_remarks', true);
@@ -1832,6 +1851,7 @@ class Manuscripts extends OPRS_Controller {
 			$title = $value->man_author_title;
 			$author = $value->man_author;
 			$email = $value->man_email;
+			$man_user_id = $value->man_user_id;
 		}
 		
 		// email notification condition
@@ -1841,6 +1861,14 @@ class Manuscripts extends OPRS_Controller {
 			$email_contents = $this->Email_model->get_email_content(13);
 
 			$mail->AddAddress($email);
+
+			// save process for auto reminder email notificiation
+			$email_contents = $this->Email_model->get_email_content(13);
+			$process['ps_man_id'] = $man_id;
+			$process['ps_processor_id'] = $man_user_id;
+			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
+			$this->Review_model->save_process_status(array_filter($process));
+
 		}else{ // no revision
 			$man['man_status'] = 7;
 			$track['trk_description'] = 'Endorsed to Copy Editor for Proofreading';
@@ -1854,6 +1882,13 @@ class Manuscripts extends OPRS_Controller {
 			}
 
 			$mail->AddAddress($next_processor_email);
+		
+			// save process for auto reminder email notificiation
+			$email_contents = $this->Email_model->get_email_content(12);
+			$process['ps_man_id'] = $man_id;
+			$process['ps_role_id'] = 17;
+			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
+			$this->Review_model->save_process_status(array_filter($process));
 		}
 
 		// update manuscript status
@@ -4664,12 +4699,14 @@ class Manuscripts extends OPRS_Controller {
 		$where_process['ps_processor_id'] = _UserIdFromSession(); 
 		$where_process['ps_status'] = 0;
 		$this->Review_model->update_process_status(array_filter($process), $where_process);
+
 		$process = array(); $where_process = array();
+
 		// udpate manuscript, status
 		$post = array();
 		$post['man_pages'] = $man_pages;
-		$post['man_status'] = ($revision_status == 2) ? 6 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
-		$post['man_revision_status'] = ($revision_status == 2) ? 1 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 0);
+		$post['man_status'] = ($revision_status == 1) ? 18 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
+		$post['man_revision_status'] = ($revision_status == 1) ? 1 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 0);
 		$post['man_process_date'] = date('Y-m-d H:i:s');
 
 		// full manuscript
@@ -4723,7 +4760,7 @@ class Manuscripts extends OPRS_Controller {
 		$this->Manuscript_model->update_manuscript_status(array_filter($post), $where);
 
 
-		if($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
+		if($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
 			$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
 			// server
 			// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
@@ -4748,7 +4785,8 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 
-		if($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
+
+		if($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
 			$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
 			// server
 			// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
@@ -4773,7 +4811,7 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 		
-		if($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
+		if($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
 			$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
 			// server
 			// $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
@@ -4798,7 +4836,7 @@ class Manuscripts extends OPRS_Controller {
 			$data = $this->upload->data();
 		}
 		
-		if($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
+		if($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
 			$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_latex/';
 			// server
 			// $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/revised_latex/';
@@ -4825,7 +4863,7 @@ class Manuscripts extends OPRS_Controller {
 			}
 		}
 
-		if($revision_status == 2){
+		if($revision_status == 1){
 			// add uploaded matrix
 			$post = array();
 	
@@ -4867,7 +4905,7 @@ class Manuscripts extends OPRS_Controller {
 
 		// save tracking
 		$track['trk_man_id'] = $man_id;
-		$track['trk_description'] = ($revision_status == 2 || $criteria_status == 2 || $editor_review_status == 10) ? 'Uploaded revision' : 'Uploaded final revision';
+		$track['trk_description'] = ($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10) ? 'Uploaded revision' : 'Uploaded final revision';
 		$track['trk_processor'] = _UserIdFromSession();
 		$track['trk_process_datetime'] = date('Y-m-d H:i:s');
 		$this->Manuscript_model->tracking(array_filter($track));
@@ -4904,7 +4942,7 @@ class Manuscripts extends OPRS_Controller {
 			$email = $value->man_email;
 		}
 
-		if($revision_status == 2 || $criteria_status == 2){
+		if($revision_status == 1 || $criteria_status == 2){
 			$next_processor_info = $this->User_model->get_processor_by_role(5);
 			// get email notification content
 			$email_contents = $this->Email_model->get_email_content(14);

@@ -10458,6 +10458,12 @@ function submit_consolidation(){
     $('#cons_man_id').val(man_id);
 }
 
+//TODO:check resubmission of revised in consolition
+function submit_revision_consolidation(id){
+    $('#consolidationModal').modal('toggle');
+    $('#cons_man_id').val(man_id);
+}
+
 function checkOnlyOne(checkbox) {
     let name = $(checkbox).attr('name');
     const checkboxes = document.querySelectorAll('input[name="' + name + '"]');
@@ -10480,7 +10486,7 @@ function upload_revision(man_id){
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            console.log("🚀 ~ upload_revision ~ data:", data)
+            // console.log("🚀 ~ upload_revision ~ data:", data)
             $.each(data, function(key, val){
                 if(val.tr_final == 2){
                     $('#criteria_review_result').removeClass('d-none');
@@ -10526,7 +10532,7 @@ function upload_revision(man_id){
                 // technical desk editor consolidate peer review results
                 $('#revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'" target="_blank">Download</a>');
                 $('#revision_remarks').text(val.cons_remarks);
-                $('#revision_status').text(val.cons_status);
+                $('#revision_status').val(val.cons_status);
 
                 if(val.cons_status == 3){
                     $('#revision_matrix_template').hide();

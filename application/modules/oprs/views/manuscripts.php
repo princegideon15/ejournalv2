@@ -134,9 +134,12 @@
 									<li class="nav-item" role="presentation">
 										<button class="nav-link" id="peer-tab" data-bs-toggle="tab" data-bs-target="#peer-tab-pane" type="button" role="tab" aria-controls="peer-tab-pane" aria-selected="false">Endorsement to Peer <?php if($man_peer_count >0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $man_peer_count; ?></span><?php } ?></button>
 									</li>
-									<li class="nav-item" role="presentation">
+									<!-- <li class="nav-item" role="presentation">
 										<button class="nav-link" id="review-consolidated-tab" data-bs-toggle="tab" data-bs-target="#review-consolidated-tab-pane" type="button" role="tab" aria-controls="review-consolidated-tab-pane" aria-selected="false">Review Consolidated <?php if($rev_cons_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $rev_cons_count; ?></span><?php } ?></button>
-									</li>
+									</li> -->
+									<!-- <li class="nav-item" role="presentation">
+										<button class="nav-link" id="review-consolidated-tab" data-bs-toggle="tab" data-bs-target="#review-consolidated-tab-pane" type="button" role="tab" aria-controls="review-consolidated-tab-pane" aria-selected="false">Revised<?php if($rev_cons_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $rev_cons_count; ?></span><?php } ?></button>
+									</li> -->
 									<li class="nav-item" role="presentation">
 										<button class="nav-link" id="proofread-coped-tab" data-bs-toggle="tab" data-bs-target="#proofread-coped-tab-pane" type="button" role="tab" aria-controls="proofread-coped-tab-pane" aria-selected="false">Proofread Copy Editor <?php if($prf_cop_count > 0){?><span class="badge rounded-pill text-bg-secondary"><?php echo $prf_cop_count; ?></span><?php } ?></button>
 									</li>
@@ -511,6 +514,56 @@
 														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
 														<td>
 															<div class="btn-groupx d-flex gap-1" role="group">
+
+															<?php if (_UserRoleFromSession() == 5) { 
+																	if($m->man_status == 1){ ?>
+																		<!-- process manuscript -->
+																		<button type="button" class="btn btn-outline-primary"
+																			onclick="tech_rev_criterion(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)" rel="tooltip"
+																			data-bs-placement="top" title="Process"><span
+																				class="fas fa-gear"></span></button>
+																	
+
+																		<?php }else if($m->man_status == 15){ ?>
+																		<!-- process manuscript -->
+																		<button type="button" class="btn btn-outline-success"
+																			onclick="process_man(<?php echo $m->row_id; ?>,<?php echo $m->man_status; ?>)"
+																			data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip"
+																			data-bs-placement="top" title="Add Reviewers"><span
+																				class="fas fa-user-plus"></span></button>
+																		<?php }else if($m->man_status == 5){ ?>
+																		<!-- view reviewers -->
+																		<button type="button" class="btn border border-1 btn-light text-info"
+																			onclick="view_reviewers('<?php echo $m->row_id; ?>','0','<?php echo rawurlencode($title); ?>','<?php echo $m->man_status; ?>')"
+																			data-bs-toggle="modal" data-bs-target="#reviewerModal" rel="tooltip"
+																			data-bs-placement="top" title="View Reviewers"><span
+																				class="fas fa-users"></span></button>
+																		<!-- <button type="button" class="btn btn-light btn-sm"
+																			onclick="view_reviews('<?php echo $m->row_id; ?>','<?php echo rawurlencode($title); ?>')"
+																			data-bs-toggle="modal" data-bs-target="#reviewsModal" rel="tooltip" data-bs-placement="top"
+																			title="View Reviews"><span class="fa fa-eye"></span> View Reviews
+																		</button> -->
+																		<?php }else if($m->man_status == 6){ ?>
+																			<button type="button" class="btn btn-outline-primary"
+																			onclick="endorse_coped('<?php echo $m->row_id; ?>')"
+																			data-bs-toggle="modal" data-bs-target="#checkRevisionModal" rel="tooltip"
+																			data-bs-placement="top" title="Endorse to Copy Editor"><span
+																				class="fas fa-gear"></span></button>
+																		<?php }else if($m->man_status == 8){ ?>
+																			<!-- publish to ejournal -->
+																			<!-- <button type="button" class="btn border border-1 btn-light text-success"
+																			onclick="publish_to_ejournal('<?php echo $m->row_id; ?>')"
+																			data-bs-toggle="modal" data-bs-target="#publishModal" rel="tooltip"
+																			data-bs-placement="top" title="Publish to eJournal"><span
+																				class="fas fa-paper-plane"></span></button> -->
+																		<?php } ?>
+
+																	
+																		<!-- view manuscript details -->
+																		<button type="button" class="btn btn-outline-secondary" rel="tooltip"
+																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
+																<?php } ?>
+
 																<!-- SUPERADMIN/MANAGING EDITOR-->
 																<?php if (_UserRoleFromSession() == 20 || _UserRoleFromSession() == 3) { ?>
 																	<!-- view reviewers -->
@@ -1047,6 +1100,19 @@
 														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
 														<td>
 															<div class="btn-groupx d-flex gap-1" role="group">
+																
+																<!-- TECHNICAL DESK EDITOR -->
+																<?php if (_UserRoleFromSession() == 5) { 
+																	if($m->man_status == 17){ ?>
+																		<!-- process manuscript -->
+																		<button type="button" class="btn btn-outline-primary"
+																			onclick="submit_revision_consolidation(<?php echo $m->row_id; ?>)" rel="tooltip"
+																			data-bs-placement="top" title=""><span
+																				class="fas fa-gear"></span></button>
+
+																	<?php } ?>
+																<?php } ?>
+
 																	<!-- view manuscript details -->
 																	<button type="button" class="btn btn-outline-secondary" rel="tooltip"
 																		data-bs-placement="top" title="View" onclick="view_manus(<?php echo $m->row_id; ?>);"><span class="fa fa-eye"></span></button>
