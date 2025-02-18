@@ -670,6 +670,7 @@ class Email extends OPRS_Controller {
 					}
 				}
 				
+		// var_dump($info);exit;
 				// other processor
 				if(isset($row->ps_role_id) || isset($row->ps_processor_id)){
 					
@@ -724,7 +725,7 @@ class Email extends OPRS_Controller {
 							$next_processor_email = $next_processor_info[0]->usr_username;
 							
 							// refer to tblemail_notif_contents
-							$email_content_id = 14;
+							$email_content_id = 15;
 		
 						} else if($value->man_status == 9){ // author proofread
 	
@@ -738,7 +739,7 @@ class Email extends OPRS_Controller {
 							$author_name = $author[0]->man_author;
 							$title = $author[0]->man_author_title;
 		
-						} else if($value->man_status == 18){ // submited revision
+						} else if($value->man_status == 17){ // submited revision
 		
 							$next_processor_info = $this->User_model->get_processor_by_role($row->ps_role_id);
 							$next_processor_email = $next_processor_info[0]->usr_username;
@@ -761,7 +762,7 @@ class Email extends OPRS_Controller {
 						} else if($value->man_status == 11){ // layout artist
 		
 							$next_processor_info = $this->User_model->get_processor_by_role($row->ps_role_id);
-							$next_processor_email = $row->usr_username;
+							$next_processor_email = $next_processor_info[0]->usr_username;
 							
 							// refer to tblemail_notif_contents
 							$email_content_id = 17;
@@ -773,6 +774,17 @@ class Email extends OPRS_Controller {
 							
 							// refer to tblemail_notif_contents
 							$email_content_id = 15;
+		
+		
+						}  else if($value->man_status == 18){ // author final proofread
+		
+							$author = $this->Review_model->get_manus_author_info($row->ps_man_id);
+							$next_processor_email = $author[0]->man_email;
+							$author_name = $author[0]->man_author;
+							$title = $author[0]->man_author_title;
+							
+							// refer to tblemail_notif_contents
+							$email_content_id = 18;
 		
 		
 						}  

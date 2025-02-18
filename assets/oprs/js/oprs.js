@@ -5900,7 +5900,7 @@ $(document).ready(function() {
         errorClass: 'text-danger',
         rules: {
             coped_file: {
-                // required: true,
+                required: true,
                 extension: "pdf",
             },
             coped_remarks: {
@@ -6260,6 +6260,94 @@ $(document).ready(function() {
                         success: function(data) {
                             $('body').loading('stop');
                             $('#submit_proofread_revision_form')[0].reset();
+                            Swal.fire({
+                            title: "Revision submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
+
+    $("#submit_proofread_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            man_abs : {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_file: {
+                required: true,
+                extension: "pdf",
+                filesize : 20000000,
+            },
+            man_word: {
+                required: true,
+                extension: "doc|docx",
+                filesize : 20000000,
+            },
+            man_latex: {
+                texFile: true, // Use the custom rule
+                filesize : 20000000,
+            },
+            man_pages: {
+                required: true,
+            }
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#uploadProofreadModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#submit_proofread_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/submit_final_proofread_revision",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#submit_proofread_form')[0].reset();
                             Swal.fire({
                             title: "Revision submitted successfully!",
                             icon: 'success',
@@ -10458,10 +10546,9 @@ function submit_consolidation(){
     $('#cons_man_id').val(man_id);
 }
 
-//TODO:check resubmission of revised in consolition
 function submit_revision_consolidation(id){
     $('#consolidationModal').modal('toggle');
-    $('#cons_man_id').val(man_id);
+    $('#cons_man_id').val(id);
 }
 
 function checkOnlyOne(checkbox) {
@@ -10543,14 +10630,15 @@ function upload_revision(man_id){
     });
 }
 
-function upload_proofread_revision(man_id){
+function upload_final_proofread(man_id){
 
-    $('#uploadProofreadRevisionModal').modal('toggle');
+    $('#uploadProofreadModal').modal('toggle');
     $('#layout_file').empty();
     $('#layout_remarks').text('');
-    $('#submit_proofread_revision_form #man_id').val(man_id);
-    
-    //get layout
+    $('#submit_proofread_form #man_id').val(man_id);
+
+        
+    // get layout
     $.ajax({
         type: "GET",
         url: base_url + "oprs/manuscripts/get_layout/" + man_id,
@@ -10561,6 +10649,38 @@ function upload_proofread_revision(man_id){
                 // technical desk editor consolidate peer review results
                 $('#layout_file').append('<a href="'+ base_url + 'assets/oprs/uploads/layouts/' + val.lay_file +'" target="_blank">Download</a>');
                 $('#layout_remarks').text(val.lay_remarks);
+            });
+        }
+    });
+    
+
+}
+
+function upload_proofread_revision(man_id){
+
+    $('#uploadProofreadRevisionModal').modal('toggle');
+    $('#coped_rev_file').empty();
+    $('#coped_rev_remarks').text('');
+    $('#submit_proofread_revision_form #man_id').val(man_id);
+
+    //get copy editor review
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_consolidation/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){    
+                // technical desk editor consolidate peer review results
+                $('#coped_rev_file').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'" target="_blank">Download</a>');
+                $('#coped_rev_remarks').text(val.cons_remarks);
+                // $('#revision_status').val(3);
+                // $('#revision_status').val(val.cons_status);
+
+                // if(val.cons_status == 3){
+                //     $('#revision_matrix_template').hide();
+                //     $("#div_man_matrix").hide();
+                // }
             });
         }
     });

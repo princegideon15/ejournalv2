@@ -107,6 +107,11 @@
 															data-bs-placement="top" title="Upload Revision" onclick="upload_proofread_revision(<?php echo $m->row_id; ?>)"><span class="fa fa-edit"></span></button>
 														<?php } ?>
 														
+														<?php if($m->man_status == 18){ ?>
+															<!-- for proofread -->
+															<button type="button" class="btn btn-outline-primary" rel="tooltip"
+															data-bs-placement="top" title="Upload Revision" onclick="upload_final_proofread(<?php echo $m->row_id; ?>)"><span class="fa fa-edit"></span></button>
+														<?php } ?>
 													</div>
 												</td>
 											</tr>
