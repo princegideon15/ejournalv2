@@ -1055,8 +1055,10 @@
 				<!-- <a href="javascript:void(0);" id="new_rev" data-bs-toggle="modal" data-bs-target="#processModal"
                     class="btn btn-primary"><span class="fa fa-search"></span> Find new reviewer</a> -->
 				<?php } ?>
+				<button class="btn btn-outline-success" type="button" id="add_more_reviewers" data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip" data-bs-placement="top" title="Add Reviewers">
+					<span class="fas fa-user-plus"></span></button>
+				<button class="btn btn-primary" type="button" id="view_review_results">Review Results</button>
 				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-				<button class="btn btn-primary" type="button" id="view_review_results">View Review Results</button>
 			</div>
 		</div>
 	</div>

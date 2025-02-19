@@ -5888,7 +5888,7 @@ class Manuscripts extends OPRS_Controller {
 		// final revision
 		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 		// server
-		// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/'
+		// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 	
 		// upload full manuscript
 		$config_abs['upload_path'] = $dir_abs;
@@ -6177,7 +6177,7 @@ class Manuscripts extends OPRS_Controller {
 		// final revision
 		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 		// server
-		// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/'
+		// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 	
 		// upload full manuscript
 		$config_abs['upload_path'] = $dir_abs;

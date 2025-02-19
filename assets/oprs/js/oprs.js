@@ -6935,6 +6935,7 @@ function show_hidden_manus() {
 // show all reviewers per manuscript
 function view_reviewers(id, time, title, status) {
     
+    $('#add_more_reviewers').attr('onclick', "process_man(" + id + ",'" + status + "')");
     $('#view_review_results').attr('onclick', "view_reviews(" + id + ",'" + title + "')");
 
     var manuscript_title = decodeURIComponent(title);
@@ -8107,7 +8108,8 @@ function logout(){
     current_button_id = '#submit_feedback';
     $('#feedbackModal').modal('toggle');
     recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
-        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+        // 'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+        'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // for test
         'callback': onRecaptchaSuccess,
         'expired-callback': onRecaptchaExpired
     });

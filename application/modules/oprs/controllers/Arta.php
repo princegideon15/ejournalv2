@@ -29,10 +29,14 @@ class Arta extends OPRS_Controller {
 		$this->load->model('Log_model');
 		$this->load->model('User_model');
 		$this->load->model('Manuscript_model');
-		$this->load->model('client/CSF_model');
+		// $this->load->model('client/CSF_model');
 		$this->load->helper('is_online_helper');
-		$this->load->model('oprs/Library_model');
+		// $this->load->model('oprs/Library_model');
+		$this->load->model('Library_model');
 		$this->load->model('Arta_model');
+
+		
+		$this->load->model('../modules/client/models/CSF_model');
     }
 
 	/**

@@ -32,7 +32,8 @@ class Backup extends OPRS_Controller {
         $this->load->model('Manuscript_model');
         $this->load->model('Arta_model');
 		$this->load->helper('is_online_helper');
-		$this->load->model('client/Library_model');
+		// $this->load->model('client/Library_model');
+		$this->load->model('../modules/client/models/CSF_model');
     }
 
     public function index(){
