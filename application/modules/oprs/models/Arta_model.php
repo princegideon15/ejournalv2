@@ -159,6 +159,7 @@ class Arta_model extends CI_Model {
 		$this->db->from($this->sqd);
 		$query = $this->db->get();
 		return $query->result();
+		
 	}
 
 }

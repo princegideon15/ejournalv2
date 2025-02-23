@@ -131,6 +131,7 @@ class Statistics_model extends CI_Model {
 		return $results;
 
     }
+	
     public function get_author_by_sex_stats($from = null, $to = null){
 		
 		$oprs = $this->load->database('dboprs', TRUE);
