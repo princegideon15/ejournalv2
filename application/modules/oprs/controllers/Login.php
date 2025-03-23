@@ -133,7 +133,7 @@ class Login extends OPRS_Controller {
 				$user_account = $this->Login_model->check_multiple_account($email);
 
 				//check if account activated
-				if($validateUser[0]->usr_status == 1){
+				if($validateUser[0]->usr_status <= 1){
 					if (password_verify($password, $validateUser[0]->usr_password)) {
 						if(count($user_account) > 1){
 							$this->session->set_flashdata('email', $email);
@@ -397,7 +397,6 @@ class Login extends OPRS_Controller {
 				$this->Login_model->delete_otp_oprs($isOtpRefExist[0]->usr_id);
 				$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
 			}
-
 			
 			if($isOtpRefExist[0]->otp_ref_code == null){ //link expired
 				

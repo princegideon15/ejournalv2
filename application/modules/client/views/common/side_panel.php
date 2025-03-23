@@ -27,10 +27,10 @@
         </div>
     </div>
 
-    <?php if(!$logged_in){
+    <!-- <?php if(!$logged_in){
             echo '<div class="sticky-top pt-3"><a type="button" class="btn main-btn w-100 login-btn" href="'.base_url('client/login').'" >
             Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a></div>';
-    }?>
+    }?> -->
 
     
 <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/crossref.jfif"); ?>" alt="crossref" width="100%" height="50px">

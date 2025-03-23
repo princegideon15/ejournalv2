@@ -179,11 +179,11 @@ class Ejournal extends EJ_Controller {
 
 		//copy file to another directory
 		//local
-		$file_path = $_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/' . $file;
+		// $file_path = $_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/' . $file;
 		
 		//server manuscript
 		// $from = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/' . $file;
-		// $to = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
+		$file_path = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
 
 
 		// save blank arta
@@ -717,19 +717,19 @@ class Ejournal extends EJ_Controller {
 		$config['reuse_query_string'] = true;
 		$config['first_link'] = 'First';
 		$config['last_link'] = 'Last';
-		$config['first_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['first_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 		$config['first_tag_close'] = '</span></li>';
 		$config['prev_link'] = 'Previous';
-		$config['prev_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['prev_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 		$config['prev_tag_close'] = '</span></li>';
 		$config['next_link'] = 'Next';
-		$config['next_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['next_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 		$config['next_tag_close'] = '</span></li>';
-		$config['last_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['last_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 		$config['last_tag_close'] = '</span></li>';
-		$config['cur_tag_open'] = '<li class="page-item"><span class="page-link text-white main-bg-color">';
+		$config['cur_tag_open'] = '<li class="page-item"><span class="text-white main-bg-color page-link">';
 		$config['cur_tag_close'] = '</span></li>';
-		$config['num_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+		$config['num_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 		$config['num_tag_close'] = '</span></li>';
 
 
@@ -860,19 +860,19 @@ class Ejournal extends EJ_Controller {
 			$config['reuse_query_string'] = true;
 			$config['first_link'] = 'First';
 			$config['last_link'] = 'Last';
-			$config['first_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['first_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 			$config['first_tag_close'] = '</span></li>';
 			$config['prev_link'] = 'Previous';
-			$config['prev_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['prev_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 			$config['prev_tag_close'] = '</span></li>';
 			$config['next_link'] = 'Next';
-			$config['next_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['next_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 			$config['next_tag_close'] = '</span></li>';
-			$config['last_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['last_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 			$config['last_tag_close'] = '</span></li>';
-			$config['cur_tag_open'] = '<li class="page-item"><span class="page-link text-white main-bg-color">';
+			$config['cur_tag_open'] = '<li class="page-item"><span class="text-white main-bg-color page-link">';
 			$config['cur_tag_close'] = '</span></li>';
-			$config['num_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+			$config['num_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 			$config['num_tag_close'] = '</span></li>';
 	
 	
@@ -1360,7 +1360,7 @@ class Ejournal extends EJ_Controller {
 	public function article($id){
 		// data to display
 		$data['article'] = $this->Client_journal_model->get_article($id);
-		$data['volumes'] = $journals;
+		// $data['volumes'] = $journals;
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['popular'] = $this->Client_journal_model->top_five();
 		$data['client_count'] = $this->Client_journal_model->all_client();
@@ -1611,19 +1611,19 @@ class Ejournal extends EJ_Controller {
 	// 	$config['reuse_query_string'] = true;
 	// 	$config['first_link'] = 'First';
 	// 	$config['last_link'] = 'Last';
-	// 	$config['first_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['first_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 	// 	$config['first_tag_close'] = '</span></li>';
 	// 	$config['prev_link'] = 'Previous';
-	// 	$config['prev_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['prev_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 	// 	$config['prev_tag_close'] = '</span></li>';
 	// 	$config['next_link'] = 'Next';
-	// 	$config['next_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['next_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 	// 	$config['next_tag_close'] = '</span></li>';
-	// 	$config['last_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['last_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 	// 	$config['last_tag_close'] = '</span></li>';
-	// 	$config['cur_tag_open'] = '<li class="page-item"><span class="page-link text-white main-bg-color">';
+	// 	$config['cur_tag_open'] = '<li class="page-item"><span class="text-white main-bg-color page-link">';
 	// 	$config['cur_tag_close'] = '</span></li>';
-	// 	$config['num_tag_open'] = '<li class="page-item"><span class="page-link main-link">';
+	// 	$config['num_tag_open'] = '<li class="page-item"><span class="main-link page-link">';
 	// 	$config['num_tag_close'] = '</span></li>';
 
 
@@ -1698,7 +1698,7 @@ class Ejournal extends EJ_Controller {
 	// 		echo 'Message could not be sent.</br>';
 	// 		echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
 	// 		echo '</div>';
-	// 		echo '<div class="btn btn-warning btn-block small font-weight-bold" id="send_verification_code" onclick="send_verification_code()" style="font-size:0.9em; width:100%;" title="Click this button to get the verification code emailed to you."><sup class="text-danger font-weight-bold">*</sup>Click the button to get the verification code emailed to you.</div>';
+	// 		echo '<div class="btn btn-block btn-warning font-weight-bold small" id="send_verification_code" onclick="send_verification_code()" style="font-size:0.9em; width:100%;" title="Click this button to get the verification code emailed to you."><sup class="text-danger font-weight-bold">*</sup>Click the button to get the verification code emailed to you.</div>';
 	// 		exit;
 	// 	}else{
 	// 		echo "<div class='alert alert-success font-weight-bold'> Verification code was sent to your email.</div>";
@@ -1871,7 +1871,7 @@ class Ejournal extends EJ_Controller {
 	// 		//$this->load->view('myform');
 	// 		//$error = 400;
 	// 		if(validation_errors()):
-	// 			echo "<div class='alert alert-danger px-1 py-1 font-weight-bold'>".validation_errors()."</div>";
+	// 			echo "<div class='alert alert-danger font-weight-bold px-1 py-1'>".validation_errors()."</div>";
 	// 		endif;
 	// 	}
 	// 	else

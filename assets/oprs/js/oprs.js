@@ -79,7 +79,7 @@ $(document).ready(function() {
             });
         },
         error: function(xhr, status, error) {
-        reject(error);
+        console.log(error);
         }
     }); 
 
@@ -96,7 +96,7 @@ $(document).ready(function() {
             }
         },
         error: function(xhr, status, error) {
-        reject(error);
+        console.log(error);
         }
     }); 
 

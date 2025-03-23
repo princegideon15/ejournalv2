@@ -464,8 +464,8 @@ class Client_journal_model extends CI_Model {
 	/** this function count total pdf downloads of an article */
 	public function count_pdf($id) {
 		$this->db->select('*');
-		$this->db->from($this->clients);
-		$this->db->where('clt_journal_downloaded_id', $id);
+		$this->db->from($this->downloads);
+		$this->db->where('dl_art_id', $id);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}

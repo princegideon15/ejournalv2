@@ -82,13 +82,13 @@
                             <div class="col">
                                 <label class="form-label" for="first_name"><span
                                 class="text-danger fw-bold">*</span>First Name</label>
-                                <input type="first_name" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['first_name']){ echo 'is-invalid';} ?>" id="first_name" name="first_name" value="<?= set_value('first_name', $this->session->flashdata('first_name')); ?>">
+                                <input type="text" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['first_name']){ echo 'is-invalid';} ?>" id="first_name" name="first_name" value="<?= set_value('first_name', $this->session->flashdata('first_name')); ?>">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['first_name'] ?></span>
                             </div>
                             <div class="col">
                                 <label class="form-label" for="last_name"><span
                                 class="text-danger fw-bold">*</span>Last Name</label>
-                                <input type="last_name" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['last_name']){ echo 'is-invalid';} ?>" id="last_name" name="last_name" value="<?= set_value('last_name', $this->session->flashdata('last_name')); ?>">
+                                <input type="text" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['last_name']){ echo 'is-invalid';} ?>" id="last_name" name="last_name" value="<?= set_value('last_name', $this->session->flashdata('last_name')); ?>">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['last_name'] ?></span>
                             </div>
                         </div>
@@ -97,12 +97,12 @@
                         <div class="row">
                             <div class="col">
                                 <label class="form-label" for="middle_name">Middle Name</label>
-                                <input type="middle_name" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['middle_name']){ echo 'is-invalid';} ?>" id="middle_name" name="middle_name" value="<?= set_value('middle_name', $this->session->flashdata('middle_name')); ?>">
+                                <input type="text" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['middle_name']){ echo 'is-invalid';} ?>" id="middle_name" name="middle_name" value="<?= set_value('middle_name', $this->session->flashdata('middle_name')); ?>">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['middle_name'] ?></span>
                             </div>
                             <div class="col">
                                 <label class="form-label" for="extension_name">Extension Name</label>
-                                <input type="extension_name" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['extension_name']){ echo 'is-invalid';} ?>" id="extension_name" name="extension_name" value="<?= set_value('extension_name', $this->session->flashdata('extension_name')); ?>">
+                                <input type="text" class="form-control <?php if($this->session->flashdata('signup_validation_errors')['extension_name']){ echo 'is-invalid';} ?>" id="extension_name" name="extension_name" value="<?= set_value('extension_name', $this->session->flashdata('extension_name')); ?>">
                                 <span class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['extension_name'] ?></span>
                             </div>
                             <div class="col">

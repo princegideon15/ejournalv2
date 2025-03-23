@@ -4,7 +4,9 @@
     // Initialize reCAPTCHA and store the widget ID
     window.onload = function () {
         recaptchaWidgetId_csf_arta = grecaptcha.render('captcha_csf', {
-            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', //gerard site key
+		// 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+	  // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
             'callback': onRecaptchaSuccess,
             'expired-callback': onRecaptchaExpired
         });
@@ -12,10 +14,10 @@
     }
 </script>
 
-<div class="container-fluid mt-2 p-4">
+<div class="container-fluid p-4 mt-2">
 	<div class="row justify-content-center">
 	  <div class="col-8">
-        <div class="border p-5 mb-5 bg-white rounded">
+        <div class="bg-white border p-5 rounded mb-5">
             <h3 class="text-center">HELP US SERVE YOU BETTER!</h3>
             <p>This Client Satsifaction Measurement (CSM) tracks the cusomter experience of government offices.
                 Your feedback on your <span class="text-decoration-underline">recently concluded transaction</span>
@@ -40,8 +42,8 @@
 
                 <div class="row">
                     <div class="col col-4">
-                        <div class="mb-3 row">
-                            <label for="arta_sex" class="col-sm-2 col-form-label fw-bold">Sex:</label>
+                        <div class="row mb-3">
+                            <label for="arta_sex" class="col-form-label col-sm-2 fw-bold">Sex:</label>
                             <div class="col-sm-8 d-flex gap-1">
                                 <div class="form-check form-check-inline mt-2">
                                     <input class="form-check-input" type="checkbox" id="arta_male" name="arta_sex" value="1" <?= (set_value('arta_sex', $this->session->flashdata('arta_sex')) == 1) ? 'checked' : '' ?> onclick="checkOnlyOne(this)">
@@ -56,8 +58,8 @@
                         </div>
                     </div>
                     <div class="col col-4">
-                        <div class="mb-3 row">
-                            <label for="arta_age" class="col-sm-2 col-form-label fw-bold">Age:</label>
+                        <div class="row mb-3">
+                            <label for="arta_age" class="col-form-label col-sm-2 fw-bold">Age:</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control w-50" id="arta_age" name="arta_age" maxlength="2" value="<?= (set_value('arta_age', $this->session->flashdata('arta_age'))) ?? '' ?>" >
                             </div>
@@ -68,8 +70,8 @@
 
                 <div class="row">
                     <div class="col col-6">
-                        <div class="mb-3 row">
-                            <label for="arta_region" class="col-sm-5 col-form-label fw-bold">Region of residence:</label>
+                        <div class="row mb-3">
+                            <label for="arta_region" class="col-form-label col-sm-5 fw-bold">Region of residence:</label>
                             <div class="col-sm-7 ps-0">
                                 <select class="form-select" name="arta_region" id="arta_region">
                                     <option value="">Select here</option>
@@ -88,8 +90,8 @@
                         </div>
                     </div>
                     <div class="col col-6">
-                        <div class="mb-3 row">
-                            <label for="arta_service" class="col-sm-4 col-form-label fw-bold">Service availed:</label>
+                        <div class="row mb-3">
+                            <label for="arta_service" class="col-form-label col-sm-4 fw-bold">Service availed:</label>
                             <div class="col-sm-8 pe-0">
                                 <input type="text" class="form-control bg-light" name="arta_service" value="Journal Service" readonly>
                             </div>
@@ -156,16 +158,16 @@
                 </div>
                 <div>
                     <p>INSTRUCTIONS: For SQD 0-8, Please put a <span class="fw-bold">check mark (&#10004)</span> on the column that best corresponds to your answer.</p>
-                    <table class="table table-striped table-bordered" id="sqd-table">
+                    <table class="table table-bordered table-striped" id="sqd-table">
                         <thead>
                             <tr>
                                 <th></th>
-                                <th class="text-center align-middle">Strongly Disagree</th>
-                                <th class="text-center align-middle">Disagree</th>
-                                <th class="text-center align-middle">Neither Agree nor Disagree</th>
-                                <th class="text-center align-middle">Agree</th>
-                                <th class="text-center align-middle">Strongly Agree</th>
-                                <th class="text-center align-middle">Not Applicable</th>
+                                <th class="align-middle text-center">Strongly Disagree</th>
+                                <th class="align-middle text-center">Disagree</th>
+                                <th class="align-middle text-center">Neither Agree nor Disagree</th>
+                                <th class="align-middle text-center">Agree</th>
+                                <th class="align-middle text-center">Strongly Agree</th>
+                                <th class="align-middle text-center">Not Applicable</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -173,12 +175,12 @@
                                 <?php echo '<tr>
                                         <td><b>SQD '. ($index + 1) .'.</b> ' . $row['sqd_desc'] . '
                                         <div class="text-danger">'. $this->session->flashdata('csf_arta_validation_errors')['arta_sqd' . $row['sqd_value']] .'</div></td>
-                                        <td class="text-center align-middle"><input class="form-check-input" type="checkbox" value="5" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 5)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
-                                        <td class="text-center align-middle"><input class="form-check-input" type="checkbox" value="4" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 4)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
-                                        <td class="text-center align-middle"><input class="form-check-input" type="checkbox" value="3" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 3)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
-                                        <td class="text-center align-middle"><input class="form-check-input" type="checkbox" value="2" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 2)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
-                                        <td class="text-center align-middle"><input class="form-check-input" type="checkbox" value="1" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 1)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
-                                        <td class="text-center align-middle"><input class="form-check-input" type="checkbox" value="6" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 6)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
+                                        <td class="align-middle text-center"><input class="form-check-input" type="checkbox" value="5" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 5)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
+                                        <td class="align-middle text-center"><input class="form-check-input" type="checkbox" value="4" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 4)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
+                                        <td class="align-middle text-center"><input class="form-check-input" type="checkbox" value="3" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 3)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
+                                        <td class="align-middle text-center"><input class="form-check-input" type="checkbox" value="2" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 2)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
+                                        <td class="align-middle text-center"><input class="form-check-input" type="checkbox" value="1" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 1)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
+                                        <td class="align-middle text-center"><input class="form-check-input" type="checkbox" value="6" name="arta_sqd' . $row['sqd_value'] .'" ' . ( (set_value('arta_sqd' . $row['sqd_value'], $this->session->flashdata('arta_sqd' . $row['sqd_value']) == 6)) ? 'checked' : '' ) . ' onclick="checkOnlyOne(this)"></td>
                                     </tr>'; ?>
                             <?php endforeach;?>
                         </tbody>
@@ -189,12 +191,13 @@
                     <textarea class="form-control" name="arta_suggestion" id="arta_suggestion" rows="5" placeholder="Type your suggestions here..."></textarea>
                 </div>
                
-                <div class="mb-3 d-flex justify-content-center" id="google_recaptchav2_container" style="text-align:center">
-                                <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_csf"></div>
+                <div class="d-flex justify-content-center mb-3" id="google_recaptchav2_container" style="text-align:center">
+                                <div id="captcha_csf"></div>
+                                <!-- <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_csf"></div> -->
                                 <p class="text-danger" id="g-recaptcha"></p>
                             </div>
 
-                <div class="text-center"><button type="submit" class="btn main-btn w-50" id="submit_csf_arta" disabled>Submit Feedback</button></div>
+                <div class="text-center"><button type="submit" class="btn w-50 main-btn" id="submit_csf_arta" disabled>Submit Feedback</button></div>
             </form>
         </div>
       </div>
