@@ -15,7 +15,9 @@
     // Initialize reCAPTCHA and store the widget ID
     window.onload = function () {
         recaptchaWidgetId_create_author_account = grecaptcha.render('captcha_author', {
-            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
+            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+            // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+          // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
             'callback': onRecaptchaSuccess,
             'expired-callback': onRecaptchaExpired
         });
@@ -256,7 +258,8 @@
                     </div>
 
                     <div class="mb-3 w-100" id="google_recaptchav2_container">
-                        <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_author"></div>
+                        <div id="captcha_author"></div>
+                        <!-- <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_author"></div> -->
                         <p class="text-danger" id="g-recaptcha"></p>
                     </div>
                     

@@ -8108,8 +8108,9 @@ function logout(){
     current_button_id = '#submit_feedback';
     $('#feedbackModal').modal('toggle');
     recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
-        // 'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6',
-        'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // for test
+        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+        // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+      // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
         'callback': onRecaptchaSuccess,
         'expired-callback': onRecaptchaExpired
     });

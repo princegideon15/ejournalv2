@@ -101,7 +101,7 @@ $(document).ready(function()
       // Remove 'selected' class from all stars and add it to the clicked star and previous stars
       $(".rate-ui").removeClass("selected");
       $(".rate-ui").each(function () {
-        if ($(this).data("value") <= selectedRatingui) {
+        if ($(this).data("value") <= selectedRatingUI) {
           $(this).addClass("selected");
           $('.rate-ux-validation').text('');
         }

@@ -651,7 +651,8 @@
 
                   
             <div class="mt-3 mb-0 w-100" id="google_recaptchav2_container">
-                <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_logout"></div>
+                <div id="captcha_logout"></div>
+                <!-- <div data-sitekey="6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6" id="captcha_logout"></div> -->
                 <p class="text-danger" id="g-recaptcha"></p>
             </div>
 
