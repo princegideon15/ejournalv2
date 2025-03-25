@@ -1713,6 +1713,9 @@ $(document).ready(function() {
         } );
     } ).draw();
 
+     // users table
+     var usrt = $('#dataTable_users').DataTable();
+
     // peer reviewer table
     var prt = $('#dataTable_rev').DataTable({
         "order": [[ 2, "asc" ]],
