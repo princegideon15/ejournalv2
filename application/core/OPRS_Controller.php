@@ -61,7 +61,7 @@ class OPRS_Controller extends MX_Controller {
 	private function check_user_activity() {
 		
 		if ($this->session->userdata('_oprs_logged_in')) {
-			$timeout = 1200; // 20 minutes
+			$timeout = 3600; // 1hr
 			$current_time = time();
 
 			// Check if last activity is set in session

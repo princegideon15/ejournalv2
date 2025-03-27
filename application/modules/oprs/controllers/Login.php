@@ -77,7 +77,7 @@ class Login extends OPRS_Controller {
 				$email = $user_category[0]->usr_username;
 
 			}else{ // oprs user
-				if( $user_category[0]->usr_role == 12 ){
+				if( $user_category[0]->usr_role == 16 ){
 					// reviewer
 					$reviewer_info = $this->User_model->get_reviewer_info_by_id($id);
 					$user_id = $reviewer_info[0]->rev_id;
@@ -268,7 +268,7 @@ class Login extends OPRS_Controller {
 			$user_id = $ejournal_client_info[0]->user_id;
 			$name = $ejournal_client_info[0]->title . ' ' . $ejournal_client_info[0]->first_name . ' ' . $ejournal_client_info[0]->last_name;
 		}else{ // oprs user
-			if( $user_info[0]->usr_role == 12 ){
+			if( $user_info[0]->usr_role == 16 ){
 				// reviewer
 				$reviewer_info = $this->User_model->get_reviewer_info_by_email($email);
 				$user_id = $reviewer_info[0]->rev_id;

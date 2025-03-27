@@ -154,7 +154,6 @@ class Manuscript_model extends CI_Model {
 				$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 				$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 		}
-
 		$query = $oprs->get();
 		return $query->result();
 	}

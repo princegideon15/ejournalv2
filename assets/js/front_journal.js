@@ -201,7 +201,7 @@ $(document).ready(function()
   // get user access token
   accessToken = $.ajax({
     type: "GET",
-    url: base_url + "/client/login/get_access_token/",
+    url: base_url + "client/login/get_access_token/",
     async:false,
     crossDomain: true,
     success: function(data) {

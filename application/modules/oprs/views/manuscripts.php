@@ -198,6 +198,24 @@
 													<?php $title = $m->man_title; ?>
 													<?php $authors = $m->man_author . $acoa; ?>
 													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
+													<?php 
+														$date1 = new DateTime($m->date_created);
+														$date2 = new DateTime($m->man_process_date);
+
+														$interval = $date1->diff($date2);
+														$minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+														
+														if ($minutes < 60) {
+															$fraction = "< 1 hr";
+														} elseif ($minutes < 1440) { // 1440 minutes in a day
+															$hours = round($minutes / 60, 1);
+															$fraction = $hours . " hrs";
+														} else {
+															$days = round($minutes / 1440, 1); // Convert to days with 1 decimal place
+															$fraction = $days . " days";
+														}
+													?>
 													<tr>
 														<td></td>
 														<td width="50%"><a href="javascript:void(0);" onclick="view_manus(<?php echo $m->row_id; ?>);"
@@ -651,6 +669,7 @@
 														<td><?php echo $author_type;?> - <?php echo $mem_type;?></td>
 														<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
 														<td><?php echo $status;?></td>
+														
 														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
 														<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
 														<td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->row_id;?>')"><?php echo $m->man_trk_no;?></a></td>
