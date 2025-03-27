@@ -530,8 +530,9 @@ $(document).ready(function() {
       var timerInterval = setInterval(function() {
           idleTime += 1;
           
-        //   console.log("🚀 ~ timerInterval ~ idleTime:", idleTime)
-          if (idleTime >= 3600) { // 20 minutes in seconds
+          console.log("🚀 ~ timerInterval ~ idleTime:", idleTime)
+        //   if (idleTime >= 3600) { // 20 minutes in seconds
+          if (idleTime >= 120) { // 20 minutes in seconds
   
               Swal.fire({
                 title: "Session Expired",
