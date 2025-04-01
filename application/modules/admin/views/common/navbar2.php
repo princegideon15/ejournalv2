@@ -1,4 +1,7 @@
+
 <?php $role = $this->session->userdata('_oprs_type_num');?>
+<?php $user_id = $this->session->userdata('_oprs_user_id');?>
+
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark fixed-top">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="javascript:void(0);">
@@ -138,10 +141,19 @@
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                <?php if ($this->session->userdata('_oprs_type_num') == 8 || $this->session->userdata('_oprs_type_num') == 8 || $this->session->userdata('_oprs_type_num') == 3) {?>
-                    <a class="btn btn-secondary w-100" href="<?php echo base_url('oprs/dashboard'); ?>"><i class="fa fa-sync me-2"></i>eReview Admin</a>
-                    <hr class="text-light h-10 fw-bold">
+
+            
+            <?php if ($role != 1 && $role != 16) {?>
+                    
+                    <?php if($this->session->userdata('_' . $user_id . '_acc_logs') == 1):?>
+
+                        <a class="btn btn-info w-100" href="<?php echo base_url('oprs/dashboard'); ?>"><i class="fa fa-sync me-2"></i>eReview Admin</a>
+                        <hr class="text-light h-10 fw-bold">
+
+                    <?php endif ?>
+
                 <?php }?>
+                
                 <div class="small">Logged in as:</div>
                 <?php echo $this->session->userdata('_oprs_type'); ?>
             </div>

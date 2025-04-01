@@ -296,7 +296,7 @@
         </form>
       </div>
       <div class="modal-footer">
-          <button class="btn btn-light" type="button" data-bs-dismiss="modal">Later</button>
+          <a class="btn btn-light" type="button" href="<?php echo base_url("oprs/login/logout");?>">Later</a>
           <button type="button" id="submit_feedback" class="btn btn-primary" disabled>Submit</button>
       </div>
     </div>
@@ -475,7 +475,7 @@
                     
                     <?php if($this->session->userdata('_' . $user_id . '_acc_logs') == 1):?>
 
-                        <a class="btn btn-info w-100" href="<?php echo base_url('../../admin/dashboard'); ?>"><i class="fa fa-sync me-2"></i>eJournal Admin</a>
+                        <a class="btn btn-info w-100" href="<?php echo base_url() . 'admin/dashboard'; ?>"><i class="fa fa-sync me-2"></i>eJournal Admin</a>
                         <hr class="text-light h-10 fw-bold">
 
                     <?php endif ?>

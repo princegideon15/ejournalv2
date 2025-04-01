@@ -151,8 +151,8 @@ class Manuscript_model extends CI_Model {
 		}else{ // super admin
 				$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 				$oprs->from($this->manus . ' m');
-				$oprs->join($this->publication . ' p', 'm.man_type = p.id');
-				$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+				$oprs->join($this->publication . ' p', 'm.man_type = p.id', 'left');
+				$oprs->join($this->status . ' s', 'm.man_status = s.status_id', 'left');
 		}
 		$query = $oprs->get();
 		return $query->result();
@@ -878,8 +878,8 @@ class Manuscript_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
 		$oprs->from($this->manus . ' m');
-		$oprs->join($this->publication . ' p', 'm.man_type = p.id');
-		$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
+		$oprs->join($this->publication . ' p', 'm.man_type = p.id', 'left');
+		$oprs->join($this->status . ' s', 'm.man_status = s.status_id', 'left');
 
 		if($status > 0){
 			if($status == 2){

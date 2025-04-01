@@ -144,6 +144,125 @@ class Login extends OPRS_Controller {
 							$this->Login_model->clear_login_attempts($validateUser[0]->usr_username);
 							//send otp to email
 							$this->send_login_otp($email);
+
+							// $type_num = $validateUser[0]->usr_role;
+							// $type = $validateUser[0]->usr_desc;
+							// $id = $validateUser[0]->usr_id;
+							// $dp = $validateUser[0]->usr_dp;
+							// $sys = $validateUser[0]->usr_sys_acc;
+							// $usr_name = $validateUser[0]->usr_username;
+
+
+							// // privilege session
+							// $priv = $this->User_model->get_privilege($id);
+							
+
+							// if($priv){
+							// 	foreach ($priv as $row) {
+							// 		$priv_sess = array('_prv_add' => $row->prv_add,
+							// 			'_prv_edt' => $row->prv_edit,
+							// 			'_prv_del' => $row->prv_delete,
+							// 			'_prv_view' => $row->prv_view,
+							// 			'_prv_exp' => $row->prv_export);
+							// 	}
+							// }
+							// else{
+							// 	$priv_sess = array('_prv_add' => 0,
+							// 	'_prv_edt' => 0,
+							// 	'_prv_del' => 0,
+							// 	'_prv_view' => 0,
+							// 	'_prv_exp' => 0);
+							// }
+							
+							// $this->session->set_userdata($priv_sess);
+							
+							// // module access session
+							// $mod_acc = $this->User_model->get_module_access($id);
+							// $mod_acc_sess = [];
+
+							// if($mod_acc){
+							// 	foreach ($mod_acc as $row) {
+							// 		foreach ($row as $key => $value) {
+							// 			// Skip 'prv_id' if you don't want to store it
+							// 			if ($key === 'acc_id' || $key === 'acc_usr_id' || $key === 'acc_date_created' || $key === 'acc_last_updated') continue;
+	
+							// 			// Generate a dynamic session key
+							// 			$session_key = "_{$row->acc_usr_id}_{$key}";
+	
+							// 			// Store key-value pair in the session array
+							// 			$mod_acc_sess[$session_key] = $value;
+							// 		}
+							// 	}
+								
+							// 	$this->session->set_userdata($mod_acc_sess);
+							// }
+
+							// // get last date visited
+							// $last_visit_date = $this->Login_model->get_last_visit_date($id);
+							// $last_visit_date = new DateTime($last_visit_date[0]->date_created);
+							// $last_visit_date = $last_visit_date->format('F j, Y');
+							
+							
+							// if ($sys == 1) { // ejournal admin
+
+							// 	// login session
+							// 	$sess = array('_oprs_logged_in' => true,
+							// 		'_oprs_username' => $usr_name,
+							// 		'_oprs_type' => $type,
+							// 		'_oprs_type_num' => $type_num,
+							// 		'_oprs_user_id' => $id,
+							// 		'_oprs_user_dp' => $dp,
+							// 		'sys_acc' => $sys,
+							// 		'_oprs_last_visit' => $last_visit_date);
+									
+							// 	is_online($id);
+							// 	$this->session->set_userdata($sess);
+							// 	save_log_oprs(_UserIdFromSession(), 'login', 0, _UserRoleFromSession());
+							// 	$this->create_access_token($id);
+							// 	redirect('admin/dashboard');
+							// } else if ($sys == 3){ // oprs superadmin
+							// 	// login session
+							// 	$sess = array('_oprs_logged_in' => true,
+							// 		'_oprs_username' => $usr_name,
+							// 		'_oprs_type' => $type,
+							// 		'_oprs_type_num' => $type_num,
+							// 		'_oprs_user_id' => $id,
+							// 		'_oprs_user_dp' => $dp,
+							// 		'sys_acc' => $sys,
+							// 		'_oprs_last_visit' => $last_visit_date);
+									
+							// 	is_online($id);
+							// 	$this->session->set_userdata('last_activity', time()); // Track the login time
+							// 	$this->session->set_userdata($sess);
+							// 	save_log_oprs(_UserIdFromSession(), 'login', 0, _UserRoleFromSession());
+							// 	$this->create_access_token($id);
+							// 	redirect('oprs/dashboard');
+							// } else {
+								
+							// 	// privilege session
+							// 	// login session
+							// 	$sess = array('_oprs_logged_in' => true,
+							// 		'_oprs_username' => $usr_name,
+							// 		'_oprs_type' => $type,
+							// 		'_oprs_type_num' => $type_num,
+							// 		'_oprs_user_id' => $id,
+							// 		'_oprs_user_dp' => $dp,
+							// 		'_oprs_srce' => '_op',
+							// 		'sys_acc' => $sys,
+							// 		'_oprs_last_visit' => $last_visit_date);
+
+							// 	is_online($validateUser[0]->usr_id);
+							// 	$this->session->set_userdata($sess);
+							// 	save_log_oprs(_UserIdFromSession(), 'login', 0,  _UserRoleFromSession());
+							// 	$this->create_access_token($id);
+
+							// 	if (_UserRoleFromSession() == 3 || _UserRoleFromSession() == 20) {
+							// 		redirect('oprs/dashboard');
+							// 	} else {
+							// 		redirect('oprs/manuscripts');
+							// 	}
+							// }
+
 						}
 					}else{
 						$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->usr_username));
@@ -384,8 +503,6 @@ class Login extends OPRS_Controller {
 		$ref = $this->security->xss_clean($ref);
 		$isOtpRefExist = $this->Login_model->validate_otp_ref($ref);
 
-	
-		
 
 		if($isOtpRefExist){
 
@@ -446,7 +563,6 @@ class Login extends OPRS_Controller {
 						$verifyOTP = $this->Login_model->validate_otp_ref($ref);
 						
 						if (password_verify($otp, $verifyOTP[0]->otp)) {
-
 
 							$type_num = $verifyOTP[0]->usr_role;
 							$type = $verifyOTP[0]->usr_desc;
@@ -566,121 +682,6 @@ class Login extends OPRS_Controller {
 								}
 							}
 
-
-							// remember me
-							// $expire = time() + 3600;
-							// if (!empty($_POST['oprs_remember'])) {
-							// 	$this->input->set_cookie('oprs_cookie_user',
-							// 		$usr_name,
-							// 		3600);
-							// 	$this->input->set_cookie('oprs_cookie_pass',
-							// 		$verifyOTP[0]->usr_username,
-							// 		3600);
-							// 	$this->input->set_cookie('oprs_remember_me',
-							// 		$remember,
-							// 		3600);
-							// } else {
-							// 	delete_cookie('oprs_cookie_user');
-							// 	delete_cookie('oprs_cookie_pass');
-							// 	delete_cookie('oprs_remember_me');
-							// }
-
-							// $x = 0;
-			
-							// if (isset($login)) {
-							// 	$usr_name = $this->input->post('usr_username', true);
-							// 	$usr_password = $this->input->post('usr_password', true);
-							// 	$usr_role = $this->input->post('usr_role');
-
-							// 	if ($this->Login_model->authenticate_user($usr_name, $usr_role)) {
-							// 		$hash = $this->Login_model->authenticate_user($usr_name, $usr_role);
-									
-							// 		if($hash[0]->usr_status == 2){
-							// 			// incorrect password
-							// 			$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-danger', 'msg' => 'Account not activated. Please verify your account.');
-							// 			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
-							// 			redirect('oprs/login');
-							// 		}
-
-							// 		$count_hash = count($hash);
-
-							// 		foreach ($hash as $row) {
-							// 			$pass = $row->usr_password;
-							// 			$type_num = $row->usr_role;
-							// 			$type = $row->usr_desc;
-							// 			$id = $row->usr_id;
-							// 			$dp = $row->usr_dp;
-							// 			$sys = $row->usr_sys_acc;
-							// 			if (password_verify($usr_password, $pass)) {
-											
-							// 			} else {
-							// 				$x++;
-							// 			}
-							// 		}
-
-							// 		if ($x == 2 && $count_hash == 2) {
-							// 			// incorrect password
-							// 			$array_msg = array('icon' => 'fa fa-times', 'class' => 'alert-danger', 'msg' => 'Incorrect Password.');
-							// 			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
-							// 			redirect('oprs/login');
-							// 		} else {
-							// 			// incorrect password
-							// 			$array_msg = array('icon' => 'fa fa-times', 'class' => 'alert-danger', 'msg' => 'Incorrect Password.');
-							// 			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
-							// 			redirect('oprs/login');
-							// 		}
-
-							// 		//redirect to otp page
-							// 		//TODO:
-							// 	} else {
-							// 		if ($this->Login_model->authenticate_member($usr_name)) {
-							// 			$hash = $this->Login_model->authenticate_member($usr_name);
-							// 			foreach ($hash as $row) {
-							// 				$pass = $row->usr_password;
-							// 				$type_num = 1;
-							// 				$type = 'Author';
-							// 				$id = $row->usr_id;
-							// 				$dp = '';
-							// 			}
-							// 			if (password_verify($usr_password, $pass)) {
-							// 				$sess = array('_oprs_logged_in' => true,
-							// 					'_oprs_username' => $usr_name,
-							// 					'_oprs_type' => $type,
-							// 					'_oprs_type_num' => $type_num,
-							// 					'_oprs_user_id' => $id,
-							// 					'_oprs_user_dp' => $dp,
-							// 					'_oprs_srce' => '_sk');
-							// 				is_online($id);
-							// 				$this->session->set_userdata($sess);
-							// 				save_log_oprs(_UserIdFromSession(), 'login', 0, _UserRoleFromSession());
-							// 				// remember me
-							// 				$year = time() + 31536000;
-							// 				if (isset($_POST['remember'])) {
-							// 					setcookie('oprs_cookie_user', $usr_name, $year);
-							// 					setcookie('oprs_cookie_pass', $usr_password, $year);
-							// 					setcookie('oprs_remember_me', $remember, $year);
-							// 				} else {
-							// 					$past = time() - 100;
-							// 					setcookie('oprs_remember_me', '', $past);
-							// 					setcookie('oprs_cookie_user', '', $past);
-							// 					setcookie('oprs_cookie_pass', '', $past);
-							// 				}
-							// 				redirect('oprs/manuscripts');
-							// 			} else {
-							// 				// incorrect password
-							// 				$array_msg = array('icon' => 'fa fa-times', 'class' => 'alert-danger', 'msg' => 'Incorrect Password.');
-							// 				$this->session->set_flashdata('_oprs_login_msg', $array_msg);
-							// 				redirect('oprs/login');
-							// 			}
-							// 		} else {
-							// 			// invalid user
-							// 			$array_msg = array('icon' => 'fa fa-user-times', 'class' => 'alert-danger', 'msg' => 'User not found.');
-							// 			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
-							// 			redirect('oprs/login');
-							// 		}
-							// 	}
-							// }
-						
 						} else {
 							//invalid code
 							$this->session->set_flashdata('otp', '
@@ -1487,3 +1488,120 @@ class Login extends OPRS_Controller {
 }
 
 /* End of file Login.php */
+
+
+
+							// remember me
+							// $expire = time() + 3600;
+							// if (!empty($_POST['oprs_remember'])) {
+							// 	$this->input->set_cookie('oprs_cookie_user',
+							// 		$usr_name,
+							// 		3600);
+							// 	$this->input->set_cookie('oprs_cookie_pass',
+							// 		$verifyOTP[0]->usr_username,
+							// 		3600);
+							// 	$this->input->set_cookie('oprs_remember_me',
+							// 		$remember,
+							// 		3600);
+							// } else {
+							// 	delete_cookie('oprs_cookie_user');
+							// 	delete_cookie('oprs_cookie_pass');
+							// 	delete_cookie('oprs_remember_me');
+							// }
+
+							// $x = 0;
+			
+							// if (isset($login)) {
+							// 	$usr_name = $this->input->post('usr_username', true);
+							// 	$usr_password = $this->input->post('usr_password', true);
+							// 	$usr_role = $this->input->post('usr_role');
+
+							// 	if ($this->Login_model->authenticate_user($usr_name, $usr_role)) {
+							// 		$hash = $this->Login_model->authenticate_user($usr_name, $usr_role);
+									
+							// 		if($hash[0]->usr_status == 2){
+							// 			// incorrect password
+							// 			$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-danger', 'msg' => 'Account not activated. Please verify your account.');
+							// 			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+							// 			redirect('oprs/login');
+							// 		}
+
+							// 		$count_hash = count($hash);
+
+							// 		foreach ($hash as $row) {
+							// 			$pass = $row->usr_password;
+							// 			$type_num = $row->usr_role;
+							// 			$type = $row->usr_desc;
+							// 			$id = $row->usr_id;
+							// 			$dp = $row->usr_dp;
+							// 			$sys = $row->usr_sys_acc;
+							// 			if (password_verify($usr_password, $pass)) {
+											
+							// 			} else {
+							// 				$x++;
+							// 			}
+							// 		}
+
+							// 		if ($x == 2 && $count_hash == 2) {
+							// 			// incorrect password
+							// 			$array_msg = array('icon' => 'fa fa-times', 'class' => 'alert-danger', 'msg' => 'Incorrect Password.');
+							// 			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+							// 			redirect('oprs/login');
+							// 		} else {
+							// 			// incorrect password
+							// 			$array_msg = array('icon' => 'fa fa-times', 'class' => 'alert-danger', 'msg' => 'Incorrect Password.');
+							// 			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+							// 			redirect('oprs/login');
+							// 		}
+
+							// 		//redirect to otp page
+							// 		//TODO:
+							// 	} else {
+							// 		if ($this->Login_model->authenticate_member($usr_name)) {
+							// 			$hash = $this->Login_model->authenticate_member($usr_name);
+							// 			foreach ($hash as $row) {
+							// 				$pass = $row->usr_password;
+							// 				$type_num = 1;
+							// 				$type = 'Author';
+							// 				$id = $row->usr_id;
+							// 				$dp = '';
+							// 			}
+							// 			if (password_verify($usr_password, $pass)) {
+							// 				$sess = array('_oprs_logged_in' => true,
+							// 					'_oprs_username' => $usr_name,
+							// 					'_oprs_type' => $type,
+							// 					'_oprs_type_num' => $type_num,
+							// 					'_oprs_user_id' => $id,
+							// 					'_oprs_user_dp' => $dp,
+							// 					'_oprs_srce' => '_sk');
+							// 				is_online($id);
+							// 				$this->session->set_userdata($sess);
+							// 				save_log_oprs(_UserIdFromSession(), 'login', 0, _UserRoleFromSession());
+							// 				// remember me
+							// 				$year = time() + 31536000;
+							// 				if (isset($_POST['remember'])) {
+							// 					setcookie('oprs_cookie_user', $usr_name, $year);
+							// 					setcookie('oprs_cookie_pass', $usr_password, $year);
+							// 					setcookie('oprs_remember_me', $remember, $year);
+							// 				} else {
+							// 					$past = time() - 100;
+							// 					setcookie('oprs_remember_me', '', $past);
+							// 					setcookie('oprs_cookie_user', '', $past);
+							// 					setcookie('oprs_cookie_pass', '', $past);
+							// 				}
+							// 				redirect('oprs/manuscripts');
+							// 			} else {
+							// 				// incorrect password
+							// 				$array_msg = array('icon' => 'fa fa-times', 'class' => 'alert-danger', 'msg' => 'Incorrect Password.');
+							// 				$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+							// 				redirect('oprs/login');
+							// 			}
+							// 		} else {
+							// 			// invalid user
+							// 			$array_msg = array('icon' => 'fa fa-user-times', 'class' => 'alert-danger', 'msg' => 'User not found.');
+							// 			$this->session->set_flashdata('_oprs_login_msg', $array_msg);
+							// 			redirect('oprs/login');
+							// 		}
+							// 	}
+							// }
+						
