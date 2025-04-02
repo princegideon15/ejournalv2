@@ -730,105 +730,110 @@ class Login extends OPRS_Controller {
 	 * @return  void
 	 */
 	public function reviewer($man_id, $action, $id, $days = null) {
-		$output = $this->Login_model->check_reveiwer_status($id, $man_id);
-		foreach ($output as $key => $row) {
-			$status = $row->rev_status;
-			$response = $row->rev_date_respond;
-		}
-		if ($status == 9 || $status == 1) {
-			// determine if reviewer has clicked accept or decline already
-			$message = ($status == 1) ? 'accepted' : 'declined';
-			$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-warning', 'msg' => 'Sorry, you have already ' . $message. ' the request.');
-			$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
-			redirect('oprs/login');
-			$this->session->unset_userdata('_reviewer_login_msg');
-		} else if ($status == 3) {
-			$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-danger', 'msg' => 'Sorry, the request has been expired.');
-			$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
-			redirect('oprs/login');
-			$this->session->unset_userdata('_reviewer_login_msg');
-		} else {
-			if ($action == 1) {
-				// accept
-				// get info reviewer
-				$output = $this->Login_model->get_reviewer_info($id);
-				foreach($output as $row){
-					$rev_username = $row->rev_email;
-					$rev_man_id = $row->rev_man_id;
-				}
-				if ($this->Login_model->authenticate_user($rev_username, 16)) {
-					$array_msg = array('icon' => 'fa fa-check-square', 'class' => 'alert-success', 'msg' => 'Thank you for accepting the review request. <br/><br/>
-					You already have a temporary account. Please use your
-					existing username and password to begin the review. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
-				
-					// get info existing reviewer
-					$output = $this->User_model->get_user_info($id);
-					foreach($output as $row){
-						$rev_password = $row->usr_password_copy;
-					}
-				
-				
-				} else {
-					$rev_password = 'nrcp' . rand(100, 1000);
-					$rev_password_hash = password_hash($rev_password, PASSWORD_BCRYPT);
-					// create temporary account
-					$temp['usr_username'] = $rev_username;
-					$temp['usr_password'] = $rev_password_hash;
-					$temp['usr_password_copy'] = $rev_password;
-					$temp['usr_desc'] = 'Peer Reviewer';
-					$temp['usr_role'] = 16;
-					$temp['usr_sys_acc'] = 2;
-					$temp['usr_status'] = 1;
-					$temp['date_created'] = date('Y-m-d H:i:s');
-					$temp['usr_id'] = $id;
-					$this->User_model->create_temp_reviewer(array_filter($temp));
-					save_log_oprs($id, 'accepted review request for', $rev_man_id, 16);
-					$array_msg = array('icon' => 'fa fa-check-square', 'class' => 'alert-success', 'msg' => 'Thank you for accepting the review request. <br/><br/>
-					To begin with review, please login to your temporary account
-					with this username and password. <br/></br>
-					Username: <strong>' . $rev_username . '</strong><br/>
-					Password : <strong>' . $rev_password . '</strong><br/><br/>
-					Please check your email for more details. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
-					// $this->send_password_copy($rev_username, $rev_password);
-				}
-
-				// Please take note of your username and password for your next login. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
-				
-				// update reviewer
-				$revs['rev_status'] = $action;
-				$revs['rev_notif_status'] = 0;
-				$revs['rev_date_respond'] = date('Y-m-d H:i:s');
-				$where['rev_id'] = $id;
-				$where['rev_man_id'] = $man_id;
-				$this->Manuscript_model->update_reviewer(array_filter($revs), $where);
-
-				// send toke for apprection mail to reviewer
-				$this->send_appreciation_msg($id, $rev_password, 16);
-				// $this->send_appreciation_msg($rev_username);
-
-				// add flag to tblscores
-				$post_scr['scr_man_id'] = $man_id;	
-				$post_scr['scr_man_rev_id'] = $id;
-				$post_scr['scr_status'] = 2;
-				$this->Review_model->save_review(array_filter($post_scr));
+		
+		if ($this->session->userdata('_oprs_logged_in')) {
+			$this->load->view('errors/html/restricted_access'); // Load the HTML page
+		}else{
+			$output = $this->Login_model->check_reveiwer_status($id, $man_id);
+			foreach ($output as $key => $row) {
+				$status = $row->rev_status;
+				$response = $row->rev_date_respond;
+			}
+			if ($status == 9 || $status == 1) {
+				// determine if reviewer has clicked accept or decline already
+				$message = ($status == 1) ? 'accepted' : 'declined';
+				$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-warning', 'msg' => 'Sorry, you have already ' . $message. ' the request.');
+				$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
+				redirect('oprs/login');
+				$this->session->unset_userdata('_reviewer_login_msg');
+			} else if ($status == 3) {
+				$array_msg = array('icon' => 'fa fa-exclamation-triangle', 'class' => 'alert-danger', 'msg' => 'Sorry, the request has been expired.');
 				$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
 				redirect('oprs/login');
 				$this->session->unset_userdata('_reviewer_login_msg');
 			} else {
-				$rev_username = $this->Login_model->get_reviewer_info($id);
-				$this->decline_request($rev_username, $man_id, $id);
-
-				// decline
-				// update reviewer
-				$revs['rev_status'] = 9;
-				$revs['rev_date_respond'] = date('Y-m-d H:i:s');
-				$where['rev_id'] = $id;
-				$where['rev_man_id'] = $man_id;
-				$this->Manuscript_model->update_reviewer(array_filter($revs), $where);
-				$array_msg = array('icon' => 'fa fa-times-circle', 'class' => 'alert-warning', 'msg' => 'Request declined.');
-				$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
-				redirect('oprs/login');
-				$this->session->unset_userdata('_reviewer_login_msg');
+				if ($action == 1) {
+					// accept
+					// get info reviewer
+					$output = $this->Login_model->get_reviewer_info($id);
+					foreach($output as $row){
+						$rev_username = $row->rev_email;
+						$rev_man_id = $row->rev_man_id;
+					}
+					if ($this->Login_model->authenticate_user($rev_username, 16)) {
+						$array_msg = array('icon' => 'fa fa-check-square', 'class' => 'alert-success', 'msg' => 'Thank you for accepting the review request. <br/><br/>
+						You already have a temporary account. Please use your
+						existing username and password to begin the review. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
+					
+						// get info existing reviewer
+						$output = $this->User_model->get_user_info($id);
+						foreach($output as $row){
+							$rev_password = $row->usr_password_copy;
+						}
+					
+					
+					} else {
+						$rev_password = 'nrcp' . rand(100, 1000);
+						$rev_password_hash = password_hash($rev_password, PASSWORD_BCRYPT);
+						// create temporary account
+						$temp['usr_username'] = $rev_username;
+						$temp['usr_password'] = $rev_password_hash;
+						$temp['usr_password_copy'] = $rev_password;
+						$temp['usr_desc'] = 'Peer Reviewer';
+						$temp['usr_role'] = 16;
+						$temp['usr_sys_acc'] = 2;
+						$temp['usr_status'] = 1;
+						$temp['date_created'] = date('Y-m-d H:i:s');
+						$temp['usr_id'] = $id;
+						$this->User_model->create_temp_reviewer(array_filter($temp));
+						save_log_oprs($id, 'accepted review request for', $rev_man_id, 16);
+						$array_msg = array('icon' => 'fa fa-check-square', 'class' => 'alert-success', 'msg' => 'Thank you for accepting the review request. <br/><br/>
+						To begin with review, please login to your temporary account
+						with this username and password. <br/></br>
+						Username: <strong>' . $rev_username . '</strong><br/>
+						Password : <strong>' . $rev_password . '</strong><br/><br/>
+						Please check your email for more details. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
+						// $this->send_password_copy($rev_username, $rev_password);
+					}
+	
+					// Please take note of your username and password for your next login. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
+					
+					// update reviewer
+					$revs['rev_status'] = $action;
+					$revs['rev_notif_status'] = 0;
+					$revs['rev_date_respond'] = date('Y-m-d H:i:s');
+					$where['rev_id'] = $id;
+					$where['rev_man_id'] = $man_id;
+					$this->Manuscript_model->update_reviewer(array_filter($revs), $where);
+	
+					// send toke for apprection mail to reviewer
+					$this->send_appreciation_msg($id, $rev_password, 16);
+					// $this->send_appreciation_msg($rev_username);
+	
+					// add flag to tblscores
+					$post_scr['scr_man_id'] = $man_id;	
+					$post_scr['scr_man_rev_id'] = $id;
+					$post_scr['scr_status'] = 2;
+					$this->Review_model->save_review(array_filter($post_scr));
+					$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
+					redirect('oprs/login');
+					$this->session->unset_userdata('_reviewer_login_msg');
+				} else {
+					$rev_username = $this->Login_model->get_reviewer_info($id);
+					$this->decline_request($rev_username, $man_id, $id);
+	
+					// decline
+					// update reviewer
+					$revs['rev_status'] = 9;
+					$revs['rev_date_respond'] = date('Y-m-d H:i:s');
+					$where['rev_id'] = $id;
+					$where['rev_man_id'] = $man_id;
+					$this->Manuscript_model->update_reviewer(array_filter($revs), $where);
+					$array_msg = array('icon' => 'fa fa-times-circle', 'class' => 'alert-warning', 'msg' => 'Request declined.');
+					$this->session->set_flashdata('_reviewer_login_msg', $array_msg);
+					redirect('oprs/login');
+					$this->session->unset_userdata('_reviewer_login_msg');
+				}
 			}
 		}
 	}

@@ -63,25 +63,7 @@ $(document).ready(function() {
         }
     });
 
-    // get user account info
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/user/get_account_info",
-        async:false,
-        crossDomain: true,
-        dataType: 'json',
-        success: function(data) {
-            $.each(data, function(key, val){
-                $('#form_update_account #usr_username').val(val.usr_username);
-                $('#form_update_account #usr_full_name').val(val.usr_full_name);
-                $('#form_update_account #usr_sex').val(val.usr_sex);
-                $('#form_update_account #usr_contact').val(val.usr_contact);
-            });
-        },
-        error: function(xhr, status, error) {
-        console.log(error);
-        }
-    }); 
+   
 
     // get user access token
     accessToken = $.ajax({
@@ -101,6 +83,28 @@ $(document).ready(function() {
     }); 
 
     accessToken = (accessToken.responseText).trim();
+
+    if(accessToken){
+        // get user account info
+        $.ajax({
+           type: "GET",
+           url: base_url + "oprs/user/get_account_info",
+           async:false,
+           crossDomain: true,
+           dataType: 'json',
+           success: function(data) {
+               $.each(data, function(key, val){
+                   $('#form_update_account #usr_username').val(val.usr_username);
+                   $('#form_update_account #usr_full_name').val(val.usr_full_name);
+                   $('#form_update_account #usr_sex').val(val.usr_sex);
+                   $('#form_update_account #usr_contact').val(val.usr_contact);
+               });
+           },
+           error: function(xhr, status, error) {
+           console.log(error);
+           }
+       }); 
+    }
 
     // feedback suggestion box character limit
     var $textArea = $("#fb_suggest_ui");
@@ -559,7 +563,7 @@ $(document).ready(function() {
       refCode = url.split('/').pop();
       
       if(secondToLastSegment == 'verify_otp'){ // login otp, create client account otp
-        getCurrentOTP(refCode);
+            getCurrentOTP(refCode);
       }else if(secondToLastSegment == 'csf_arta'){
         current_button_id = "#submit_csf_arta";
       }
@@ -8844,7 +8848,7 @@ function getCurrentOTP(refCode){
         try{
           otpDate = new Date(data[0]['otp_date']);
            
-          var diff = currentDate.getTime() - otpDate.getTime();
+          var diff = Math.abs(currentDate.getTime() - otpDate.getTime());
           var diffHours = Math.floor(diff / (1000 * 60 * 60));
           var diffMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
           var diffSeconds = Math.floor((diff % (1000 * 60)) / 1000);   
