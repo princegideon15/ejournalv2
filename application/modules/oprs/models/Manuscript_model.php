@@ -536,11 +536,12 @@ class Manuscript_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
 		$oprs->from($this->reviewers);
-		$oprs->join($this->manus . ' m', 'm.row_id = rev_man_id');
-		$oprs->join($this->scores, 'scr_man_id = rev_man_id');
+		// $oprs->join($this->manus . ' m', 'm.row_id = rev_man_id');
+		$oprs->join($this->scores, 'scr_man_rev_id = rev_id');
 		// $oprs->join($this->editors, 'edit_man_id = m.row_id');
-		$oprs->where('scr_status > ', 3);
-		$oprs->where('m.row_id', $id);
+		// $oprs->where('scr_status > ', 3);
+		$oprs->where('scr_man_id', $id);
+		$oprs->group_by('rev_id');
 		// $oprs->where('edit_id', _UserIdFromSession());
 		$query = $oprs->get();
 		return $query->result();

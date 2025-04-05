@@ -215,6 +215,20 @@ class User extends OPRS_Controller {
 		echo $output;
 	}
 
+	public function verify_peer_reviewer_email(){	
+		$email_list = $this->input->post('trk_rev_email');
+
+		if (is_array($email_list)) {
+			foreach ($email_list as $email) {
+				// Perform validation, e.g., check if the email exists in the database
+				$exists = $this->User_model->verify_peer_reviewer_email($email);
+				echo $exists;
+			}
+		}
+	
+
+	}
+
 	/**
 	 * this function verify old password
 	 *

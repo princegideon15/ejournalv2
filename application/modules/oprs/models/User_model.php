@@ -95,7 +95,7 @@ class User_model extends CI_Model {
 		$oprs->select('usr_status, role_name, usr_sys_acc, usr_username, usr_id, usr_logout_time, usr_role, usr_sex');
 		$oprs->from($this->oprs_users . ' a');
 		$oprs->join($this->roles . ' r', 'a.usr_role = r.role_id');
-		$oprs->where_not_in('a.row_id', $id);
+		$oprs->where_not_in('a.usr_id', $id);
 		$query = $oprs->get();
 		return $query->result();
 
@@ -452,7 +452,7 @@ class User_model extends CI_Model {
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('p.*, a.usr_id, a.usr_username, a.usr_sys_acc, a.usr_desc, m.*');
 		$oprs->from($this->oprs_users . ' a');
-		$oprs->join($this->privileges . ' p', 'a.usr_id = p.prv_usr_id');
+		$oprs->join($this->privileges . ' p', 'a.usr_id = p.prv_usr_id', 'left');
 		$oprs->join($this->modules . ' m', 'a.usr_id = m.acc_usr_id', 'left');
 		$oprs->where('a.usr_id !=', _UserIdFromSession());
 		$oprs->where_not_in('a.usr_role', [1,16]);
@@ -707,6 +707,21 @@ class User_model extends CI_Model {
 		$oprs->where('acc_usr_id', $user_id);
 		$query = $oprs->get();
 		return $query->result();
+	}
+
+	public function verify_peer_reviewer_email($email){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('*');
+		$oprs->from($this->oprs_users);
+		$oprs->where('usr_username', $email);
+		$oprs->where('usr_role !=', 16);
+		$query = $oprs->get();
+		$rows = $query->num_rows();
+		if ($rows > 0) {
+			return 'false'; // email already in use
+		} else {
+			return 'true';
+		}
 	}
 
 	
