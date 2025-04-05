@@ -89,7 +89,9 @@
                     <select id="usr_role" name="usr_role" class="form-select">
                       <option value="" selected>Select User Role</option>
                       <?php foreach($user_types as $row): ?>
+                        <?php if($row->role_id != 1 && $row->role_id != 16){ ?>
                         <option value="<?= $row->role_id ?>"><?= $row->role_name ?></option>
+                        <?php } ?>
                       <?php endforeach ?>
                     </select>
                   </div>
