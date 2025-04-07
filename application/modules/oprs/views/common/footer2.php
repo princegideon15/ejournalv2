@@ -1051,12 +1051,10 @@
 					( <span class="fas fa-user-alt-slash ml-2"></span> ) <span class="text-primary">Authors hidden to
 						Reviewers</span>
 				</div>
-				<?php if(_UserRoleFromSession() != 8) { ?>
-				<!-- <a href="javascript:void(0);" id="new_rev" data-bs-toggle="modal" data-bs-target="#processModal"
-                    class="btn btn-primary"><span class="fa fa-search"></span> Find new reviewer</a> -->
-				<?php } ?>
-				<button class="btn btn-outline-success" type="button" id="add_more_reviewers" data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip" data-bs-placement="top" title="Add Reviewers">
+				<?php if(_UserRoleFromSession() == 5) { ?>
+					<button class="btn btn-outline-success" type="button" id="add_more_reviewers" data-bs-toggle="modal" data-bs-target="#processModal" rel="tooltip" data-bs-placement="top" title="Add Reviewers">
 					<span class="fas fa-user-plus"></span></button>
+				<?php } ?>
 				<button class="btn btn-primary" type="button" id="view_review_results">Review Results</button>
 				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
 			</div>
@@ -1096,7 +1094,9 @@
 			<div class="modal-footer">
 				<button class="btn btn-outline-secondary me-auto" type="button" data-bs-toggle="modal" data-bs-target="#reviewerModal">Back to Reviewers</button>
 				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" onclick="submit_consolidation()">Submit Consolidation</button>
+				<?php if(_UserRoleFromSession() == 5) { ?>
+					<button type="button" class="btn btn-primary" onclick="submit_consolidation()">Submit Consolidation</button>
+				<?php } ?>
 			</div>
 		</div>
 	</div>

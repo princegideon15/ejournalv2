@@ -63,25 +63,7 @@ $(document).ready(function() {
         }
     });
 
-    // get user account info
-    $.ajax({
-        type: "GET",
-        url: base_url + "oprs/user/get_account_info",
-        async:false,
-        crossDomain: true,
-        dataType: 'json',
-        success: function(data) {
-            $.each(data, function(key, val){
-                $('#form_update_account #usr_username').val(val.usr_username);
-                $('#form_update_account #usr_full_name').val(val.usr_full_name);
-                $('#form_update_account #usr_sex').val(val.usr_sex);
-                $('#form_update_account #usr_contact').val(val.usr_contact);
-            });
-        },
-        error: function(xhr, status, error) {
-        console.log(error);
-        }
-    }); 
+   
 
     // get user access token
     accessToken = $.ajax({
@@ -101,6 +83,28 @@ $(document).ready(function() {
     }); 
 
     accessToken = (accessToken.responseText).trim();
+
+    if(accessToken){
+        // get user account info
+        $.ajax({
+           type: "GET",
+           url: base_url + "oprs/user/get_account_info",
+           async:false,
+           crossDomain: true,
+           dataType: 'json',
+           success: function(data) {
+               $.each(data, function(key, val){
+                   $('#form_update_account #usr_username').val(val.usr_username);
+                   $('#form_update_account #usr_full_name').val(val.usr_full_name);
+                   $('#form_update_account #usr_sex').val(val.usr_sex);
+                   $('#form_update_account #usr_contact').val(val.usr_contact);
+               });
+           },
+           error: function(xhr, status, error) {
+           console.log(error);
+           }
+       }); 
+    }
 
     // feedback suggestion box character limit
     var $textArea = $("#fb_suggest_ui");
@@ -560,7 +564,7 @@ $(document).ready(function() {
       refCode = url.split('/').pop();
       
       if(secondToLastSegment == 'verify_otp'){ // login otp, create client account otp
-        getCurrentOTP(refCode);
+            getCurrentOTP(refCode);
       }else if(secondToLastSegment == 'csf_arta'){
         current_button_id = "#submit_csf_arta";
       }
@@ -3066,6 +3070,9 @@ $(document).ready(function() {
         },
         submitHandler: function() {
 
+            $('#form_add_user .btn').prop('disabled' ,true);
+            $('#form_add_user .btn').html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span> Loading');
+
             $.ajax({
                 type: "POST",
                 url: base_url + "oprs/user/add_user",
@@ -3073,6 +3080,8 @@ $(document).ready(function() {
                 cache: false,
                 crossDomain: true,
                 success: function(data) {
+                    
+
                     Swal.fire({
                         title: "New user added successfully!",
                         icon: 'success',
@@ -3634,6 +3643,13 @@ $(document).ready(function() {
                 email: true,
                 uniqueEmail: true,
                 repeatEmail: true,
+                remote: {
+                    url: base_url + "oprs/user/verify_peer_reviewer_email",
+                    type: "post",
+                    complete: function(response) {
+                        console.log("Server Response:", response.responseText); // Log the response
+                    }
+                }
             },
             trk_timeframe: {
                 required: true,
@@ -3659,6 +3675,7 @@ $(document).ready(function() {
             'trk_rev_email[]': {
                 uniqueEmail: "Email already in use",
                 repeatEmail: "Email can not be repeated",
+                remote: "Email already in use"
             },
             'trk_rev[]': {
                 uniqueName: "Name can not be repeated",
@@ -7150,8 +7167,9 @@ function view_reviews(id, title) {
                 var score = val.scr_total + '/100';
                 var status = val.scr_status;
                 var rem = (val.scr_remarks == '' || val.scr_remarks == null) ? '-' : val.scr_remarks;
-                var file = (val.scr_file == null || val.scr_file == '') ? 'N/A' : '<a class="text-primary" href="' + base_url + "assets/oprs/uploads/reviewersdoc/" + val.scr_file + '" target="_blank" download>Downlod</a>';
-                var reco = (status == 4) ? '<span class="badge rounded-pill bg-success">SUCCESS</span>' : '<span class="badge rounded-pill bg-danger">FAILED</span>';
+                var file = (val.scr_file == null || val.scr_file == '') ? 'N/A' : '<a class="text-primary" href="' + base_url + "assets/oprs/uploads/reviewersdoc/" + val.scr_file + '" target="_blank" download>Download</a>';
+                var reco = (status == 4) ? '<span class="badge rounded-pill bg-success">SUCCESS</span>' 
+                : ((status == 7) ? '<span class="badge rounded-pill bg-danger">FAILED</span>' : '<span class="badge rounded-pill bg-secondary">PENDING</span>');
  
 
                 $('#reviews_table tbody').append('<tr><td>' + i +'</td> \
@@ -8822,7 +8840,7 @@ function togglePassword(elementID, iconID, elementID2){
   }
 function disableOnSubmit(element, form, action){
     var newButtonText = (action == 'verify') ? 'Verifying' : 'Loading';
-
+    
     $(element).prop('disabled' ,true);
     $(element).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>' + newButtonText);
     $(form).submit();
@@ -8845,7 +8863,7 @@ function getCurrentOTP(refCode){
         try{
           otpDate = new Date(data[0]['otp_date']);
            
-          var diff = currentDate.getTime() - otpDate.getTime();
+          var diff = Math.abs(currentDate.getTime() - otpDate.getTime());
           var diffHours = Math.floor(diff / (1000 * 60 * 60));
           var diffMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
           var diffSeconds = Math.floor((diff % (1000 * 60)) / 1000);   

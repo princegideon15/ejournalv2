@@ -238,9 +238,9 @@ class Manuscripts extends OPRS_Controller {
 		$post['man_source'] = $source; 
 
 		// local
-		$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
+		// $dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
 		// server
-		// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
+		$dir_man = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_pdf/';
 	
 		// upload full manuscript
 		$config_man['upload_path'] = $dir_man;
@@ -257,9 +257,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// local
-		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
+		// $dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
 		// server
-		//  $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
+		 $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/initial_abstracts_pdf/';
 	
 		// upload full manuscript
 		$config_abs['upload_path'] = $dir_abs;
@@ -276,9 +276,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// local
-		$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
+		// $dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
 		// server
-		//  $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
+		 $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/initial_manuscripts_word/';
 	
 		// upload full manuscript word
 		$config_word['upload_path'] = $dir_word;
@@ -296,9 +296,9 @@ class Manuscripts extends OPRS_Controller {
 
 		if(isset($upload_file_latex)){
 			// local
-			$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_latex/';
+			// $dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/initial_latex/';
 			// server
-			//  $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/initial_latex/';
+			 $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/initial_latex/';
 		
 			// upload full manuscript latex
 			$config_latex['upload_path'] = $dir_latex;
@@ -4705,7 +4705,7 @@ class Manuscripts extends OPRS_Controller {
 		// udpate manuscript, status
 		$post = array();
 		$post['man_pages'] = $man_pages;
-		$post['man_status'] = ($revision_status == 1) ? 18 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
+		$post['man_status'] = ($revision_status == 1) ? 17 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
 		$post['man_revision_status'] = ($revision_status == 1) ? 1 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 0);
 		$post['man_process_date'] = date('Y-m-d H:i:s');
 
@@ -4761,14 +4761,14 @@ class Manuscripts extends OPRS_Controller {
 
 
 		if($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
-			$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
+			// $dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
 			// server
-			// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
+			$dir_man = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_pdf/';
 		}else{
 			// final revision
-			$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
+			// $dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
 			// server
-			// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
+			$dir_man = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
 		}
 	
 		// upload full manuscript
@@ -4787,14 +4787,14 @@ class Manuscripts extends OPRS_Controller {
 
 
 		if($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
-			$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
+			// $dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
 			// server
-			// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
+			$dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/revised_abstracts_pdf/';
 		}else{
 			// final revision
-			$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
+			// $dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 			// server
-			// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
+			$dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 		}
 	
 		// upload full manuscript
@@ -4812,14 +4812,14 @@ class Manuscripts extends OPRS_Controller {
 		}
 		
 		if($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
-			$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
+			// $dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
 			// server
-			// $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
+			$dir_word = '/var/www/html/ejournal/assets/oprs/uploads/revised_manuscripts_word/';
 		}else{
 			// final revision
-			$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_word/';
+			// $dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_word/';
 			// server
-			// $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_word/';
+			$dir_word = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_word/';
 		}
 	
 		// upload full manuscript word
@@ -4837,14 +4837,14 @@ class Manuscripts extends OPRS_Controller {
 		}
 		
 		if($revision_status == 1 || $criteria_status == 2 || $editor_review_status == 10){ // pre-final revision
-			$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_latex/';
+			// $dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revised_latex/';
 			// server
-			// $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/revised_latex/';
+			$dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/revised_latex/';
 		}else{
 			// final revision
-			$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_latex/';
+			// $dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_latex/';
 			// server
-			// $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/final_latex/';
+			$dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/final_latex/';
 		}
 	
 		if(isset($upload_file_latex)){
@@ -4878,9 +4878,9 @@ class Manuscripts extends OPRS_Controller {
 			$post['mtx_file'] = date('YmdHis') . '_' . $clean_file_mtx . '.' . $file_ext_mtx;
 			$upload_file_mtx = $post['mtx_file'];
 	
-			$dir_mtx = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revision_matrix/';
+			// $dir_mtx = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/revision_matrix/';
 			// server
-			// $dir_mtx = '/var/www/html/ejournal/assets/oprs/uploads/revision_matrix/';
+			$dir_mtx = '/var/www/html/ejournal/assets/oprs/uploads/revision_matrix/';
 		
 			// upload full mtxuscript
 			$config_mtx['upload_path'] = $dir_mtx;
@@ -5694,7 +5694,7 @@ class Manuscripts extends OPRS_Controller {
 		$mail->AddAddress($email);
 
 		// update manuscript status
-		$man['man_status'] = 17;
+		$man['man_status'] = 18;
 		$man['man_process_date'] = date('Y-m-d H:i:s');
 		$man['last_updated'] = date('Y-m-d H:i:s');
 		$where['row_id'] = $man_id;
@@ -5866,9 +5866,9 @@ class Manuscripts extends OPRS_Controller {
 
 
 		// final revision
-		$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
+		// $dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
 		// server
-		// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
+		$dir_man = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
 		
 	
 		// upload full manuscript
@@ -5886,9 +5886,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// final revision
-		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
+		// $dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 		// server
-		// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
+		$dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 	
 		// upload full manuscript
 		$config_abs['upload_path'] = $dir_abs;
@@ -5905,9 +5905,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 	
 		// final revision
-		$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_word/';
+		// $dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_word/';
 		// server
-		// $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_word/';
+		$dir_word = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_word/';
 	
 		// upload full manuscript word
 		$config_word['upload_path'] = $dir_word;
@@ -5925,9 +5925,9 @@ class Manuscripts extends OPRS_Controller {
 		
 	
 		// final revision
-		$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_latex/';
+		// $dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_latex/';
 		// server
-		// $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/final_latex/';
+		$dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/final_latex/';
 		
 	
 		// upload full manuscript latex
@@ -6155,9 +6155,9 @@ class Manuscripts extends OPRS_Controller {
 
 
 		// final revision
-		$dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
+		// $dir_man = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
 		// server
-		// $dir_man = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
+		$dir_man = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/';
 		
 	
 		// upload full manuscript
@@ -6175,9 +6175,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// final revision
-		$dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
+		// $dir_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 		// server
-		// $dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
+		$dir_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/';
 	
 		// upload full manuscript
 		$config_abs['upload_path'] = $dir_abs;
@@ -6194,9 +6194,9 @@ class Manuscripts extends OPRS_Controller {
 		}
 	
 		// final revision
-		$dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_word/';
+		// $dir_word = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_word/';
 		// server
-		// $dir_word = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_word/';
+		$dir_word = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_word/';
 	
 		// upload full manuscript word
 		$config_word['upload_path'] = $dir_word;
@@ -6214,9 +6214,9 @@ class Manuscripts extends OPRS_Controller {
 		
 	
 		// final revision
-		$dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_latex/';
+		// $dir_latex = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_latex/';
 		// server
-		// $dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/final_latex/';
+		$dir_latex = '/var/www/html/ejournal/assets/oprs/uploads/final_latex/';
 		
 	
 		// upload full manuscript latex
@@ -6412,11 +6412,11 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// server
-		// $from_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/' . $abs;
-		// $to_abs = '/var/www/html/ejournal/assets/uploads/abstract/' . $abs;
+		$from_abs = '/var/www/html/ejournal/assets/oprs/uploads/final_abstracts_pdf/' . $abs;
+		$to_abs = '/var/www/html/ejournal/assets/uploads/abstract/' . $abs;
 		// local
-		$from_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/' . $abs;
-		$to_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/uploads/abstract/' . $abs;
+		// $from_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_abstracts_pdf/' . $abs;
+		// $to_abs = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/uploads/abstract/' . $abs;
 
 
 		if (!copy($from_abs, $to_abs)) {
@@ -6426,11 +6426,11 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		// server
-		// $from_pdf = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/' . $file;
-		// $to_pdf = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
+		$from_pdf = '/var/www/html/ejournal/assets/oprs/uploads/final_manuscripts_pdf/' . $file;
+		$to_pdf = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
 		// local
-		$from_pdf = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/' . $abs;
-		$to_pdf = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/uploads/pdf/' . $abs;
+		// $from_pdf = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/oprs/uploads/final_manuscripts_pdf/' . $abs;
+		// $to_pdf = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/uploads/pdf/' . $abs;
 
 		if (!copy($from_pdf, $to_pdf)) {
 			echo "failed to copy $from_abs...\n";

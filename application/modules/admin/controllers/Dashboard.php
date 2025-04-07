@@ -82,7 +82,8 @@ class Dashboard extends EJ_Controller {
 
 				$this->_LoadPage('common/body', $data);
 			} else {
-				redirect('../../ejournal/oprs/dashboard');
+				redirect('../../ejournal/oprs/dashboard'); // local or test
+				// redirect('../../oprs/dashboard'); // prod
 			}
 		}
 

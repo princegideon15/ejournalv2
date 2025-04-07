@@ -87,6 +87,8 @@ class Library_model extends CI_Model {
 			$oprs->where('id', $id);
 		}
 
+		$oprs->where('publication_status', 1);
+
 		$query = $oprs->get();
 		return $query->result();
 	}

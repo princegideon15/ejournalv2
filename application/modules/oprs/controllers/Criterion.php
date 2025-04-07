@@ -91,7 +91,7 @@ class Criterion extends OPRS_Controller {
             $where['pcrt_id'] = $this->input->post('pcrt_id', TRUE);
         }
 
-		$this->Library_model->update_critera($post, $where, $criteria);
+		$this->Library_model->update_critera(array_filter($post), $where, $criteria);
     }
 
 

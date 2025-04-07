@@ -69,7 +69,7 @@ class Publication_types extends OPRS_Controller {
 		$post['publication_status'] = $this->input->post('publication_status', TRUE);
 		$post['last_updated'] = date('Y-m-d H:i:s');
 		$where['id'] = $this->input->post('id', TRUE);
-		$this->Library_model->update_publication_type($post, $where);
+		$this->Library_model->update_publication_type(array_filter($post), $where);
     }
 
 

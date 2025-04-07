@@ -1859,7 +1859,7 @@ function getCurrentOTP(refCode, otpType){
       try{
         otpDate = new Date(data[0]['otp_date']);
          
-        var diff = currentDate.getTime() - otpDate.getTime();
+        var diff = Math.abs(currentDate.getTime() - otpDate.getTime());
         var diffHours = Math.floor(diff / (1000 * 60 * 60));
         var diffMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         var diffSeconds = Math.floor((diff % (1000 * 60)) / 1000);   

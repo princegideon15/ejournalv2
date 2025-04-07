@@ -68,7 +68,7 @@ class Roles extends OPRS_Controller {
 		$post['role_status'] = $this->input->post('role_status', TRUE);
 		$post['last_updated'] = date('Y-m-d H:i:s');
 		$where['row_id'] = $this->input->post('row_id', TRUE);
-		$this->User_model->update_user_type($post, $where);
+		$this->User_model->update_user_type(array_filter($post), $where);
     }
 
 

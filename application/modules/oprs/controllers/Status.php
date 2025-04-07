@@ -69,7 +69,7 @@ class Status extends OPRS_Controller {
 		$post['status'] = $this->input->post('status', TRUE);
 		$post['last_updated'] = date('Y-m-d H:i:s');
 		$where['id'] = $this->input->post('id', TRUE);
-		$this->Library_model->update_status_type($post, $where);
+		$this->Library_model->update_status_type(array_filter($post), $where);
     }
 
 
