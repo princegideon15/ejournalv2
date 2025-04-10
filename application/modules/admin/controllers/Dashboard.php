@@ -471,36 +471,40 @@ class Dashboard extends EJ_Controller {
 
 	public function update_policy() {
 		// upload policy
-		$config_pdf['upload_path'] = './assets/uploads/editorial_policy';
-		$config_pdf['allowed_types'] = 'pdf';
-		$config_pdf['overwrite'] = TRUE;
-		$config_pdf['file_name'] = now() . '_editorial_policy';
+		// $config_pdf['upload_path'] = './assets/uploads/editorial_policy';
+		// $config_pdf['allowed_types'] = 'pdf';
+		// $config_pdf['overwrite'] = TRUE;
+		// $config_pdf['file_name'] = now() . '_editorial_policy';
 
-		$this->load->library('upload', $config_pdf);
-		$this->upload->initialize($config_pdf);
+		// $this->load->library('upload', $config_pdf);
+		// $this->upload->initialize($config_pdf);
 
-		if (!$this->upload->do_upload('ep_file')) {
-			$error = $this->upload->display_errors();
-		} else {
-			$data = $this->upload->data();
-		}
+		// if (!$this->upload->do_upload('ep_file')) {
+		// 	$error = $this->upload->display_errors();
+		// } else {
+		// 	$data = $this->upload->data();
+		// }
 
-		// $content = $this->input->post('content', TRUE);
+		$content = $this->input->post('content', TRUE);
 
 		// archive old policy
-		$archive['ep_is_archive'] = '1';
-		$where['ep_is_archive'] = '0';
+		// $archive['ep_is_archive'] = '1';
+		// $where['ep_is_archive'] = '0';
 
-		$this->Library_model->archive_editorial_policy($archive, $where);
+		// $this->Library_model->archive_editorial_policy($archive, $where);
 
 		// save new policy
 		$data = [
-			'ep_file' => $config_pdf['file_name'],
-			'ep_is_archive' => 0,
-			'created_at' => date('Y-m-d H:i:s')
+			// 'ep_file' => $config_pdf['file_name'],
+			// 'ep_is_archive' => 0,
+			'ep_content' => $content,
+			'updated_at' => date('Y-m-d H:i:s')
 		];
 
-		$this->Library_model->save_editorial_policy($data);
+
+
+		// $this->Library_model->save_editorial_policy($data);
+		$this->Library_model->update_editorial_policy($data);
 
 		save_log_ej(_UserIdFromSession(), 'Added Editorial Policy', '0', _UserRoleFromSession());
 	}

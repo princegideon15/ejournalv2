@@ -2028,42 +2028,42 @@ $(document).ready(function () {
 		debug: true,
 		errorClass: 'text-danger',
 		rules: {
-			// ep_content: {
-			// 	required: true,
-			// },
-			ep_file : {
-				extension: "pdf",
-				filesize : 20000000,
+			ep_content: {
+				required: true,
 			},
+			// ep_file : {
+			// 	extension: "pdf",
+			// 	filesize : 20000000,
+			// },
 		},
 		messages: {
-			ep_file: {
-				filesize: function (param) {
-					// Dynamically construct the message based on the file size limit
-					return `File size must be less than 20 MB`;
-				}
-			}
+			// ep_file: {
+			// 	filesize: function (param) {
+			// 		// Dynamically construct the message based on the file size limit
+			// 		return `File size must be less than 20 MB`;
+			// 	}
+			// }
 		},
 		submitHandler: function () {
 
-			// var ep_content = tinyMCE.get('ep_content').getContent();
+			var ep_content = tinyMCE.get('ep_content').getContent();
 
-			var form = $('#form_policy');
-			var formdata = false;
+			// var form = $('#form_policy');
+			// var formdata = false;
 
-			if (window.FormData) {
-				formdata = new FormData(form[0]);
-			}
+			// if (window.FormData) {
+			// 	formdata = new FormData(form[0]);
+			// }
 
 			$.ajax({
 				url: base_url + "admin/dashboard/update_policy/",
-				// data: { content: ep_content },
-				data: formdata ? formdata : form.serialize(),
+				data: { content: ep_content },
+				// data: formdata ? formdata : form.serialize(),
 				cache: false,
-				contentType: false,
-				processData: false,
-				// contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Use default content type for simple data
-				// processData: true, // Allow jQuery to process the data
+				// contentType: false,
+				// processData: false,
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Use default content type for simple data
+				processData: true, // Allow jQuery to process the data
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 

@@ -539,7 +539,8 @@ $(document).ready(function() {
   
               Swal.fire({
                 title: "Session Expired",
-                text: "You have been idle for 20 minutes. Please log in again.",
+                // text: "You have been idle for 20 minutes. Please log in again.",
+                text: "You have been idle for an hour. Please log in again.",
                 icon: "info",
                 confirmButtonColor: "#0c6bcb",
               
@@ -7167,8 +7168,8 @@ function view_reviews(id, title) {
                 var status = val.scr_status;
                 var rem = (val.scr_remarks == '' || val.scr_remarks == null) ? '-' : val.scr_remarks;
                 var file = (val.scr_file == null || val.scr_file == '') ? 'N/A' : '<a class="text-primary" href="' + base_url + "assets/oprs/uploads/reviewersdoc/" + val.scr_file + '" target="_blank" download>Download</a>';
-                var reco = (status == 4) ? '<span class="badge rounded-pill bg-success">SUCCESS</span>' 
-                : ((status == 7) ? '<span class="badge rounded-pill bg-danger">FAILED</span>' : '<span class="badge rounded-pill bg-secondary">PENDING</span>');
+                var reco = (val.scr_total >= 75) ? '<span class="badge rounded-pill bg-success">PASSED</span>' 
+                : ((val.scr_total > 0 && val.scr_total < 75) ? '<span class="badge rounded-pill bg-danger">FAILED</span>' : '<span class="badge rounded-pill bg-secondary">PENDING</span>');
  
 
                 $('#reviews_table tbody').append('<tr><td>' + i +'</td> \

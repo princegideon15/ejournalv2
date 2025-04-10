@@ -6,12 +6,12 @@
 		</div>
 		<div class="col col-7 p-3">
 					<!-- <div class="border p-0 mb-5 bg-white rounded"> -->
-					<div class="p-0 mb-5">
-						<div class="row p-0">
-                            <!-- <div class="col p-0"> -->
-								<!-- <?php echo $editorial_policy;?> -->
-								<embed WMODE="transparent" src="<?php echo base_url('assets/uploads/editorial_policy/' . $editorial_policy . '.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" type="application/pdf" width="100%" height="1000px">
-                            <!-- </div> -->
+					<div class="mb-5">
+						<div class="row">
+                            <div class="col ">
+								<?php echo $editorial_policy[0]['ep_content'];?>
+								<!-- <embed WMODE="transparent" src="<?php echo base_url('assets/uploads/editorial_policy/' . $editorial_policy . '.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" type="application/pdf" width="100%" height="1000px"> -->
+                            </div>
 						</div>
 
 						<div class="mt-5">

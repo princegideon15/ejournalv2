@@ -103,12 +103,12 @@ class Library_model extends CI_Model {
         return $query->result_array();
     }
     public function get_editorial_policy_content(){
-		$this->db->select("ep_file");
+		$this->db->select("ep_content, ep_file");
 		$this->db->from('tbleditorial_policy');
-        $this->db->where('ep_is_archive', '0');
+        // $this->db->where('ep_is_archive', '0');
 		$query = $this->db->get();
 		$result = $query->result_array();
-		return $result[0]['ep_file'];
+		return $result;
 	}
 
     

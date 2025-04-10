@@ -880,18 +880,18 @@
 								<form id="form_policy">
 									<div class="mb-3">
 										<!-- <div class="upload_cfp d-none"> -->
-											<label for="ep_file" class="form-label">Upload File <span class="badge rounded-pill bg-danger">PDF</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
-											<input type="file" class="form-control" id="ep_file" name="ep_file" accept="application/pdf">
+											<!-- <label for="ep_file" class="form-label">Upload File <span class="badge rounded-pill bg-danger">PDF</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
+											<input type="file" class="form-control" id="ep_file" name="ep_file" accept="application/pdf"> -->
 										<!-- </div>	 -->
-										<!-- <label for="ep_content" class="form-label">Content</label> -->
-										<!-- <textarea rows="20" class="form-control" id="ep_content" name="ep_content"><?php echo $editorial_policy; ?></textarea> -->
+										<label for="ep_content" class="form-label">Content</label>
+										<textarea rows="20" class="form-control" id="ep_content" name="ep_content"><?php echo $editorial_policy[0]['ep_content']; ?></textarea>
 									</div>
 									
 									<div class="mb-5">
 									<button type="submit" class="btn btn-primary" id="btn_save_policy" name="btn_save_policy"><span class="oi oi-check"></span> Save</button>
 									</div>
 
-									<div class="mb-3">
+									<!-- <div class="mb-3">
 										<table class="table">
 											<thead class="text-muted fs-6">
 												<th>Archived File</th>
@@ -916,12 +916,12 @@
 												<?php } ?>
 											</tbody>
 										</table>
-									</div>
+									</div> -->
 								</form>
 							</div>
-							<div class="col">
+							<!-- <div class="col">
 								<embed WMODE="transparent" class="border border-secondary" id="ep_file" src="<?php echo base_url('assets/uploads/editorial_policy/'.$editorial_policy.'.pdf#toolbar=0&navpanes=0&scrollbar=0'); ?>" type="application/pdf" width="100%" height="600px">
-							</div>
+							</div> -->
 						</div>
 						</div>
 					</div>

@@ -47,22 +47,13 @@
                           <?php $c = 1;foreach ($manus as $m): ?>
                           <?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($m->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($m->row_id);?>
                           <?php $authors = $m->man_author . $acoa?>
-                          <?php $status = (($m->man_status == '1') ? 'New' :
-              ((($m->man_status == '2') ? 'On-review' :
-                ((($m->man_status == '3') ? 'Reviewed' :
-                  ((($m->man_status == '4') ? 'For Approval' :
-                    'Published')))))));?>
-                              <?php $class = (($m->man_status == '1') ? 'warning' :
-              ((($m->man_status == '2') ? 'primary' :
-                ((($m->man_status == '3') ? 'info' :
-                  ((($m->man_status == '4') ? 'danger' :
-                    'success')))))));?>
+													<?php $status = '<span class="badge rounded-pill bg-' . $m->status_class . '">' . $m->status . '</span>'; ?>
                           <tr>
                             <td class="text-center"><?php echo $c++; ?></td>
                             <td><?php echo $m->man_title; ?></td>
                             <td><?php echo $authors; ?></td>
                             <td><?php echo date_format(new DateTime($m->date_created), 'F j, Y'); ?></td>
-                            <td><span style="cursor:pointer" class="badge rounded-pill text-bg-<?php echo $class; ?>" data-bs-toggle="modal" rel="tooltip" data-placement="top" title="View Tracking" data-bs-target="#trackingModal" onclick="tracking(<?php echo $m->row_id; ?>,<?php echo $this->session->userdata('_oprs_type_num'); ?>);"><?php echo $status; ?></span></td>
+                            <td><span style="cursor:pointer" data-bs-toggle="modal" rel="tooltip" data-placement="top" title="View Tracking" data-bs-target="#trackingModal" onclick="tracking(<?php echo $m->row_id; ?>,<?php echo $this->session->userdata('_oprs_type_num'); ?>);"><?php echo $status; ?></span></td>
                           </tr>
                           <?php endforeach;?>
                         </tbody>
@@ -159,12 +150,13 @@
                         <?php $acoa = (empty($this->Coauthor_model->get_author_coauthors($row->row_id))) ? '' : ', ' . $this->Coauthor_model->get_author_coauthors($row->row_id);?>
                         <?php $authors = $row->man_author . $acoa; ?>
                         <?php $file = ($row->scr_file != '') ? "<a class='text-truncate' href='" . base_url('assets/oprs/uploads/reviewersdoc/'.$row->scr_file.'') ."' download>Download</a>" : 'N/A'; ?>
-                        <?php $rev_status = (($row->scr_status == '4') ? '<span class="badge rounded-pill bg-success">Recommended as submitted</span>' 
-                                  : ((($row->scr_status == '5') ? '<span class="badge rounded-pill bg-warning">Recommended with minor revisions</span>' 
-                                  : ((($row->scr_status == '6') ? '<span class="badge rounded-pill bg-warning">Recommended with major revisions</span>'  
-                                  : ((($row->scr_status == '7') ? '<span class="badge rounded-pill bg-danger">Not recommended</span>' 
-                                  : '-'))))))
-                                  );?>
+                        <?php $rev_status = ($row->scr_total >= 75) 
+                            ? '<span class="badge rounded-pill bg-success">PASSED</span>' 
+                            : (($row->scr_total > 0 && $row->scr_total < 75) 
+                                ? '<span class="badge rounded-pill bg-danger">FAILED</span>' 
+                                : '<span class="badge rounded-pill bg-secondary">PENDING</span>');?>
+
+
                         <?php $cert = ($row->scr_cert == 1) ? '<span class="badge bg-success"><span class="fas fa-check-circle"></span> eCertification</span>' : '<button class="btn btn-sm btn-outline-secondary" onclick="send_cert(\'' . $row->scr_man_rev_id . '\',\'' . $row->man_id . '\')">Send eCertification</button>';?>
                         <tr>
                           <td><?php echo $c++; ?></td></td>
