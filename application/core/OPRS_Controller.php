@@ -38,7 +38,7 @@ class OPRS_Controller extends MX_Controller {
 
 		$objMail = $this->my_phpmailer->load();
 
-			//security headers
+		//security headers
 		$this->output->set_header("Content-Security-Policy: 
 			default-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com; 
 			script-src 'self' https://*.google.com https://*.gstatic.com https://*.googleapis.com 'unsafe-inline'; 
