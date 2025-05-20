@@ -394,8 +394,7 @@ class Review_model extends CI_Model {
 		$oprs->where('ps_status', 0);
 		$oprs->where('ps_action_date', NULL);
 		$query = $oprs->get();
-		return $query->
-		result();
+		return $query->result();
 	}
 
 	public function get_cluster_editor_status($id){
@@ -408,6 +407,20 @@ class Review_model extends CI_Model {
 		// $oprs->where('edit_status', NULL);
 		$query = $oprs->get();
 		return $query->result();
+	}
+
+	public function get_last_processor_role_id($man_id){
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('ps_role_id');
+		$oprs->from($this->process_status);
+		$oprs->where('ps_man_id', $man_id);
+		$oprs->where_in('ps_role_id', [6, 7, 8, 9, 10]);
+		$oprs->order_by('id', 'DESC'); // or use a date column
+		$oprs->limit(1);
+		$query = $oprs->get();
+		$result = $query->row(); // get only one row
+		
+		return $result ? $result->ps_role_id : null;
 	}
 }
 

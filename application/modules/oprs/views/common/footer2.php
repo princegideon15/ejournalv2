@@ -644,64 +644,64 @@
 				<h5 class="modal-title">Manuscript Revision</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<form id="manuscript_revision_form">
-					<input type="hidden" id="man_id" name="man_id">
-					<input type="hidden" id="revision_status" name="revision_status">
-					<input type="hidden" id="criteria_status" name="criteria_status">
-					<input type="hidden" id="editor_review_status" name="editor_review_status">
-				<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>REVISION DOCUMENTS/REMARKS</h6>
-					<table class="table">
-						<tbody>
-							<tr class="d-none" id="criteria_review_result"><td class="fw-bold bg-light">Criteria Review Result</td><td id="criteria_review_result_value"></td></tr>
-							<tr id="revision_consolidations_row"><td class="fw-bold bg-light">Consolidated Review/Remarks</td><td id="revision_consolidations"></td></tr>
-							<tr><td class="fw-bold bg-light">Remarks</td><td id="revision_remarks"></td></tr>
-							<tr id="revision_matrix_template"><td class="fw-bold bg-light">Revision Matrix Template</td><td><a href="<?php echo base_url("assets/oprs/uploads/REVISION_MATRIX_TEMPLATE.docx");?>" download>Download</a></td></tr>
-						</tbody>
-					</table>
-					<h6 class="text-uppercase text-muted fw-bold border border-2 bg-light p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span> Upload Revisions</h6>
-					<div class="mb-3" id="div_man_matrix">
-						<label class="fw-bold form-label" for="man_matrix">Revision Matrix</label>
-						<span class="badge rounded-pill bg-primary">WORD</span>
-						<span class="badge rounded-pill bg-danger">PDF</span>
-						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
-						<input type="file" class="form-control" id="man_matrix" name="man_matrix" accept="application/pdf">
-					</div>
-					<div class="mb-3">
-						<label class="fw-bold form-label" for="man_abs">Abstract</label>
-						<span class="badge rounded-pill bg-danger">PDF</span>
-						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
-						<input type="file" class="form-control" id="man_abs" name="man_abs" accept="application/pdf">
-					</div>
-					<div class="mb-3" id="man_file_div">
-						<label class="fw-bold form-label" for="man_file">Full Manuscript</label>
-						<span class="badge rounded-pill bg-danger">PDF</span>
-						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
-						<input type="file" class="form-control" id="man_file" name="man_file" accept="application/pdf">
-					</div>
-					<div class="mb-3" id="man_word_div">
-						<label class="fw-bold form-label" for="man_word">Full Manuscript</label>
-						<span class="badge rounded-pill bg-primary">WORD</span>
-						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
-						<input type="file" class="form-control" id="man_word" name="man_word"
-							accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-					</div>
-					<div class="mb-3" id="man_latex_div">
-						<label class="fw-bold form-label" for="man_latex">LaTex Format</label>
-						<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
-						<input type="file" class="form-control" id="man_latex" name="man_latex">
-					</div>
-					<div class="mb-3">
-						<label class="fw-bold form-label" for="man_pages">Number of pages</label>
-						<input type="number" class="form-control w-25" placeholder="0" id="man_pages" name="man_pages"
-							min="1">
-					</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary">Submit</button>
-				</form>
-			</div>
+			<form id="manuscript_revision_form"  enctype="multipart/form-data">
+				<div class="modal-body">
+						<input type="hidden" id="man_id2" name="man_id2">
+						<input type="hidden" id="revision_status" name="revision_status">
+						<input type="hidden" id="criteria_status" name="criteria_status">
+						<input type="hidden" id="editor_review_status" name="editor_review_status">
+						<h6 class="text-uppercase text-muted fw-bold bg-light border border-2 p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span>REVISION DOCUMENTS/REMARKS</h6>
+						<table class="table">
+							<tbody>
+								<tr class="d-none" id="criteria_review_result"><td class="fw-bold bg-light">Criteria Review Result</td><td id="criteria_review_result_value"></td></tr>
+								<tr id="revision_consolidations_row"><td class="fw-bold bg-light">Consolidated Review/Remarks</td><td id="revision_consolidations"></td></tr>
+								<tr><td class="fw-bold bg-light">Remarks</td><td id="revision_remarks"></td></tr>
+								<tr id="revision_matrix_template"><td class="fw-bold bg-light">Revision Matrix Template</td><td><a href="<?php echo base_url("assets/oprs/uploads/REVISION_MATRIX_TEMPLATE.docx");?>" download>Download</a></td></tr>
+							</tbody>
+						</table>
+						<h6 class="text-uppercase text-muted fw-bold border border-2 bg-light p-2" style="font-size:14px"><span class="fa fa-info-circle me-1"></span> Upload Revisions</h6>
+						<!-- <span class="badge rounded-pill bg-primary">WORD</span> -->
+						<div class="mb-3" id="div_man_matrix">
+							<label class="fw-bold form-label" for="man_matrix">Revision Matrix</label>
+							<span class="badge rounded-pill bg-danger">PDF</span>
+							<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+							<input type="file" class="form-control" id="man_matrix" name="man_matrix" accept="application/pdf">
+						</div>
+						<div class="mb-3">
+							<label class="fw-bold form-label" for="man_abs">Abstract</label>
+							<span class="badge rounded-pill bg-danger">PDF</span>
+							<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+							<input type="file" class="form-control" id="man_abs" name="man_abs" accept="application/pdf">
+						</div>
+						<div class="mb-3" id="man_file_div">
+							<label class="fw-bold form-label" for="man_file">Full Manuscript</label>
+							<span class="badge rounded-pill bg-danger">PDF</span>
+							<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+							<input type="file" class="form-control" id="man_file" name="man_file" accept="application/pdf">
+						</div>
+						<div class="mb-3" id="man_word_div">
+							<label class="fw-bold form-label" for="man_word">Full Manuscript</label>
+							<span class="badge rounded-pill bg-primary">WORD</span>
+							<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+							<input type="file" class="form-control" id="man_word" name="man_word"
+								accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+						</div>
+						<div class="mb-3" id="man_latex_div">
+							<label class="fw-bold form-label" for="man_latex">LaTex Format</label>
+							<span class="badge rounded-pill bg-warning text-dark">20MB Limit</span>
+							<input type="file" class="form-control" id="man_latex" name="man_latex">
+						</div>
+						<div class="mb-3">
+							<label class="fw-bold form-label" for="man_pages">Number of pages</label>
+							<input type="number" class="form-control w-25" placeholder="0" id="man_pages" name="man_pages"
+								min="1">
+						</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -1280,7 +1280,7 @@
 						<textarea class="form-control form-control-sm" id="cons_remarks" name="cons_remarks"
 							placeholder="(Type N/A if no remarks)"></textarea>
 					</div>
-					<div>
+					<!-- <div>
 						<label for="cons_action" class="fw-bold form-label">Need Revision?</label>
 						<div class="d-flex gap-1" id="cons_revise">
 							<div class="form-check form-check-inline mt-2">
@@ -1292,7 +1292,7 @@
 								<label class="form-check-label pt-1" for="cons_revise_no">No</label>
 							</div>
 						</div>
-					</div>
+					</div> -->
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-outline-secondary me-auto" type="button" data-bs-toggle="modal" data-bs-target="#reviewsModal">Back to Reviews</button>
@@ -1303,7 +1303,53 @@
 		</div>
 	</div>
 </div>
-<!-- /.Final Review -->
+<!-- /.Technicak Desk Editor Consolidation -->
+
+
+<!-- EIC Review Author Revision -->
+<div class="modal fade" id="reviewRevisionModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Review Revised Manuscript</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table class="table">
+					<tbody>
+						<tr id="desk_revision_consolidations_row"><td class="fw-bold bg-light">Consolidated Review/Remarks</td><td id="desk_revision_consolidations"></td></tr>
+						<tr><td class="fw-bold bg-light">Remarks</td><td id="desk_revision_remarks"></td></tr></tbody>
+				</table>
+				<!-- <form id="submit_consolidation_form" method="POST" enctype="multipart/form-data"> -->
+				<form id="review_revised_form">
+					<input type="hidden" id="desk_rev_man_id" name="desk_rev_man_id">
+					<div class="mb-3">
+						<label class="fw-bold form-label" for="desk_rev_remarks">Remarks</label>
+						<textarea class="form-control form-control-sm" id="desk_rev_remarks" name="desk_rev_remarks"
+							placeholder="(Type N/A if no remarks)"></textarea>
+					</div>
+					<div>
+						<label for="desk_rev_action" class="fw-bold form-label">Need Revision?</label>
+						<div class="d-flex gap-1" id="desk_rev_revise">
+							<div class="form-check form-check-inline mt-2">
+								<input class="form-check-input" type="checkbox" id="desk_rev_revise_yes" name="desk_rev_revise" value="1" onclick="checkOnlyOne(this)">
+								<label class="form-check-label pt-1" for="desk_rev_revise_yes">Yes</label>
+							</div>
+							<div class="form-check form-check-inline mt-2">
+								<input class="form-check-input" type="checkbox" id="desk_rev_revise_no" name="desk_rev_revise" value="2" onclick="checkOnlyOne(this)">
+								<label class="form-check-label pt-1" for="desk_rev_revise_no">No</label>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.EIC Review Author Revision -->
 
 <!-- View Score -->
 <div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModal" aria-hidden="true">
