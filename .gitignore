@@ -1,6 +1,5 @@
-/assets/*
-!/assets/uploads/
-!/assets/oprs/uploads/
+/assets/uploads/
+/assets/oprs/uploads/
 /system/
 /user_guide/
 /application/*
@@ -19,3 +18,4 @@ license.txt
 readme.rst
 tbleditorial_policy.sql
 tblemail_notif_contents.sql
+.gitignore
