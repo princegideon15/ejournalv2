@@ -4,3 +4,16 @@ system/
 user_guide/
 !/application/modules/
 composer.json
+--index.html
+.gitignore
+README.md
+REVISED NRCP-RJ EDITORIAL POLICY.pdf
+addtional_table_process_status_with_modifeid_email_notification_added_status_typs.sql
+contributing.md
+dbej_new_tables_and_libraries.sql
+dboprs_new_tables_and_libraries.sql
+index.php
+license.txt
+readme.rst
+tbleditorial_policy.sql
+tblemail_notif_contents.sql
