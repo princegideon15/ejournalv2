@@ -3,3 +3,4 @@ assets/oprs/uploads/*
 system/
 user_guide/
 !/application/modules/
+composer.json
