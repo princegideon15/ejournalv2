@@ -75,7 +75,7 @@
 
                         <embed class="mb-3" src="<?= base_url('assets/uploads/abstract/'.$article[0]->art_abstract_file) ?>#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="700px" type="application/pdf">
                         
-                        <?php if($logged_in){
+                        <?php //if($logged_in){
                             echo '<div class="d-flex gap-1 mb-3">
                             <a class="main-btn btn" href="'.base_url('client/ejournal/download_file/'. $article[0]->art_id .'/'.$article[0]->art_full_text_pdf).'"
                                 role="button">
@@ -88,7 +88,7 @@
                            
                            
                             </div>';
-                        }?>
+                        //}?>
 
                         
                             

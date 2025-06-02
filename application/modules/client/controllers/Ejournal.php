@@ -167,10 +167,11 @@ class Ejournal extends EJ_Controller {
 	 */
 	public function download_file($dl_id, $file) {
 
+		$user_id = $this->session->userdata('user_id') ?? 0;
 		// get info of downloader
 		$data = [
 			'dl_art_id' => $dl_id,
-			'dl_user_id' => $this->session->userdata('user_id'),
+			'dl_user_id' => $user_id,
 			'dl_datetime' => date('Y-m-d H:i:s')
 		];
 		
@@ -186,20 +187,22 @@ class Ejournal extends EJ_Controller {
 		// $from = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/' . $file;
 		$file_path = '/var/www/html/ejournal/assets/uploads/pdf/' . $file;
 
+		if($user_id > 0) {
+			// save blank arta
+			$ref_code = random_string('alnum', 16);
+			$id = $this->session->userdata('user_id');
+			$email = $this->session->userdata('email');
+			$post['arta_user_id'] = $id;
+			$post['arta_email'] = $email;
+			$post['arta_ref_code'] = $ref_code;
+			$post['arta_created_at'] = date('Y-m-d H:i:s');
 
-		// save blank arta
-		$ref_code = random_string('alnum', 16);
-		$id = $this->session->userdata('user_id');
-		$email = $this->session->userdata('email');
-		$post['arta_user_id'] = $id;
-		$post['arta_email'] = $email;
-		$post['arta_ref_code'] = $ref_code;
-		$post['arta_created_at'] = date('Y-m-d H:i:s');
+			$this->CSF_model->save_csf_arta($post);
+ 
+			// send email
+			$this->notify_client($id, $dl_id, $ref_code);
+		}
 
-		$this->CSF_model->save_csf_arta($post);
-
-		// send email
-		$this->notify_client($id, $dl_id, $ref_code);
 
 
         $data = file_get_contents($file_path);
