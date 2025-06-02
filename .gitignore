@@ -1,7 +1,9 @@
-assets/uploads/*
-assets/oprs/uploads/*
-system/
-user_guide/
+/assets/*
+!/assets/uploads/
+!/assets/oprs/uploads/
+/system/
+/user_guide/
+/application/*
 !/application/modules/
 composer.json
 --index.html
