@@ -28,7 +28,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 </div>
                 <?=form_close()?>
                 <p class="text-end fst-italic pr-3 me-3"><a class="main-link"
-                        href="<?=base_url('/client/ejournal/advanced')?>">Advanced search test</a></p>
+                        href="<?=base_url('/client/ejournal/advanced')?>">Advanced search</a></p>
             </div>
 
             <!-- ABOUT CONTENT -->
