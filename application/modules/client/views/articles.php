@@ -148,20 +148,6 @@
 							title="Cited"><i class="oi oi-document"></i>
 							<?=number_format($row['citations'], 0, '', ',')?></span>
 					</div>
-                    
-                    <?php if($logged_in){
-                               echo '<div class="d-flex gap-1">
-                                <a  data-bs-toggle="modal" data-bs-target="#client_modal"
-                                    class="main-btn btn btn-sm" href="javascript:void(0);"
-                                    role="button" onclick="get_download_id('.$row['id'].')">
-                                    Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
-                                <a  data-bs-toggle="modal" data-bs-target="#citationModal"
-                                    class="main-btn btn-sm btn " href="javascript:void(0);"
-                                    role="button"
-                                    onclick="get_citee_info(\''.addslashes($row['cite']).'\','.$row['id'].')">
-                                    Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
-                                </div>';
-                            }?>
 				</div>
 
 				<hr>
