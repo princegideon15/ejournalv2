@@ -375,8 +375,8 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
             </div>
         </div>
     </div>
-    <!-- Citation Modal -->
-    <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+      <!-- CITATION MODAL -->
+     <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -384,9 +384,10 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Please provide us with your Full Name and Email Address. Then click SUBMIT to show the APA
+                    <!-- <p>Please fill up the required fields. Then click SUBMIT to show the APA
                         citation</p>
                     <form id="form_citation">
+                        
                         <input type="hidden" id="cite_value" name="cite_value">
                         <div class="form-group">
                             <label class="font-weight-bold" for="cite_title">Title<span
@@ -395,7 +396,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                                 placeholder="Mr. / Ms. / Dr.">
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-bold" for="cite_name">Name<span
+                        <label class="font-weight-bold" for="cite_name">Name<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <input type="text" class="form-control" id="cite_name" name="cite_name"
                                 placeholder="Full name">
@@ -412,25 +413,21 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                         <div class="form-group">
                             <label class="font-weight-bold" for="clt_affiliation">Affiliation<span
                                     class="text-danger font-weight-bold">*</span></label>
-                            <input type="text" class="form-control" id="cite_affiliation" name="cite_affiliation"
-                                placeholder="Affiliation">
+                            <input type="text" class="form-control" id="cite_affiliation" name="cite_affiliation" placeholder="Affiliation">
                         </div>
                         <div class="form-group">
                             <label class="font-weight-bold" for="cite_country">Country<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <select class="form-control" id="cite_country" name="cite_country"
                                 placeholder="Select Country" style="background-color: white">
-                                <!-- foreach of country -->
                                 <?php foreach ($country as $c): ?>
-                                d
                                 <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
+                                    echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
                                 <?php endforeach;?>
-                                <!-- /.end of foreach-->
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-bold" for="cite_email">Email<span
+                        <label class="font-weight-bold" for="cite_email">Email<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <input type="email" class="form-control" id="cite_email" name="cite_email"
                                 placeholder="Email">
@@ -445,13 +442,12 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                         </div>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
+                    </form> -->
+
                     <div id="cite_content" class="w-100">
                         <ul class="nav nav-tabs" id="cite_tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#apa" role="tab">APA</a>
+                                <a class="nav-link active" data-bs-toggle="tab" href="#apa" role="tab">APA</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="cite_tab_content">
@@ -459,9 +455,11 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                                 <textarea id="apa_format" class="form-control" readonly rows="5"></textarea>
                             </div>
                         </div>
-                        <button type="button" onClick="copyCitationToClipboard('#apa_format')"
-                            class="btn btn-outline-primary mt-3 w-100">Copy to clipboard</button>
+                        <button type="button" onClick="copyCitationToClipboard('#apa_format')" class="btn main-btn mt-3 w-100">Copy to clipboard</button>
                     </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>
