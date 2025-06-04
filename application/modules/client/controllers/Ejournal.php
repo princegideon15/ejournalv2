@@ -935,7 +935,9 @@ class Ejournal extends EJ_Controller {
 	public function save_citation($id)
 	{
 
-		$post['cite_user_id'] = $this->session->userdata('user_id');
+		$user_id = $this->session->userdata('user_id') ?? 0;
+
+		$post['cite_user_id'] = $user_id;
 		$post['cite_art_id'] = $id;
 		$post['date_created'] = date('Y-m-d H:i:s');
 		

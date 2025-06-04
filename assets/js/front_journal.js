@@ -1367,7 +1367,7 @@ function get_download_id(id, flag=null, file=null, logged_in = null)
 }
 
 function save_hits(id){
-  console.log("🚀 ~ save_hits ~ id:", id)
+  // console.log("🚀 ~ save_hits ~ id:", id)
   $.ajax({
     type:"POST",
     url: base_url + "client/ejournal/abstract_hits/"+id,
