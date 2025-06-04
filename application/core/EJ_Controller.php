@@ -61,8 +61,7 @@ class EJ_Controller extends MX_Controller {
 	private function check_user_activity() {
 		
 		if ($this->session->userdata('_oprs_logged_in')) {
-			// $timeout = 3600; // 20 minutes
-			$timeout = 1200; // 20 minutes
+			$timeout = 28800; // 8 hours
 			$current_time = time();
 
 			// Check if last activity is set in session
@@ -87,7 +86,7 @@ class EJ_Controller extends MX_Controller {
 		}
 		
 		if($this->session->userdata('_ej_logged_in')){
-			$timeout = 3600; // 20 minutes
+			$timeout = 28800; // 8 hours
 			$current_time = time();
 
 			// Check if last activity is set in session

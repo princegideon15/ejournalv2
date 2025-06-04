@@ -99,7 +99,7 @@ $(document).ready(function () {
       let timerInterval = setInterval(function() {
           idleTime += 1;
           
-          if (idleTime >= 3600) { // 20 minutes in seconds
+          if (idleTime >= 28800) { // 8 hours
               // Trigger logout or other actions
               clearInterval(timerInterval); // Stop the timer
   

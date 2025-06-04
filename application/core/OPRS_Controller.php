@@ -61,7 +61,7 @@ class OPRS_Controller extends MX_Controller {
 	private function check_user_activity() {
 		
 		if ($this->session->userdata('_oprs_logged_in')) {
-			$timeout = 3600; // 1hr
+			$timeout = 28800; // 8 hours
 			$current_time = time();
 
 			// Check if last activity is set in session
@@ -79,6 +79,30 @@ class OPRS_Controller extends MX_Controller {
 					$this->session->unset_userdata('_oprs_user_id'); // Clear specific session data
 					$this->session->set_flashdata('_oprs_session_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
 					redirect('oprs/login');
+				}
+			}
+
+			// Update the last activity timestamp
+			$this->session->set_userdata('last_activity', $current_time);
+		}
+
+		if($this->session->userdata('_ej_logged_in')){
+			$timeout = 28800; // 8 hours
+			$current_time = time();
+
+			// Check if last activity is set in session
+			if ($this->session->userdata('last_activity')) {
+				$last_activity = $this->session->userdata('last_activity');
+
+				// Check if the user has been inactive for too long
+				if (($current_time - $last_activity) > $timeout) {
+					// Destroy the session and redirect to login
+					save_log_ej($this->session->userdata('user_id'), 'Session expired');
+					$this->session->unset_userdata('_ej_logged_in'); // Clear specific session data
+					$this->session->unset_userdata('user_id');
+					$this->session->unset_userdata('email');
+					$this->session->set_flashdata('_ej_session_msg', 'Your session has expired due to inactivity. Please log in again to continue.');
+					redirect('client/login');
 				}
 			}
 
