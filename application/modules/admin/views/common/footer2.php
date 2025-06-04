@@ -659,7 +659,7 @@
         </form>
       </div>
       <div class="modal-footer">
-          <button class="btn btn-light" type="button" data-bs-dismiss="modal">Later</button>
+          <a class="btn btn-light" type="button" href="<?php echo base_url("oprs/login/logout");?>">Later</a>
           <button type="button" id="submit_feedback" class="btn btn-primary" disabled>Submit</button>
       </div>
     </div>
