@@ -395,6 +395,7 @@ $(document).ready(function () {
 
 	tinymce.init({
 		selector: '#ep_content',
+		content_css: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
 		forced_root_block: false,
 		height: "900",
 		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
