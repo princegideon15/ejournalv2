@@ -953,6 +953,8 @@ class Ejournal extends EJ_Controller {
 
 		echo $last_insert_id;
 
+		if($user_id){
+
 		// send email to author after citing his/her article
 		$this->notify_author($last_insert_id, $id, 2); // 2 - cited article
 
@@ -1080,6 +1082,7 @@ class Ejournal extends EJ_Controller {
 			echo '</br></br>Message could not be sent.</br>';
 			echo 'Mailer Error: ' . $mail->ErrorInfo . '</br>';
 			exit;
+		}
 		}
 	}
 

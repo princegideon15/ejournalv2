@@ -25,7 +25,9 @@ refCode,              // reference code for otp
 accessToken,          // user access token generated on logged in
 article_id,           // article id 
 article_page_timeout, // article page timeout for saving abstract hits         
-current_button_id = "#create_account";    // button to enable/disable for catpcha        
+current_button_id = "#create_account",    // button to enable/disable for catpcha
+isThrottledCitation = false,        
+isThrottledDownload = false;        
 
 $(document).ready(function()
 {
@@ -1753,11 +1755,21 @@ function copyCitationToClipboard(element){
 }
 
 function save_cite(apa_id){
-  $.ajax({
-    type:"POST",
-    url: base_url + "client/ejournal/save_citation/"+apa_id,
-    async: false
-  });
+
+  if (!isThrottledCitation) {
+        isThrottledCitation = true;
+
+      $.ajax({
+        type:"POST",
+        url: base_url + "client/ejournal/save_citation/"+apa_id,
+        async: false
+      });
+
+      setTimeout(function () {
+          isThrottled = false;
+      }, 1000); // allow next call after 1 second
+
+    }
 }
 
 
