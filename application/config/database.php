@@ -75,9 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
+	'hostname' => 'localhost', //server of ip
+	'username' => 'testserver_uat',
+	'password' => 'admin@NRCP2025',
+	// 'database' => 'dbej_new',
 	'database' => 'dbej',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
@@ -98,9 +99,8 @@ $db['default'] = array(
 $db['members'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost', //server of ip
-	'username' => 'root',
-	// 'password' => '$km$@NRCP@1933',
-	'password' => '',
+	'username' => 'testserver_uat',
+	'password' => 'admin@NRCP2025',
 	'database' => 'new_dbskms',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
@@ -121,9 +121,9 @@ $db['members'] = array(
 $db['dboprs'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost', //server of ip
-	'username' => 'root',
-	// 'password' => '$km$@NRCP@1933',
-	'password' => '',
+	'username' => 'testserver_uat',
+	'password' => 'admin@NRCP2025',
+	// 'database' => 'dboprs_new',
 	'database' => 'dboprs',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
@@ -140,8 +140,5 @@ $db['dboprs'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
-
-
-
 
 

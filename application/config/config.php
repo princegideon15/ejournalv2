@@ -24,10 +24,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 //$config['base_url'] = 'http://202.90.141.243/ejournal/';
-//$config['base_url'] = 'http://10.10.128.12/ejournal/';
-// $config['base_url'] = 'https://researchjournal.nrcp.dost.gov.ph/';
+// $config['base_url'] = 'http://10.10.128.12/ejournal/';
+//$config['base_url'] = 'http://10.10.128.19/ejournal/';
+$config['base_url'] = 'http://10.10.128.20/ejournal/';
+ //$config['base_url'] = 'https://researchjournal.nrcp.dost.gov.ph/';
 // $config['base_url'] = 'localhost';
-$config['base_url'] = 'http://localhost/ejournal/';
+// $config['base_url'] = 'http://localhost/ejournal/';
 
 /*
 |--------------------------------------------------------------------------
@@ -383,10 +385,10 @@ $config['encryption_key'] = '';
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 3600;
+$config['sess_expiration'] = 7200;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
-$config['sess_time_to_update'] = 300; // Regenerate session ID every 5 minutes
+$config['sess_time_to_update'] = 0;
 $config['sess_regenerate_destroy'] = FALSE;
 
 /*
@@ -407,9 +409,9 @@ $config['sess_regenerate_destroy'] = FALSE;
 $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 //$config['cookie_path']		= '/';
-$config['cookie_secure']	= TRUE;
-$config['cookie_httponly'] 	= FALSE;
-$config['cookie_path']      = '/; SameSite=None';
+$config['cookie_secure']	= FALSE;
+$config['cookie_httponly'] 	= TRUE;
+$config['cookie_path']      = '/';
 /*
 |--------------------------------------------------------------------------
 | Standardize newlines
