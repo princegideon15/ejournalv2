@@ -64,6 +64,10 @@
         <li class="nav-item">
             <a class="nav-link active fw-bolder text-decoration-uppercase" aria-current="page" href="#!">Online Peer Review System (eReview)</a>
         </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="http://researchjournal.nrcp.dost.gov.ph/" target="_blank"><span class="oi oi-globe"></span> Visit Client Page</a>
+            <!-- <a class="nav-link" href="<?php echo base_url(); ?>" target="_blank"><span class="oi oi-globe"></span> Visit Client Page</a> -->
+        </li>
     </ul>
     <button class="btn btn-dark text-start border border-1" style="width:20%" onclick="toggleSearch()"><span class="fas fa-search"></span> Search</button>
     <!-- Navbar Search-->
