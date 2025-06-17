@@ -219,27 +219,42 @@ class Signup extends EJ_Controller {
 	 */
 	public function send_create_account_otp($email, $otp, $account_type, $nrcp_member) {
 		
-		if($account_type == 'client'){
-			$user = $this->Client_journal_model->get_user_info($email);
-			$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
-			$ref_code = $user[0]->otp_ref_code;
-			$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
-		}else{ // author
-			if($nrcp_member == 1){ // skms member
+		// if($account_type == 'client'){
+		// 	$user = $this->Client_journal_model->get_user_info($email);
+		// 	$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
+		// 	$ref_code = $user[0]->otp_ref_code;
+		// 	$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
+		// }else{ // author
+		// 	if($nrcp_member == 1){ // skms member
+		// 		$user_info = $this->User_model->get_nrcp_member_info($email);
+		// 		$name = $user_info['title_name'] . ' ' . $user_info['pp_first_name'] . ' ' . $user_info['pp_last_name'];
+		// 		$otp_info = $this->User_model->get_user_info_by_email($email);
+		// 		$ref_code = $otp_info[0]->otp_ref_code;
+		// 		$link = base_url() . 'client/signup/author_account_verify_otp/'.$ref_code;
+		// 	}else { // oprs member
+		// 		$user_info = $this->Client_journal_model->get_user_info($email);
+		// 		$name = $user_info[0]->title . ' ' . $user_info[0]->first_name . ' ' . $user_info[0]->last_name;
+				
+		// 		$otp_info = $this->User_model->get_user_info_by_email($email);
+		// 		$ref_code = $otp_info[0]->otp_ref_code;
+		// 		$link = base_url() . 'client/signup/author_account_verify_otp/'.$ref_code;
+		// 	}
+		// }
+
+		if($nrcp_member == 1){ // skms member
 				$user_info = $this->User_model->get_nrcp_member_info($email);
 				$name = $user_info['title_name'] . ' ' . $user_info['pp_first_name'] . ' ' . $user_info['pp_last_name'];
 				$otp_info = $this->User_model->get_user_info_by_email($email);
 				$ref_code = $otp_info[0]->otp_ref_code;
-				$link = base_url() . 'client/signup/author_account_verify_otp/'.$ref_code;
+				$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
 			}else { // oprs member
 				$user_info = $this->Client_journal_model->get_user_info($email);
 				$name = $user_info[0]->title . ' ' . $user_info[0]->first_name . ' ' . $user_info[0]->last_name;
 				
 				$otp_info = $this->User_model->get_user_info_by_email($email);
 				$ref_code = $otp_info[0]->otp_ref_code;
-				$link = base_url() . 'client/signup/author_account_verify_otp/'.$ref_code;
+				$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
 			}
-		}
 
 		$sender = 'eJournal';
 		$sender_email = 'nrcp.ejournal@gmail.com';
@@ -530,7 +545,7 @@ class Signup extends EJ_Controller {
 			 $errors['author_type'] = 'Select Author Type.';
 			 $this->session->set_flashdata('signup_validation_errors', $errors);
 			 $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
-			 redirect('client/ejournal/submission/create_account');
+			 redirect('client/login#create-account');
 		}
 
 		if($member == 2){
@@ -644,7 +659,8 @@ class Signup extends EJ_Controller {
             // Set flashdata to pass validation errors and form data to the view
             $this->session->set_flashdata('signup_validation_errors', $errors);
             $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
-			redirect('client/ejournal/submission/create_account');
+			// redirect('client/ejournal/submission/create_account');
+			redirect('client/login#create-account');
 		}else{
 			$email = $this->input->post('new_email', TRUE);
 			$password = $this->input->post('new_password', TRUE);

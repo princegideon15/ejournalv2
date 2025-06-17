@@ -32,7 +32,16 @@ isThrottledDownload = false;
 $(document).ready(function()
 {
 
+
+  var hash = window.location.hash;
+ 
+  if (hash == '#create-account'){
+    $('#create-account-tab').trigger('click');
+  }
+
   var currentUrl = window.location.href; // Get current path
+
+
 
   $(".custom-nav a").each(function () {
       var link = $(this).attr("href");
