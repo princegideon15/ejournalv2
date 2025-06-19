@@ -6,8 +6,8 @@
 !/application/modules/
 composer.json
 --index.html
-# application/config/config.php
-# application/config/database.php
+application/config/config.php
+application/config/database.php
 
 README.md
 REVISED NRCP-RJ EDITORIAL POLICY.pdf
