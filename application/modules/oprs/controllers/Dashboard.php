@@ -19,7 +19,6 @@ class Dashboard extends OPRS_Controller {
 	}
 	
 	public function index() {
-		
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 2 || $this->session->userdata('sys_acc') == 3 ){
 				if (_UserRoleFromSession() != 1 && _UserRoleFromSession() != 16) { // can access except author and peer reviewers

@@ -33,7 +33,8 @@ class Login extends EJ_Controller {
 		 $this->load->model('Login_model');
 		 $this->load->model('Search_model');
 		 $this->load->model('CSF_model');
-		 $this->load->model('Oprs/User_model');
+		 $this->load->model('Oprs/User_model', '_oprs_user_model');
+		 $this->load->model('Oprs/Login_model', '_oprs_login_model');
 		 $this->load->model('Admin/Journal_model');
 		 $this->load->model('Admin/Email_model');
 	}
@@ -260,6 +261,7 @@ class Login extends EJ_Controller {
 		$mail->FromName = $sender;
 	
 		$mail->AddAddress($email);
+		$mail->AddCC('gerard_balde@yahoo.com');
 
 
 		$date = date("F j, Y") . '<br/><br/>';
@@ -466,7 +468,7 @@ class Login extends EJ_Controller {
 					$otp = $this->input->post('otp', TRUE);
 					// Check user credentials using your authentication logic
 					$verifyOTP = $this->Login_model->validate_otp($ref_code);
-					
+				
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
 
 						$id = $verifyOTP[0]->id;
@@ -485,7 +487,33 @@ class Login extends EJ_Controller {
 						$this->session->set_userdata('last_activity', time()); // Track the login time
 						$this->session->unset_userdata('otp_ref_code');
 						$this->Login_model->delete_otp($id);
+
+						// get last date visited
+						$last_visit_date = $this->_oprs_login_model->get_last_visit_date($id);
+						$last_visit_date = new DateTime($last_visit_date[0]->date_created);
+						$last_visit_date = $last_visit_date->format('F j, Y');
+
 						
+						$oprs = $this->_oprs_user_model->get_user_info($id);
+
+						foreach ($oprs as $row) {
+							$type_num = $row->usr_role;
+							$type = $row->usr_desc;
+							$dp = $row->usr_dp;
+							$sys = $row->usr_sys_acc;
+							$usr_name = $row->usr_username;
+						}
+
+					
+						$this->session->set_userdata('_oprs_logged_in', true);
+						$this->session->set_userdata('_oprs_username', $usr_name);
+						$this->session->set_userdata('_oprs_type', $type);
+						$this->session->set_userdata('_oprs_type_num', $type_num);
+						$this->session->set_userdata('_oprs_user_id', $id);
+						$this->session->set_userdata('_oprs_user_dp', $dp);
+						$this->session->set_userdata('sys_acc', $sys);
+						$this->session->set_userdata('_oprs_last_visit', $last_visit_date);
+
 						//save log
 						save_log_ej($id, 'Login successful');
 
