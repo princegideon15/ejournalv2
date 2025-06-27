@@ -18,6 +18,8 @@
  * Copyright (C) 2018 by the Department of Science and Technology - National Research Council of the Philiipines
  */
 
+require_once(APPPATH.'modules/client/controllers/Signup.php');
+
 class Login extends EJ_Controller {
 
 	public function __construct() {
@@ -37,6 +39,9 @@ class Login extends EJ_Controller {
 		 $this->load->model('Oprs/Login_model', '_oprs_login_model');
 		 $this->load->model('Admin/Journal_model');
 		 $this->load->model('Admin/Email_model');
+
+		 
+        $this->signupController = new Signup();
 	}
     
 
@@ -476,11 +481,12 @@ class Login extends EJ_Controller {
 						$last_visit_date = new DateTime($last_visit_date[0]->date_created);
 						$last_visit_date = $last_visit_date->format('F j, Y');
 						
+						$email =  $verifyOTP[0]->email;
 
 						//set session values
 						$this->session->set_userdata('_ej_logged_in', true);
 						$this->session->set_userdata('user_id', $id);
-						$this->session->set_userdata('email', $verifyOTP[0]->email);
+						$this->session->set_userdata('email', $email);
 						$this->session->set_userdata('name', $verifyOTP[0]->name);
 						$this->session->set_userdata('last_visit_date', $last_visit_date);
 						$this->session->set_userdata('last_activity', time()); // Track the login time
@@ -494,6 +500,15 @@ class Login extends EJ_Controller {
 
 						
 						$oprs = $this->_oprs_user_model->get_user_info($id);
+
+						if(empty($oprs)){
+
+							$this->signupController->register_author_account($email);
+
+							$oprs = $this->_oprs_user_model->get_user_info($id);
+						}
+
+						//check if has account, create orps account for previouse account created for client only
 
 						foreach ($oprs as $row) {
 							$type_num = $row->usr_role;

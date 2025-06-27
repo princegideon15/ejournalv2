@@ -767,11 +767,11 @@ class Signup extends EJ_Controller {
 	 *
 	 * @return void
 	 */
-	public function register_author_account(){
+	public function register_author_account($email){
 
-			$email = $this->input->post('email', TRUE);
-			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
-			$ref_code = random_string('alnum', 16);
+			// $email = $this->input->post('email', TRUE);
+			// $otp = substr(number_format(time() * rand(),0,'',''),0,6);
+			// $ref_code = random_string('alnum', 16);
 
 			// get client info
 			$result = $this->Client_journal_model->get_user_info($email);
@@ -795,7 +795,7 @@ class Signup extends EJ_Controller {
 
 			$this->User_model->create_author_account($data);
 
-			$this->send_create_account_otp($email, $otp, 'author', 3); // register existing client account as author
+			// $this->send_create_account_otp($email, $otp, 'author', 3); // register existing client account as author
 	}
     
 	/**

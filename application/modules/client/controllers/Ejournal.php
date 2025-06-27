@@ -1129,14 +1129,25 @@ class Ejournal extends EJ_Controller {
 	 */
 	public function feedback_form() {
 		
-			$data['main_title'] = "eJournal";
-			$data['main_content'] = "client/feedback";
-			//$data['main_content'] = "client/maintenance";
-			$data['questions'] = $this->Library_model->get_csf_questions();
-			$data['affiliations'] = $this->Library_model->get_csf_q_choices(1);
-			$data['services'] = $this->Library_model->get_csf_q_choices(2);
-			$data['choices'] = $this->Library_model->get_csf_q_choices(3);
-			$this->_LoadPage('common/body', $data);
+		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
+				$data['client_types'] = $this->Library_model->get_csf_client_types();
+				$data['cc1'] = $this->Library_model->get_csf_cc1();
+				$data['cc2'] = $this->Library_model->get_csf_cc2();
+				$data['cc3'] = $this->Library_model->get_csf_cc3();
+				$data['sqd'] = $this->Library_model->get_csf_sqd();
+				$data['ref_code'] = $ref_code;
+				$data['main_title'] = "eJournal";
+				$data['main_content'] = "client/arta";
+				$this->_LoadPage('common/body', $data);
+
+			// $data['main_title'] = "eJournal";
+			// $data['main_content'] = "client/feedback";
+			// //$data['main_content'] = "client/maintenance";
+			// $data['questions'] = $this->Library_model->get_csf_questions();
+			// $data['affiliations'] = $this->Library_model->get_csf_q_choices(1);
+			// $data['services'] = $this->Library_model->get_csf_q_choices(2);
+			// $data['choices'] = $this->Library_model->get_csf_q_choices(3);
+			// $this->_LoadPage('common/body', $data);
 	}
 
 	public function submit_feedback() {
