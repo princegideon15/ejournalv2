@@ -659,7 +659,6 @@ class Signup extends EJ_Controller {
             // Set flashdata to pass validation errors and form data to the view
             $this->session->set_flashdata('signup_validation_errors', $errors);
             $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
-			// redirect('client/ejournal/submission/create_account');
 			redirect('client/login#create-account');
 		}else{
 			$email = $this->input->post('new_email', TRUE);
