@@ -7139,7 +7139,6 @@ function view_editors(id, title) {
 // show all reviewers per manuscript
 function view_reviews(id, title) {
 
-    $('#reviewsModal').modal('toggle');
     $('#reviewerModal').modal('toggle');
 
     var manuscript_title = decodeURIComponent(title);
@@ -7195,6 +7194,7 @@ function view_reviews(id, title) {
 
             
 
+            $('#reviewsModal').modal('toggle');
 
         }
     });

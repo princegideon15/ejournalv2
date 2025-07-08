@@ -116,7 +116,6 @@ class Login extends OPRS_Controller {
 
 			// Set flashdata to pass validation errors and form data to the view
 			$this->session->set_flashdata('validation_errors', $errors);
-			// print_r($this->session->flashdata('validation_errors'));exit;
 			redirect('oprs/login');
 		}else{
 
