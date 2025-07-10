@@ -540,7 +540,10 @@ class Signup extends EJ_Controller {
 		// text field validation ---> |regex_match[/^[a-zA-Z0-9._\- ]+$/]
 		
 		$member = $this->input->post('author_type', TRUE);
-		if(empty($member)){
+
+		if($member == null){
+
+			$errors = [];
 			 // Set flashdata to pass validation errors and form data to the view
 			 $errors['author_type'] = 'Select Author Type.';
 			 $this->session->set_flashdata('signup_validation_errors', $errors);
@@ -549,29 +552,29 @@ class Signup extends EJ_Controller {
 		}
 
 		if($member == 2){
-			$this->form_validation->set_rules('title', 'Title', 'required|trim');
-			$this->form_validation->set_rules('first_name', 'First Name', 'required|trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
-			$this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
-			$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
-			$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
-			$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
-			$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim');
-			$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
+			$this->form_validation->set_rules('title', 'Title', 'required');
+			$this->form_validation->set_rules('first_name', 'First Name', 'required|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
+			$this->form_validation->set_rules('last_name', 'Last Name', 'required|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
+			$this->form_validation->set_rules('middle_name', 'Middle Name', 'regex_match[/^[a-zA-Z0-9._\- ]+$/]');
+			$this->form_validation->set_rules('extension_name', 'Extension Name', 'regex_match[/^[a-zA-Z0-9._\- ]+$/]');
+			$this->form_validation->set_rules('sex', 'Sex', 'required');
+			$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required');
+			$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
 	
 			//require region,province,city for philippines
 			if($this->input->post('country') == 175){
-				$this->form_validation->set_rules('region', 'Region', 'required|trim');
-				$this->form_validation->set_rules('province', 'Province', 'required|trim');
-				$this->form_validation->set_rules('city', 'City', 'required|trim');
+				$this->form_validation->set_rules('region', 'Region', 'required');
+				$this->form_validation->set_rules('province', 'Province', 'required');
+				$this->form_validation->set_rules('city', 'City', 'required');
 			}
 	
-			$this->form_validation->set_rules('contact', 'Contact', 'required|trim|numeric|exact_length[11]');
+			$this->form_validation->set_rules('contact', 'Contact', 'required|numeric|exact_length[11]');
 		}
 		
-		$this->form_validation->set_rules('new_email', 'Email', 'required|trim|valid_email');
-		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
+		$this->form_validation->set_rules('new_email', 'Email', 'required|valid_email');
+		$this->form_validation->set_rules('new_password', 'Password', 'required|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
 		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
-		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
+		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|matches[new_password]');
 
 		$validations = ['author_type', 'new_email', 'title', 'first_name', 'middle_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
 
@@ -659,8 +662,7 @@ class Signup extends EJ_Controller {
             // Set flashdata to pass validation errors and form data to the view
             $this->session->set_flashdata('signup_validation_errors', $errors);
             $this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
-			// redirect('client/ejournal/submission/create_account');
-			redirect('client/login#create-account');
+	    redirect('client/login#create-account');
 		}else{
 			$email = $this->input->post('new_email', TRUE);
 			$password = $this->input->post('new_password', TRUE);

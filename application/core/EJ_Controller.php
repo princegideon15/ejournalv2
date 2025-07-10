@@ -50,7 +50,7 @@ class EJ_Controller extends MX_Controller {
 		$this->output->set_header('X-XSS-Protection: 1; mode=block');
 		$this->output->set_header('X-Content-Type-Options: nosniff');
 		
-		error_reporting(0);
+		//error_reporting(0);
     }
      
     public function _LoadPage($page = NULL, $data=NULL){

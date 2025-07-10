@@ -7,15 +7,15 @@
 
             <!-- <ul class="nav nav-underline" id="myTab" role="tablist"> -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sub_sum" type="button" role="tab" aria-controls="sub_sum" aria-selected="true">Submission Summary</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sub_stat" type="button" role="tab" aria-controls="sub_stat" aria-selected="false">Submission Statistics</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#auth_sex" type="button" role="tab" aria-controls="auth_sex" aria-selected="false">Author by Sex</button>
-            </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sub_sum" type="button" role="tab" aria-controls="sub_sum" aria-selected="true">Submission Summary</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sub_stat" type="button" role="tab" aria-controls="sub_stat" aria-selected="false">Submission Statistics</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#auth_sex" type="button" role="tab" aria-controls="auth_sex" aria-selected="false">Author by Sex</button>
+                </li>
             </ul>
 
             <div class="tab-content" id="myTabContent">

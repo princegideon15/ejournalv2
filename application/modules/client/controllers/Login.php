@@ -45,6 +45,13 @@ class Login extends EJ_Controller {
 	}
     
 
+public function test_session() {
+    $count = $this->session->userdata('count');
+    $count = $count ? $count + 1 : 1;
+    $this->session->set_userdata('count', $count);
+    echo "You have visited this page {$count} times.";
+}
+
 	/**
 	 * Login page
 	 *
@@ -92,6 +99,7 @@ class Login extends EJ_Controller {
 		$this->form_validation->set_rules('password', 'Password', 'required|trim');
 
 		if($this->form_validation->run() == FALSE){
+
 			$errors = [];
 
 			if (form_error('email')) {
@@ -101,11 +109,12 @@ class Login extends EJ_Controller {
 				$errors['password'] = strip_tags(form_error('password'));
 			}
 
+
 			// Set flashdata to pass validation errors and form data to the view
 			$this->session->set_flashdata('validation_errors', $errors);
 			redirect('client/login');
 		}else{
-			
+
 			$email = $this->input->post('email', TRUE);
 			$password = $this->input->post('password', TRUE);
 		
@@ -361,8 +370,7 @@ class Login extends EJ_Controller {
 		$mail->FromName = $sender;
 	
 		// $mail->AddAddress('nrcp.ejournal@gmail.com');
-		$mail->AddAddress('mark205a@gmail.com'); // Replace with actual CC email
-		// $mail->addCC('mark205a@gmail.com'); // Replace with actual CC email
+		$mail->AddAddress('gerard_balde@yahoo.com');
 
 
 		$date = date("F j, Y") . '<br/><br/>';

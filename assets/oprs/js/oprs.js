@@ -535,6 +535,7 @@ $(document).ready(function() {
           idleTime += 1;
           
         //   console.log("🚀 ~ timerInterval ~ idleTime:", idleTime)
+        //   if (idleTime >= 3600) { // 20 minutes in seconds
           if (idleTime >= 3600) { // 20 minutes in seconds
   
               Swal.fire({
@@ -5835,6 +5836,86 @@ $(document).ready(function() {
               });
         }
     });
+
+    $("#review_revised_form").validate({
+        debug: true,
+        errorClass: 'text-danger',
+        rules: {
+            desk_rev_remarks: {
+                required: true,
+            },
+            desk_rev_revise: {
+                required: true,
+            },
+        },
+        errorPlacement: function (error, element) {
+            // Place error message below the group of checkboxes
+            if (element.attr("name") === "desk_rev_revise") {
+                error.insertAfter("#desk_rev_revise");
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function() {
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                // text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#007bff",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Submit"
+              }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $('body').loading('start');
+                    $('#reviewRevisionModal').modal('toggle');
+                    
+                    var formdata = new FormData($('#review_revised_form')[0]);
+    
+                    $.ajax({
+                        url: base_url + "oprs/manuscripts/desk_revision_review",
+                        data: formdata,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
+                            $('body').loading('stop');
+                            $('#review_revised_form')[0].reset();
+                            Swal.fire({
+                            title: "Review submitted successfully!",
+                            icon: 'success',
+                            // html: "I will close in <b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                location.reload();
+                            }
+                            }).then((result) => {
+                                /* Read more about handling dismissals below */
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    console.log("I was closed by the timer");
+                                }
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+              });
+        }
+    });
     
     $("#submit_revision_endorsement_form").validate({
         debug: true,
@@ -6163,7 +6244,7 @@ $(document).ready(function() {
                 required: true,
             }
         },
-        submitHandler: function() {
+        submitHandler: function(form) {
 
             
             Swal.fire({
@@ -6179,18 +6260,20 @@ $(document).ready(function() {
 
                     $('body').loading('start');
                     $('#uploadRevisionModal').modal('toggle');
-                    
+
                     var formdata = new FormData($('#manuscript_revision_form')[0]);
-    
+
                     $.ajax({
                         url: base_url + "oprs/manuscripts/author_revision",
-                        data: formdata,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        crossDomain: true,
                         type: 'POST',
-                        success: function(data) {
+                        data: new FormData($('#manuscript_revision_form')[0]),
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        // dataType: 'json',
+                        success: function(response) {
+                            // console.log("🚀 ~ response:", response);return false;
+
                             $('body').loading('stop');
                             $('#manuscript_revision_form')[0].reset();
                             Swal.fire({
@@ -6217,10 +6300,15 @@ $(document).ready(function() {
                                 }
                                 location.reload();
                             });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'An unexpected error occurred.', 'error');
+                          console.error(error);
                         }
                     });
                 }
               });
+                    console.log("🚀 ~ this:", this)
         }
     });
 
@@ -7139,7 +7227,7 @@ function view_editors(id, title) {
 // show all reviewers per manuscript
 function view_reviews(id, title) {
 
-    $('#reviewsModal').modal('toggle');
+
     $('#reviewerModal').modal('toggle');
 
     var manuscript_title = decodeURIComponent(title);
@@ -7155,7 +7243,8 @@ function view_reviews(id, title) {
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            console.log("🚀 ~ view_reviews ~ data:", data)
+	console.log(data);
+
             if ($.fn.DataTable.isDataTable("#reviews_table")) {
                 $('#reviews_table ').DataTable().clear().destroy();
             }
@@ -7194,7 +7283,7 @@ function view_reviews(id, title) {
             }).draw();
 
             
-
+    $('#reviewsModal').modal('toggle');
 
         }
     });
@@ -8130,8 +8219,8 @@ function logout(){
     current_button_id = '#submit_feedback';
     $('#feedbackModal').modal('toggle');
     recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
-        // 'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
-        'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+        // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
       // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
         'callback': onRecaptchaSuccess,
         'expired-callback': onRecaptchaExpired
@@ -8603,6 +8692,26 @@ function submit_publishable(id){
                     $('#publishable_form #man_id').val(id);
 
                 });
+            });
+        }
+    });
+}
+
+function review_revision(man_id){
+    $('#reviewRevisionModal').modal('toggle');
+    $('#desk_rev_man_id').val(man_id);
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_consolidation/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            console.log(data);
+            $.each(data, function(key, val){    
+                // technical desk editor consolidate peer review results
+                $('#desk_revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'" target="_blank">Download</a>');
+                $('#desk_revision_remarks').text(val.cons_remarks);
+                
             });
         }
     });
@@ -10589,7 +10698,7 @@ function upload_revision(man_id){
     $('#uploadRevisionModal').modal('toggle');
     $('#revision_consolidations').empty();
     $('#revision_remarks').text('');
-    $('#manuscript_revision_form #man_id').val(man_id);
+    $('#manuscript_revision_form #man_id2').val(man_id);
 
     // get criteria review results
     $.ajax({
@@ -10639,7 +10748,7 @@ function upload_revision(man_id){
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            console.log(data);
+            // console.log(data);
             $.each(data, function(key, val){    
                 // technical desk editor consolidate peer review results
                 $('#revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'" target="_blank">Download</a>');

@@ -159,7 +159,7 @@
 <!-- Copyright -->
 <div class="footer-copyright p-2 text-muted bg-light text-right text-end border" style="font-size:.9rem">
 	<p class="mb-0">&copy; 2018 <b>NRCP Research Journal</b>, All rights reserved.</p>
-	<p class="mb-0">Currently v2.1.85</p>
+	<p class="mb-0">Currently v3.0.0</p>
 </div>
 <!-- Copyright -->
 

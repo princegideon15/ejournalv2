@@ -1595,7 +1595,14 @@
 																rel="tooltip"
 																data-bs-placement="top" title="Publish to eJournal"><span
 																	class="fas fa-paper-plane"></span></button>
-														<?php } ?>
+															<?php }else if($m->man_status == 17){ ?>
+															<!-- for author revision or endorse to copy editor -->
+															<button type="button" class="btn btn-outline-primary"
+																onclick="review_revision('<?php echo $m->row_id; ?>')"
+																rel="tooltip"
+																data-bs-placement="top" title="Review Revision"><span
+																	class="fas fa-gear"></span></button>
+															<?php } ?>
 														
 														
 														<!-- view manuscript details -->

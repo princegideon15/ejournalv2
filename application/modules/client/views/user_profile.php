@@ -244,14 +244,18 @@ gtag('config', 'G-VDLLX3HKBL');
                                     class="invalid-feedback"><?= $this->session->flashdata('signup_validation_errors')['new_password'] ?></span>
                             </div>
 
-                            <div class="mt-1" style="font-size:.8rem">
-                                <div><span class="fw-bold me-1">Password strength:</span><span
-                                        id="password-strength"></span></div>
-                                <div class="progress mt-1" style="height: .5rem;">
-                                    <div class="progress-bar" role="progressbar"
-                                        <?= $this->session->flashdata('bar_style')?> id="password-strength-bar"
-                                        aria-label="Success example" aria-valuenow="0" aria-valuemin="0"
-                                        aria-valuemax="100"></div>
+                            <div class="card d-none mt-3" id="password_strength_container">
+                                <div class="card-body text-secondary">
+                                    <div><span class="me-1 fs-6">Password strength:</span><span class="fw-bold" id="password-strength"></span></div>
+                                    <div class="progress mt-1" style="height: .5rem;">
+                                        <div class="progress-bar" role="progressbar" <?= $this->session->flashdata('bar_style')?> id="password-strength-bar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <ul class="mt-3 small text-muted ps-3">
+                                        <li>8-20 characters long.</li>
+                                        <li>At least 1 letter.</li>
+                                        <li>At lestt 1 number.</li>
+                                        <li>At least 1 special character.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>

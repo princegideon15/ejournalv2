@@ -108,7 +108,7 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
-			$oprs->where_in('man_status', [2,8,12,13,16]);
+			$oprs->where_in('man_status', [2,8,12,13,16,17]);
 			$oprs->group_by('man_trk_no');
 		}else if ($role_id >= 7 && $role_id <= 10 ){ // associate
 			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
@@ -116,7 +116,7 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
-			$oprs->where('man_status', 3);
+			$oprs->where_in('man_status', [3,17]);
 			$oprs->where('edit_usr_id', _UserIdFromSession());
 		}else if ($role_id >= 11 && $role_id <= 14 ){ // cluster
 			$oprs->select('m.*, p.publication_desc, status_desc as status, status_class');
