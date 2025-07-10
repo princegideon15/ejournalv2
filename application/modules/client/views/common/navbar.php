@@ -67,12 +67,12 @@
         <!-- <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/guidelines');?>">Guidelines</a>
         </li> -->
-        <!-- <li class="nav-item">
-          <a class="nav-link text-dark" href="<?php echo base_url('/client/ejournal/articles');?>">Articles</a>
-        </li> -->
         <li class="nav-item">
-          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/submission');?>">Submissions</a>
+          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/submission');?>">Guidelines</a>
           <!-- <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a> -->
+        </li>
+
+          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/volume/'.$latest_volume[0]['jor_volume'].'/'.$latest_volume[0]['jor_issue']);?>">Volumes</a>
         </li>
         <!-- <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/integrity');?>">Research Integrity</a>
@@ -94,7 +94,7 @@
                 </li>';
         }else{
           echo '<li class="nav-item">
-                  <a class="nav-link text-dark fw-bolder" id="logout" href="'.base_url('/client/login').'">Account</a>
+                  <a class="nav-link text-dark fw-bolder" id="logout" href="'.base_url('/client/login').'">Login</a>
                 </li>';
         } ?>
 

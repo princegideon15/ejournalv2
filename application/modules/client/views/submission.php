@@ -8,9 +8,9 @@
 		</div>
 		<div class="col col-7 p-3">
 					<div class="border p-5 mb-5 bg-white rounded">
-						<!-- <div class="row mt-5">
-							<div class="col"> -->
-                                
+						<h1>Guidelines</h1>
+						
+						<?php if(!$logged_in) { ?>    
                         <h3 class="text-uppercase">Submit Manuscript</h3>
                         <div class="mt-3">
                             <!-- <h6 class="fw-bold">NRCP Non-Member</h6> -->
@@ -18,16 +18,11 @@
                                 you need to have an account with the Online Peer Review System (eReview).
                             </p>
 
-                             <?php if(!$logged_in) { ?> 
-                                <p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/login#create-account');?>">Sign up here.</a></p>
-								<!-- <a role="button" href="http://researchjournal.nrcp.dost.gov.ph/oprs/login" target="_blank" class="btn main-btn">Start Submission</a> -->
-								<a role="button" href="<?php echo base_url('/oprs/login');?>" target="_blank" class="btn btn-lg main-btn text-decoration-none">Start Submission</a>
-                       		<?php }else{ ?>
-								<!-- <a role="button" href="http://researchjournal.nrcp.dost.gov.ph/oprs/login" target="_blank" class="btn main-btn">Start Submission</a> -->
-								<a role="button" href="<?php echo base_url('/oprs/manuscripts');?>" class="btn btn-lg main-btn text-decoration-none">Start Submission</a>
-							<?php } ?> 
+							<p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/login#create-account');?>">Sign up here.</a></p>
+						
 						 </div>
-                        <hr class="my-5">
+						 <?php } ?>
+                        <hr>
                         <!-- <div>
                             <h6 class="fw-bold">NRCP Member</h6>
                             <p>To submit manuscript, and to check the status of your submission,
