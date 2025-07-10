@@ -228,6 +228,16 @@ class Client_journal_model extends CI_Model {
 		// }
 	}
 
+	public function get_latest_volume(){
+		
+		$this->db->select('*');
+		$this->db->from($this->journals);
+		$this->db->order_by('jor_id', 'desc');
+		$this->db->limit('1');
+		$query = $this->db->get();
+		return $query->result_array();
+	}
+
 	/** this function get all editorial boards */
 	public function get_editorials() {
 		$this->db->select('*');
@@ -344,7 +354,8 @@ class Client_journal_model extends CI_Model {
 	/** this function get total numbers of clients */
 	public function all_client() {
 		$this->db->select('*');
-		$this->db->from($this->clients);
+		$this->db->from($this->downloads);
+		$this->db->where('dl_datetime', '%' . date('Y') .'%');
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
@@ -635,8 +646,8 @@ class Client_journal_model extends CI_Model {
 	public function totalDownloadsCurrentYear()
 	{
 		$this->db->select('*');
-		$this->db->from($this->clients);
-		$this->db->where('YEAR(clt_download_date_time)',date('Y'));
+		$this->db->from($this->downloads);
+		$this->db->where('YEAR(dl_datetime)',date('Y'));
 		return $this->db->get()->num_rows();
 		
 	}

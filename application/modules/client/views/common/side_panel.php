@@ -1,6 +1,11 @@
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
+
+    <?php if($logged_in) { ?>    
+        <a role="button" href="<?php echo base_url('/oprs/manuscripts');?>" class="btn main-btn text-decoration-none w-100 mb-3 fw-bold">Submit Manuscript</a>
+    <?php } ?>
+
     <?php if($logged_in && $this->session->userdata('csf_arta')){ echo $this->session->userdata('csf_arta'); } ?>
    
     <div class="card bg-light border-0">

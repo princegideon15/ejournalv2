@@ -48,11 +48,11 @@ class Ejournal extends EJ_Controller {
 		// store visitor information
 		ip_info(); 
 		
-		$journals = $this->Client_journal_model->get_journals();
+		$journals = 
 
 		//data to display
-		$data['volumes'] = $journals;
-		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['volumes'] = $this->Client_journal_model->get_journals();
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['popular'] = $this->Client_journal_model->top_five();
 		$data['client_count'] = $this->Client_journal_model->all_client();
 		$data['hits_count'] = $this->Client_journal_model->all_hits();
