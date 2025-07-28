@@ -762,13 +762,7 @@ class Login extends OPRS_Controller {
 					if ($this->Login_model->authenticate_user($rev_username, 16)) {
 						$array_msg = array('icon' => 'fa fa-check-square', 'class' => 'alert-success', 'msg' => 'Thank you for accepting the review request. <br/><br/>
 						You already have a temporary account. Please use your
-						existing username and password to begin the review. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
-					
-						// get info existing reviewer
-						$output = $this->User_model->get_user_info($id);
-						foreach($output as $row){
-							$rev_password = $row->usr_password_copy;
-						}
+						existing username and password to begin the review. You have <strong>' . $days . ' days</strong> to complete and submit the score/evaluation sheet.');
 					
 					
 					} else {
@@ -787,12 +781,14 @@ class Login extends OPRS_Controller {
 						$this->User_model->create_temp_reviewer(array_filter($temp));
 						save_log_oprs($id, 'accepted review request for', $rev_man_id, 16);
 						$array_msg = array('icon' => 'fa fa-check-square', 'class' => 'alert-success', 'msg' => 'Thank you for accepting the review request. <br/><br/>
-						To begin with review, please login to your temporary account
-						with this username and password. <br/></br>
-						Username: <strong>' . $rev_username . '</strong><br/>
-						Password : <strong>' . $rev_password . '</strong><br/><br/>
-						Please check your email for more details. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
+						To begin the review, please login to your temporary account
+						using the username and password sent to your email. <br/></br>
+						
+						You have <strong>' . $days . ' days</strong> to complete and submit the score/evaluation sheet.');
 						// $this->send_password_copy($rev_username, $rev_password);
+						//Username: <strong>' . $rev_username . '</strong><br/>
+						// Password : <strong>' . $rev_password . '</strong><br/><br/> 
+						//Please check your email for more details. 
 					}
 	
 					// Please take note of your username and password for your next login. You have <strong>' . $days . ' days</strong> to accomplish and submit the score/evaluation sheet.');
@@ -806,7 +802,7 @@ class Login extends OPRS_Controller {
 					$this->Manuscript_model->update_reviewer(array_filter($revs), $where);
 	
 					// send toke for apprection mail to reviewer
-					$this->send_appreciation_msg($id, $rev_password, 16);
+					$this->send_appreciation_msg($id, 16);
 					// $this->send_appreciation_msg($rev_username);
 	
 					// add flag to tblscores
@@ -962,7 +958,14 @@ class Login extends OPRS_Controller {
 	 *
 	 * @return  void
 	 */
-	public function send_appreciation_msg($id, $rev_password, $role) {
+	public function send_appreciation_msg($id, $role) {
+
+		// get info existing reviewer
+		$output = $this->User_model->get_user_info($id);
+		foreach($output as $row){
+			$rev_password = empty($row->usr_password_copy) ? "(Please use your existing password or reset your password.)" : $row->usr_password_copy;
+		}
+
 
 		$link = 'https://researchjournal.nrcp.dost.gov.ph/oprs/login';
 		$sender = 'eJournal';

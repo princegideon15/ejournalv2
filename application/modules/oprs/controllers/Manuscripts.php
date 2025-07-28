@@ -612,8 +612,10 @@ class Manuscripts extends OPRS_Controller {
 				array_push($rev_id_validated, $revs['rev_id']);
 				$revs['rev_status'] = 2;
 				$revs['date_created'] = date('Y-m-d H:i:s');
-				$revs['rev_hide_auth'] = $this->input->post('rev_hide_auth');
-				$revs['rev_hide_rev'] = $this->input->post('rev_hide_rev');
+				// $revs['rev_hide_auth'] = $this->input->post('rev_hide_auth');
+				// $revs['rev_hide_rev'] = $this->input->post('rev_hide_rev');
+				$revs['rev_hide_auth'] = 1;
+				$revs['rev_hide_rev'] = 1;
 				$revs['rev_man_id'] = $id;
 				$this->Manuscript_model->save_reviewers(array_filter($revs), $id);
 			}
@@ -741,10 +743,10 @@ class Manuscripts extends OPRS_Controller {
 			$accept_decline = $acc_dec . $days . $timer;
 			$emailBody = str_replace('[ACCEPT/DECLINE]', $accept_decline, $emailBody);
 
-			if ($this->input->post('rev_hide_auth') == 1) {
+			// if ($this->input->post('rev_hide_auth') == 1) {
 				$emailBody = str_replace($author, '<em>Undisclosed</em>', $emailBody);
 				$emailBody = str_replace($affiliation, '<em>Undisclosed</em>', $emailBody);
-			}
+			// }
 			
 			// send email
 			$mail->Subject = $email_subject;
@@ -2089,6 +2091,8 @@ class Manuscripts extends OPRS_Controller {
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
 			$this->Review_model->save_process_status(array_filter($process));
 		}
+
+		$mail->AddCC('gerard_balde@yahoo.com');
 
 		// update manuscript status
 		$man['last_updated'] = date('Y-m-d H:i:s');
@@ -5157,6 +5161,7 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		$mail->AddAddress($next_processor_email);
+		$mail->AddCC('gerard_balde@yahoo.com');
 
 		foreach($email_contents as $row){
 			$email_subject = $row->enc_subject;

@@ -534,9 +534,7 @@ $(document).ready(function() {
       var timerInterval = setInterval(function() {
           idleTime += 1;
           
-        //   console.log("🚀 ~ timerInterval ~ idleTime:", idleTime)
-        //   if (idleTime >= 3600) { // 20 minutes in seconds
-          if (idleTime >= 3600) { // 20 minutes in seconds
+          if (idleTime >= 28800) { // 20 minutes in seconds
   
               Swal.fire({
                 title: "Session Expired",
@@ -970,15 +968,15 @@ $(document).ready(function() {
         "repeatEmail",
         function(value, element) {
 
-            var timeRepeated = 0;
+            var timeRepeatedEmail = 0;
             $("[name*='trk_rev_email[]']").each(function() {
 
                 if ($(this).val() === value) {
-                    timeRepeated++;
+                    timeRepeatedEmail++;
                 }
             });
 
-            if (timeRepeated === 1 || timeRepeated === 0) {
+            if (timeRepeatedEmail === 1 || timeRepeatedEmail === 0) {
                 return true
             } else {
                 return false
@@ -991,16 +989,16 @@ $(document).ready(function() {
         "uniqueName",
         function(value, element) {
 
-            var timeRepeated = 0;
+            var timeRepeatedName = 0;
             $("[name*='trk_rev[]']").each(function() {
 
                 if ($(this).val() === value) {
-                    timeRepeated++;
+                    timeRepeatedName++;
                 }
 
             });
 
-            if (timeRepeated === 1 || timeRepeated === 0) {
+            if (timeRepeatedName === 1 || timeRepeatedName === 0) {
                 return true
             } else {
                 return false
@@ -1016,6 +1014,13 @@ $(document).ready(function() {
             return response;
         }
     );
+
+    $('#processModal').on('hidden.bs.modal', function () {
+        timeRepeatedName = 0; // reset variable
+        timeRepeatedEmail = 0; // reset variable
+        console.log("Variable timeRepeatedName:", timeRepeatedName);
+        console.log("Variable timeRepeatedEmail:", timeRepeatedEmail);
+    });
 
     // user types 
     var utt = $('#user_types_table').DataTable();
@@ -1777,7 +1782,7 @@ $(document).ready(function() {
 
     // all manuscripts;
     var amt = $('#all-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1791,7 +1796,7 @@ $(document).ready(function() {
 
     // new manuscripts
     var nmt = $('#new-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1805,7 +1810,7 @@ $(document).ready(function() {
 
     // on-review manuscripts
     var ort = $('#onreview-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1819,7 +1824,7 @@ $(document).ready(function() {
 
     // endorsement to peer manuscripts
     var etp = $('#peer-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1833,7 +1838,7 @@ $(document).ready(function() {
 
     // consolidated reviews
     var rmt = $('#review-consolidated-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1847,7 +1852,7 @@ $(document).ready(function() {
 
     // copy editor proofread manuscripts
     var cop = $('#coped-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1861,7 +1866,7 @@ $(document).ready(function() {
 
     // final review eic manuscripts
     var frm = $('#fin-rev-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1875,7 +1880,7 @@ $(document).ready(function() {
 
     // proofread author manuscripts
     var prfam = $('#prf-auth-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1889,7 +1894,7 @@ $(document).ready(function() {
 
     // layout  manuscripts
     var laym = $('#layout-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1903,7 +1908,7 @@ $(document).ready(function() {
 
     // final approval  manuscripts
     var fapm = $('#fin-app-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1917,7 +1922,7 @@ $(document).ready(function() {
 
     // published  manuscripts
     var pubm = $('#published-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1931,7 +1936,7 @@ $(document).ready(function() {
 
     // rejected  manuscripts
     var rejm = $('#rejected-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -1945,7 +1950,7 @@ $(document).ready(function() {
 
     // revision manuscripts
     var revm = $('#revision-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [
             {"targets":4, "type":"date"},
         ]
@@ -2061,7 +2066,7 @@ $(document).ready(function() {
 
     // statistics manuscripts
     sm = $('#stats-manuscript').DataTable({
-        "order": [[ 4, "asc" ]],
+        "order": [[ 4, "desc" ]],
         "columnDefs" : [{"targets":4, "type":"date"}],
         dom: "<'row'<'col-sm-12'B>>" +    // Buttons in their own row at the top
              "<'row'<'col-sm-6'l><'col-sm-6'f>>" +  // Length menu and Search
@@ -3642,15 +3647,15 @@ $(document).ready(function() {
             'trk_rev_email[]': {
                 required: true,
                 email: true,
-                uniqueEmail: true,
+                // uniqueEmail: true,
                 repeatEmail: true,
-                remote: {
-                    url: base_url + "oprs/user/verify_peer_reviewer_email",
-                    type: "post",
-                    complete: function(response) {
-                        console.log("Server Response:", response.responseText); // Log the response
-                    }
-                }
+                // remote: {
+                //     url: base_url + "oprs/user/verify_peer_reviewer_email",
+                //     type: "post",
+                //     complete: function(response) {
+                //         console.log("Server Response:", response.responseText); // Log the response
+                //     }
+                // }
             },
             trk_timeframe: {
                 required: true,
@@ -3674,7 +3679,7 @@ $(document).ready(function() {
         },
         messages: {
             'trk_rev_email[]': {
-                uniqueEmail: "Email already in use",
+                // uniqueEmail: "Email already in use",
                 repeatEmail: "Email can not be repeated",
                 remote: "Email already in use"
             },
@@ -5758,8 +5763,8 @@ $(document).ready(function() {
         rules: {
             cons_file: {
                 required: true,
-                // extension: "doc|docx|pdf",
-                extension: "pdf",
+                extension: "doc|docx",
+                // extension: "pdf",
             },
             cons_remarks: {
                 required: true,
@@ -6217,7 +6222,7 @@ $(document).ready(function() {
         errorClass: 'text-danger',
         rules: {
             man_matrix : {
-                // required: true,
+                required: true,
                 extension: "pdf|doc|docx",
                 filesize : 20000000,
             },
@@ -7242,13 +7247,14 @@ function view_reviews(id, title) {
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            console.log("🚀 ~ view_reviews ~ data:", data)
             if ($.fn.DataTable.isDataTable("#reviews_table")) {
                 $('#reviews_table ').DataTable().clear().destroy();
             }
 
             var i = 1;
             $.each(data, function(key, val) {
+
+
 
                 var name = val.rev_name;
                 var score = val.scr_total + '/100';
@@ -7269,6 +7275,13 @@ function view_reviews(id, title) {
                 i++;
             });
 
+            // console.log(pass_count);
+
+            if(data.lengt >= 2){
+                $('#submit_consolidation').addClass('disabled')
+            }else{
+                $('#submit_consolidation').removeClass('disabled')
+            }
             
             var t = $('#reviews_table').DataTable();
             t.on('order.dt search.dt', function() {
