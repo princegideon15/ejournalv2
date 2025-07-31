@@ -2094,7 +2094,7 @@ class Manuscripts extends OPRS_Controller {
 			$mail->AddAddress($next_processor_email);
 		
 			// save process for auto reminder email notificiation
-			$email_contents = $this->Email_model->get_email_content(25);
+			$email_contents = $this->Email_model->get_email_content(26);
 			$process['ps_man_id'] = $man_id;
 			$process['ps_role_id'] = 17;
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
@@ -3767,7 +3767,7 @@ class Manuscripts extends OPRS_Controller {
 			$mail->AddAddress($next_processor_email);
 
 		}else if($status == 7){ // endorse to copy editor
-			$track['trk_description'] = 'For Proofread';
+			$track['trk_description'] = 'Endorsed to Copy Editor for Proofreading';
 			$track['trk_remarks'] = $remarks;
 
 			// send email 26
