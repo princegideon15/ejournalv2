@@ -86,7 +86,7 @@
 													<?php } ?>
 												</td>
 												<td><?php echo $m->publication_desc;?></td>
-												<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y'); ?></td>
+												<td><?php echo date_format(new DateTime($m->date_created), 'F j, Y, g:i a'); ?></td>
 												<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking('<?php echo $m->man_trk_no;?>',<?php echo $this->session->userdata('_oprs_type_num');?>,<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
 												<!-- <td class="text-center"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->row_id;?>,<?php echo $this->session->userdata('_oprs_type_num');?>,'<?php echo rawurlencode($title) ?>',<?php echo $m->man_status ?>)"><?php echo $m->man_trk_no;?></a></td> -->
 												<td class="text-centerx"><a href="javascript:void(0);" onclick="tracking(<?php echo $m->row_id;?>)"><?php echo $m->man_trk_no;?></a></td>
@@ -1614,7 +1614,7 @@
 													<?php if (_UserRoleFromSession() >= 7 && _UserRoleFromSession() <= 10) { ?>
 															<!-- process manuscript -->
 															<button type="button" class="btn btn-outline-primary"
-															onclick="assoced_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
+															onclick="assoced_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>,<?php echo $m->man_revision_status; ?>)"
 															data-bs-toggle="modal" data-bs-target="#assocEdProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>

@@ -2141,7 +2141,7 @@
 							<div class="d-flex gap-3">
 								<button class="btn btn-outline-danger w-100" onclick="editor_action('reject','associate')"><span class="fa fa-times-circle me-1"></span>Reject</button>
 								<button class="btn btn-outline-secondary w-100" onclick="editor_action('revise','associate')"><span class="fa fa-refresh me-1"></span>Revise</button>
-								<button class="btn btn-success w-100" onclick="editor_action('accept','associate')"><span class="fa fa-check-circle me-1"></span>Accept</button>
+								<button class="btn btn-success w-100" onclick="editor_action('accept','associate')"  id="submit_assoc_rev" ><span class="fa fa-check-circle me-1"></span>Accept</button>
 							</div>
 						</div>
 						

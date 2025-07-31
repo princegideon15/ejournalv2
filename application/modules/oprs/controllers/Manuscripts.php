@@ -599,16 +599,25 @@ class Manuscripts extends OPRS_Controller {
 				$revs['rev_specialization'] = $rev_spec[$i];
 				$revs['rev_man_id'] = $id;
 				// $revs['rev_id'] = ($rev_id[$i] == '') ? 'R' . rand(1, 9999) : $rev_id[$i];
-				if ($rev_id[$i] == '') {
-					$check = $this->Review_model->check_reviewer($rev_mail[$i]);
+
+				$check = $this->Review_model->check_reviewer($rev_mail[$i]);
 					if ($check == '0') {
 						$revs['rev_id'] = 'R' . md5(uniqid('', TRUE));
 					} else {
 						$revs['rev_id'] = $check;
 					}
-				} else {
-					$revs['rev_id'] = $rev_id[$i];
-				}
+
+
+				// if ($rev_id[$i] == '') {
+				// 	$check = $this->Review_model->check_reviewer($rev_mail[$i]);
+				// 	if ($check == '0') {
+				// 		$revs['rev_id'] = 'R' . md5(uniqid('', TRUE));
+				// 	} else {
+				// 		$revs['rev_id'] = $check;
+				// 	}
+				// } else {
+				// 	$revs['rev_id'] = $rev_id[$i];
+				// }
 				array_push($rev_id_validated, $revs['rev_id']);
 				$revs['rev_status'] = 2;
 				$revs['date_created'] = date('Y-m-d H:i:s');
@@ -3757,6 +3766,74 @@ class Manuscripts extends OPRS_Controller {
 
 			$mail->AddAddress($next_processor_email);
 
+		}else if($status == 7){ // endorse to copy editor
+			$track['trk_description'] = 'For Proofread';
+			$track['trk_remarks'] = $remarks;
+
+			// send email 26
+			// update manuscript status
+			$manus['man_status'] = $status;
+			$manus['man_process_date'] = date('Y-m-d H:i:s');
+			$where['row_id'] = $man_id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+		
+			// save process for auto reminder email notificiation
+			$email_contents = $this->Email_model->get_email_content(26);
+			$process['ps_man_id'] = $man_id;
+			$process['ps_role_id'] = 17;
+			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
+			$this->Review_model->save_process_status(array_filter($process));
+			
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+			
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			$next_processor_info = $this->User_model->get_processor_by_role(17);
+
+			foreach ($next_processor_info as $row) {
+				$next_processor_email = $row->usr_username;
+			}
+
+			$mail->AddAddress($next_processor_email);
+			$mail->AddCC('gerard_balde@yahoo.com');
+			
 		}else{ // add peer reviwers
 			$track['trk_description'] = 'Suggested Peer Reviewers';
 			$track['trk_remarks'] = $remarks;
@@ -4286,11 +4363,79 @@ class Manuscripts extends OPRS_Controller {
 				}
 				$mail->ClearAllRecipients();
 			}
+		}else if($status == 7){ // endorse to copy editor
+			$track['trk_description'] = 'For Proofread';
+			$track['trk_remarks'] = $remarks;
+
+			// send email 26
+			// update manuscript status
+			$manus['man_status'] = $status;
+			$manus['man_process_date'] = date('Y-m-d H:i:s');
+			$where['row_id'] = $man_id;
+			$this->Manuscript_model->update_manuscript_status(array_filter($manus), $where);
+		
+			// save process for auto reminder email notificiation
+			$email_contents = $this->Email_model->get_email_content(26);
+			$process['ps_man_id'] = $man_id;
+			$process['ps_role_id'] = 17;
+			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
+			$this->Review_model->save_process_status(array_filter($process));
+			
+			$output = $this->Review_model->get_manus_author_info($man_id);
+
+			foreach ($output as $key => $value) {
+				$manuscript = $value->man_title;
+				$title = $value->man_author_title;
+				$author = $value->man_author;
+				$email = $value->man_email;
+			}
+			
+			foreach($email_contents as $row){
+				$email_subject = $row->enc_subject;
+				$email_contents = $row->enc_content;
+
+				if( strpos($row->enc_cc, ',') !== false ) {
+					$email_cc = explode(',', $row->enc_cc);
+				}else{
+					$email_cc = array();
+					array_push($email_cc, $row->enc_cc);
+				}
+
+				if( strpos($row->enc_bcc, ',') !== false ) {
+					$email_bcc = explode(',', $row->enc_bcc);
+				}else{
+					$email_bcc = array();
+					array_push($email_bcc, $row->enc_bcc);
+				}
+
+				if( strpos($row->enc_user_group, ',') !== false ) {
+					$email_user_group = explode(',', $row->enc_user_group);
+				}else{
+					$email_user_group = array();
+					array_push($email_user_group, $row->enc_user_group);
+				}
+				
+			}
+
+			$link = "<a href='" . $link_to ."' target='_blank' style='cursor:pointer;'>
+			https://researchjournal.nrcp.dost.gov.ph</a>";
+			$emailBody = str_replace('[LINK]', $link, $email_contents);
+			$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+
+			$next_processor_info = $this->User_model->get_processor_by_role(17);
+
+			foreach ($next_processor_info as $row) {
+				$next_processor_email = $row->usr_username;
+			}
+
+			$mail->AddAddress($next_processor_email);
+			$mail->AddCC('gerard_balde@yahoo.com');
+			
 		}else{ // add peer reviwers
 			$track['trk_description'] = 'Suggested Peer Reviewers';
 			$track['trk_remarks'] = $remarks;
 
-			// send email 23
+		
 			// update manuscript status
 			$status = 15;
 			$manus['man_status'] = $status;
@@ -4388,6 +4533,7 @@ class Manuscripts extends OPRS_Controller {
 
 			$mail->AddAddress($next_processor_email);
 		}
+		//add endorse to copy editor
 
 		// update editors review data status
 		$where_editorial_data['edit_man_id'] = $man_id;
@@ -5045,6 +5191,7 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		if($revision_status == 1){
+			//TODO:to be continued
 			// add uploaded matrix
 			$post = array();
 	
@@ -5125,10 +5272,12 @@ class Manuscripts extends OPRS_Controller {
 
 		if($revision_status == 1){
 			$get_last_processor_role_id = $this->Review_model->get_last_processor_role_id($man_id);
+			//TODO:check if last process is valid
+			$editor = ($get_last_processor_role_id == '6') ? 'Editor-in-Chief' : 'Associate Editor';
 
 			$next_processor_info = $this->User_model->get_processor_by_role($get_last_processor_role_id);
 			// save process for auto reminder email notificiation
-			$email_contents = $this->Email_model->get_email_content(26);
+			$email_contents = $this->Email_model->get_email_content(14);
 			$process['ps_man_id'] = $man_id;
 			$process['ps_role_id'] = $get_last_processor_role_id; //change to next processor eic or assoced
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
@@ -5140,6 +5289,7 @@ class Manuscripts extends OPRS_Controller {
 				
 			// save process for auto reminder email notificiation
 			$email_contents = $this->Email_model->get_email_content(14);
+			$editor = "Technical Desk Editor";
 			$process['ps_man_id'] = $man_id;
 			$process['ps_role_id'] = 5;
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
@@ -5152,6 +5302,7 @@ class Manuscripts extends OPRS_Controller {
 
 			$process['ps_man_id'] = $man_id;
 			$process['ps_role_id'] = 6;
+			$editor = "Editor-in-Chief";
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
 			$this->Review_model->save_process_status(array_filter($process));
 		}
@@ -5194,6 +5345,7 @@ class Manuscripts extends OPRS_Controller {
 		https://researchjournal.nrcp.dost.gov.ph</a>";
 		$emailBody = str_replace('[LINK]', $link, $email_contents);
 		$emailBody = str_replace('[MANUSCRIPT]', $manuscript, $emailBody);
+		$emailBody = str_replace('[EDITOR]', $editor, $emailBody);
 
 		// add exisiting email as cc
 		if(count($email_user_group) > 0){

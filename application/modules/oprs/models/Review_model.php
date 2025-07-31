@@ -411,16 +411,17 @@ class Review_model extends CI_Model {
 
 	public function get_last_processor_role_id($man_id){
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('ps_role_id');
+		$oprs->select('usr_role');
 		$oprs->from($this->process_status);
+		$oprs->join($this->oprs_users, 'usr_id = ps_processor_id');
 		$oprs->where('ps_man_id', $man_id);
-		$oprs->where_in('ps_role_id', [6, 7, 8, 9, 10]);
+		$oprs->where_in('usr_role', [6, 7, 8, 9, 10]);
 		$oprs->order_by('id', 'DESC'); // or use a date column
 		$oprs->limit(1);
 		$query = $oprs->get();
 		$result = $query->row(); // get only one row
 		
-		return $result ? $result->ps_role_id : null;
+		return $result ? $result->usr_role : null;
 	}
 }
 
