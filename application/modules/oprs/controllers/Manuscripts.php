@@ -5191,7 +5191,7 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		if($revision_status == 1){
-			//TODO:to be continued
+			
 			// add uploaded matrix
 			$post = array();
 	

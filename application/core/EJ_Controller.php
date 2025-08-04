@@ -24,6 +24,7 @@ class EJ_Controller extends MX_Controller {
 		$this->load->helper('visitors_helper');
 		$this->load->helper('string');
 
+		$this->load->helper('cookie');
 		$this->load->library('form_validation');
 		$this->load->library('session');
 		$this->load->library('upload');
