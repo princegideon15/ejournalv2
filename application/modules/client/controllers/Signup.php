@@ -242,19 +242,20 @@ class Signup extends EJ_Controller {
 		// }
 
 		if($nrcp_member == 1){ // skms member
-				$user_info = $this->User_model->get_nrcp_member_info($email);
-				$name = $user_info['title_name'] . ' ' . $user_info['pp_first_name'] . ' ' . $user_info['pp_last_name'];
-				$otp_info = $this->User_model->get_user_info_by_email($email);
-				$ref_code = $otp_info[0]->otp_ref_code;
-				$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
-			}else { // oprs member
-				$user_info = $this->Client_journal_model->get_user_info($email);
-				$name = $user_info[0]->title . ' ' . $user_info[0]->first_name . ' ' . $user_info[0]->last_name;
-				
-				$otp_info = $this->User_model->get_user_info_by_email($email);
-				$ref_code = $otp_info[0]->otp_ref_code;
-				$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
-			}
+			$user_info = $this->User_model->get_nrcp_member_info($email);
+			$name = $user_info['title_name'] . ' ' . $user_info['pp_first_name'] . ' ' . $user_info['pp_last_name'];
+			$otp_info = $this->User_model->get_user_info_by_email($email);
+			$ref_code = $otp_info[0]->otp_ref_code;
+			$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
+		}else { // oprs member
+			$user_info = $this->Client_journal_model->get_user_info($email);
+			$name = $user_info[0]->title . ' ' . $user_info[0]->first_name . ' ' . $user_info[0]->last_name;
+			
+			$otp_info = $this->User_model->get_user_info_by_email($email);
+			$ref_code = $otp_info[0]->otp_ref_code;
+			$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
+		}
+
 
 		$sender = 'eJournal';
 		$sender_email = 'nrcp.ejournal@gmail.com';
@@ -860,6 +861,8 @@ class Signup extends EJ_Controller {
 					$verifyOTP = $this->Login_model->validate_otp($ref_code);
 
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
+						
+					$this->Library_model->generate_device_token($verifyOTP[0]->id);
 						$this->session->unset_userdata('otp_ref_code');
 						$this->Login_model->activate_account($verifyOTP[0]->id);
 						$this->Login_model->delete_otp($verifyOTP[0]->id);
