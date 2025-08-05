@@ -37,8 +37,9 @@ class Login_model extends CI_Model {
 	}
 
   public function validate_user($email){
-      $this->db->select('*');
-      $this->db->from($this->users);
+      $this->db->select('u.*, CONCAT(first_name," ",last_name) as name');
+      $this->db->from($this->users . ' u');
+      $this->db->join($this->profile . ' p', 'id = user_id');
       $this->db->where('email', $email);
       $query = $this->db->get();
       // If a matching user is found, return the user object

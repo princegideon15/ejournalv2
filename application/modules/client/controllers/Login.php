@@ -113,13 +113,112 @@ class Login extends EJ_Controller {
 			$validateUser = $this->Login_model->validate_user($email);
 
 			if ($validateUser) {
+				$user_id = $validateUser[0]->id;
+				$email =  $validateUser[0]->email;
+				$name =  $validateUser[0]->name;
 
 				//check if account activated
 				if($validateUser[0]->status == 1){
 					if (password_verify($password, $validateUser[0]->password)) {
-						$this->Login_model->clear_login_attempts($validateUser[0]->email);
-						//send otp to email
-						$this->send_login_otp($email);
+						$this->Login_model->clear_login_attempts($email);
+
+						if ($this->Library_model->validate_device_token($user_id)) {
+
+							$last_visit_date = $this->Login_model->get_last_visit_date($user_id);
+							$last_visit_date = new DateTime($last_visit_date[0]->date_created);
+							$last_visit_date = $last_visit_date->format('F j, Y');
+							
+							//set session values
+							$this->session->set_userdata('_ej_logged_in', true);
+							$this->session->set_userdata('user_id', $user_id);
+							$this->session->set_userdata('email', $email);
+							$this->session->set_userdata('name', $name);
+							$this->session->set_userdata('last_visit_date', $last_visit_date);
+							$this->session->set_userdata('last_activity', time()); // Track the login time
+							$this->session->unset_userdata('otp_ref_code');
+							$this->Login_model->delete_otp($user_id);
+
+							// get last date visited
+							$last_visit_date = $this->_oprs_login_model->get_last_visit_date($user_id);
+							$last_visit_date = new DateTime($last_visit_date[0]->date_created);
+							$last_visit_date = $last_visit_date->format('F j, Y');
+
+							
+							$oprs = $this->_oprs_user_model->get_user_info($user_id);
+
+							if(empty($oprs)){
+
+								$this->signupController->register_author_account($email);
+
+								$oprs = $this->_oprs_user_model->get_user_info($user_id);
+							}
+
+						
+							foreach ($oprs as $row) {
+								$type_num = $row->usr_role;
+								$type = $row->usr_desc;
+								$dp = $row->usr_dp;
+								$sys = $row->usr_sys_acc;
+								$usr_name = $row->usr_username;
+							}
+
+						
+							$this->session->set_userdata('_oprs_logged_in', true);
+							$this->session->set_userdata('_oprs_username', $usr_name);
+							$this->session->set_userdata('_oprs_type', $type);
+							$this->session->set_userdata('_oprs_type_num', $type_num);
+							$this->session->set_userdata('_oprs_user_id', $user_id);
+							$this->session->set_userdata('_oprs_user_dp', $dp);
+							$this->session->set_userdata('sys_acc', $sys);
+							$this->session->set_userdata('_oprs_last_visit', $last_visit_date);
+
+							//save log
+							save_log_ej($user_id, 'Login successful');
+
+							//create access token
+							$token = uniqid();
+							$token = password_hash($token, PASSWORD_BCRYPT);
+							$this->session->set_userdata('access_token', $token);
+
+							$expiration_time = time() + 1200; // 20 minutes in seconds
+							$expired_at = date('Y-m-d H:i:s', $expiration_time);
+
+							
+							$this->Login_model->delete_access_token($user_id);
+
+							$tokenData = [
+								'tkn_user_id' => $user_id,
+								'tkn_value' => $token,
+								'tkn_created_at' => date('Y-m-d H:i:s'),
+								'tkn_expired_at' => $expired_at
+							];
+							
+							$this->Login_model->create_user_access_token($tokenData);
+							
+							// check if there is an unaccomplished csf arta
+							$arta_ref_code = $this->CSF_model->get_latest_incomplete_csf_arta($user_id);
+
+							if($arta_ref_code){
+								$csf_arta = '<div class="alert alert-warning" role="alert">
+									<h4 class="alert-heading h6 fw-bold"><span class="fa fa-exclamation-triangle text-warning"></span> CSF-ARTA</h4>
+									<hr>
+									<p class="mb-3">The system has detected that you have an unsubmitted CSF-ARTA from your most recent article download.</p>
+									
+									<div>
+										<a href="' . base_url() . 'client/ejournal/csf_arta/' . $arta_ref_code . '" class="btn btn-sm btn-warning" target="_blank">View</a>
+									</div>
+								</div>';
+		
+								$this->session->set_userdata('csf_arta', $csf_arta);
+							}
+
+
+							redirect('client/ejournal/');
+
+						}else{
+							//send otp to email
+							$this->send_login_otp($email);
+						}
 					}else{
 						$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->email));
 	
@@ -477,6 +576,7 @@ class Login extends EJ_Controller {
 					if (password_verify($otp, $verifyOTP[0]->otp)) {
 
 						$id = $verifyOTP[0]->id;
+						$this->Library_model->generate_device_token($id);
 
 						$last_visit_date = $this->Login_model->get_last_visit_date($id);
 						$last_visit_date = new DateTime($last_visit_date[0]->date_created);
@@ -509,8 +609,7 @@ class Login extends EJ_Controller {
 							$oprs = $this->_oprs_user_model->get_user_info($id);
 						}
 
-						//check if has account, create orps account for previouse account created for client only
-
+					
 						foreach ($oprs as $row) {
 							$type_num = $row->usr_role;
 							$type = $row->usr_desc;
@@ -815,4 +914,7 @@ class Login extends EJ_Controller {
 			echo 0;
 		}
 	}
+
+	
+	
 }

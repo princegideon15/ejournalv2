@@ -280,9 +280,9 @@
                           <option value="3">3</option>
                           <option value="4">4</option>
                           <option value="5">Special Issue No. 1</option>
-                          <option value="6">Special Issue No. 2</option>
+                          <!-- <option value="6">Special Issue No. 2</option>
                           <option value="7">Special Issue No. 3</option>
-                          <option value="8">Special Issue No. 4</option>
+                          <option value="8">Special Issue No. 4</option> -->
                         </select>
                       </div>
                       <div class="col mb-3">
@@ -397,7 +397,7 @@
 							</div>
 						</div>
 
-						<nav>
+						<!-- <nav>
 							<div class="nav nav-tabs" id="nav-tab" role="tablist">
 								<a class="nav-item nav-link active" id="nav-timeframe-tab" data-bs-toggle="tab" href="#nav-timeframe" role="tab" aria-controls="nav-timeframe" aria-selected="true"><span class="fas fa-check-square"></span> Optional</a>
 							</div>
@@ -422,7 +422,7 @@
 								<small class="text-muted float-right limit"></small>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 
 					<div class="tab-pane fade" id="nav-suggested-peer" role="tabpanel">
@@ -1095,7 +1095,7 @@
 				<button class="btn btn-outline-secondary me-auto" type="button" data-bs-toggle="modal" data-bs-target="#reviewerModal">Back to Reviewers</button>
 				<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
 				<?php if(_UserRoleFromSession() == 5) { ?>
-					<button type="button" class="btn btn-primary" onclick="submit_consolidation()">Submit Consolidation</button>
+					<button type="button" class="btn btn-primary" onclick="submit_consolidation()" id="submit_consolidation">Submit Consolidation</button>
 				<?php } ?>
 			</div>
 		</div>
@@ -1128,10 +1128,10 @@
 												<th>TITLE</th>
 												<th class="fw-light" colspan="4" id="rev_title"></th>
 											</tr>
-											<tr>
+											<!-- <tr>
 												<th>AUTHOR</th>
 												<th class="fw-light" colspan="4" id="rev_author"></th>
-											</tr>
+											</tr> -->
 								</table>
 								<hr>
 								<table class="table table-borderless mt-1" style="font-size:14px;">
@@ -1268,11 +1268,11 @@
 						<input type="hidden" id="cons_man_id" name="cons_man_id">
 						<div class="mb-3">
 							<label for="cons_file" class="form-label fw-bold">Consolidated reviews/remarks 
-								<!-- <span class="badge rounded-pill bg-primary">WORD</span> -->
-								<span class="badge rounded-pill bg-danger">PDF</span>
+								<span class="badge rounded-pill bg-primary">WORD</span>
+								<!-- <span class="badge rounded-pill bg-danger">PDF</span> -->
 							</label>
-							<!-- <input class="form-control" type="file" id="cons_file" name="cons_file" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"> -->
-							<input class="form-control" type="file" id="cons_file" name="cons_file" accept="application/pdf">
+							<input class="form-control" type="file" id="cons_file" name="cons_file" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf">
+							<!-- <input class="form-control" type="file" id="cons_file" name="cons_file" accept="application/pdf"> -->
 						</div>
 					</div>
 					<div class="mb-3">
@@ -2095,7 +2095,7 @@
 							<div class="d-flex gap-3">
 								<button class="btn btn-outline-danger w-100" onclick="editor_action('reject','associate')"><span class="fa fa-times-circle me-1"></span>Reject</button>
 								<button class="btn btn-outline-secondary w-100" onclick="editor_action('revise','associate')"><span class="fa fa-refresh me-1"></span>Revise</button>
-								<button class="btn btn-success w-100" onclick="editor_action('accept','associate')"><span class="fa fa-check-circle me-1"></span>Accept</button>
+								<button class="btn btn-success w-100" onclick="editor_action('accept','associate')"  id="submit_assoc_rev" ><span class="fa fa-check-circle me-1"></span>Accept</button>
 							</div>
 						</div>
 						
