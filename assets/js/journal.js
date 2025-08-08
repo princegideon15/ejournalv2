@@ -65,9 +65,16 @@ $(document).ready(function () {
 
 	
 	// validate file size before uploading
-    $.validator.addMethod('filesize', function (value, element, param) {
-        return this.optional(element) || (element.files[0].size <= param)
-    }, `File size exceeds the allowed limit.`);
+	$.validator.addMethod('filesize', function (value, element, param) {
+		// Only run if input is type="file"
+		if (element.type !== 'file') return true;
+
+		// Allow empty file if optional
+		if (this.optional(element)) return true;
+
+		// Check if a file is selected and its size is within the limit
+		return element.files.length > 0 && element.files[0].size <= param;
+	}, `File size exceeds the allowed limit.`);
 
 
 	 // get user access token
