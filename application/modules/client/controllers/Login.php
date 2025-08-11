@@ -62,6 +62,7 @@ class Login extends EJ_Controller {
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['titles'] = $this->Client_journal_model->getTitles();
 		$data['educations'] = $this->Client_journal_model->getEducations();
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/login";
 

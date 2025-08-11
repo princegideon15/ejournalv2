@@ -74,6 +74,7 @@ class Ejournal extends EJ_Controller {
 	public function guidelines() {
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/guidelines";
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['journals'] = $this->Client_journal_model->get_journals();
@@ -92,6 +93,7 @@ class Ejournal extends EJ_Controller {
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		// $data['editorial_policy'] = $this->Library_model->get_editorial_policy_content('0');
 		$data['editorial_policy'] = $this->Library_model->get_editorial_policy_content();
 		
@@ -110,6 +112,7 @@ class Ejournal extends EJ_Controller {
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['editorials_vol_year'] = $this->Client_journal_model->get_unique_editorials();
 		$data['journals'] = $this->Client_journal_model->get_journals();
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$this->_LoadPage('common/body', $data);
 	}
 
@@ -1361,6 +1364,7 @@ class Ejournal extends EJ_Controller {
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['guidelines'] = $this->Library_model->get_guidelines_content();
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 
 		if($create_author_account){
 			$data['titles'] = $this->Client_journal_model->getTitles();
