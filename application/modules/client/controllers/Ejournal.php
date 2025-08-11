@@ -754,6 +754,7 @@ class Ejournal extends EJ_Controller {
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/search_results";
@@ -909,6 +910,7 @@ class Ejournal extends EJ_Controller {
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['years'] = $this->Journal_model->get_unique_journal_year();
 		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['main_title'] = "eJournal";
@@ -1390,6 +1392,7 @@ class Ejournal extends EJ_Controller {
 		$data['client_count'] = $this->Client_journal_model->all_client();
 		$data['hits_count'] = $this->Client_journal_model->all_hits();
 		$data['latest'] = $this->Client_journal_model->latest_journal();
+		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
 		// $data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
