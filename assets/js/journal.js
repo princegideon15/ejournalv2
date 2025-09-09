@@ -949,9 +949,9 @@ $(document).ready(function () {
 	// check and display export button if privilege to export is enabled
 	if (prv_exp == 0) {
 		$('#table-clients').DataTable({
-			"order": [
-				[3, "desc"]
-			],
+			// "order": [
+			// 	[3, "desc"]
+			// ],
 			retrieve: true,
 			"columnDefs": [{
 				"targets": 0,
@@ -960,9 +960,9 @@ $(document).ready(function () {
 		});
 	} else {
 		$('#table-clients').DataTable({
-			"order": [
-				[3, "desc"]
-			],
+			// "order": [
+			// 	[3, "desc"]
+			// ],
 			retrieve: true,
 			"columnDefs": [{
 				"targets": 0,
