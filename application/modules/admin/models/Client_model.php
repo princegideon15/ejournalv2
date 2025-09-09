@@ -55,7 +55,7 @@ class Client_model extends CI_Model {
 		$this->db->join($this->user_profiles . ' c', 'a.dl_user_id = c.user_id', 'left');
 		$this->db->join($this->countries . ' d', 'c.country = d.country_id', 'left');
 		$this->db->join($this->users . ' e', 'c.user_id = e.id', 'left');
-		$this->db->order_by('clt_download_date_time', 'desc');
+		$this->db->order_by('dl_datetime', 'desc');
 		$query = $this->db->get();
 		return $query->result();
 	}
