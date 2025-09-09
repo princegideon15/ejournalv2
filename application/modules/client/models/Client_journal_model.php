@@ -355,7 +355,7 @@ class Client_journal_model extends CI_Model {
 	public function all_client() {
 		$this->db->select('*');
 		$this->db->from($this->downloads);
-		$this->db->where('dl_datetime', '%' . date('Y') .'%');
+		$this->db->like('dl_datetime', date('Y'));
 		$query = $this->db->get();
 		return $query->num_rows();
 	}

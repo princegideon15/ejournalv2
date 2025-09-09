@@ -45,7 +45,7 @@ class Client_model extends CI_Model {
 	public function get_clients() {
 		$this->db->select('*');
 		$this->db->from($this->clients . ' a');
-		$this->db->join($this->articles . ' b', 'a.clt_journal_downloaded_id = b.art_id');
+		$this->db->join($this->articles . ' b', 'a.clt_journal_downloaded_id = b.art_id' , 'left');
 		$this->db->order_by('clt_download_date_time', 'desc');
 		$query = $this->db->get();
 		return $query->result();

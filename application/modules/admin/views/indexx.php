@@ -666,7 +666,7 @@
 				</div>
 				<!-- /.ADD EDITORIAL -->
 
-				<!-- CLIENTS -->
+				<!-- CLIENTS --> 
 				<div class="tab-pane fade " id="clients" role="tabpanel" aria-labelledby="clients" >
 					<div class="jumbotron text-white">
 						<h1 class="h3">Client Information</h1>

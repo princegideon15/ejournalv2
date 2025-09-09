@@ -50,7 +50,7 @@ class Dashboard extends EJ_Controller {
 				$data['journal_max'] = $this->Journal_model->get_journal_max();
 				$data['u_journal'] = $this->Journal_model->get_unique_journal();
 				$data['u_year'] = $this->Journal_model->get_unique_journal_year();
-				$data['client_count'] = $this->Client_model->client_count();
+				$data['client_count'] = $this->Client_model->client_count(); //changing
 				$data['art_count'] = $this->Article_model->art_count();
 				$data['edt_count'] = $this->Editorial_model->edt_count();
 				$data['jor_count'] = $this->Journal_model->jor_count();
