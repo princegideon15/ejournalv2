@@ -529,8 +529,8 @@
 												<th scope="col">Affiliation</th>
 												<th scope="col">Country</th>
 												<th scope="col">Email</th>
-												<th scope="col">Purpose</th>
-												<th scope="col">Ip Address</th>
+												<!-- <th scope="col">Purpose</th>
+												<th scope="col">Ip Address</th> -->
 												<th scope="col">Date&Time Visited</th>
 												<th scope="col">Article Reference ID</th>
 											</tr>
@@ -540,16 +540,17 @@
 											<tr>
 												<td></td>
 												<td><?php echo $c->art_title; ?></td>
-												<td><?php echo $c->clt_title . ' ' . $c->clt_name; ?></td>
-												<td><?php echo ($c->clt_sex == 1) ? 'Male' : 'Female'; ?></td>
-												<td><?php echo $c->clt_affiliation; ?></td>
-												<td><?php echo $c->clt_country; ?></td>
-												<td><?php echo $c->clt_email; ?></td>
-												<td><?php echo $c->clt_purpose; ?></td>
-												<td><?php echo $c->clt_ip_address; ?></td>
-												<td><?php echo $c->clt_download_date_time; ?></td>
-												<td>ID:<?php echo $c->clt_journal_downloaded_id; ?></td>
+												<td><?php echo $c->title . ' ' . $c->first_name . ' ' . $c->last_name; ?></td>
+												<td><?php echo ($c->sex == 1) ? 'Male' : 'Female'; ?></td>
+												<td><?php echo $c->affiliation; ?></td>
+												<td><?php echo $c->country_name; ?></td>
+												<td><?php echo $c->email; ?></td>
+												<!-- <td>-</td>
+												<td>-</td> -->
+												<td><?php echo $c->dl_datetime; ?></td>
+												<td>ID:<?php echo $c->dl_art_id; ?></td>
 											</tr>
+
 											<?php endforeach;?>
 										</tbody>
 									</table>
