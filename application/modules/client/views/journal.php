@@ -41,29 +41,13 @@ gtag('config', 'G-VDLLX3HKBL');
                 <a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark cursor-pointer">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
             </div>
 
-            <h3 class="mt-3">Volumes</h3>
+            <!-- <h3 class="mt-3">Volumes</h3>
 
             <div>
                 <ul class="list-unstyled overflow-hidden" id="volume_list"  style="height:200px; min-height:200px">
                     <?php foreach($volumes as $row):?>
                         <?php if(strpos($row->jor_volume, 'Adv. Publication') === false){ ?>
-                            <!-- <li><span class="fw-bold h6 text-decoration-underline">Volume <?=$key?></span> -->
-                            <li class="mb-1"><a href="<?=base_url('/client/ejournal/volume/'.$row->jor_volume.'/'.$row->jor_issue)?>" class="fs-6 main-link cursor-pointer">Volume <?= $row->jor_volume ?>, <?= $row->jor_year ?></a>
-                            
-                                <!-- <ul class="list-unstyled mb-3">
-                                    <?php foreach($row as $val):?>
-                                        <?php   $issue = (
-                                                    ($val[0] == 5) ? 'Special Issue No. 1' :
-                                                    (($val[0] == 6) ? 'Special Issue No. 2' :
-                                                        (($val[0] == 7) ? 'Special Issue No. 3' :
-                                                            (($val[0] == 8) ? 'Special Issue No. 4' : 'Issue ' . $val[0])))
-                                                );
-                                        ?>
-                                    <li><a href="<?=base_url('/client/ejournal/get_issues/'.$key.'/'.$val[1])?>" class="main-link"><?=$issue?></a></li>
-                                    <?php endforeach; ?>
-                                </ul> -->
-                                            
-                            </li>
+                            <li class="mb-1"><a href="<?=base_url('/client/ejournal/volume/'.$row->jor_volume.'/'.$row->jor_issue)?>" class="fs-6 main-link cursor-pointer">Volume <?= $row->jor_volume ?>, <?= $row->jor_year ?></a></li>
                         <?php } ?>
                     <?php endforeach; ?>
                 </ul>
@@ -71,7 +55,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     <a href="javascript:void(0);" class="text-dark cursor-pointer" id="see_more_volumes">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
                 </div>
                 
-            </div>
+            </div> -->
 
             <div class="mt-5"> 
                 <h6 class="fw-bold">Open Access</h6>   
@@ -114,7 +98,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="advance-publication-tab" data-bs-toggle="tab"
                         data-bs-target="#advance-publication-tab-pane" type="button" role="tab"
-                        aria-controls="advance-publication-tab-pane" aria-selected="false">Advance Publication</button>
+                        aria-controls="advance-publication-tab-pane" aria-selected="false">Advanced Publication</button>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
