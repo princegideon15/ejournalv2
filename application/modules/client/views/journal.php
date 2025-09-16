@@ -37,7 +37,7 @@ gtag('config', 'G-VDLLX3HKBL');
             <!-- <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p> -->
 
             
-            <div>
+            <div class="mt-3">
                 <a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark cursor-pointer">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
             </div>
 
@@ -57,15 +57,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 
             </div> -->
 
-            <div class="mt-5"> 
-                <h6 class="fw-bold">Open Access</h6>   
-                <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
-                    <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
-                </a>
-                <p>This work is licensed under a <a class="text-dark" rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
-                    Attribution 4.0 International License</a>.
-                </p>
-            </div>
+           
             
             <!-- <div class="accordion" id="accordionDivisions">
                 <?php foreach($divisions as $row):?>
@@ -355,6 +347,15 @@ gtag('config', 'G-VDLLX3HKBL');
         <div class="col col-lg-2 p-3">
             <?php $this->load->view('common/side_panel');?>
         </div>
+    </div>
+     <div class=""> 
+        <h6 class="fw-bold">Open Access</h6>   
+        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
+            <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+        </a>
+        <p>This work is licensed under a <a class="text-dark" rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
+            Attribution 4.0 International License</a>.
+        </p>
     </div>
 </div>
 
