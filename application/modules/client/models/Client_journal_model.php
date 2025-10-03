@@ -353,9 +353,12 @@ class Client_journal_model extends CI_Model {
 
 	/** this function get total numbers of clients */
 	public function all_client() {
+
+		$current_year = date('Y');
+
 		$this->db->select('*');
 		$this->db->from($this->downloads);
-		$this->db->where('dl_datetime', '%' . date('Y') .'%');
+		$this->db->where('YEAR(dl_datetime)', $current_year);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
