@@ -26,8 +26,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //$config['base_url'] = 'http://202.90.141.243/ejournal/';
 // $config['base_url'] = 'http://10.10.128.12/ejournal/';
 //$config['base_url'] = 'http://10.10.128.19/ejournal/';
-$config['base_url'] = 'http://10.10.128.12/ejournal2/';
- //$config['base_url'] = 'https://researchjournal.nrcp.dost.gov.ph/';
+//$config['base_url'] = 'http://10.10.128.12/ejournal2/';
+ $config['base_url'] = 'https://researchjournal.nrcp.dost.gov.ph/';
 // $config['base_url'] = 'localhost';
 // $config['base_url'] = 'http://localhost/ejournal/';
 
