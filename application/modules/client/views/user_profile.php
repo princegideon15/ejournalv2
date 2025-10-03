@@ -12,18 +12,18 @@ gtag('config', 'G-VDLLX3HKBL');
 </script>
 
 <?php error_reporting(0);?>
-<div class="container-fluid mt-3 p-4">
+<div class="container-fluid mt-2 p-4">
     <div class="row">
-        <div class="col col-3">
-
-        </div>
+        <div class="col col-3 p-3">
+            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
+		</div>
         <div class="col col-7 p-3">
             <div class="border rounded p-5 ">
                 <h2>My Profile</h2>
                 <?php if ($this->session->flashdata('message')) { ?>
                 <?php echo $this->session->flashdata('message'); ?>
                 <?php } ?>
-                <?=form_open('client/login/update_profile', ['id' => 'updateProfileForm'])?>
+                <?=form_open('client/user/update_profile', ['id' => 'updateProfileForm'])?>
                 <div class="mb-3">
                     <label class="form-label" for="new_email">Email</label>
                     <input type="email"

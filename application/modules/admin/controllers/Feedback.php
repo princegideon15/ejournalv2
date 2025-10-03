@@ -87,7 +87,7 @@ class Feedback extends EJ_Controller {
             $post['fb_source'] = $this->input->post('fb_source', TRUE); // 1-full text 2-citation 3-internal
             $post['date_created'] = date('Y-m-d H:i:s');
             $saved =  $this->Feedback_model->save_feedback(array_filter($post));
-            //save_log_ej($id, 'submitted UI/UX feedback.',  $this->db->insert_id());
+            save_log_ej($id, 'Submitted UI/UX feedback.',  $this->db->insert_id());
             //if($saved){
             echo 1;
            // }

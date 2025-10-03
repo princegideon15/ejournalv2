@@ -18,8 +18,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 
 class Client_model extends CI_Model {
-	private $clients = 'tblclients';
+	private $clients = 'tbldownloads';
 	private $articles = 'tblarticles';
+	private $user_profiles = 'tbluser_profiles';
+	private $countries = 'tblcountries';
+	private $users = 'tblusers';
+
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->database(ENVIRONMENT);
@@ -43,10 +48,14 @@ class Client_model extends CI_Model {
 	 * @return  array  all client information
 	 */
 	public function get_clients() {
-		$this->db->select('*');
+
+		$this->db->select('art_title, title, first_name, last_name, sex, affiliation, country_name, email, dl_datetime, dl_art_id');
 		$this->db->from($this->clients . ' a');
-		$this->db->join($this->articles . ' b', 'a.clt_journal_downloaded_id = b.art_id');
-		$this->db->order_by('clt_download_date_time', 'desc');
+		$this->db->join($this->articles . ' b', 'a.dl_art_id = b.art_id');
+		$this->db->join($this->user_profiles . ' c', 'a.dl_user_id = c.user_id', 'left');
+		$this->db->join($this->countries . ' d', 'c.country = d.country_id', 'left');
+		$this->db->join($this->users . ' e', 'c.user_id = e.id', 'left');
+		$this->db->order_by('dl_datetime', 'desc');
 		$query = $this->db->get();
 		return $query->result();
 	}

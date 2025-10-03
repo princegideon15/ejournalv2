@@ -9,13 +9,14 @@
         <title>OPRS</title>
         <script type="text/javascript" >var base_url = '<?php echo base_url(); ?>';</script>
         <!-- Bootstrap core CSS-->
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+        <!-- <link rel="stylesheet" href="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/bootstrap/css/bootstrap.min.css"> -->
         <!-- Custom fonts for this template-->
         <link href="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <!-- Page level plugin CSS-->
         <link href="<?php echo base_url(); ?>assets/oprs/sbadmin/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
         <!-- Custom styles for this template-->
-        <link href="<?php echo base_url(); ?>assets/oprs/css/sb-admin.css" rel="stylesheet">
+        <!-- <link href="<?php echo base_url(); ?>assets/oprs/css/sb-admin.css" rel="stylesheet"> -->
         <!-- Bootstrap Datetimepicker-->
         <link href="<?php echo base_url(); ?>assets/oprs/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
         <!-- Editable dropwdown-->
@@ -26,5 +27,6 @@
         <link href="<?php echo base_url(); ?>assets/oprs/css/animate.min.css" rel="stylesheet"/>
         <!-- Loading Screen -->
         <link rel="stylesheet" href="<?php echo base_url("assets/oprs/css/jquery.loading.admin.css"); ?>">
+        <link rel="icon" href="<?php echo base_url("assets/images/ejicon-07.png"); ?>">     
     </head>
     <body id="page-top">

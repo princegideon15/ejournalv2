@@ -13,7 +13,7 @@ gtag('config', 'G-VDLLX3HKBL');
 
 <?php error_reporting(0);?>
 
-<div class="container-fluid mt-3 p-4">
+<div class="container-fluid mt-2 p-4">
     <div class="row">
         <div class="col col-lg-4">
 
@@ -43,7 +43,7 @@ gtag('config', 'G-VDLLX3HKBL');
                             <h1><i class="oi oi-circle-check me-1 text-success fs-3"></i>Success!</h1>
                             <div class="alert alert- border" role="alert">
                                 <?php echo $this->session->flashdata('reset_password_success'); ?>
-                                <div><a class="btn main-btn mt-3" href="<?= base_url('client/ejournal/login') ?>">Continue to Login</a></div>
+                                <div><a class="btn main-btn mt-3" href="<?= base_url('client/login') ?>">Continue to Login</a></div>
                             </div>
                         <?php } else { ?>
 
@@ -57,7 +57,7 @@ gtag('config', 'G-VDLLX3HKBL');
                                 <button type="submit" class="btn main-btn mt-1 w-100" onclick="disableOnSubmit(this, '#resetPasswordForm', 'reset')">Submit </button>
                             <?=form_close()?>
 
-                            <div class="mt-5"><a class="main-link" href="<?= base_url('client/ejournal/login') ?>">Back to Login</a></div>
+                            <div class="mt-5"><a class="main-link" href="<?= base_url('client/login') ?>">Back to Login</a></div>
                         <?php } ?>
                     </div>
             </div>

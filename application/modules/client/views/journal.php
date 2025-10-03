@@ -15,7 +15,7 @@ gtag('config', 'G-VDLLX3HKBL');
 
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 
-<div class="container-fluid mt-3 p-4">
+<div class="container-fluid mt-2 p-4">
     <div class="row">
         <div class="col col-lg-5 p-3">
             <div class="d-flex flex-column mb-3 w-75">
@@ -31,45 +31,23 @@ gtag('config', 'G-VDLLX3HKBL');
                         href="<?=base_url('/client/ejournal/advanced')?>">Advanced search</a></p>
             </div>
 
-            <h3>Aim and Scope</h3>
-            <p class="aim-scope">
-                The NRCP Research Journal publishes articles on topics across the thirteen (13) divisions of the
-                Council.
-                <br><br>
-                The journal aspires to become a valuable platform that nurtures cross-disciplinary research and
-                collaboration which may lead to understanding and solving of complex challenges society faces. The NRCP
-                Research Journal envisions itself to become a top-tier peer-reviewed open access multi-disciplinary
-                journal that publishes rigorous and valuable research that broadly spans the entire spectrum of life,
-                physical, earth, engineering, humanities, social and medical science, which contribute to basic,
-                conceptual and practical scientific advancements including the translation of research to public policy.
-            </p>
+            <!-- ABOUT CONTENT -->
+            <?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?>
+
+            <!-- <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p> -->
 
             
-            <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p>
+            <div class="mt-3">
+                <a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark cursor-pointer">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
+            </div>
 
-            <h3>Volumes</h3>
+            <!-- <h3 class="mt-3">Volumes</h3>
 
             <div>
                 <ul class="list-unstyled overflow-hidden" id="volume_list"  style="height:200px; min-height:200px">
                     <?php foreach($volumes as $row):?>
                         <?php if(strpos($row->jor_volume, 'Adv. Publication') === false){ ?>
-                            <!-- <li><span class="fw-bold h6 text-decoration-underline">Volume <?=$key?></span> -->
-                            <li class="mb-1"><a href="<?=base_url('/client/ejournal/volume/'.$row->jor_volume.'/'.$row->jor_issue)?>" class="fs-6 main-link cursor-pointer">Volume <?= $row->jor_volume ?>, <?= $row->jor_year ?></a>
-                            
-                                <!-- <ul class="list-unstyled mb-3">
-                                    <?php foreach($row as $val):?>
-                                        <?php   $issue = (
-                                                    ($val[0] == 5) ? 'Special Issue No. 1' :
-                                                    (($val[0] == 6) ? 'Special Issue No. 2' :
-                                                        (($val[0] == 7) ? 'Special Issue No. 3' :
-                                                            (($val[0] == 8) ? 'Special Issue No. 4' : 'Issue ' . $val[0])))
-                                                );
-                                        ?>
-                                    <li><a href="<?=base_url('/client/ejournal/get_issues/'.$key.'/'.$val[1])?>" class="main-link"><?=$issue?></a></li>
-                                    <?php endforeach; ?>
-                                </ul> -->
-                                            
-                            </li>
+                            <li class="mb-1"><a href="<?=base_url('/client/ejournal/volume/'.$row->jor_volume.'/'.$row->jor_issue)?>" class="fs-6 main-link cursor-pointer">Volume <?= $row->jor_volume ?>, <?= $row->jor_year ?></a></li>
                         <?php } ?>
                     <?php endforeach; ?>
                 </ul>
@@ -77,7 +55,9 @@ gtag('config', 'G-VDLLX3HKBL');
                     <a href="javascript:void(0);" class="text-dark cursor-pointer" id="see_more_volumes">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
                 </div>
                 
-            </div>
+            </div> -->
+
+           
             
             <!-- <div class="accordion" id="accordionDivisions">
                 <?php foreach($divisions as $row):?>
@@ -110,7 +90,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="advance-publication-tab" data-bs-toggle="tab"
                         data-bs-target="#advance-publication-tab-pane" type="button" role="tab"
-                        aria-controls="advance-publication-tab-pane" aria-selected="false">Advance Publication</button>
+                        aria-controls="advance-publication-tab-pane" aria-selected="false">Advanced Publication</button>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -163,7 +143,7 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <!-- <a href="javascript:void(0);" class="main-link h6" onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a> -->
-                                <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a>
+                                <a href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
                             </div>
 
                             <div class="mt-2">
@@ -199,6 +179,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 <!-- Most Accessed -->
                 <div class="tab-pane fade" id="most-access-tab-pane" role="tabpanel" aria-labelledby="most-access-tab"
                     tabindex="0">
+
                     <?php if ($client_count != '' && $hits_count != '') { ?>
                     <?php $c = 0;foreach ($popular as $row):
 					$c++;
@@ -244,7 +225,8 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <!-- <a href="javascript:void(0);" class="main-link h6" onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Most Accessed')"><?=$row['title']?></a> -->
-                                <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a>
+                                <!-- <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a> -->
+                                <a href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
                             </div>
 
 
@@ -327,7 +309,8 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <!-- <a href="javascript:void(0);" class="main-link h6" onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Advance Publication')"><?=$row['title']?></a> -->
-                                <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a>
+                                <!-- <a href="<?= base_url() . 'client/ejournal/articles?search=' . str_replace(' ', '+', $row['title']) ?>" class="main-link h6"><?=$row['title']?></a> -->
+                                <a href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
                             </div>
 
                             <div class="mt-2">
@@ -365,6 +348,15 @@ gtag('config', 'G-VDLLX3HKBL');
         <div class="col col-lg-2 p-3">
             <?php $this->load->view('common/side_panel');?>
         </div>
+    </div>
+     <div class=""> 
+        <h6 class="fw-bold">Open Access</h6>   
+        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
+            <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+        </a>
+        <p>This work is licensed under a <a class="text-dark" rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
+            Attribution 4.0 International License</a>.
+        </p>
     </div>
 </div>
 
@@ -428,7 +420,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     echo '<button type="button" class="btn main-btn" id="top_download_pdf">
                     Download Full Paper <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></button>';
                 } else {
-                    echo '<a type="button" class="btn main-btn" href="'.base_url('client/ejournal/login').'">
+                    echo '<a type="button" class="btn main-btn" href="'.base_url('client/login').'">
                     Login to Get Access <span class="oi oi-account-login ms-2"></span></a>';
                 }?>
             </div>

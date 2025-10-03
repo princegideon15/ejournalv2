@@ -1,7 +1,7 @@
 <?php error_reporting(0);?>
 <?php $logged_in = $this->session->userdata('user_id'); ?>
-<div class="container-fluid mt-3 p-4">
-    <div class="row pt-3">
+<div class="container-fluid mt-2 p-4">
+    <div class="row">
         <!-- SIDE NAVIGATION -->
         
         <div class="col col-3 p-3">
@@ -89,7 +89,7 @@
 					<div class="flex-grow-1">
 						<p class="mt-0 text-dark">
 							<h2>Volume <?= $journal; ?></h2>
-							<h5 class="text-muted small">Publication Year: <?= $pub_date; ?></h5>
+							<h5 class="text-muted small">Year Published: <?= $pub_date; ?></h5>
 							<!-- <h5 class="text-muted small">ISSN: <?= $issn; ?></h5> -->
 							<h5 class="text-muted small">Articles: <?= count($articles); ?></h5>
 							<h5 class="text-muted small">Description: <?= $description ?? '-'; ?></h5>
@@ -103,7 +103,8 @@
 				<?php $coa_arr = (explode(",& ", $row['coa']));?>
 
 				<!-- <p class="mt-0 text-dark mb-0 main-link"><?php echo $row['title']; ?></p> -->
-                <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $row['art_id'] ?>','hits','<?= $row['file'] ?>')"><?= $row['title'] ?></a>
+                <a class="mt-0 text-dark mb-0 main-link" href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>"><?= $row['title'] ?></a>
+                <!-- <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $row['art_id'] ?>','hits','<?= $row['file'] ?>')"><?= $row['title'] ?></a> -->
 				
 				<div class="mt-2">
 					<?php $i = 0; foreach ($coa_arr as $c): ?>
@@ -148,20 +149,21 @@
 							<?=number_format($row['citations'], 0, '', ',')?></span>
 					</div>
                     
-                    <?php if($logged_in){
-                               echo '<div class="d-flex gap-1">
-                                <a  data-bs-toggle="modal" data-bs-target="#client_modal"
-                                    class="main-btn btn btn-sm" href="javascript:void(0);"
-                                    role="button" onclick="get_download_id('.$row['id'].')">
-                                    Download PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
-                                <a  data-bs-toggle="modal" data-bs-target="#citationModal"
-                                    class="main-btn btn-sm btn " href="javascript:void(0);"
-                                    role="button"
-                                    onclick="get_citee_info(\''.addslashes($row['cite']).'\','.$row['id'].')">
-                                    Cite  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
-                                </div>';
-                            }?>
-				</div>
+                      <?php //if($logged_in){
+                            //echo '<div class="d-flex gap-1 mb-3">
+                            //<a class="main-btn btn" href="'.base_url('client/ejournal/download_file/'. $article[0]->art_id .'/'.$article[0]->art_full_text_pdf).'"
+                            //    role="button">
+                             //   Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                            //<a  data-bs-toggle="modal" data-bs-target="#citationModal"
+                             //   class="main-btn btn " href="javascript:void(0);"
+                              //  role="button"
+                              //  onclick="get_citee_info(\''.addslashes($cite).'\','.$article[0]->art_id.')">
+                              //  Cite this article  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
+                           
+                           
+                          //  </div>';
+                        //}?>				
+</div>
 
 				<hr>
 				<?php endforeach;?>
@@ -173,6 +175,7 @@
     </div>
 
 	<div class="mt-5">    
+    <h6 class="fw-bold">Open Access</h6>   
         <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
             <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
         </a>
@@ -387,8 +390,8 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
             </div>
         </div>
     </div>
-    <!-- Citation Modal -->
-    <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <!-- CITATION MODAL -->
+     <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -396,9 +399,10 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Please provide us with your Full Name and Email Address. Then click SUBMIT to show the APA
+                    <!-- <p>Please fill up the required fields. Then click SUBMIT to show the APA
                         citation</p>
                     <form id="form_citation">
+                        
                         <input type="hidden" id="cite_value" name="cite_value">
                         <div class="form-group">
                             <label class="font-weight-bold" for="cite_title">Title<span
@@ -407,7 +411,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                                 placeholder="Mr. / Ms. / Dr.">
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-bold" for="cite_name">Name<span
+                        <label class="font-weight-bold" for="cite_name">Name<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <input type="text" class="form-control" id="cite_name" name="cite_name"
                                 placeholder="Full name">
@@ -424,25 +428,21 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                         <div class="form-group">
                             <label class="font-weight-bold" for="clt_affiliation">Affiliation<span
                                     class="text-danger font-weight-bold">*</span></label>
-                            <input type="text" class="form-control" id="cite_affiliation" name="cite_affiliation"
-                                placeholder="Affiliation">
+                            <input type="text" class="form-control" id="cite_affiliation" name="cite_affiliation" placeholder="Affiliation">
                         </div>
                         <div class="form-group">
                             <label class="font-weight-bold" for="cite_country">Country<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <select class="form-control" id="cite_country" name="cite_country"
                                 placeholder="Select Country" style="background-color: white">
-                                <!-- foreach of country -->
                                 <?php foreach ($country as $c): ?>
-                                d
                                 <?php $selected = ($c->country_id == '175') ? 'selected' : '';
-echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
+                                    echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_name . '</option>';?>
                                 <?php endforeach;?>
-                                <!-- /.end of foreach-->
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-bold" for="cite_email">Email<span
+                        <label class="font-weight-bold" for="cite_email">Email<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <input type="email" class="form-control" id="cite_email" name="cite_email"
                                 placeholder="Email">
@@ -457,13 +457,12 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                         </div>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
+                    </form> -->
+
                     <div id="cite_content" class="w-100">
                         <ul class="nav nav-tabs" id="cite_tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#apa" role="tab">APA</a>
+                                <a class="nav-link active" data-bs-toggle="tab" href="#apa" role="tab">APA</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="cite_tab_content">
@@ -471,14 +470,15 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
                                 <textarea id="apa_format" class="form-control" readonly rows="5"></textarea>
                             </div>
                         </div>
-                        <button type="button" onClick="copyCitationToClipboard('#apa_format')"
-                            class="btn btn-outline-primary mt-3 w-100">Copy to clipboard</button>
+                        <button type="button" onClick="copyCitationToClipboard('#apa_format')" class="btn main-btn mt-3 w-100">Copy to clipboard</button>
                     </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- feedback modal -->
     <div class="modal fade" id="feedbackModal" data-backdrop="static" data-keyboard="false"
         style="z-index: 1051 !important;">

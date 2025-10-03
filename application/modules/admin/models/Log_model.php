@@ -21,6 +21,7 @@ class Log_model extends CI_Model {
 
 	private $logs = 'tbllogs';
 	private $accounts = 'tblaccounts';
+	private $users = 'tblusers';
 
 	public function __construct() {
 		parent::__construct();
@@ -53,11 +54,12 @@ class Log_model extends CI_Model {
 	 * @return  array  
 	 */
 	public function get_all_logs() {
-		$this->db->select('*');
+		$this->db->select('email, log_ip, log_browser, log_action, date_created');
 		$this->db->from($this->logs);
-		$this->db->where("log_user_id IN (select row_id from tblaccounts)");
-		$this->db->where_not_in('log_user_id', _UserIdFromSession());
-		$this->db->where('log_user_id IN (select row_id from tblaccounts where acc_type != 0)');
+		$this->db->join($this->users, 'id = log_user_id', 'left');
+		// $this->db->where("log_user_id IN (select row_id from tblaccounts)");
+		// $this->db->where_not_in('log_user_id', _UserIdFromSession());
+		// $this->db->where('log_user_id IN (select row_id from tblaccounts where acc_type != 0)');
 		$this->db->order_by('date_created', 'desc');
 		$query = $this->db->get();
 		return $query->result();
@@ -107,6 +109,13 @@ class Log_model extends CI_Model {
 	 */
 	public function save_log_export($data) {
 		$this->db->insert($this->logs, $data);
+	}
+	
+	public function get_logs_only(){
+		return $this->db->get($this->logs)->result();
+	}
+	public function clear_logs(){
+		$this->db->truncate($this->logs);
 	}
 }
 
