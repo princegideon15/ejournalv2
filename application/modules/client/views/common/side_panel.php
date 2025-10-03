@@ -43,3 +43,4 @@
     <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/ebscohost.gif"); ?>" alt="ebscohost" width="100%" height="50px">
     <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/tuv_nord_iso.png"); ?>" alt="tub_nord_iso" width="100%" height="200px"> 
     <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/pej.png"); ?>" alt="pej" width="100%" height="50px">
+	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/ithenticate.jpg"); ?>" alt="ithenticate" width="100%" height="80px">

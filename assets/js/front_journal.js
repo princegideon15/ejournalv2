@@ -27,7 +27,7 @@ article_id,           // article id
 article_page_timeout, // article page timeout for saving abstract hits         
 current_button_id = "#create_account",    // button to enable/disable for catpcha
 isThrottledCitation = false,        
-isThrottledDownload = false;        
+isThrottledDownload = false;    
 
 $(document).ready(function()
 {
@@ -1378,7 +1378,7 @@ function get_download_id(id, flag=null, file=null, logged_in = null)
 }
 
 function save_hits(id){
-  // console.log("🚀 ~ save_hits ~ id:", id)
+  console.log("🚀 ~ save_hits ~ id:", id)
   $.ajax({
     type:"POST",
     url: base_url + "client/ejournal/abstract_hits/"+id,
@@ -1764,7 +1764,6 @@ function copyCitationToClipboard(element){
 }
 
 function save_cite(apa_id){
-
   if (!isThrottledCitation) {
         isThrottledCitation = true;
 
