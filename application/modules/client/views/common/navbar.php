@@ -72,7 +72,7 @@
           <!-- <a class="nav-link text-dark" href="https://skms.nrcp.dost.gov.ph/main/login" target="_blank">Submit manuscript</a> -->
         </li>
 
-          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/volume/'.$latest_volume[0]['jor_volume'].'/'.$latest_volume[0]['jor_issue']);?>">Volumes</a>
+          <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/volume/'.$latest_volume[0]['jor_volume'].'/'.$latest_volume[0]['jor_issue']);?>">Archives</a>
         </li>
         <!-- <li class="nav-item">
           <a class="nav-link text-dark fw-bolder" href="<?php echo base_url('/client/ejournal/integrity');?>">Research Integrity</a>
