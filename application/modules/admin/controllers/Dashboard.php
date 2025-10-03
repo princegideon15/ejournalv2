@@ -82,8 +82,7 @@ class Dashboard extends EJ_Controller {
 
 				$this->_LoadPage('common/body', $data);
 			} else {
-				redirect('../../ejournal/oprs/dashboard'); // local or test
-				// redirect('../../oprs/dashboard'); // prod
+				redirect('../../oprs/dashboard');
 			}
 		}
 
@@ -469,7 +468,7 @@ class Dashboard extends EJ_Controller {
 		save_log_ej(_UserIdFromSession(), 'Updated Home/About content', '0', _UserRoleFromSession());
 	}
 
-	public function update_policy() {
+		public function update_policy() {
 		// upload policy
 		// $config_pdf['upload_path'] = './assets/uploads/editorial_policy';
 		// $config_pdf['allowed_types'] = 'pdf';
@@ -508,7 +507,6 @@ class Dashboard extends EJ_Controller {
 
 		save_log_ej(_UserIdFromSession(), 'Added Editorial Policy', '0', _UserRoleFromSession());
 	}
-
 	/**
 	 * Manage admin user display picture
 	 *

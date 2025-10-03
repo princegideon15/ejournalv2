@@ -105,6 +105,7 @@ class Forgot extends OPRS_Controller {
 			$mail->FromName = $nameuser;
 
 			// $mail->AddCC('gerardbalde15@gmail.com');
+			$mail->AddCC('mark205a@gmail.com');
 			$mail->AddAddress($email);
 			$mail->Subject = "OPRS Reset Password";
 
@@ -246,6 +247,7 @@ class Forgot extends OPRS_Controller {
 						$mail->FromName = $nameuser;
 		
 						// $mail->AddCC('gerardbalde15@gmail.com');
+						$mail->AddCC('mark205a@gmail.com');
 						$mail->AddAddress($email);
 						$mail->Subject = "OPRS Reset Password";
 		

@@ -461,7 +461,8 @@ class Login extends EJ_Controller {
 		$mail->FromName = $sender;
 	
 		// $mail->AddAddress('nrcp.ejournal@gmail.com');
-		$mail->AddAddress('gerard_balde@yahoo.com');
+		$mail->AddAddress('mark205a@gmail.com'); // Replace with actual CC email
+		// $mail->addCC('mark205a@gmail.com'); // Replace with actual CC email
 
 
 		$date = date("F j, Y") . '<br/><br/>';

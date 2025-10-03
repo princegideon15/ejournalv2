@@ -394,7 +394,8 @@ class Review_model extends CI_Model {
 		$oprs->where('ps_status', 0);
 		$oprs->where('ps_action_date', NULL);
 		$query = $oprs->get();
-		return $query->result();
+		return $query->
+		result();
 	}
 
 	public function get_cluster_editor_status($id){
