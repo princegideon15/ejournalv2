@@ -39,10 +39,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // $config['base_url'] = 'http://localhost/ejournal/';
 //$config['base_url'] = 'http://localhost:8080/';
 
-
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -397,17 +393,10 @@ $config['encryption_key'] = '';
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
-<<<<<<< HEAD
-$config['sess_expiration'] = 7200;
-$config['sess_save_path'] = NULL;
-$config['sess_match_ip'] = FALSE;
-$config['sess_time_to_update'] = 0;
-=======
 $config['sess_expiration'] = 3600;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300; // Regenerate session ID every 5 minutes
->>>>>>> 2990f74183f8f5ccce7c7658e129f8d299dbf22a
 $config['sess_regenerate_destroy'] = FALSE;
 
 /*
@@ -428,15 +417,10 @@ $config['sess_regenerate_destroy'] = FALSE;
 $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 //$config['cookie_path']		= '/';
-<<<<<<< HEAD
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= TRUE;
 $config['cookie_path']      = '/';
-=======
-$config['cookie_secure']	= TRUE;
-$config['cookie_httponly'] 	= FALSE;
-$config['cookie_path']      = '/; SameSite=None';
->>>>>>> 2990f74183f8f5ccce7c7658e129f8d299dbf22a
+
 /*
 |--------------------------------------------------------------------------
 | Standardize newlines
