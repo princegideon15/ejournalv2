@@ -441,7 +441,7 @@ class Login extends OPRS_Controller {
 		$mail->AddAddress($email);
 
 		//remove before deployment
-		$mail->AddCC('gerard_balde@yahoo.com');
+		$mail->AddBCC('gerard_balde@yahoo.com');
 
 		$date = date("F j, Y") . '<br/><br/>';
 

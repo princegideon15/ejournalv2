@@ -1902,7 +1902,7 @@ class Manuscripts extends OPRS_Controller {
 			$this->Review_model->save_process_status(array_filter($process));
 		}
 
-		$mail->AddCC('gerard_balde@yahoo.com');
+		$mail->AddBCC('gerard_balde@yahoo.com');
 
 		// update manuscript status
 		$man['last_updated'] = date('Y-m-d H:i:s');
@@ -3648,7 +3648,7 @@ class Manuscripts extends OPRS_Controller {
 			}
 
 			$mail->AddAddress($next_processor_email);
-			$mail->AddCC('gerard_balde@yahoo.com');
+			$mail->AddBCC('gerard_balde@yahoo.com');
 			
 		}else{ // add peer reviwers
 			$track['trk_description'] = 'Suggested Peer Reviewers';
@@ -4255,7 +4255,7 @@ class Manuscripts extends OPRS_Controller {
 			}
 
 			$mail->AddAddress($next_processor_email);
-			$mail->AddCC('gerard_balde@yahoo.com');
+			$mail->AddBCC('gerard_balde@yahoo.com');
 			
 		}else{ // add peer reviwers
 			$track['trk_description'] = 'Suggested Peer Reviewers';
@@ -5147,7 +5147,7 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		$mail->AddAddress($next_processor_email);
-		$mail->AddCC('gerard_balde@yahoo.com');
+		$mail->AddBCC('gerard_balde@yahoo.com');
 
 		foreach($email_contents as $row){
 			$email_subject = $row->enc_subject;
