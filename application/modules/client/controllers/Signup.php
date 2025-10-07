@@ -280,7 +280,7 @@ class Signup extends EJ_Controller {
 	
 		$mail->AddAddress($email);
 		// remove after development
-		$mail->AddCC('gerard_balde@yahoo.com');
+		$mail->AddBCC('gerard_balde@yahoo.com');
 
 
 		$date = date("F j, Y") . '<br/><br/>';
