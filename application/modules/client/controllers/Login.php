@@ -366,7 +366,7 @@ class Login extends EJ_Controller {
 		$mail->FromName = $sender;
 	
 		$mail->AddAddress($email);
-		$mail->AddCC('gerard_balde@yahoo.com');
+		$mail->AddBCC('gerard_balde@yahoo.com');
 
 
 		$date = date("F j, Y") . '<br/><br/>';
