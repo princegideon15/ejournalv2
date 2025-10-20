@@ -179,6 +179,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 <!-- Most Accessed -->
                 <div class="tab-pane fade" id="most-access-tab-pane" role="tabpanel" aria-labelledby="most-access-tab"
                     tabindex="0">
+
                     <?php if ($client_count != '' || $hits_count != '') { ?>
                     <?php $c = 0;foreach ($popular as $row):
 					$c++;
