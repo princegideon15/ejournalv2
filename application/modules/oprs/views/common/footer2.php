@@ -505,9 +505,10 @@
 						<label for="man_type" class="fw-bold form-label">Type of Publcation</label>
 						<select class="form-select" name="man_type" id="man_type">
 							<option value="">Select Type</option>
-							<?php foreach($publ_types as $row): ?>
-								<option value="<?php echo $row->id;?>"><?php echo $row->publication_desc;?></option>
-							<?php endforeach ?>
+							<option value="1">Regular research articles</option>
+							<!-- <?php //foreach($publ_types as $row): ?>
+								<option value="<?php //echo $row->id;?>"><?php // echo $row->publication_desc;?></option>
+							<?php // endforeach ?> -->
 						</select>
 					</div>
 					<div class="mb-3">
