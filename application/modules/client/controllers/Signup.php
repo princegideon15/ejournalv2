@@ -54,7 +54,7 @@ class Signup extends EJ_Controller {
 		$this->form_validation->set_rules('middle_name', 'Middle Name', 'trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
 		$this->form_validation->set_rules('extension_name', 'Extension Name', 'trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
 		$this->form_validation->set_rules('sex', 'Sex', 'required|trim');
-		$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
+		$this->form_validation->set_rules('educational_attainment', 'Educational Attainment', 'required|trim|');
 		$this->form_validation->set_rules('affiliation', 'Affiliation', 'required|trim|regex_match[/^[a-zA-Z0-9._\- ]+$/]');
 
 		// require region,province,city for philippines
@@ -65,7 +65,7 @@ class Signup extends EJ_Controller {
 		}
 
 		$this->form_validation->set_rules('contact', 'Contact', 'required|trim|numeric|exact_length[11]');
-		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
+		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]',
 		array('regex_match' => 'Password must contain at least 1 letter, 1 number and 1 special character.'));
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
 

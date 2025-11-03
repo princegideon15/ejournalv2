@@ -104,7 +104,7 @@
     <!-- ISSN -->
     <div class="d-flex flex-column ">
       <p class="badge badge-issn rounded-0 fs-6 mb-1 rounded-start">EISSN: 2980-4728</p>
-      <p class="badge badge-issn rounded-0 fs-6 rounded-start">ISSN: 0116-3294</p>
+      <p class="badge badge-issn rounded-0 fs-6 rounded-start">ISSN: 0117-3294</p>
     </div>
 
   </div>
