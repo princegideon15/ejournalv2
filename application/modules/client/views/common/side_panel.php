@@ -41,7 +41,7 @@
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/crossref.png"); ?>" alt="crossref" width="100%" height="70px">	
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/ebscohost.gif"); ?>" alt="ebscohost" width="100%" height="70px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/agpci.png"); ?>" alt="agpci" width="100%" height="60px">
-	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/pejlogo.png"); ?>" alt="agpci" width="100%" height="160px">
+	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/pejlogo.png"); ?>" alt="agpci" width="100%" height="200px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/Ithenticate.jpg"); ?>" alt="ithenticate" width="100%" height="80px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/issn.png"); ?>" alt="ithenticate" width="100%" height="90px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/iso.png"); ?>" alt="iso" width="100%" height="200px"> 
