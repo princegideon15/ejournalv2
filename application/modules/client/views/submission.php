@@ -14,10 +14,11 @@
                         <h3 class="text-uppercase">Submit Manuscript</h3>
                         <div class="mt-3">
                             <!-- <h6 class="fw-bold">NRCP Non-Member</h6> -->
-                            <p>To submit manuscript, and to check the status of your submission,
-                                you need to have an account with the Online Peer Review System (eReview).
-                            </p>
+                            <p>
+								Please note: Your SKMS account cannot be used for manuscript submission.
+								To submit a manuscript and to check the status of your submission, kindly register a separate account on the eJournal’s Online Peer Review System (eReview). 
 
+							</p>							
 							<p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/login#create-account');?>">Sign up here.</a></p>
 						
 						 </div>
@@ -46,9 +47,9 @@
 						
 						<div class="mt-5">
 						<h6 class="fw-bold">Open Access</h6>   
-							<a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank"><img
-									alt="Creative Commons License" style="border-width:0"
-									src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is
+							<a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
+								 <img alt="Creative Commons License" style="width: 10%;" src="<?php echo base_url('assets/images/Creative.png'); ?>" />
+							</a><br />This work is
 							licensed
 							under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"
 								target="_blank">Creative Commons Attribution 4.0 International License</a>.
