@@ -4864,8 +4864,38 @@ class Manuscripts extends OPRS_Controller {
 		// udpate manuscript, status
 		$post = array();
 		$post['man_pages'] = $man_pages;
-		$post['man_status'] = ($revision_status == 1) ? 17 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
-		$post['man_revision_status'] = ($revision_status == 1) ? 1 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 0);
+		// $post['man_status'] = ($revision_status == 1) ? 17 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
+		
+		// Get current manuscript info to understand workflow context
+		$current_manuscript = $this->Manuscript_model->get_manuscript_by_id($man_id);
+		$current_status = $current_manuscript['man_status'];
+
+		// Determine next status based on workflow rules
+		if ($revision_status == 1) {
+			// Author submitted revision - stay in revision status
+			// If current status was 10 (Author: Revision), stay at 10
+			// If current status was 17 (Revised), stay at 17
+			if ($current_status == 10 || $current_status == 17) {
+				$post['man_status'] = $current_status; // Maintain current revision status
+			} else {
+				// If coming from other status to revision, use 17 (Revised)
+				$post['man_status'] = 17;
+			}
+			$post['man_revision_status'] = 1; // Mark as still in revision
+		} else if ($criteria_status == 2) {
+			// Criteria not met by desk reviewer - back to Technical Review (status 1)
+			$post['man_status'] = 1;
+			$post['man_revision_status'] = 1; // Still needs work
+		} else if ($editor_review_status == 10) {
+			// Editor sends back for revision - back to Desk Review: Revision (status 10)
+			$post['man_status'] = 10;
+			$post['man_revision_status'] = 1; // Still needs revision
+		} else {
+			// All approvals met - move to next step (status 8: Final Review)
+			$post['man_status'] = 8;
+			$post['man_revision_status'] = 0; // No more revisions needed
+		}
+		// $post['man_revision_status'] = ($revision_status == 1) ? 1 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 0);
 		$post['man_process_date'] = date('Y-m-d H:i:s');
 
 		// full manuscript

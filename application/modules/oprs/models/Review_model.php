@@ -387,6 +387,18 @@ class Review_model extends CI_Model {
 		$oprs->update($this->process_status, $post, $where);
 	}
 
+
+public function get_manuscript_by_id($man_id) {
+    $oprs = $this->load->database('dboprs', TRUE);
+    
+    $query = $oprs->select('*')
+                  ->from($this->tblmanuscripts)
+                  ->where('row_id', $man_id)
+                  ->get();
+    
+    return $query->row_array(); // Returns single record as associative array
+}
+
 	public function get_process_status(){
 		$oprs = $this->load->database('dboprs', TRUE);
 		$oprs->select('*');
