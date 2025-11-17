@@ -502,7 +502,7 @@
 						<textarea class="form-control" id="man_title" name="man_title" placeholder=""></textarea>
 					</div>
 					<div class="mb-3">
-						<label for="man_type" class="fw-bold form-label">Type of Publcation</label>
+						<label for="man_type" class="fw-bold form-label">Type of Publication</label>
 						<select class="form-select" name="man_type" id="man_type">
 							<option value="">Select Type</option>
 							<option value="1">Regular research articles</option>

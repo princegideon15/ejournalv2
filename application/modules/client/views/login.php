@@ -125,6 +125,9 @@
                         ?>
 
                 <?=form_open('client/signup/create_author_account', ['method' => 'post', 'id' => 'authorSignUpForm'])?>
+							<div class = "" style = 'background-color: #FFF8E1; padding:10px; border-radius:5px; margin-bottom:15px;'>
+								<span class="fw-bold">Note:</span> If NRCP Member, you may use the same password in your SKMS account.
+							</div>
                     <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
                     <div class="mb-3">
                         <div class="form-check">
