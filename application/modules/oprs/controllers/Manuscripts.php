@@ -2993,7 +2993,7 @@ class Manuscripts extends OPRS_Controller {
 			$where['tr_processor_id'] = _UserIdFromSession();
 			$where['tr_man_id'] = $man_id;
 			$post['tr_date_reviewed'] = date('Y-m-d H:i:s');
-			$post['tr_final'] = 1;
+			$post['tr_final'] = $post['tr_final'];
 			$post['tr_remarks'] = ($remarks != '') ? $remarks : 'No remarks';
 
 			$this->Review_model->update_tech_rev_score(array_filter($post), $where);
@@ -4882,7 +4882,6 @@ class Manuscripts extends OPRS_Controller {
 				$post['man_status'] = 2; // Desk review: EIC
 			}
 		 }
-
 		if ($revision_status == 1) {
    			$post['man_revision_status'] = 1;
 		} else if ($criteria_status == 2 || $editor_review_status == 10) {
@@ -4890,8 +4889,6 @@ class Manuscripts extends OPRS_Controller {
 		} else {
 			$post['man_revision_status'] = 0;
 		}
-		// $post['man_revision_status'] = ($revision_status == 1) ? 1 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 0);
-		$post['man_process_date'] = date('Y-m-d H:i:s');
 
 		// full manuscript
 		$file_string_man = str_replace(" ", "_", $_FILES['man_file']['name']);
