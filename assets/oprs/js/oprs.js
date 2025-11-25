@@ -10511,19 +10511,12 @@ function assoced_process(id, title, status, rev_status) {
         }
     });
 
-    if(rev_status > 0){
-	// 	// endorse to copy editor button
-        $('#select-cluster-tab').hide();
-        $('#assoc-suggest-peer-tab').hide();
+		// endorse to copy editor button
+		$('#select-cluster-tab').show();
+		$('#assoc-suggest-peer-tab').show();
         $('#submit_assoc_rev').html('<svg class="svg-inline--fa fa-circle-check me-1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> Endorse to Copy Editor');
         $('#submit_assoc_rev').attr('onclick',"editor_action('endorse_to_copy_editor','associate')");
-    }else{
-		// accept button
-        $('#select-cluster-tab').show();
-        $('#assoc-suggest-peer-tab').show();
-        $('#submit_assoc_rev').html('<svg class="svg-inline--fa fa-circle-check me-1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> Accept');
-        $('#submit_assoc_rev').attr('onclick',"editor_action('accept','associate')");
-    }
+   
 }
 
 function clued_process(id, title) {
