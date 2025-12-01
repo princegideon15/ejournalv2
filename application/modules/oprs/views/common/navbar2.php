@@ -48,6 +48,47 @@
     }
 </style>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  let exitUrl = '';
+
+  // Attach click handler to all external links
+  document.querySelectorAll('a[data-external]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      exitUrl = this.href;
+      document.getElementById('exitModal').style.display = 'flex';
+    });
+  });
+
+  // Stay button
+  document.getElementById('stayBtn').addEventListener('click', function() {
+    document.getElementById('exitModal').style.display = 'none';
+  });
+
+  // Leave button
+  document.getElementById('leaveBtn').addEventListener('click', function() {
+    if (exitUrl) {
+      window.open(exitUrl, '_blank', 'noopener,noreferrer');
+    }
+    document.getElementById('exitModal').style.display = 'none';
+    exitUrl = '';
+  });
+});
+</script>
+
+<!-- Custom Exit Confirmation Modal -->
+<div id="exitModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
+  <div style="background:white; padding:20px; border-radius:8px; max-width:400px; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+    <p>You are now leaving the Online Peer Review System (eReview).</p>
+    <button id="stayBtn" style="margin:8px; padding:6px 12px; background:#ccc; border:none; border-radius:4px; cursor:pointer;">
+      Stay Here
+    </button>
+    <button id="leaveBtn" style="margin:8px; padding:6px 12px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer;">
+      Leave Anyway
+    </button>
+  </div>
+</div>
 
 <?php $role = $this->session->userdata('_oprs_type_num');?>
 <?php $user_id = $this->session->userdata('_oprs_user_id');?>
@@ -65,7 +106,10 @@
             <a class="nav-link active fw-bolder text-decoration-uppercase" aria-current="page" href="#!">Online Peer Review System (eReview)</a>
         </li>
         <li class="nav-item active">
-            <a class="nav-link" href="http://researchjournal.nrcp.dost.gov.ph/" target="_blank"><span class="oi oi-globe"></span> Visit Client Page</a>
+            <button class="nav-link" href="<?= site_url('/oprs/client_sso/go_to_client') ?>">
+				<!-- <button class="nav-link" href="<?php echo base_url('client_sso/go_to_client') ?>"> -->
+			<span class="oi oi-globe"></span> Visit Client Page
+			</button>
             <!-- <a class="nav-link" href="<?php echo base_url(); ?>" target="_blank"><span class="oi oi-globe"></span> Visit Client Page</a> -->
         </li>
     </ul>
