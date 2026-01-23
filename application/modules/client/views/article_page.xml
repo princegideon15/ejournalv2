@@ -1,0 +1,9 @@
+<article id="37">
+  <!-- <title><?php echo htmlspecialchars($article[0]->art_title, ENT_XML1, 'UTF-8'); ?></title>
+  <authors><?php echo htmlspecialchars($article[0]->art_authors, ENT_XML1, 'UTF-8'); ?></authors>
+  <keywords><?php echo htmlspecialchars($article[0]->art_keywords, ENT_XML1, 'UTF-8'); ?></keywords>
+  <metadata><?php echo htmlspecialchars($article[0]->art_metadata, ENT_XML1, 'UTF-8'); ?></metadata> -->
+  <!-- <metrics>...<?php print_r($article[0]); ?></metrics> -->
+  <abstract_text>this is the xml version</abstract_text>
+  <journal_info>...</journal_info>
+</article>

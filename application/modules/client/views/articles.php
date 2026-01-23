@@ -103,7 +103,7 @@
 				<?php $coa_arr = (explode(",& ", $row['coa']));?>
 
 				<!-- <p class="mt-0 text-dark mb-0 main-link"><?php echo $row['title']; ?></p> -->
-                <a class="mt-0 text-dark mb-0 main-link" href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>"><?= $row['title'] ?></a>
+                <a class="mt-0 text-dark mb-0 main-link" href="<?= base_url() . 'client/ejournal/article_xml/' . $row['id'] ?>"><?= $row['title'] ?></a>
                 <!-- <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $row['art_id'] ?>','hits','<?= $row['file'] ?>')"><?= $row['title'] ?></a> -->
 				
 				<div class="mt-2">
