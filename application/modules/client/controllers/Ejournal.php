@@ -1398,10 +1398,60 @@ class Ejournal extends EJ_Controller {
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/article_page";
+		$data['main_content'] = "client/article_page.xml";
 		$this->_LoadPage('common/body', $data);
 	}
+	
+	public function article_xml($art_id = null) {
+    // ⚠️ Critical: Disable ALL output that isn't XML
+    error_reporting(0);
+    ini_set('display_errors', 0);
+    ob_clean(); // Discard any accidental whitespace or prior output
 
+    // Validate ID
+    if (!is_numeric($art_id) || $art_id <= 0) {
+        header('Content-Type: application/xml; charset=utf-8');
+        echo '<?xml version="1.0" encoding="UTF-8"?><error>Invalid article ID</error>';
+        exit;
+    }
+
+    $this->load->model('Client_journal_model');
+    $article_list = $this->Client_journal_model->get_article($art_id);
+    
+    if (empty($article_list)) {
+        header('Content-Type: application/xml; charset=utf-8');
+        echo '<?xml version="1.0" encoding="UTF-8"?><error>Article not found</error>';
+        exit;
+    }
+
+    $article = $article_list[0];
+
+    // Build XML
+    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><article/>');
+    $xml->addAttribute('id', $art_id);
+
+    $xml->addChild('title', htmlspecialchars($article->art_title, ENT_XML1, 'UTF-8'));
+    $xml->addChild('author', htmlspecialchars($article->art_author, ENT_XML1, 'UTF-8'));
+
+    // 🔧 FIXED: Use $article, not $art
+    if (!empty($article->art_keywords)) {
+        $keywords = array_map('trim', explode(',', $article->art_keywords));
+        $kwNode = $xml->addChild('keywords');
+        foreach ($keywords as $kw) {
+            if ($kw !== '') {
+                $kwNode->addChild('keyword', htmlspecialchars($kw, ENT_XML1, 'UTF-8'));
+            }
+        }
+    }
+
+    $xml->addChild('pages', htmlspecialchars($article->art_page, ENT_XML1, 'UTF-8'));
+
+    // ✅ Final output
+    header('Content-Type: application/xml; charset=utf-8');
+    header('Content-Disposition: inline; filename="nrcp_article_' . $art_id . '.xml"');
+    echo $xml->asXML();
+    exit; // Prevent ANY further output
+}
 	
 	/**
 	 * Send email to client after downloading article for csf arta
