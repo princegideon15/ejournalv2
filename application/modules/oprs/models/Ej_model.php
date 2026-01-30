@@ -23,5 +23,9 @@ class Ej_model extends CI_Model {
 		{
 			return $this->db->where('email', $email)->get('tblusers')->row();
 		}
+
+		public function get_user_info($id){
+			return $this->db->where('id', $id)->get('tblusers');
+		}
 		
 }

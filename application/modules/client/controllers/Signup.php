@@ -697,7 +697,7 @@ class Signup extends EJ_Controller {
 
 				$lastUserID = $this->get_last_user_id();
 				$newUserID = $this->generate_user_id('0000', intval($lastUserID) + 1);
-
+				$otpHash = password_hash($otp, PASSWORD_BCRYPT);
 				// save in ejournal
 				// save user account
 				$userAuth = [
@@ -705,8 +705,8 @@ class Signup extends EJ_Controller {
 					'email' => $email,
 					'password' => password_hash($password, PASSWORD_BCRYPT),
 					'status' => 0,
-					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
 					'otp_date' => date('Y-m-d H:i:s'),
+					'otp' => $otpHash, 
 					'otp_ref_code' => $ref_code,
 					'created_at' => date('Y-m-d H:i:s')
 				];
@@ -748,9 +748,9 @@ class Signup extends EJ_Controller {
 					'usr_category' => $member,
 					'date_created' => date('Y-m-d H:i:s'),
 					'usr_sys_acc' => 2,
-					'otp' => password_hash($otp, PASSWORD_BCRYPT), 
+					'otp' => $otpHash, 
+					'otp_ref_code' => $ref_code,
 					'otp_date' => date('Y-m-d H:i:s'),
-					'otp_ref_code' => $ref_code
 				];
 				
 				$this->User_model->create_author_account($data);

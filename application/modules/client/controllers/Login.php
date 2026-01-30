@@ -115,6 +115,7 @@ class Login extends EJ_Controller {
 			// Check user credentials using your authentication logic
 			$validateUser = $this->Login_model->validate_user($email);
 
+
 			if ($validateUser) {
 				$user_id = $validateUser[0]->id;
 				$email =  $validateUser[0]->email;
