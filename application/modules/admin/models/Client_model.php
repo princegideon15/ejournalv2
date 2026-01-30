@@ -56,6 +56,7 @@ class Client_model extends CI_Model {
 		$this->db->join($this->countries . ' d', 'c.country = d.country_id', 'left');
 		$this->db->join($this->users . ' e', 'c.user_id = e.id', 'left');
 		$this->db->order_by('dl_datetime', 'desc');
+		$this->db->like('dl_datetime', date('Y'));
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -109,6 +110,7 @@ class Client_model extends CI_Model {
 	public function client_count() {
 		$this->db->select('*');
 		$this->db->from($this->clients);
+		$this->db->like('dl_datetime', date('Y'));
 		$query = $this->db->get();
 		return $query->num_rows();
 	}

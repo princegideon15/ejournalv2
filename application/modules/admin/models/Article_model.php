@@ -236,6 +236,7 @@ class Article_model extends CI_Model {
 		$this->db->select('art_title, art_id, art_author');
 		$this->db->from($this->articles);
 		$this->db->order_by('art_title', 'asc');
+		$this->db->limit(5);
 		$query = $this->db->get();
 		return $query->result();
 	}
