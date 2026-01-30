@@ -78,8 +78,15 @@ class Signup extends OPRS_Controller {
 				echo $isNrcpMember;
 			}
 		}else{
-			$output = $this->User_model->check_author_email_ejournal($email);
-			echo json_encode($output);
+			$isNrcpMember = $this->User_model->check_author_email_skms($email);
+
+			if($isNrcpMember == 1){ // check if existing in oprs
+				echo 3;
+			}
+			else{
+				$output = $this->User_model->check_author_email_ejournal($email);
+				echo json_encode($output);
+			}
 		}
 
 	}

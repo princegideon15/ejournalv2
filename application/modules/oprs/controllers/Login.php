@@ -58,45 +58,45 @@ class Login extends OPRS_Controller {
 
 			
 		// send temp password if there is selected account in multiple account
-		if($this->input->post('user_id')){
-			$id = $this->input->post('user_id');
-			$user_category = $this->User_model->get_user_info_by_id($id);
+		// if($this->input->post('user_id')){
+		// 	$id = $this->input->post('user_id');
+		// 	$user_category = $this->User_model->get_user_info_by_id($id);
 
-			if( $user_category[0]->usr_category == 1) { // nrcp member
+		// 	if( $user_category[0]->usr_category == 1) { // nrcp member
 
-				$nrcp_member_info = $this->User_model->get_nrcp_member_info_by_id($id);
-				$user_id = $nrcp_member_info[0]->usr_id;
-				$name = $nrcp_member_info[0]->title_name . ' ' . $nrcp_member_info[0]->pp_first_name . ' ' .  $nrcp_member_info[0]->pp_last_name;
-				$email = $user_category[0]->usr_username;
+		// 		$nrcp_member_info = $this->User_model->get_nrcp_member_info_by_id($id);
+		// 		$user_id = $nrcp_member_info[0]->usr_id;
+		// 		$name = $nrcp_member_info[0]->title_name . ' ' . $nrcp_member_info[0]->pp_first_name . ' ' .  $nrcp_member_info[0]->pp_last_name;
+		// 		$email = $user_category[0]->usr_username;
 
-			}else if( $user_category[0]->usr_category == 2) { // ejournal client and oprs non member author 
+		// 	}else if( $user_category[0]->usr_category == 2) { // ejournal client and oprs non member author 
 
-				$ejournal_client_info = $this->Client_journal_model->get_client_info_id($id);
-				$user_id = $ejournal_client_info[0]->user_id;
-				$name = $ejournal_client_info[0]->title . ' ' . $ejournal_client_info[0]->first_name . ' ' . $ejournal_client_info[0]->last_name;
-				$email = $user_category[0]->usr_username;
+		// 		$ejournal_client_info = $this->Client_journal_model->get_client_info_id($id);
+		// 		$user_id = $ejournal_client_info[0]->user_id;
+		// 		$name = $ejournal_client_info[0]->title . ' ' . $ejournal_client_info[0]->first_name . ' ' . $ejournal_client_info[0]->last_name;
+		// 		$email = $user_category[0]->usr_username;
 
-			}else{ // oprs user
-				if( $user_category[0]->usr_role == 16 ){
-					// reviewer
-					$reviewer_info = $this->User_model->get_reviewer_info_by_id($id);
-					$user_id = $reviewer_info[0]->rev_id;
-					$name = $reviewer_info[0]->rev_title . ' ' . $reviewer_info[0]->rev_name;
-					$email = $user_category[0]->usr_username;
+		// 	}else{ // oprs user
+		// 		if( $user_category[0]->usr_role == 16 ){
+		// 			// reviewer
+		// 			$reviewer_info = $this->User_model->get_reviewer_info_by_id($id);
+		// 			$user_id = $reviewer_info[0]->rev_id;
+		// 			$name = $reviewer_info[0]->rev_title . ' ' . $reviewer_info[0]->rev_name;
+		// 			$email = $user_category[0]->usr_username;
 
-				}else{
+		// 		}else{
 
-					// oprs orejournal admin/supderamin
-					$user_id = $user_category[0]->usr_id;
-					$name = 'User';
-					$email = $user_category[0]->usr_username;
-				}
-			}
+		// 			// oprs orejournal admin/supderamin
+		// 			$user_id = $user_category[0]->usr_id;
+		// 			$name = 'User';
+		// 			$email = $user_category[0]->usr_username;
+		// 		}
+		// 	}
 
-			$this->Login_model->clear_login_attempts($email);
-			//send otp to email
-			$this->send_login_otp($email);
-		}
+		// 	$this->Login_model->clear_login_attempts($email);
+		// 	//send otp to email
+		// 	$this->send_login_otp($email);
+		// }
 
 		// validation and other functions for single account
 		if($this->form_validation->run() == FALSE){
@@ -126,20 +126,21 @@ class Login extends OPRS_Controller {
 	
 			// Check user credentials using your authentication logic
 			$validateUser = $this->Login_model->validate_user($email);
-	
+
 			if ($validateUser) {
-	
-				$user_account = $this->Login_model->check_multiple_account($email);
+				// $user_account = $this->Login_model->check_multiple_account($email);
 
 				//check if account activated
 				if($validateUser[0]->usr_status <= 1){
+					
+
 					if (password_verify($password, $validateUser[0]->usr_password)) {
-						if(count($user_account) > 1){
-							$this->session->set_flashdata('email', $email);
-							$this->session->set_flashdata('accounts', $user_account);
-							$this->session->set_flashdata('disable_login', 'disabled');
-							redirect('oprs/login');
-						}else{
+						// if(count($user_account) > 1){
+						// 	$this->session->set_flashdata('email', $email);
+						// 	$this->session->set_flashdata('accounts', $user_account);
+						// 	$this->session->set_flashdata('disable_login', 'disabled');
+						// 	redirect('oprs/login');
+						// }else{
 							$this->Login_model->clear_login_attempts($validateUser[0]->usr_username);
 
 							if ($this->validate_device_token($validateUser[0]->usr_id)) {
@@ -265,7 +266,7 @@ class Login extends OPRS_Controller {
 								$this->send_login_otp($email);
 							}
 
-						}
+						// }
 					}else{
 						$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->usr_username));
 	
@@ -716,8 +717,14 @@ class Login extends OPRS_Controller {
 		save_log_oprs(_UserIdFromSession(), 'logout', 0, _UserRoleFromSession());
 		$this->Login_model->delete_access_token(_UserIdFromSession());
 		is_offline(_UserIdFromSession());
-		session_unset();
-		redirect('oprs/login');
+		if($this->session->userdata('_ej_logged_in')){
+			session_unset();
+			redirect('/');
+		}else{
+			session_unset();
+			redirect('oprs/login');
+		}
+
 	}
 
 
@@ -1138,7 +1145,8 @@ class Login extends OPRS_Controller {
 	 *
 	 * @return  int          number of account found
 	 */
-	public function check_multiple_account($email) {
+	public function check_multiple_account() {
+		$email = $this->input->get('email');
 		$output = $this->Login_model->check_multiple_account($email);
 		echo json_encode($output);
 	}

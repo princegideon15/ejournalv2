@@ -1018,6 +1018,7 @@ function checkEmail(formData){
     dataType: 'json',
     data: formData,
     success: function (response) {
+        console.log(response);
       if(formData['member'] == 1){
         if(response == 1){ // nrcp member and not oprs author
           $('#new_email').removeClass('is-invalid')
@@ -1033,37 +1034,46 @@ function checkEmail(formData){
           $('#create_account').addClass('disabled');
         }
       }else{
-        if(response['ej'] == 1 && response['op'] == 0){
-  
-          Swal.fire({
-            title: "Email already exists in eJournal",
-            text: "Do you want to register this account as author?",
-            icon: "warning",
-            showCancelButton: true,
-            cancelButtonColor: "#adb5bd",
-            confirmButtonColor: "#0c6bcb",
-            confirmButtonText: "Proceed"
-          }).then((result) => {
-            if (result.isConfirmed) {
-              register_author_acccount(formData);
-            } else {
-              $('#authorSignUpForm')[0].reset();
-              $('form input, select').removeClass('is-invalid');
-              $('.alert-danger').alert('close');
-            }
-          });
-  
-          $('#create_account').addClass('disabled');
-        }else if(response['op'] >= 1){
-          let oprs_url = base_url + "oprs/login";
+        if(response == 3){ // nrcp member and not oprs author
           $('#new_email').addClass('is-invalid')
-          $('.invalid-feedback').html('Email already exist as Author. Click <a class="text-danger text-decoration-underline fw-bold" href="' + oprs_url +'">here</a> to login as Author.');
+          $('.invalid-feedback').text('Email is an active account as NRCP Member.');
           $('#create_account').addClass('disabled');
         }else{
           $('#new_email').removeClass('is-invalid')
           $('.invalid-feedback').text();
           $('#create_account').removeClass('disabled');
         }
+        // if(response['ej'] == 1 && response['op'] == 0){
+  
+        //   Swal.fire({
+        //     title: "Email already exists in eJournal",
+        //     text: "Do you want to register this account as author?",
+        //     icon: "warning",
+        //     showCancelButton: true,
+        //     cancelButtonColor: "#adb5bd",
+        //     confirmButtonColor: "#0c6bcb",
+        //     confirmButtonText: "Proceed"
+        //   }).then((result) => {
+        //     if (result.isConfirmed) {
+        //       register_author_acccount(formData);
+        //     } else {
+        //       $('#authorSignUpForm')[0].reset();
+        //       $('form input, select').removeClass('is-invalid');
+        //       $('.alert-danger').alert('close');
+        //     }
+        //   });
+  
+        //   $('#create_account').addClass('disabled');
+        // }else if(response['op'] >= 1){
+        //   let oprs_url = base_url + "oprs/login";
+        //   $('#new_email').addClass('is-invalid')
+        //   $('.invalid-feedback').html('Email already exist as Author. Click <a class="text-danger text-decoration-underline fw-bold" href="' + oprs_url +'">here</a> to login as Author.');
+        //   $('#create_account').addClass('disabled');
+        // }else{
+        //   $('#new_email').removeClass('is-invalid')
+        //   $('.invalid-feedback').text();
+        //   $('#create_account').removeClass('disabled');
+        // }
       }
     }
   });

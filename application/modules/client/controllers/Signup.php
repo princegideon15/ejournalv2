@@ -241,20 +241,28 @@ class Signup extends EJ_Controller {
 		// 	}
 		// }
 
-		if($nrcp_member == 1){ // skms member
-			$user_info = $this->User_model->get_nrcp_member_info($email);
-			$name = $user_info['title_name'] . ' ' . $user_info['pp_first_name'] . ' ' . $user_info['pp_last_name'];
-			$otp_info = $this->User_model->get_user_info_by_email($email);
-			$ref_code = $otp_info[0]->otp_ref_code;
+			$user = $this->Client_journal_model->get_user_info($email);
+			$name = $user[0]->title . ' ' . $user[0]->first_name . ' ' . $user[0]->last_name;
+			$ref_code = $user[0]->otp_ref_code;
 			$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
-		}else { // oprs member
-			$user_info = $this->Client_journal_model->get_user_info($email);
-			$name = $user_info[0]->title . ' ' . $user_info[0]->first_name . ' ' . $user_info[0]->last_name;
+
 			
-			$otp_info = $this->User_model->get_user_info_by_email($email);
-			$ref_code = $otp_info[0]->otp_ref_code;
-			$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
-		}
+
+		
+		// if($nrcp_member == 1){ // skms member
+		// 	$user_info = $this->User_model->get_nrcp_member_info($email);
+		// 	$name = $user_info['title_name'] . ' ' . $user_info['pp_first_name'] . ' ' . $user_info['pp_last_name'];
+		// 	$otp_info = $this->User_model->get_user_info_by_email($email);
+		// 	$ref_code = $otp_info[0]->otp_ref_code;
+		// 	$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
+		// }else { // oprs member
+		// 	$user_info = $this->Client_journal_model->get_user_info($email);
+		// 	$name = $user_info[0]->title . ' ' . $user_info[0]->first_name . ' ' . $user_info[0]->last_name;
+			
+		// 	$otp_info = $this->User_model->get_user_info_by_email($email);
+		// 	$ref_code = $otp_info[0]->otp_ref_code;
+		// 	$link = base_url() . 'client/signup/new_account_verify_otp/'.$ref_code;
+		// }
 
 
 		$sender = 'eJournal';
@@ -671,6 +679,43 @@ class Signup extends EJ_Controller {
 
 				// get member info
 				$result = $this->User_model->get_nrcp_member_info($email);
+
+				$otpHash = password_hash($otp, PASSWORD_BCRYPT);
+				// save in ejournal
+				// save user account
+				$userAuth = [
+					'id' => $result[0]->usr_id,
+					'email' => $email,
+					'password' => password_hash($password, PASSWORD_BCRYPT),
+					'status' => 0,
+					'otp_date' => date('Y-m-d H:i:s'),
+					'otp' => $otpHash, 
+					'otp_ref_code' => $ref_code,
+					'created_at' => date('Y-m-d H:i:s')
+				];
+				
+				$this->Login_model->create_user_auth($userAuth);
+
+				// save user profile
+				$userProfile = [
+					'user_id' => $result[0]->usr_id,
+					'title' => $result[0]->title_name,
+					'first_name' =>  $result[0]->pp_first_name,
+					'middle_name' => '',
+					'last_name' => $result[0]->pp_last_name,
+					'extension_name' => '',
+					'sex' =>  $result[0]->pp_sex,
+					'educational_attainment' => '',
+					'affiliation' => '',
+					'country' => '',
+					'region' => '',
+					'province' => '',
+					'city' => '',
+					'contact' => $result[0]->pp_contact,
+					'created_at' => date('Y-m-d H:i:s'),
+				];
+
+				$this->Login_model->create_user_profile($userProfile);
 				
 				// create author account in oprs
 				$data = [
@@ -681,7 +726,7 @@ class Signup extends EJ_Controller {
 					'usr_contact' => $result[0]->pp_contact,
 					'usr_desc' => 'Author',
 					'usr_role' => 1,
-					'usr_status' => 2,
+					'usr_status' => 1,
 					'usr_sex' => $result[0]->pp_sex,
 					'usr_category' => $member,
 					'date_created' => date('Y-m-d H:i:s'),
