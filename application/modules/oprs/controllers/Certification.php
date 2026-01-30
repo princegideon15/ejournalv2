@@ -88,7 +88,7 @@ class Certification extends TCPDF {
 
         $dbhost = 'localhost';
         $dbuser = 'skms';
-        $dbpass = '$km$@NRCP@1933';
+        $dbpass = '$km$@NRCP@1933-ca54f1da1a4eaf1ca17eebc10a090f412e6ae5d8';
         $dbname = 'dboprs';
         $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
         
@@ -156,15 +156,15 @@ class Certification extends TCPDF {
         $pdf->AddPage();
 
         // create columns content
-        $left_column = '<h5>NRCP GOVERNING BOARD <br/>2022-2023</h5>
+        $left_column = '<h5>NRCP GOVERNING BOARD <br/>2024-2025</h5>
                         
-                        <span style="font-size:8.5px;"><strong>LESLIE MICHELLE M. DALMACIO, Ph.D.</strong> 
+                        <span style="font-size:8.5px;"><strong>AIMEE LYNN A. BARRION-DUPO, Ph.D.</strong> 
                         <br/><em>President<em>
-                        <br/><em>Chair</em>, Medical Science
+                        <br/><em>Member-atLarge</em>
                         
                         <br/><br/>
 
-                        <strong>MARIBEL G. NONATO, Ph.D.</strong>
+                        <strong>GISELA P. CONCEPCION, Ph.D.</strong>
                         <br/><em>Vice President</em>
                         <br/><em>Chair<em/>, Chemical Sciences
                         
@@ -176,46 +176,46 @@ class Certification extends TCPDF {
                         
                         <br/><br/>
                         
-                        <strong>MICHAEL ANGELO B. PROMENTILLA, Ph.D.</strong>
-                        <br/><em>Treasurer</em>
-                        <br/><em>Chair</em>, Engineering and Industrial Research
-                        
-                        <br/><br/>
-                        
-                        <strong>AIMEE LYNN A. BARRION-DUPO, Ph.D.</strong>
-                        <br/><em>Assistant Corporate Secretary</em>
-                        <br/><em>Member-at-Large</em>
-                        
-                        <br/><br/>
-                        
                         <strong>RIO JOHN T. DUCUSIN, Ph.D.</strong>
-                        <br/><em>Assistant Treasurer</em>
+                        <br/><em>Treasurer</em>
                         <br/><em>Chair</em>, Veterinary Medicine
                         
                         <br/><br/>
                         
-                        <strong>MARIE PAZ E. MORALES, Ph.D.</strong>
-                        <br/><em>Chair</em>, Governmental, Educational,
+                        <strong>MA. LOUISE ANTONETTE N. DE LAS PE�AS, Ph.D.</strong>
+                        <br/><em>Assistant Corporate Secretary</em>
+                        <br/><em>Chair</em>, Masthematical Sciences
+
+                        <br/><br/>
+                        
+                        <strong>RAMON CHRISTIAN P. EUSEBIO, Ph.D.</strong>
+                        <br/><em>Assistant Treasurer</em>
+                        <br/><em>Chair</em>, Engineering and Industrial Research
+                        
+                        <br/><br/>
+                        
+                        <strong>ROCHELLE IRENE GARCIA-LUCAS, Ph.D.</strong>
+                        <br/><em>Chair</em>, Governmental, Educational, 
                         <br/>and International Policies
                         
                         <br/><br/>
                         
-                        <strong>MA. LOUISE ANTONETTE N. DE LAS PE�AS, Ph.D.</strong>
-                        <br/><em>Chair</em>, Mathematical Sciences
+                        <strong>JOSE MA. M. ANGELES, Ph.D.</strong>
+                        <br/><em>Chair</em>, Medical Sciences
                         
                         <br/><br/>
                         
-                        <strong>ERNA C. AROLLADO, Ph.D.</strong>
+                        <strong>ROSS D. VASQUEZ, Ph.D.</strong>
                         <br/><em>Chair</em>, Pharmaceutical Sciences
                         
                         <br/><br/>
                         
-                        <strong>RENATO SA. VEGA, DSc</strong>
+                        <strong>DIXON T. GEVA�A, Ph.D.</strong>
                         <br/><em>Chair</em>, Agricultrual and Forestry
                         
                         <br/><br/>
                         
-                        <strong>LAWRENCE B. DACUYCUY, DEc</strong>
+                        <strong>MARIA ELA. L. ATIENZA, Ph.D.</strong>
                         <br/><em>Chair</em>, Social Sciences
                         
                         <br/><br/>
@@ -235,7 +235,7 @@ class Certification extends TCPDF {
                         
                         <br/><br/>
 
-                        <strong>GISELA P. CONCEPCION, Ph.D.</strong>
+                        <strong>JOSE WENDELL P. CAPILI, Ph.D.</strong>
                         <br/><em>Member-at-Large</em>
                         
                         <br/><br/>
@@ -256,15 +256,12 @@ class Certification extends TCPDF {
                         <br/><em>Executive Director</em>
                         
                         </span>';
-
-       
         
-        // $right_column = '<b>CERTIFICATION</b>';
         $html = '<br><h2 style="text-align:center;">CERTIFICATION</h2><br>';
 
         $dbhost = 'localhost';
         $dbuser = 'skms';
-        $dbpass = '$km$@NRCP@1933';
+        $dbpass = '$km$@NRCP@1933-ca54f1da1a4eaf1ca17eebc10a090f412e6ae5d8';
         $dbname = 'dboprs';
         $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
         
@@ -273,7 +270,7 @@ class Certification extends TCPDF {
         exit();
         }
         
-        $sql = 'SELECT * FROM tblemail_notif_contents WHERE row_id LIKE 17';
+        $sql = 'SELECT * FROM tblemail_notif_contents WHERE row_id LIKE 20';
         $result = $mysqli->query($sql);
         while($row = $result->fetch_assoc()) {
             $email_content = $row['enc_content'];             
@@ -579,8 +576,8 @@ class Certification extends TCPDF {
         }
         $mysqli->close();
     
-        // $dost = '/var/www/html/ejournal/assets/images/sepeda.png';
-        $dost = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/images/sepeda.png';
+        $dost = '/var/www/html/ejournal/assets/images/sepeda.png';
+        // $dost = $_SERVER['DOCUMENT_ROOT'] . '/ejournal/assets/images/sepeda.png';
         // Image example with resizing
         $pdf->Image($dost, 110, 145, 70, 30, 'PNG', '', '', true, 100, '', false, false, 0, false, false, false);
         

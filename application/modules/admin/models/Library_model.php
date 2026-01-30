@@ -60,11 +60,6 @@ class Library_model extends CI_Model {
 		$this->db->insert('tbleditorial_policy', $data);
 	}
 
-	public function update_editorial_policy($data){
-		$this->db->where('id', 1); // specify the condition
-		$this->db->update('tbleditorial_policy', $data);
-	}
-
 	public function get_editorial_policy_content(){
 		$this->db->select("*");
 		$this->db->from('tbleditorial_policy');
@@ -82,6 +77,11 @@ class Library_model extends CI_Model {
 		$query = $this->db->get();
 		$result = $query->result_array();
 		return $result[0]['gd_content'];
+	}
+
+	public function update_editorial_policy($data){
+		$this->db->where('id', 1); // specify the condition
+		$this->db->update('tbleditorial_policy', $data);
 	}
 }
 

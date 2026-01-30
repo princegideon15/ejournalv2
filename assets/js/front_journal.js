@@ -27,7 +27,7 @@ article_id,           // article id
 article_page_timeout, // article page timeout for saving abstract hits         
 current_button_id = "#create_account",    // button to enable/disable for catpcha
 isThrottledCitation = false,        
-isThrottledDownload = false;        
+isThrottledDownload = false;    
 
 $(document).ready(function()
 {
@@ -1054,7 +1054,7 @@ function checkEmail(formData){
           });
   
           $('#create_account').addClass('disabled');
-        }else if(response['ej'] >= 1 && response['op'] >= 1){
+        }else if(response['op'] >= 1){
           let oprs_url = base_url + "oprs/login";
           $('#new_email').addClass('is-invalid')
           $('.invalid-feedback').html('Email already exist as Author. Click <a class="text-danger text-decoration-underline fw-bold" href="' + oprs_url +'">here</a> to login as Author.');
@@ -1378,7 +1378,7 @@ function get_download_id(id, flag=null, file=null, logged_in = null)
 }
 
 function save_hits(id){
-  // console.log("🚀 ~ save_hits ~ id:", id)
+  console.log("🚀 ~ save_hits ~ id:", id)
   $.ajax({
     type:"POST",
     url: base_url + "client/ejournal/abstract_hits/"+id,
@@ -1764,7 +1764,6 @@ function copyCitationToClipboard(element){
 }
 
 function save_cite(apa_id){
-
   if (!isThrottledCitation) {
         isThrottledCitation = true;
 
@@ -1792,33 +1791,50 @@ function disableOnSubmit(element, form, action){
 }
 
 function getPasswordStrength(password) {
-  // Implement your password strength logic here
-  // For example, you can check for length, uppercase, lowercase, numbers, and special characters
+  // Check for spaces first - if any spaces exist, return 0 strength
+  if (/\s/.test(password)) {
+    return 0;
+  }
+  
   var strength = 0;
-  if (password.length >= 8) {
-      strength+=10;
+  
+  // Length checks (8-64 characters)
+  if (password.length >= 8 && password.length <= 64) {
+    if (password.length >= 8) {
+      strength += 10;
+    }
+    if (password.length >= 12) {
+      strength += 15;
+    }
+    if (password.length >= 16) {
+      strength += 20;
+    }
+  } else {
+    // If length is outside 8-64 range, return 0 strength
+    return 0;
   }
-  if (password.length >= 12) {
-    strength+=15;
-  }
-  if (password.length >= 16) {
-    strength+=20;
-  }
+  
+  // At least 1 uppercase letter (A-Z)
   if (/[A-Z]/.test(password)) {
-      strength+=15;
+    strength += 15;
   }
+  
+  // At least 1 lowercase letter (a-z)
   if (/[a-z]/.test(password)) {
-      strength+=10;
+    strength += 10;
   }
+  
+  // At least 1 number (0-9)
   if (/[0-9]/.test(password)) {
-      strength+=15;
+    strength += 15;
   }
-  if   
-  (/[^A-Za-z0-9]/.test(password)) {
-      strength+=15;
+  
+  // At least 1 special character (e.g., ! @ # $ % ^ & * )
+  if (/[@$!%*?&]/.test(password)) {
+    strength += 15;
   }
-  return strength;   
-
+  
+  return strength;
 }
 
 function startTimer() {

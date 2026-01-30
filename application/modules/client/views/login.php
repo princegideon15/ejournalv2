@@ -16,8 +16,7 @@
     // Initialize reCAPTCHA and store the widget ID
     window.onload = function () {
         recaptchaWidgetId_create_client_account = grecaptcha.render('captcha_client', {
-            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
-            // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+            'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA',
           // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
             'callback': onRecaptchaSuccess,
             'expired-callback': onRecaptchaExpired
@@ -28,8 +27,19 @@
        // Initialize reCAPTCHA and store the widget ID
     window.onload = function () {
         recaptchaWidgetId_create_author_account = grecaptcha.render('captcha_author', {
-            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
-            // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+             //'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+            'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+          // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
+            'callback': onRecaptchaSuccess,
+            'expired-callback': onRecaptchaExpired
+        });
+    };
+
+       // Initialize reCAPTCHA and store the widget ID
+    window.onload = function () {
+        recaptchaWidgetId_create_author_account = grecaptcha.render('captcha_author', {
+            // 'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+            'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
           // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
             'callback': onRecaptchaSuccess,
             'expired-callback': onRecaptchaExpired
@@ -81,7 +91,8 @@
                                 <i class="oi oi-circle-x me-1 pt-1"></i><?php echo $this->session->flashdata('_ej_session_msg'); ?>
                             </div>
                         <?php } ?>
-                        
+
+
                         <?=form_open('client/login/authenticate', ['method' => 'post', 'id' => 'loginForm', 'class' => 'w-50'])?>
                             <div class="mb-3">
                                 <input type="email" class="form-control form-control-lg <?php if($this->session->flashdata('validation_errors')['email']){ echo 'is-invalid';} ?>" id="email" name="email" placeholder="Email">
@@ -114,6 +125,9 @@
                         ?>
 
                 <?=form_open('client/signup/create_author_account', ['method' => 'post', 'id' => 'authorSignUpForm'])?>
+							<div class = "" style = 'background-color: #FFF8E1; padding:10px; border-radius:5px; margin-bottom:15px;'>
+								<span class="fw-bold">Note:</span> If NRCP Member, you may use the same password in your SKMS account.
+							</div>
                     <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
                     <div class="mb-3">
                         <div class="form-check">

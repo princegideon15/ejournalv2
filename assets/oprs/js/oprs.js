@@ -5841,86 +5841,6 @@ $(document).ready(function() {
               });
         }
     });
-
-    $("#review_revised_form").validate({
-        debug: true,
-        errorClass: 'text-danger',
-        rules: {
-            desk_rev_remarks: {
-                required: true,
-            },
-            desk_rev_revise: {
-                required: true,
-            },
-        },
-        errorPlacement: function (error, element) {
-            // Place error message below the group of checkboxes
-            if (element.attr("name") === "desk_rev_revise") {
-                error.insertAfter("#desk_rev_revise");
-            } else {
-                error.insertAfter(element);
-            }
-        },
-        submitHandler: function() {
-
-            
-            Swal.fire({
-                title: "Are you sure?",
-                // text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#007bff",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Submit"
-              }).then((result) => {
-                if (result.isConfirmed) {
-
-                    $('body').loading('start');
-                    $('#reviewRevisionModal').modal('toggle');
-                    
-                    var formdata = new FormData($('#review_revised_form')[0]);
-    
-                    $.ajax({
-                        url: base_url + "oprs/manuscripts/desk_revision_review",
-                        data: formdata,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        crossDomain: true,
-                        type: 'POST',
-                        success: function(data) {
-                            $('body').loading('stop');
-                            $('#review_revised_form')[0].reset();
-                            Swal.fire({
-                            title: "Review submitted successfully!",
-                            icon: 'success',
-                            // html: "I will close in <b></b> milliseconds.",
-                            timer: 2000,
-                            timerProgressBar: true,
-                            didOpen: () => {
-                                Swal.showLoading();
-                                const timer = Swal.getPopup().querySelector("b");
-                                timerInterval = setInterval(() => {
-                                timer.textContent = `${Swal.getTimerLeft()}`;
-                                }, 100);
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval);
-                                location.reload();
-                            }
-                            }).then((result) => {
-                                /* Read more about handling dismissals below */
-                                if (result.dismiss === Swal.DismissReason.timer) {
-                                    console.log("I was closed by the timer");
-                                }
-                                location.reload();
-                            });
-                        }
-                    });
-                }
-              });
-        }
-    });
     
     $("#submit_revision_endorsement_form").validate({
         debug: true,
@@ -6249,7 +6169,7 @@ $(document).ready(function() {
                 required: true,
             }
         },
-        submitHandler: function(form) {
+        submitHandler: function() {
 
             
             Swal.fire({
@@ -6265,20 +6185,18 @@ $(document).ready(function() {
 
                     $('body').loading('start');
                     $('#uploadRevisionModal').modal('toggle');
-
+                    
                     var formdata = new FormData($('#manuscript_revision_form')[0]);
-
+    
                     $.ajax({
                         url: base_url + "oprs/manuscripts/author_revision",
-                        type: 'POST',
-                        data: new FormData($('#manuscript_revision_form')[0]),
-                        processData: false,
-                        contentType: false,
+                        data: formdata,
                         cache: false,
-                        // dataType: 'json',
-                        success: function(response) {
-                            // console.log("🚀 ~ response:", response);return false;
-
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        type: 'POST',
+                        success: function(data) {
                             $('body').loading('stop');
                             $('#manuscript_revision_form')[0].reset();
                             Swal.fire({
@@ -6305,15 +6223,10 @@ $(document).ready(function() {
                                 }
                                 location.reload();
                             });
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error', 'An unexpected error occurred.', 'error');
-                          console.error(error);
                         }
                     });
                 }
               });
-                    console.log("🚀 ~ this:", this)
         }
     });
 
@@ -8231,9 +8144,9 @@ function logout(){
     current_button_id = '#submit_feedback';
     $('#feedbackModal').modal('toggle');
     recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
-        'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+        // 'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
         // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
-      // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
+      'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
         'callback': onRecaptchaSuccess,
         'expired-callback': onRecaptchaExpired
     });
@@ -10598,17 +10511,12 @@ function assoced_process(id, title, status, rev_status) {
         }
     });
 
-    if(rev_status > 0){
-        $('#select-cluster-tab').hide();
-        $('#assoc-suggest-peer-tab').hide();
+		// endorse to copy editor button
+		$('#select-cluster-tab').show();
+		$('#assoc-suggest-peer-tab').show();
         $('#submit_assoc_rev').html('<svg class="svg-inline--fa fa-circle-check me-1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> Endorse to Copy Editor');
         $('#submit_assoc_rev').attr('onclick',"editor_action('endorse_to_copy_editor','associate')");
-    }else{
-        $('#select-cluster-tab').show();
-        $('#assoc-suggest-peer-tab').show();
-        $('#submit_assoc_rev').html('<svg class="svg-inline--fa fa-circle-check me-1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg> Accept');
-        $('#submit_assoc_rev').attr('onclick',"editor_action('accept','associate')");
-    }
+   
 }
 
 function clued_process(id, title) {
@@ -10729,7 +10637,97 @@ function upload_revision(man_id){
     $('#uploadRevisionModal').modal('toggle');
     $('#revision_consolidations').empty();
     $('#revision_remarks').text('');
-    $('#manuscript_revision_form #man_id2').val(man_id);
+    $('#manuscript_revision_form #man_id').val(man_id);
+    
+    // Reset form fields
+    $('#criteria_status').val('');
+    $('#editor_review_status').val('');
+    $('#revision_status').val('');
+    
+    // State object to collect all revision information
+    var revisionState = {
+        criteriaFailed: false,
+        criteriaRemarks: '',
+        editorReviewFailed: false,
+        editorRemarks: '',
+        consolidationStatus: null,
+        consolidationRemarks: '',
+        consolidationFile: null,
+        remarks: [] // Array to collect all remarks
+    };
+
+    // Function to apply revision state with proper priority
+    function applyRevisionState(state) {
+        // Priority: criteria_status > editor_review_status > consolidation
+        
+        // Set form field values based on priority
+        if(state.criteriaFailed) {
+            $('#criteria_status').val(2);
+            $('#criteria_review_result').removeClass('d-none');
+            $('#criteria_review_result_value').text('Failed');
+        } else if(state.editorReviewFailed) {
+            $('#editor_review_status').val(10);
+        }
+        
+        // Set revision_status from consolidation (if not already set by criteria/editor)
+        if(state.consolidationStatus && !state.criteriaFailed && !state.editorReviewFailed) {
+            $('#revision_status').val(state.consolidationStatus);
+        } else if(state.consolidationStatus) {
+            // Still set it, but criteria/editor take priority for routing
+            $('#revision_status').val(state.consolidationStatus);
+        }
+        
+        // Combine all remarks (priority order: criteria > editor > consolidation)
+        var finalRemarks = [];
+        if(state.criteriaRemarks) {
+            finalRemarks.push('Technical Review: ' + state.criteriaRemarks);
+        }
+        if(state.editorRemarks) {
+            finalRemarks.push('Editor Review: ' + state.editorRemarks);
+        }
+        if(state.consolidationRemarks && !state.criteriaFailed && !state.editorReviewFailed) {
+            finalRemarks.push('Consolidation: ' + state.consolidationRemarks);
+        } else if(state.consolidationRemarks) {
+            // Show consolidation remarks but with lower priority
+            finalRemarks.push('Consolidation: ' + state.consolidationRemarks);
+        }
+        
+        if(finalRemarks.length > 0) {
+            $('#revision_remarks').text(finalRemarks.join('\n\n'));
+        }
+        
+        // Show/hide UI elements based on revision type
+        // Priority: criteria > editor > consolidation
+        if(state.criteriaFailed) {
+            // Criteria failed - hide consolidation and matrix
+            $('#revision_consolidations_row').hide();
+            $('#revision_matrix_template').hide();
+            $('#div_man_matrix').hide();
+        } else if(state.editorReviewFailed) {
+            // Editor review failed - hide consolidation and matrix
+            $('#revision_consolidations_row').hide();
+            $('#revision_matrix_template').hide();
+            $('#div_man_matrix').hide();
+        } else {
+            // Show consolidation if available
+            if(state.consolidationFile) {
+                // Clear and set consolidation link (prevent duplicate appends)
+                $('#revision_consolidations').html('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + state.consolidationFile +'" target="_blank">Download</a>');
+                $('#revision_consolidations_row').show();
+            } else {
+                $('#revision_consolidations_row').hide();
+            }
+            
+            // Show/hide matrix based on consolidation status
+            if(state.consolidationStatus == 3) {
+                $('#revision_matrix_template').hide();
+                $('#div_man_matrix').hide();
+            } else {
+                $('#revision_matrix_template').show();
+                $('#div_man_matrix').show();
+            }
+        }
+    }
 
     // get criteria review results
     $.ajax({
@@ -10741,15 +10739,14 @@ function upload_revision(man_id){
             // console.log("🚀 ~ upload_revision ~ data:", data)
             $.each(data, function(key, val){
                 if(val.tr_final == 2){
-                    $('#criteria_review_result').removeClass('d-none');
-                    $('#criteria_review_result_value').text('Failed');
-                    $('#revision_remarks').text(val.tr_remarks);
-                    $('#revision_consolidations_row').hide();
-                    $('#revision_matrix_template').hide();
-                    $('#div_man_matrix').hide();
-                    $('#criteria_status').val(2);
+                    revisionState.criteriaFailed = true;
+                    revisionState.criteriaRemarks = val.tr_remarks || '';
+                    if(val.tr_remarks) {
+                        revisionState.remarks.push('Technical Review: ' + val.tr_remarks);
+                    }
                 }
             });
+            applyRevisionState(revisionState);
         }
     });
 
@@ -10762,13 +10759,14 @@ function upload_revision(man_id){
         success: function(data) {
             $.each(data, function(key, val){
                 if(val.edit_status == 10){
-                    $('#revision_remarks').text(val.edit_remarks);
-                    $('#revision_consolidations_row').hide();
-                    $('#revision_matrix_template').hide();
-                    $('#div_man_matrix').hide();
-                    $('#editor_review_status').val(10);
+                    revisionState.editorReviewFailed = true;
+                    revisionState.editorRemarks = val.edit_remarks || '';
+                    if(val.edit_remarks) {
+                        revisionState.remarks.push('Editor Review: ' + val.edit_remarks);
+                    }
                 }
             });
+            applyRevisionState(revisionState);
         }
     });
     
@@ -10779,18 +10777,18 @@ function upload_revision(man_id){
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            // console.log(data);
+            console.log(data);
             $.each(data, function(key, val){    
                 // technical desk editor consolidate peer review results
-                $('#revision_consolidations').append('<a href="'+ base_url + 'assets/oprs/uploads/consolidations/' + val.cons_file +'" target="_blank">Download</a>');
-                $('#revision_remarks').text(val.cons_remarks);
-                $('#revision_status').val(val.cons_status);
-
-                if(val.cons_status == 3){
-                    $('#revision_matrix_template').hide();
-                    $("#div_man_matrix").hide();
+                revisionState.consolidationStatus = val.cons_status;
+                revisionState.consolidationRemarks = val.cons_remarks || '';
+                revisionState.consolidationFile = val.cons_file;
+                
+                if(val.cons_remarks) {
+                    revisionState.remarks.push('Consolidation: ' + val.cons_remarks);
                 }
             });
+            applyRevisionState(revisionState);
         }
     });
 }

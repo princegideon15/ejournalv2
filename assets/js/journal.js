@@ -106,7 +106,7 @@ $(document).ready(function () {
       let timerInterval = setInterval(function() {
           idleTime += 1;
           
-          if (idleTime >= 28800) { // 8 hours
+          if (idleTime >= 3600) { // 20 minutes in seconds
               // Trigger logout or other actions
               clearInterval(timerInterval); // Stop the timer
   
@@ -402,7 +402,7 @@ $(document).ready(function () {
 
 	tinymce.init({
 		selector: '#ep_content',
-		content_css: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+ 		content_css: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
 		forced_root_block: false,
 		height: "900",
 		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
@@ -2031,7 +2031,7 @@ $(document).ready(function () {
 		}
 	});
 
-	// update editor polcy content
+		// update editor polcy content
 	$("#form_policy").validate({
 		debug: true,
 		errorClass: 'text-danger',
@@ -2075,7 +2075,8 @@ $(document).ready(function () {
 				type: 'POST',
 				success: function (data, textStatus, jqXHR) {
 
-					let timerInterval;
+					
+	let timerInterval;
 
 					Swal.fire({
 					title: "Editorial Policy saved successfully!",
@@ -2101,26 +2102,13 @@ $(document).ready(function () {
 						console.log("I was closed by the timer");
 					}
 					});
-
 					
-					// $.notify({
-					// 	icon: 'oi oi-check',
-					// 	message: 'Saved successfully. Page will reload in 3 seconds'
-					// }, {
-					// 	type: 'success',
-					// 	timer: 3000
-					// });
-
-					// setTimeout(function () {
-					// 	history.go(0);
-					// }, 3000);
-
+				
 				}
 			});
 			
 		}
 	});
-
 	// update author guidelines with validation
 	$("#form_guidelines").validate({
 		debug: true,
@@ -5028,8 +5016,8 @@ function logout(){
     current_button_id = '#submit_feedback';
     $('#feedbackModal').modal('toggle');
     recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
-		'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
-		// 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+		// 'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+		'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
 	  // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
         'callback': onRecaptchaSuccess,
         'expired-callback': onRecaptchaExpired

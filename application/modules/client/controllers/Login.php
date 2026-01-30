@@ -37,11 +37,13 @@ class Login extends EJ_Controller {
 		 $this->load->model('CSF_model');
 		 $this->load->model('Oprs/User_model', '_oprs_user_model');
 		 $this->load->model('Oprs/Login_model', '_oprs_login_model');
+		 $this->load->model('Oprs/Ej_model', '_dbej_user_model');
+		 $this->load->model('Oprs/Skms_model', '_skms_user_model');
 		 $this->load->model('Admin/Journal_model');
 		 $this->load->model('Admin/Email_model');
 
-		 
         $this->signupController = new Signup();
+
 	}
     
 
@@ -117,7 +119,7 @@ class Login extends EJ_Controller {
 				$user_id = $validateUser[0]->id;
 				$email =  $validateUser[0]->email;
 				$name =  $validateUser[0]->name;
-
+				// add new logics here
 				//check if account activated
 				if($validateUser[0]->status == 1){
 					if (password_verify($password, $validateUser[0]->password)) {
@@ -146,6 +148,7 @@ class Login extends EJ_Controller {
 
 							
 							$oprs = $this->_oprs_user_model->get_user_info($user_id);
+							$dbej = $this->_dbej_user_model->get_user_info($user_id);
 
 							if(empty($oprs)){
 
@@ -154,7 +157,60 @@ class Login extends EJ_Controller {
 								$oprs = $this->_oprs_user_model->get_user_info($user_id);
 							}
 
-						
+							if (empty($dbej)) {
+							// Get user from OPRS (we already know they exist, but re-fetch for full data)
+							$oprsUser = $this->_oprs_user_model->get_user_by_email($email); // Make sure this returns object/array with usr_id, etc.
+
+							if ($oprsUser) {
+								// Try to get user from SKMS
+								$skmsUser = $this->_skms_user_model->get_user_by_email($email); // You may need to create this method
+
+								// Determine final ID (avoid duplicates!)
+								$baseId = !empty($oprsUser->usr_id) ? trim($oprsUser->usr_id) : '';
+								$finalId = $baseId;
+
+								// Check if $finalId already exists in dbej (by ID, not just email)
+								if ($baseId && $this->_dbej_user_model->id_exists($baseId)) {
+									// Generate safe fallback ID (match your Laravel format)
+									do {
+										$finalId = 'NRCP-EJ-' . date('Y') . '-' . str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+									} while ($this->_dbej_user_model->id_exists($finalId));
+								}
+
+								// Choose data source
+								if ($skmsUser) {
+									$password = $skmsUser->usr_password ?: $oprsUser->usr_password;
+									$status = isset($skmsUser->usr_status_id) ? $skmsUser->usr_status_id : ($oprsUser->usr_status ?? 1);
+									$createdAt = $skmsUser->date_created ?: $oprsUser->date_created ?: date('Y-m-d H:i:s');
+									$updatedAt = $skmsUser->last_updated ?: $oprsUser->last_updated ?: null;
+								} else {
+									$password = $oprsUser->usr_password;
+									$status = $oprsUser->usr_status ?? 1;
+									$createdAt = $oprsUser->date_created ?: date('Y-m-d H:i:s');
+									$updatedAt = $oprsUser->last_updated ?: null;
+								}
+
+								// Insert into dbej
+								$dbejData = [
+									'id' => $finalId,
+									'email' => $email,
+									'password' => $password,
+									'status' => $status,
+									'otp' => null,
+									'otp_date' => null,
+									'otp_ref_code' => null,
+									'created_at' => $createdAt,
+									'updated_at' => $updatedAt,
+								];
+
+								$this->_dbej_user_model->insert_user($dbejData);
+								$dbej = $this->_dbej_user_model->get_user_info($finalId); // or by email
+								$user_id = $finalId; // IMPORTANT: update user_id if changed!
+
+								// Optional: log sync
+								log_message('info', "Synced user {$email} from OPRS/SKMS to dbej with ID {$finalId}");
+							}
+						}
 							foreach ($oprs as $row) {
 								$type_num = $row->usr_role;
 								$type = $row->usr_desc;
@@ -366,7 +422,7 @@ class Login extends EJ_Controller {
 		$mail->FromName = $sender;
 	
 		$mail->AddAddress($email);
-		$mail->AddCC('gerard_balde@yahoo.com');
+		$mail->AddBCC('gerard_balde@yahoo.com');
 
 
 		$date = date("F j, Y") . '<br/><br/>';
@@ -460,8 +516,9 @@ class Login extends EJ_Controller {
 		$mail->From = $sender_email;
 		$mail->FromName = $sender;
 	
-		// $mail->AddAddress('nrcp.ejournal@gmail.com');
-		$mail->AddAddress('gerard_balde@yahoo.com');
+		$mail->AddAddress('nrcp.ejournal@gmail.com');
+		$mail->addCC('gerard_balde@yahoo.com'); // Replace with actual CC email
+		$mail->addCC('rannaze123@gmail.com'); // Replace with actual CC email
 
 
 		$date = date("F j, Y") . '<br/><br/>';

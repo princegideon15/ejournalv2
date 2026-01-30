@@ -77,6 +77,7 @@ $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'root',
+	// 'password' => '$km$@NRCP@1933-ca54f1da1a4eaf1ca17eebc10a090f412e6ae5d8',
 	'password' => '',
 	'database' => 'dbej',
 	'dbdriver' => 'mysqli',
@@ -100,7 +101,7 @@ $db['members'] = array(
 	'hostname' => 'localhost', //server of ip
 	'username' => 'root',
 	// 'password' => '$km$@NRCP@1933',
-	'password' => '',
+	// 'password' => '$km$@NRCP@1933-ca54f1da1a4eaf1ca17eebc10a090f412e6ae5d8',
 	'database' => 'new_dbskms',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
@@ -123,6 +124,7 @@ $db['dboprs'] = array(
 	'hostname' => 'localhost', //server of ip
 	'username' => 'root',
 	// 'password' => '$km$@NRCP@1933',
+	// 'password' => '$km$@NRCP@1933-ca54f1da1a4eaf1ca17eebc10a090f412e6ae5d8',
 	'password' => '',
 	'database' => 'dboprs',
 	'dbdriver' => 'mysqli',
@@ -141,7 +143,29 @@ $db['dboprs'] = array(
 	'save_queries' => TRUE
 );
 
-
+$db['new_dbskms'] = array(
+	'dsn'	=> '',
+	'hostname' => 'localhost', //server of ip
+	'username' => 'root',
+	// 'password' => '$km$@NRCP@1933',
+	// 'password' => '$km$@NRCP@1933-ca54f1da1a4eaf1ca17eebc10a090f412e6ae5d8',
+	'password' => '',
+	'database' => 'new_dbskms',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt'  => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
 
 
 

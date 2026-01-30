@@ -103,7 +103,7 @@
 				<?php $coa_arr = (explode(",& ", $row['coa']));?>
 
 				<!-- <p class="mt-0 text-dark mb-0 main-link"><?php echo $row['title']; ?></p> -->
-                <a class="mt-0 text-dark mb-0 main-link" href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>"><?= $row['title'] ?></a>
+                <a class="mt-0 text-dark mb-0 main-link" href="<?= base_url() . 'client/ejournal/article_xml/' . $row['id'] ?>"><?= $row['title'] ?></a>
                 <!-- <a class="mt-0 text-dark mb-0 main-link" href="javascript:void(0)" onclick="get_download_id('<?= $row['art_id'] ?>','hits','<?= $row['file'] ?>')"><?= $row['title'] ?></a> -->
 				
 				<div class="mt-2">
@@ -148,7 +148,22 @@
 							title="Cited"><i class="oi oi-document"></i>
 							<?=number_format($row['citations'], 0, '', ',')?></span>
 					</div>
-				</div>
+                    
+                      <?php //if($logged_in){
+                            //echo '<div class="d-flex gap-1 mb-3">
+                            //<a class="main-btn btn" href="'.base_url('client/ejournal/download_file/'. $article[0]->art_id .'/'.$article[0]->art_full_text_pdf).'"
+                            //    role="button">
+                             //   Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
+                            //<a  data-bs-toggle="modal" data-bs-target="#citationModal"
+                             //   class="main-btn btn " href="javascript:void(0);"
+                              //  role="button"
+                              //  onclick="get_citee_info(\''.addslashes($cite).'\','.$article[0]->art_id.')">
+                              //  Cite this article  <span class="oi oi-double-quote-sans-left ms-1" style="font-size:.8rem"></span></a>
+                           
+                           
+                          //  </div>';
+                        //}?>				
+</div>
 
 				<hr>
 				<?php endforeach;?>
@@ -162,7 +177,7 @@
 	<div class="mt-5">    
     <h6 class="fw-bold">Open Access</h6>   
         <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
-            <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+            <img alt="Creative Commons License" style="width: 10%;" src="<?php echo base_url('assets/images/Creative.png'); ?>" />
         </a>
         <p>This work is licensed under a <a class="text-dark" rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
             Attribution 4.0 International License</a>.
@@ -375,7 +390,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
             </div>
         </div>
     </div>
-      <!-- CITATION MODAL -->
+    <!-- CITATION MODAL -->
      <div class="modal fade" id="citationModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -464,7 +479,6 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
             </div>
         </div>
     </div>
-
     <!-- feedback modal -->
     <div class="modal fade" id="feedbackModal" data-backdrop="static" data-keyboard="false"
         style="z-index: 1051 !important;">

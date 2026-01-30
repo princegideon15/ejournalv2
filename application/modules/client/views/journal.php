@@ -1,5 +1,6 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VDLLX3HKBL"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script>
 window.dataLayer = window.dataLayer || [];
 
@@ -37,11 +38,9 @@ gtag('config', 'G-VDLLX3HKBL');
             <!-- <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p> -->
 
             
-            <div class="mt-3">
-                <a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark cursor-pointer">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
-            </div>
-
-            <!-- <h3 class="mt-3">Volumes</h3>
+            
+<!-- 
+            <h3 class="mt-3">Volumes</h3>
 
             <div>
                 <ul class="list-unstyled overflow-hidden" id="volume_list"  style="height:200px; min-height:200px">
@@ -57,23 +56,27 @@ gtag('config', 'G-VDLLX3HKBL');
                 
             </div> -->
 
-           
-            
-            <!-- <div class="accordion" id="accordionDivisions">
-                <?php foreach($divisions as $row):?>
-                <div class="accordion-item border-0 mb-2">
-                    <a href="javascript:void(0);" class="main-link text-decoration-underline" data-bs-toggle="collapse"
-                        data-bs-target="#collapse<?=$row->id;?>"><?=$row->title;?></a>
-                    <div id="collapse<?=$row->id;?>" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                        data-bs-parent="#accordionDivisions">
-                        <div class="accordion-body">
-                            <?=$row->content;?>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div> -->
+				<!-- Collapsible Trigger: Aim and Scope with Icon -->
+				<div class="d-flex align-items-center mb-3">
+				<h5 class="fw-bold mb-0 me-2">Aim and Scope</h5>
+				
+				</div>
+
+				<!-- Collapsible Content -->
+			
+				<p>The NRCP Research Journal publishes articles on topics across the thirteen (13) divisions of the Council, namely: Division I, Governmental, Educational and International Policies; Division II, Mathematical Sciences; Division III, Medical Sciences; Division IV, Pharmaceutical Sciences; Division V, Biological Sciences; Division VI, Agriculture and Forestry; Division VII, Engineering and Industrial Research; Division VIII, Social Sciences; Division IX, Physics; Division X, Chemical Sciences; Division XI, Humanities, Division XII, Earth and Space Sciences; and Division XIII, Veterinary Medicine.</p>
+				<p>The journal aspires to become a valuable platform that nurtures cross-disciplinary research and collaboration which may lead to understanding and solving of complex challenges society faces. The NRCP Research Journal envisions itself to become a top-tier peer-reviewed open access multi-disciplinary journal that publishes rigorous and valuable research that broadly spans the entire spectrum of life, physical, earth, engineering, humanities, social and medical science, which contribute to basic, conceptual and practical scientific advancements including the translation of research to public policy.</p>
+				<p>The NRCP Research Journal publishes two issues per year, with accepted papers uploaded immediately. Only unpublished papers and those that are not under consideration for publication in other journals are accepted and included in the NRCP Research Journal publication. The journal publishes articles in English or Filipino. For Filipino articles, authors must supply the English translation of the title and abstract, and Non-English references. All co-authors should have full knowledge and consent that the manuscript is submitted for publication in the NRCP Research Journal and all shall be kept informed of all correspondence about the submitted manuscript.</p>
+			
+
+
+<div class="mt-3">
+                <a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark cursor-pointer">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
+            </div>
+
         </div>
+
+		
         <div class="col col-lg-5 p-3">
             <h3>Articles</h3>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -143,7 +146,7 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <!-- <a href="javascript:void(0);" class="main-link h6" onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a> -->
-                                <a href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
+                                <a href="<?= base_url() . 'client/ejournal/article_xml/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
                             </div>
 
                             <div class="mt-2">
@@ -179,6 +182,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 <!-- Most Accessed -->
                 <div class="tab-pane fade" id="most-access-tab-pane" role="tabpanel" aria-labelledby="most-access-tab"
                     tabindex="0">
+
                     <?php if ($client_count != '' || $hits_count != '') { ?>
                     <?php $c = 0;foreach ($popular as $row):
 					$c++;
@@ -351,7 +355,7 @@ gtag('config', 'G-VDLLX3HKBL');
      <div class=""> 
         <h6 class="fw-bold">Open Access</h6>   
         <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
-            <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+            <img alt="Creative Commons License" style="width: 10%;" src="<?php echo base_url('assets/images/Creative.png'); ?>" />
         </a>
         <p>This work is licensed under a <a class="text-dark" rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
             Attribution 4.0 International License</a>.
