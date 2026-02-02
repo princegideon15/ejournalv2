@@ -2993,7 +2993,7 @@ class Manuscripts extends OPRS_Controller {
 			$where['tr_processor_id'] = _UserIdFromSession();
 			$where['tr_man_id'] = $man_id;
 			$post['tr_date_reviewed'] = date('Y-m-d H:i:s');
-			$post['tr_final'] = 1;
+			$post['tr_final'] = $post['tr_final'];
 			$post['tr_remarks'] = ($remarks != '') ? $remarks : 'No remarks';
 
 			$this->Review_model->update_tech_rev_score(array_filter($post), $where);
@@ -4864,9 +4864,31 @@ class Manuscripts extends OPRS_Controller {
 		// udpate manuscript, status
 		$post = array();
 		$post['man_pages'] = $man_pages;
-		$post['man_status'] = ($revision_status == 1) ? 17 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
-		$post['man_revision_status'] = ($revision_status == 1) ? 1 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 0);
-		$post['man_process_date'] = date('Y-m-d H:i:s');
+		// $post['man_status'] = ($revision_status == 1) ? 17 : (($criteria_status == 2  || $editor_review_status == 10) ? 1 : 8);
+		
+		// Get current manuscript info to understand workflow context
+		// $current_manuscript = $this->Manuscript_model->get_manuscript_by_id($man_id);
+		// $current_status = $current_manuscript['man_status'];
+
+		if ($revision_status == 1) {
+    			$post['man_status'] = 17;
+		} else {
+			// Priority: criteria_status > editor_review_status > default
+			if($criteria_status == 2){
+				$post['man_status'] = 1; // Technical review: TeDeEd
+			} else if($editor_review_status == 10){
+				$post['man_status'] = 10; // Revision: Author (aligns with status_types table)
+			} else {
+				$post['man_status'] = 2; // Desk review: EIC
+			}
+		 }
+		if ($revision_status == 1) {
+   			$post['man_revision_status'] = 1;
+		} else if ($criteria_status == 2 || $editor_review_status == 10) {
+			$post['man_revision_status'] = 1;
+		} else {
+			$post['man_revision_status'] = 0;
+		}
 
 		// full manuscript
 		$file_string_man = str_replace(" ", "_", $_FILES['man_file']['name']);
@@ -5128,7 +5150,22 @@ class Manuscripts extends OPRS_Controller {
 			$process['ps_role_id'] = 5;
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
 			$this->Review_model->save_process_status(array_filter($process));
-		}else{
+		}
+		else if($editor_review_status == 10){
+			// After editorial review - not revised accordingly, return to editor who did desk review
+			$get_last_processor_role_id = $this->Review_model->get_last_processor_role_id($man_id);
+			//TODO:check if last process is valid
+			$editor = ($get_last_processor_role_id == '6') ? 'Editor-in-Chief' : 'Associate Editor';
+
+			$next_processor_info = $this->User_model->get_processor_by_role($get_last_processor_role_id);
+			// save process for auto reminder email notificiation
+			$email_contents = $this->Email_model->get_email_content(14);
+			$process['ps_man_id'] = $man_id;
+			$process['ps_role_id'] = $get_last_processor_role_id; // route back to editor who did desk review
+			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
+			$this->Review_model->save_process_status(array_filter($process));
+		}
+		else{
 			$next_processor_info = $this->User_model->get_processor_by_role(6);
 			// get email notification content
 			$email_contents = $this->Email_model->get_email_content(15);

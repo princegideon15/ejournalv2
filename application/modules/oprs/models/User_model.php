@@ -151,6 +151,7 @@ class User_model extends CI_Model {
 		$oprs->select('*');
 		$oprs->from($this->oprs_users);
 		$oprs->where('usr_username', $email);
+		// $oprs->where('usr_role', 1); // author
 		$query = $oprs->get();
 		return $query->result();
 	}
