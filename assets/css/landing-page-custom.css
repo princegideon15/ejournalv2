@@ -211,3 +211,30 @@ a:hover {
     /* color: #006eb1 !important;
     text-decoration: underline; */
 }
+/* Floating Feedback Button */
+#feedback-btn {
+    writing-mode: vertical-lr; /* text flows top to bottom, left to right */
+    transform: rotate(0deg);   /* no rotation needed */
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #003a5d;
+    color: white;
+    padding: 10px 5px;
+    border-radius: 5px 0 0 5px;
+    cursor: pointer;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size:18px;
+    text-align: center;
+    position: fixed;
+    right: 0;                 /* Stick to right edge */
+    top: 80%;                 /* Center vertically (approx) */
+    
+
+}
+
+#feedback-btn:hover {
+    background-color: #b15500;
+    transform: translateY(-50%) scale(1.05);
+}

@@ -33,7 +33,9 @@ gtag('config', 'G-VDLLX3HKBL');
             </div>
 
             <!-- ABOUT CONTENT -->
-            <?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?>
+           <?php 
+            echo nl2br(htmlspecialchars(file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt')));
+            ?>
 
             <!-- <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p> -->
 
@@ -726,6 +728,9 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
     </div>
 </div>
 <!-- /.feedback modal -->
+
+<!-- Floating Feedback Button -->
+<a role="button" class="btn btn-primary" target="_blank" href="<?=base_url('/client/ejournal/feedback_form')?>" id="feedback-btn">Feedback</a>
 
 
 <script>
