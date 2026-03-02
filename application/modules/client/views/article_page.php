@@ -94,7 +94,9 @@
                             
                                 <div class="input-group">
                                 <button class="btn btn-outline-dark" type="button" id="share_link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Copy to clipboard">Share <span class="oi oi-share ms-1"></span></button>
-                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="<?= base_url('client/ejournal/article/'. $article[0]->art_id) ?>" readonly>
+                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="<?= $article[0]->art_doi_link ? $article[0]->art_doi_link : base_url('client/ejournal/article/' . $article[0]->art_id) ?>" readonly>
+                                <!-- <button class="btn btn-outline-dark" type="button" id="share_link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Copy to clipboard">Share <span class="oi oi-share ms-1"></span></button>
+                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="<?= base_url('client/ejournal/article/'. $article[0]->art_id) ?>" readonly> -->
                             </div>
 
 
