@@ -729,9 +729,6 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
 </div>
 <!-- /.feedback modal -->
 
-<!-- Floating Feedback Button -->
-<a role="button" class="btn btn-primary" target="_blank" href="<?=base_url('/client/ejournal/feedback_form')?>" id="feedback-btn">Feedback</a>
-
 
 <script>
 function send_verification_code() {

@@ -167,6 +167,10 @@
 <?php $this->load->view('common/nrcp_brand');?>
 <!-- NRCP Brand -->
 
+<!-- Floating Feedback Button -->
+<!-- <a role="button" class="btn btn-primary" target="_blank" href="<?=base_url('/client/ejournal/feedback_form')?>" id="feedback-btn">Feedback</a> -->
+<a role="button" class="btn btn-primary" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSeglzfYNjbcJi-iB3d3ORI-QeujyiYXTeTPJcwmp_j4a0nlKw/viewform" id="feedback-btn">Feedback</a>
+
 
 
 </body>
