@@ -396,7 +396,7 @@ class Client_journal_model extends CI_Model {
 		return $result[0]['art_full_text_pdf'];
 	}
 
-	/** this function retreive top 5 most downloaded article */
+	/** this function retreive top 5 most downloaded article // changed to 10 */
 	public function top_five() {
 
 		$this->db->select('a.*, j.jor_volume, j.jor_issue');
@@ -404,7 +404,7 @@ class Client_journal_model extends CI_Model {
 		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
 		$this->db->where('a.art_id IN (SELECT clt_journal_downloaded_id from tblclients GROUP BY clt_journal_downloaded_id)');
 		$this->db->order_by('a.art_title', 'asc');
-		$this->db->limit(5);
+		$this->db->limit(10);
 
 		$query = $this->db->get();
 		return $query->result();
@@ -420,7 +420,7 @@ class Client_journal_model extends CI_Model {
 		$this->db->join($this->journals. ' j','a.art_jor_id = j.jor_id');
 		$this->db->where('jor_volume !=', 'Adv. Publication');
 		$this->db->order_by('a.date_created', 'desc');
-		$this->db->limit(5);
+		$this->db->limit(10);
 
 		$query = $this->db->get();
 		return $query->result();

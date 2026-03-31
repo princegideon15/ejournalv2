@@ -124,7 +124,7 @@
 			
 
 			<!-- Grid column -->
-			<div class="col-md-4 mx-auto">
+			<div class="col-md-2 mx-auto">
 
 				<!-- Links -->
 				<h6 class="font-weight-bold text-uppercase mt-3 mb-4">REACH US</h6>
@@ -143,6 +143,13 @@
 			</div>
 			<!-- Grid column -->
 
+		<!-- Grid column -->
+			<div class="col-md-2 p-3 m-3">
+
+				<img src="<?php echo base_url("assets/images/dpo_seal.png");?>" width="450" height="400">			
+				
+			</div>
+			<!-- Grid column -->
 
 		</div>
 		<!-- Grid row -->

@@ -1398,7 +1398,7 @@ class Ejournal extends EJ_Controller {
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['main_title'] = "eJournal";
-		$data['main_content'] = "client/article_page.xml";
+		$data['main_content'] = "client/article_page";
 		$this->_LoadPage('common/body', $data);
 	}
 	
