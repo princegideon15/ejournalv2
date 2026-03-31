@@ -19,8 +19,8 @@
                  <div class="sticky-top">
 								 <p>Quick Links</p>
                   <ul class="quick-links">
-                    <li><a class="text-darkk">Aim and Scope</a></li>
-                    <li><a class="text-darkk">Types of Publications</a></li>
+                    <li><a class="text-darkk">Aims and Scope</a></li>
+                    <li><a class="text-darkk">Type of Publications</a></li>
                     <li><a class="text-darkk">Editorial Criteria</a></li>
                     <li><a class="text-darkk">Editorial Process</a></li>
                     <li><a class="text-darkk">Detailed Peer Review Process</a></li>
@@ -30,6 +30,7 @@
                       <li><a class="text-darkk">External Review [Double Blind]</a></li>
                     </ul>
                     <li><a class="text-darkk">Editorial Review</a></li>
+										<li><a class="text-darkk">Communications</a></li>
                     <li><a class="text-darkk">Open Access Policy</a></li>
                     <li><a class="text-darkk">Copyright Policy</a></li>
                     <li><a class="text-darkk">Retraction Policy</a></li>
