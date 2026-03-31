@@ -125,26 +125,26 @@
                         ?>
 
                 <?=form_open('client/signup/create_author_account', ['method' => 'post', 'id' => 'authorSignUpForm'])?>
-							<div class = "" style = 'background-color: #FFF8E1; padding:10px; border-radius:5px; margin-bottom:15px;'>
-								<span class="fw-bold">Note:</span> If NRCP Member, you may use the same password in your SKMS account.
-							</div>
-                    <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
+							<!-- <div class = "" style = 'background-color: #FFF8E1; padding:10px; border-radius:5px; margin-bottom:15px;'> -->
+								<!-- <span class="fw-bold">Note:</span> If NRCP Member, you may use the same password in your SKMS account. -->
+							<!-- </div> -->
+                    <!-- <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p> -->
                     <div class="mb-3">
-                        <div class="form-check">
+                        <!-- <div class="form-check">
                             <?php $author_type = $this->session->flashdata('author_type'); ?>
 
-                            <input class="form-check-input" type="radio" name="author_type" value="1" id="author_nrcp_member" <?= ($author_type == 1) ? 'checked' : '' ?> >
+                            <input class="form-check-input" type="radio" name="author_type" value="1" id="author_nrcp_member" >
                             <label class="form-check-label" for="author_nrcp_member">
                                 NRCP Member
                             </label>
-                            </div>
-                            <div class="form-check">
-                            <input class="form-check-input" type="radio" name="author_type" value="2" id="author_non_member" <?= ($author_type == 2) ? 'checked' : '' ?> >
-                            <label class="form-check-label" for="author_non_member">
+                            </div> -->
+                            <!-- <div class="form-check"> -->
+                            <!-- <input class="form-check-input" type="radio" name="author_type" value="2" id="author_non_member"> -->
+                            <!-- <label class="form-check-label" for="author_non_member">
                                 Non-Member
-                            </label>
-                        </div>
-                        <span class="text-danger mt-1"><?= !empty($errors) && !empty($errors['author_type']) ? $errors['author_type'] : '' ?></span>
+                            </label> -->
+                        <!-- </div> -->
+                        <!-- <span class="text-danger mt-1"><?= !empty($errors) && !empty($errors['author_type']) ? $errors['author_type'] : '' ?></span> -->
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="new_email"><span

@@ -41,22 +41,22 @@
                 <?php } ?>
 
                 <?=form_open('client/signup/create_author_account', ['method' => 'post', 'id' => 'authorSignUpForm'])?>
-                    <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p>
+                    <!-- <p class="mb-3 fs-italic"><span class="text-danger fw-bold">*</span>Required fields</p> -->
                     <div class="mb-3">
-                        <div class="form-check">
+                        <!-- <div class="form-check">
                             <?php $author_type = $this->session->flashdata('author_type'); ?>
 
                             <input class="form-check-input" type="radio" name="author_type" value="1" id="author_nrcp_member" <?= ($author_type == 1) ? 'checked' : '' ?> >
                             <label class="form-check-label" for="author_nrcp_member">
                                 NRCP Member
                             </label>
-                            </div>
-                            <div class="form-check">
+                            </div> -->
+                            <!-- <div class="form-check">
                             <input class="form-check-input" type="radio" name="author_type" value="2" id="author_non_member" <?= ($author_type == 2) ? 'checked' : '' ?> >
                             <label class="form-check-label" for="author_non_member">
                                 Non-Member
                             </label>
-                        </div>
+                        </div> -->
                         <span class="text-danger mt-1"><?= $this->session->flashdata('signup_validation_errors')['author_type'] ?></span>
                     </div>
                     <div class="mb-3">
