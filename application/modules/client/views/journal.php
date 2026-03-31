@@ -1,9 +1,17 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VDLLX3HKBL"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+	.journal-content {
+    text-align: justify;      /* Justifies text alignment */
+    line-height: 1.4;         /* Reduces vertical line spacing (default is usually 1.6) */
+    margin-bottom: 10px;      /* Reduces outer spacing */
+    text-justify: inter-word; /* Improves justification appearance in some browsers */
+}
+</style>
 <script>
 window.dataLayer = window.dataLayer || [];
-
+ 
 function gtag() {
     dataLayer.push(arguments);
 }
@@ -33,9 +41,12 @@ gtag('config', 'G-VDLLX3HKBL');
             </div>
 
             <!-- ABOUT CONTENT -->
-           <?php 
+			<div class = 'journal-content'>
+ 			<?php 
             echo nl2br(htmlspecialchars(file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt')));
             ?>
+			</div>
+		  
 
             <!-- <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p> -->
 
@@ -57,20 +68,6 @@ gtag('config', 'G-VDLLX3HKBL');
                 </div>
                 
             </div> -->
-
-				<!-- Collapsible Trigger: Aim and Scope with Icon -->
-				<div class="d-flex align-items-center mb-3">
-				<h5 class="fw-bold mb-0 me-2">Aim and Scope</h5>
-				
-				</div>
-
-				<!-- Collapsible Content -->
-			
-				<p>The NRCP Research Journal publishes articles on topics across the thirteen (13) divisions of the Council, namely: Division I, Governmental, Educational and International Policies; Division II, Mathematical Sciences; Division III, Medical Sciences; Division IV, Pharmaceutical Sciences; Division V, Biological Sciences; Division VI, Agriculture and Forestry; Division VII, Engineering and Industrial Research; Division VIII, Social Sciences; Division IX, Physics; Division X, Chemical Sciences; Division XI, Humanities, Division XII, Earth and Space Sciences; and Division XIII, Veterinary Medicine.</p>
-				<p>The journal aspires to become a valuable platform that nurtures cross-disciplinary research and collaboration which may lead to understanding and solving of complex challenges society faces. The NRCP Research Journal envisions itself to become a top-tier peer-reviewed open access multi-disciplinary journal that publishes rigorous and valuable research that broadly spans the entire spectrum of life, physical, earth, engineering, humanities, social and medical science, which contribute to basic, conceptual and practical scientific advancements including the translation of research to public policy.</p>
-				<p>The NRCP Research Journal publishes two issues per year, with accepted papers uploaded immediately. Only unpublished papers and those that are not under consideration for publication in other journals are accepted and included in the NRCP Research Journal publication. The journal publishes articles in English or Filipino. For Filipino articles, authors must supply the English translation of the title and abstract, and Non-English references. All co-authors should have full knowledge and consent that the manuscript is submitted for publication in the NRCP Research Journal and all shall be kept informed of all correspondence about the submitted manuscript.</p>
-			
-
 
 <div class="mt-3">
                 <a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark cursor-pointer">See more<span class="fa fa-chevron-circle-right main-link ms-1"></span></a>
@@ -148,7 +145,7 @@ gtag('config', 'G-VDLLX3HKBL');
                         <div class="media-body">
                             <div class="mt-0">
                                 <!-- <a href="javascript:void(0);" class="main-link h6" onclick="top_article('<?=$row['id']?>','top','<?=$row['file']?>','Recent')"><?=$row['title']?></a> -->
-                                <a href="<?= base_url() . 'client/ejournal/article_xml/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
+                                <a href="<?= base_url() . 'client/ejournal/article/' . $row['id'] ?>" class="main-link h6"><?=$row['title']?></a>
                             </div>
 
                             <div class="mt-2">
