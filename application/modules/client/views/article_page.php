@@ -94,7 +94,9 @@
                             
                                 <div class="input-group">
                                 <button class="btn btn-outline-dark" type="button" id="share_link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Copy to clipboard">Share <span class="oi oi-share ms-1"></span></button>
-                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="<?= base_url('client/ejournal/article/'. $article[0]->art_id) ?>" readonly>
+                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="<?= $article[0]->art_doi_link ? $article[0]->art_doi_link : base_url('client/ejournal/article/' . $article[0]->art_id) ?>" readonly>
+                                <!-- <button class="btn btn-outline-dark" type="button" id="share_link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Copy to clipboard">Share <span class="oi oi-share ms-1"></span></button>
+                                <input type="text" id="share_link_article" class="form-control w-50 bg-light" value="<?= base_url('client/ejournal/article/'. $article[0]->art_id) ?>" readonly> -->
                             </div>
 
 
@@ -109,10 +111,10 @@
 
 	<div class="mt-5">
     <h6 class="fw-bold">Open Access</h6>       
-        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
+        <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
           <img alt="Creative Commons License" style="width: 10%;" src="<?php echo base_url('assets/images/Creative.png'); ?>" />
         </a>
-        <p>This work is licensed under a <a class="text-dark" rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
+        <p>This work is licensed under a <a class="text-dark" rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">Creative Commons
             Attribution 4.0 International License</a>.
         </p>
     </div>

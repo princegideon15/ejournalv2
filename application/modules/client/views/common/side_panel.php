@@ -13,7 +13,7 @@
             <h6 class="card-title fw-bold d-block">Journal Information</h6>
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/editorial');?>"
             class="text-dark text-decoration-underline">Editorial Board</a></p>
-            <p class="mb-0"><a href="#" class="text-dark text-decoration-underline" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">International Editorial Board</a></p>
+            <!-- <p class="mb-0"><a href="#" class="text-dark text-decoration-underline" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">International Editorial Board</a></p> -->
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/policy');?>" class="text-dark text-decoration-underline">Editorial Policy</a></p>
         </div>
     </div>

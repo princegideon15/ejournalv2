@@ -47,10 +47,10 @@
 
 						<div class="mt-5">
 						<h6 class="fw-bold">Open Access</h6>   
-							<a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank"> 
+							<a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank"> 
 								<img alt="Creative Commons License" style="width: 10%;" src="<?php echo base_url('assets/images/Creative.png'); ?>" /></a><br />This work is
 							licensed
-							under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"
+							under a <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/"
 								target="_blank">Creative Commons Attribution 4.0 International License</a>.
 						</div>
 					</div>

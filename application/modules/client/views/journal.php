@@ -33,7 +33,9 @@ gtag('config', 'G-VDLLX3HKBL');
             </div>
 
             <!-- ABOUT CONTENT -->
-            <?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?>
+           <?php 
+            echo nl2br(htmlspecialchars(file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt')));
+            ?>
 
             <!-- <p class="aim-scope"><?php echo file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'); ?></p> -->
 
@@ -354,10 +356,10 @@ gtag('config', 'G-VDLLX3HKBL');
     </div>
      <div class=""> 
         <h6 class="fw-bold">Open Access</h6>   
-        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
+        <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
             <img alt="Creative Commons License" style="width: 10%;" src="<?php echo base_url('assets/images/Creative.png'); ?>" />
         </a>
-        <p>This work is licensed under a <a class="text-dark" rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons
+        <p>This work is licensed under a <a class="text-dark" rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">Creative Commons
             Attribution 4.0 International License</a>.
         </p>
     </div>

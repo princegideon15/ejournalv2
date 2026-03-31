@@ -324,7 +324,10 @@
 											<label for="art_full_text_pdf" class="form-label">Full Text PDF <span class="badge rounded-pill bg-success" id="badge_text">PDF</span> <span class="badge rounded-pill bg-warning text-dark">20MB Limit</span></label>
 											<input type="file" class="form-control" id="art_full_text_pdf" name="art_full_text_pdf" accept="application/pdf" >
 										</div>
-									
+										<div class="mb-3">
+											<label for="art_doi_link" class="form-label">DOI Link</label>
+											<input type="text" class="form-control" id="art_doi_link" name="art_doi_link" accept="application/pdf" placeholder="If available">
+										</div>
 									</div>
 								</div>
 								<div class="row">

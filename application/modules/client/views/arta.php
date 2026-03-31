@@ -98,6 +98,15 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label for="arta_name" class="col-form-label fw-bold">Name:</label><input type="text" class="form form-control" placeholder="Optional" id="arta_name" name="arta_name">
+                    </div>
+                    <div class="col-6">
+                        <label for="arta_email" class="col-form-label fw-bold">Email:</label><input type="email" class="form form-control" id="arta_email" name="arta_email">
+                    </div>
+                </div>
                 <hr/>
                 <div>
                     <p>INSTRUCTIONS: <span class="fw-bold">Check mark (&#10004)</span> your answer to the Citizen's Charter (CC) questions.

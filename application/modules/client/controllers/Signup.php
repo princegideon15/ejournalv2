@@ -548,7 +548,8 @@ class Signup extends EJ_Controller {
 	public function create_author_account(){
 		// text field validation ---> |regex_match[/^[a-zA-Z0-9._\- ]+$/]
 		
-		$member = $this->input->post('author_type', TRUE);
+		// $member = $this->input->post('author_type', TRUE);
+		$member = 2;
 		if(empty($member)){
 			 // Set flashdata to pass validation errors and form data to the view
 			 $errors['author_type'] = 'Select Author Type.';
@@ -581,7 +582,7 @@ class Signup extends EJ_Controller {
 		$this->form_validation->set_rules('new_password', 'Password', 'required|trim|min_length[8]|max_length[20]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]');
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[new_password]');
 
-		$validations = ['author_type', 'new_email', 'title', 'first_name', 'middle_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
+		$validations = [ 'new_email', 'title', 'first_name', 'middle_name', 'last_name', 'extension_name', 'sex', 'educational_attainment', 'affiliation', 'country', 'region', 'province', 'city', 'contact', 'new_password', 'confirm_password'];
 
 		if($this->form_validation->run() == FALSE){
 			$errors = [];
