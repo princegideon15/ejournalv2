@@ -1455,29 +1455,49 @@ $(document).ready(function () {
     });
 
 
-	// trigger click on side navigation to create journal
-	$('#btn-create-journal').click(function () {
-		$('#v-pills-create-journal-tab').trigger('click');
+	// show create journal tab from dashboard shortcut
+	$('#btn-create-journal').click(function (e) {
+		e.preventDefault();
+		const tabBtn = document.querySelector('#v-pills-create-journal-tab');
+		if (tabBtn) {
+			bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+		}
 	});
 
-	// trigger click on side navigation to add editorial board
-	$('#btn-add-editorial').click(function () {
-		$('#v-pills-add-editorial-tab').trigger('click');
+	// show add editorial tab from dashboard shortcut
+	$('#btn-add-editorial').click(function (e) {
+		e.preventDefault();
+		const tabBtn = document.querySelector('#v-pills-add-editorial-tab');
+		if (tabBtn) {
+			bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+		}
 	});
 
-	// trigger click on side navigation to view list of journals
-	$('#view_journals').click(function () {
-		$('#v-pills-journal-list-tab').trigger('click');
+	// show target side navigation tabs using Bootstrap's tab API
+	$('#view_journals').click(function (e) {
+		e.preventDefault();
+		const tabBtn = document.querySelector('#v-pills-journal-list-tab');
+		if (tabBtn) {
+			bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+		}
 	});
 
-	// trigger click on side navigation to view list of editorail boards
-	$('#view_editorials').click(function () {
-		$('#v-pills-editorial-list-tab').trigger('click');
+	// show editorial board tab from dashboard shortcut
+	$('#view_editorials').click(function (e) {
+		e.preventDefault();
+		const tabBtn = document.querySelector('#v-pills-editorial-list-tab');
+		if (tabBtn) {
+			bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+		}
 	});
 
-	// trigger click on side navigation to view list of clients downloaded journals
-	$('#view_clients').click(function () {
-		$('#v-pills-client-list-tab').trigger('click');
+	// show client list tab from dashboard shortcut
+	$('#view_clients').click(function (e) {
+		e.preventDefault();
+		const tabBtn = document.querySelector('#v-pills-client-list-tab');
+		if (tabBtn) {
+			bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+		}
 	});
 
 	// remove class 

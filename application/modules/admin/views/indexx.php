@@ -1616,7 +1616,7 @@
 <!-- /.CHANGE PASSWORD -->
 
 <!-- LATEST ACTIVITIES -->
-<div class="modal fade" id="activities_modal" tabindex="-1" role="dialog">
+<!-- <div class="modal fade" id="activities_modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-lg" role="document" >
 		<div class="modal-content">
 			<div class="modal-header">
@@ -1654,7 +1654,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->
 <!-- /.LATEST ACTIVITIES -->
 
 <!-- RELATED ARTICLES -->

@@ -38,6 +38,7 @@ class Article_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from($this->citations.' c');
 		$this->db->join($this->articles.' a','a.art_id = c.cite_art_id');
+		$this->db->limit(100);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -57,6 +58,23 @@ class Article_model extends CI_Model {
 		
 	}
 	
+	/**
+	 * Retrieve all articles with performance metrics (subqueries)
+	 *
+	 * @return  array 
+	 */
+	public function get_all_articles_with_metrics() {
+		$this->db->select('a.art_id, a.art_title, a.art_author, a.art_full_text_pdf, j.jor_volume, j.jor_issue, j.jor_year');
+		$this->db->select('(SELECT COUNT(*) FROM tblhits_abstract h WHERE h.hts_art_id = a.art_id) AS abstract_hits');
+		$this->db->select('(SELECT COUNT(*) FROM tblclients c WHERE c.clt_journal_downloaded_id = a.art_id) AS pdf_count');
+		$this->db->select('(SELECT COUNT(*) FROM tblcitations ci WHERE ci.cite_art_id = a.art_id) AS citations');
+		$this->db->from($this->articles.' a');
+		$this->db->join($this->journals.' j','a.art_jor_id = j.jor_id');
+		$this->db->order_by('a.art_title', 'asc');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	/**
 	 * Retrieve all articles based on journal id
 	 *
@@ -242,6 +260,24 @@ class Article_model extends CI_Model {
 	}
 
 	/**
+	 * Retrieve top five articles with summary counts and coauthors
+	 *
+	 * @return  array  popular article metrics
+	 */
+	public function top_five_with_summary() {
+		$this->db->select('a.art_id, a.art_title, a.art_author');
+		$this->db->select('(SELECT COUNT(*) FROM tblhits_abstract h WHERE h.hts_art_id = a.art_id) AS abs');
+		$this->db->select('(SELECT COUNT(*) FROM tblclients c WHERE c.clt_journal_downloaded_id = a.art_id) AS pdf_count');
+		$this->db->select('(SELECT COUNT(*) FROM tblcitations ci WHERE ci.cite_art_id = a.art_id) AS cite');
+		$this->db->select('(SELECT GROUP_CONCAT(coa_name SEPARATOR ", ") FROM tblcoauthors WHERE coa_art_id = a.art_id) AS coa');
+		$this->db->from($this->articles.' a');
+		$this->db->order_by('a.art_title', 'asc');
+		$this->db->limit(5);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	/**
 	 * Retrieve list of authors
 	 *
 	 * @return  array  list of authors
@@ -332,3 +368,4 @@ class Article_model extends CI_Model {
 }
 
 /* End of file Article_model.php */
+
