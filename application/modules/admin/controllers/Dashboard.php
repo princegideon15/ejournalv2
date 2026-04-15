@@ -52,8 +52,9 @@ class Dashboard extends EJ_Controller {
 				
 				$data['editorials'] = $this->Editorial_model->get_editorials();
 				$data['clients'] = $this->Client_model->get_clients(); //current year
-				$data['popular'] = $this->Article_model->top_five();
+				$data['popular'] = $this->Article_model->top_five_with_summary();
 				$data['articles'] = $this->Article_model->get_all_articles_with_metrics();
+				$data['journal_article_counts'] = $this->Article_model->count_articles_grouped_by_journal();
 				$data['citees'] = $this->Article_model->get_all_citees();
 				$data['tables'] = $this->Library_model->get_tables();
 				$data['emails'] = $this->Email_model->get_contents();
@@ -81,7 +82,7 @@ class Dashboard extends EJ_Controller {
 
 				$acoa_arr = explode(",& ", $this->Coauthor_model->get_author_coauthors_list());
 				sort($acoa_arr, SORT_STRING);
-				$data['authors'] = array_unique($acoa_arr);
+				// $data['authors'] = array_unique($acoa_arr);
 				$data['main_title'] = "eJournal Admin";
 				$data['main_content'] = "admin/index";
 

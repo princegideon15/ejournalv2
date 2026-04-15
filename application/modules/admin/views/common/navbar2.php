@@ -124,8 +124,8 @@
                     <div class="sb-sidenav-menu-heading">Editorial Management</div>
                     <?php if ($this->session->userdata('_prv_add') == 1) {?>
                         <button class="nav-link" id="v-pills-add-editorial-tab" data-bs-toggle="pill" data-bs-target="#v-pills-add-editorial" type="button" role="tab" aria-controls="v-pills-add-editorial" aria-selected="false"><i class="oi oi-people me-2" title="oi-people" aria-hidden="true" ></i>Add Editorial</button>
+                        <button class="nav-link" id="v-pills-editorial-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-editorial-list" type="button" role="tab" aria-controls="v-pills-editorial-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>Editorial Board</button>
                     <?php }?>
-                    <button class="nav-link" id="v-pills-editorial-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-editorial-list" type="button" role="tab" aria-controls="v-pills-editorial-list" aria-selected="false"><i class="oi oi-eye me-2" title="oi-eye" aria-hidden="true"></i>Editorial Board</button>
                     
                     <div class="sb-sidenav-menu-heading">Library</div>
                     
