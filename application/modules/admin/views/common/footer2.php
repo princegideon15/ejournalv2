@@ -913,6 +913,29 @@ var prv_edt = <?php echo (!empty($this->session->userdata('_prv_edt'))) ? $this-
 var prv_del = <?php echo (!empty($this->session->userdata('_prv_del'))) ? $this->session->userdata('_prv_del') : '0'; ?>;
 var prv_view = <?php echo (!empty($this->session->userdata('_prv_view'))) ? $this->session->userdata('_prv_view') : '0'; ?>;
 var prv_exp = <?php echo (!empty($this->session->userdata('_prv_exp'))) ? $this->session->userdata('_prv_exp') : '0'; ?>;
+
+// Toggle search modal
+function toggleSearch() {
+    const searchModal = new bootstrap.Modal(document.getElementById('searchModal'), {});
+    searchModal.show();
+}
+
+// Logout function
+function logout() {
+    Swal.fire({
+        title: 'Logout',
+        text: 'Are you sure you want to logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, logout'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = base_url + 'admin/login/logout';
+        }
+    });
+}
 </script>
 
 

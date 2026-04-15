@@ -34,6 +34,15 @@ class Log_model extends CI_Model {
 	 *
 	 * @return  array  
 	 */
+
+	 public function get_full_data(){
+
+		$data = [];
+
+		
+
+	 }
+
 	public function get_logs() {
 		$this->db->select('b.log_user_id as log_user_id,b.log_action as log_action,a.acc_dp as acc_dp, b.date_created as date_created,log_insert_id');
 		$this->db->from($this->logs . ' b');
@@ -61,6 +70,7 @@ class Log_model extends CI_Model {
 		// $this->db->where_not_in('log_user_id', _UserIdFromSession());
 		// $this->db->where('log_user_id IN (select row_id from tblaccounts where acc_type != 0)');
 		$this->db->order_by('date_created', 'desc');
+		$this->db->limit(10);
 		$query = $this->db->get();
 		return $query->result();
 		// return $this->db->last_query();

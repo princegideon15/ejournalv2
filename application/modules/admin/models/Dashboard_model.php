@@ -52,6 +52,7 @@ class Dashboard_model extends CI_Model {
 		$this->db->from($this->hits . ' a');
 		$this->db->join($this->articles . ' b', 'a.hts_art_id = b.art_id');
 		$this->db->order_by('date_viewed', 'desc');
+		$this->db->limit(100);
 		$query = $this->db->get();
 		return $query->result();
 	}
