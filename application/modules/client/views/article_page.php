@@ -66,9 +66,9 @@
                             <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                 title="Abstract Hits"><i class="oi oi-eye"></i>
                                 <?=number_format($abs, 0, '', ',')?> Abstract Hits</span>
-                            <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                            <!-- <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                 title="Cited"><i class="oi oi-document"></i>
-                                <?=number_format($citations, 0, '', ',')?> Citations</span>
+                                <?=number_format($citations, 0, '', ',')?> Citations</span> -->
                         </div>
                         <h5>Abstract</h5>
                         <hr>
@@ -77,7 +77,7 @@
                         
                         <?php //if($logged_in){
                             echo '<div class="d-flex gap-1 mb-3">
-                            <a class="main-btn btn" href="'.base_url('client/ejournal/download_file/'. $article[0]->art_id .'/'.$article[0]->art_full_text_pdf).'"
+                            <a class="main-btn btn" href="javascript:void(0);" onclick="downloadPdfAndOpenForm(\''.base_url('client/ejournal/download_file/'. $article[0]->art_id .'/'.$article[0]->art_full_text_pdf).'\')"
                                 role="button">
                                 Download Full Text PDF <span class="oi oi-data-transfer-download ms-2" style="font-size:.8rem"></span></a>
                             <a  data-bs-toggle="modal" data-bs-target="#citationModal"
@@ -138,7 +138,14 @@
             </div>
         </div>
     </div>
-
+<script>
+function downloadPdfAndOpenForm(pdfUrl) {
+    window.open(pdfUrl, '_blank');
+    setTimeout(function() {
+        window.open('https://docs.google.com/forms/d/e/1FAIpQLSeglzfYNjbcJi-iB3d3ORI-QeujyiYXTeTPJcwmp_j4a0nlKw/viewform', '_blank');
+    }, 500);
+}
+</script>
     <!-- IMAGE PREVIEW -->
     <!-- <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -148,8 +155,16 @@
         </div>
         <div class="modal-body">
           <img src="" class="enlargeImageModalSource" style="width: 100%;height:50%">
-        </div>
-      </div>
+<script>
+function downloadPdfAndOpenForm(pdfUrl) {
+    window.open(pdfUrl, '_blank');
+    setTimeout(function() {
+        window.open('https://docs.google.com/forms/d/e/1FAIpQLSeglzfYNjbcJi-iB3d3ORI-QeujyiYXTeTPJcwmp_j4a0nlKw/viewform', '_blank');
+    }, 500);
+}
+</script>
+</div>
+</div>
     </div>
 </div> -->
 
@@ -406,7 +421,7 @@ echo '<option value=' . $c->country_id . '>' . $c->country_name . '</option>';?>
                                 <textarea id="apa_format" class="form-control" readonly rows="5"></textarea>
                             </div>
                         </div>
-                        <button type="button" onClick="copyCitationToClipboard('#apa_format')" class="btn main-btn mt-3 w-100">Copy to clipboard</button>
+                        <button type="button" onClick="copyCitationToClipboard('#apa_format')" class="btn main-btn mt-3 w-100">Copy Bibliographical Reference</button>
                     </div>
                 </div>
                 <div class="modal-footer">
