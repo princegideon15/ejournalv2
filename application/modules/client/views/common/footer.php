@@ -138,19 +138,12 @@
 
 				<iframe
 					src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15451.75657398356!2d121.050258!3d14.488183!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x232e629cdd251cc7!2sNational%20Research%20Council%20of%20the%20Philippines%20(NRCP)!5e0!3m2!1sen!2sph!4v1657682178355!5m2!1sen!2sph"
-					width="389" height="200px" style="border:0;" allowfullscreen="" loading="lazy"
+					width="300" height="200px" style="border:0;" allowfullscreen="" loading="lazy"
 					referrerpolicy="no-referrer-when-downgrade"></iframe>
 			</div>
 			<!-- Grid column -->
 
 		<!-- Grid column -->
-			<div class="col-md-2 p-3 m-3">
-
-				<img src="<?php echo base_url("assets/images/dpo_seal.png");?>" width="450" height="400">			
-				
-			</div>
-			<!-- Grid column -->
-
 		</div>
 		<!-- Grid row -->
 

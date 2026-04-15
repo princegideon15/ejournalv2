@@ -78,6 +78,7 @@
 							</div>
 						</div>
 					</div>
+					<?php //print_r($articles); ?>
 					<div class="row mt-4">
 						<div class="col-8">
 							<!-- POPULAR ARTICLE -->
@@ -164,43 +165,7 @@
 							</div>
 							<!-- /.SEARCH AUTHOR -->
 						</div>
-						<div class="col-4">
-							<div class="sticky-right-panel">
-								<div class="card border-dark">
-									<div class="card-header text-dark">
-										<span class="oi oi-bell"></span> Activity
-									</div>
-									<div class="">
-										<ul class="list-group list-group-flush">
-											<?php if ($logs != null) {
-												?>
-												<?php foreach ($logs as $row): ?>
-												<?php $src = ($row->acc_dp != '') ? base_url('assets/uploads/dp/' . $row->acc_dp . '') : base_url('assets/images/img_avatar.png');?>
-												<?php $onclick = (
-												(strpos($row->log_action, 'article') !== false) ? 'edit_article(' . $row->log_insert_id . ')' :
-												((strpos($row->log_action, 'journal') !== false) ? 'edit_journal(' . $row->log_insert_id . ')' : '')
-												);?>
-											<a href="javascript:void(0);" onclick="<?php echo $onclick; ?>";? class="list-group-item list-group-item-action">
-												<div class="media">
-													<img class="rounded-circle mr-1" width="40px" height="40px" src="<?php echo $src; ?>">
-													<div class="media-body">
-														<h6 class="mt-0 mb-0"> <?php echo $this->Login_model->get_username_for_logs($row->log_user_id); ?> <?php echo $row->log_action; ?></h6>
-														<small class="text-muted ml-auto mt-0"><?php echo $row->date_created; ?></small>
-													</div>
-												</div>
-											</a>
-											<?php endforeach;?>
-											<?php } else {?>
-											<li class="list-group-item text-muted text-center"><span class="oi oi-warning"></span> No activity.</li>
-											<?php }?>
-										</ul>
-									</div>
-									<div class="card-footer">
-										<small><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#activities_modal" class="text-decoration-none text-dark"><span class="oi oi-eye"></span> View all activity</a></small>
-									</div>
-								</div>
-							</div>
-						</div>
+					
 					</div>
 				</div>
 				<div class="tab-pane fade" id="v-pills-create-journal" role="tabpanel" aria-labelledby="v-pills-create-journal-tab" tabindex="0">
@@ -268,7 +233,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="tab-pane fade" id="v-pills-add-article" role="tabpanel" aria-labelledby="v-add-article-tab" tabindex="0">
+				<div class="tab-pane fade" id="v-pills-add-article" role="tabpanel" aria-labelledby="v-pills-add-article-tab" tabindex="0">
 					<div class="card border-dark">
 						<div class="card-body">
 							<h3>Add Article</h3>
@@ -390,9 +355,9 @@
 											: (($a->jor_issue == 6) ? 'Special Issue No. 2' 
 											: (($a->jor_issue == 7) ? 'Special Issue No. 3' 
 											: (($a->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $a->jor_issue))));
-											$pdf = $this->Article_model->count_pdf($a->art_id);
-											$abs = $this->Article_model->count_abstract($a->art_id);
-											$cite = $this->Article_model->count_citation($a->art_id);
+											$abs = $a->abstract_hits;
+											$pdf = $a->pdf_count;
+											$cite = $a->citations;
 											$abs_class = ($abs > 0 ) ? 'text-primary' : 'text-muted';
 											$pdf_class = ($pdf > 0 ) ? 'text-primary' : 'text-muted';
 											$cite_class = ($cite > 0 ) ? 'text-primary' : 'text-muted';?>
@@ -878,7 +843,7 @@
 						<p class="h3">Manage Editorial Policy</p>
 						<div class="row mt-3">
 							<div class="col-6">
-<form id="form_policy">
+						<form id="form_policy">
 										<div class="mb-3">
 											<label for="ep_content" class="form-label">Content</label>
 											<textarea rows="20" class="form-control" id="ep_content" name="ep_content"><?php echo $editorial_policy[0]['ep_content']; ?></textarea>

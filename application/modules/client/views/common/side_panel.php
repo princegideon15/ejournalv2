@@ -11,7 +11,7 @@
     <div class="card bg-light border-0">
         <div class="card-body">
             <h6 class="card-title fw-bold d-block">Journal Information</h6>
-			  <p class="mb-0"><a href="#" class="text-dark text-decoration-underline" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">International Editorial Board</a></p>
+			  <p class="mb-0"><a href="#" class="text-dark text-decoration-underline" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">Intl. Advisory Board</a></p>
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/editorial');?>"
             class="text-dark text-decoration-underline">Editorial Board</a></p>
           
@@ -28,7 +28,7 @@
             - -->
             <h6 class="card-title fw-bold mt-2 mb-0">Usage <?php echo date('Y');?></h6>
             <div>Downloads: <?=number_format($downloads, 0, '', ',')?></div>
-            <div>Altmetric mentions: <?=number_format($citations, 0, '', ',')?></div>
+            <div>Abstract Hits: <?=number_format($citations, 0, '', ',')?></div>
 
         </div>
     </div>
@@ -38,12 +38,12 @@
             Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a></div>';
     }?> -->
 
-    
-	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/crossref.png"); ?>" alt="crossref" width="100%" height="70px">	
+    <img src="https://assets.crossref.org/logo/crossref-logo-200.svg" alt="Crossref logo stacked" width="100%" height="70px"/>
+	<!-- <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/crossref.png"); ?>" alt="crossref" width="100%" height="70px">	 -->
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/ebscohost.gif"); ?>" alt="ebscohost" width="100%" height="70px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/agpci.png"); ?>" alt="agpci" width="100%" height="60px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/pejlogo.png"); ?>" alt="agpci" width="100%" height="200px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/Ithenticate.jpg"); ?>" alt="ithenticate" width="100%" height="80px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/issn.png"); ?>" alt="ithenticate" width="100%" height="90px">
 	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/iso.png"); ?>" alt="iso" width="100%" height="200px"> 
-	
+	<img class="mt-3" src="<?php echo base_url("assets/images/dpo_seal.png");?>" width="100%" height="200px">

@@ -44,28 +44,16 @@ class Dashboard extends EJ_Controller {
 	public function index() {
 		if ($this->session->userdata('_oprs_logged_in')) {
 			if($this->session->userdata('sys_acc') == 1 || $this->session->userdata('sys_acc') == 3 ){
-				$data['country'] = $this->Library_model->get_library('tblcountries');
-				$data['sex'] = $this->Library_model->get_library('tblsex');
+				
 				$data['journal'] = $this->Journal_model->get_journals();
 				$data['journal_max'] = $this->Journal_model->get_journal_max();
 				$data['u_journal'] = $this->Journal_model->get_unique_journal();
 				$data['u_year'] = $this->Journal_model->get_unique_journal_year();
-				$data['client_count'] = $this->Client_model->client_count(); //current year
-				$data['art_count'] = $this->Article_model->art_count();
-				$data['edt_count'] = $this->Editorial_model->edt_count();
-				$data['jor_count'] = $this->Journal_model->jor_count();
-				$data['hit_count'] = $this->Journal_model->hit_count();
-				$data['cite_count'] = $this->Journal_model->cite_count();
+				
 				$data['editorials'] = $this->Editorial_model->get_editorials();
 				$data['clients'] = $this->Client_model->get_clients(); //current year
-				$data['vis_count'] = $this->Dashboard_model->vis_count();
-				$data['online'] = $this->Login_model->online_users(_UserIdFromSession());
 				$data['popular'] = $this->Article_model->top_five();
-				$data['logs'] = $this->Log_model->get_logs();
-				$data['all_logs'] = $this->Log_model->get_all_logs();
-				$data['vis_all'] = $this->Dashboard_model->vis_count_all();
-				$data['viewers'] = $this->Dashboard_model->get_viewers();
-				$data['articles'] = $this->Article_model->get_all_articles();
+				$data['articles'] = $this->Article_model->get_all_articles_with_metrics();
 				$data['citees'] = $this->Article_model->get_all_citees();
 				$data['tables'] = $this->Library_model->get_tables();
 				$data['emails'] = $this->Email_model->get_contents();
@@ -73,6 +61,23 @@ class Dashboard extends EJ_Controller {
 				$data['editorial_board_position'] = $this->Library_model->get_editorial_board_position();
 				$data['editorial_policy'] = $this->Library_model->get_editorial_policy_content();
 				$data['guidelines'] = $this->Library_model->get_guidelines_content();
+
+				// $data['data'] = $this->Log_model->get_data_logs();
+
+				$data['country'] = $this->Library_model->get_library('tblcountries');
+				$data['sex'] = $this->Library_model->get_library('tblsex');
+				$data['client_count'] = $this->Client_model->client_count(); //current year
+				$data['art_count'] = $this->Article_model->art_count();
+				$data['edt_count'] = $this->Editorial_model->edt_count();
+				$data['jor_count'] = $this->Journal_model->jor_count();
+				$data['hit_count'] = $this->Journal_model->hit_count();
+				$data['cite_count'] = $this->Journal_model->cite_count();
+				$data['logs'] = $this->Log_model->get_logs();
+				$data['all_logs'] = $this->Log_model->get_all_logs();
+				$data['vis_all'] = $this->Dashboard_model->vis_count_all();
+				$data['viewers'] = $this->Dashboard_model->get_viewers();
+				$data['vis_count'] = $this->Dashboard_model->vis_count();
+				$data['online'] = $this->Login_model->online_users(_UserIdFromSession());
 
 				$acoa_arr = explode(",& ", $this->Coauthor_model->get_author_coauthors_list());
 				sort($acoa_arr, SORT_STRING);

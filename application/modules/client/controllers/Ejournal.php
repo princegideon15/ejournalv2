@@ -211,6 +211,7 @@ class Ejournal extends EJ_Controller {
         $data = file_get_contents($file_path);
         // $name = basename($file_path);
         force_download($file, $data);
+
     }
 
 	/**
