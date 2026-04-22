@@ -272,6 +272,11 @@
 											<?php }?>
 										</select>
 									</div>
+									<div class="form-group col">
+												<label for="edt_duration" class="form-label">Duration</label>
+												<input type="text" class="form-control" id="edt_duration" name="edt_duration" placeholder="Years of duration">
+												</select>
+											</div>
 									<div class="col">
 										<label for="edt_volume" class="form-label">Volume</label>
 										<select class="form-select" id="edt_volume" name="edt_volume" placeholder="ex. X">

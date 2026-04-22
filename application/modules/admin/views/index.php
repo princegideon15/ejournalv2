@@ -99,27 +99,22 @@
 											</tr>
 										</thead>
 										<tbody>
-											<!-- GET DATA STORE TO ARRAY -->
-											<?php $c = 0;foreach ($popular as $row): ?>
-											<?php $c++;
-											$pop[$c]['title'] = $row->art_title;?>
-											<?php $pop[$c]['id'] = $row->art_id;?>
-											<?php $pop[$c]['coa'] = $this->Coauthor_model->get_author_coauthors($row->art_id);?>
-											<?php $pop[$c]['count'] = $this->Article_model->count_pdf($row->art_id);?>
-											<?php $pop[$c]['abs'] = $this->Article_model->count_abstract($row->art_id);?>
-											<?php $pop[$c]['cite'] = $this->Article_model->count_citation($row->art_id);?>
-											
-											<?php endforeach;?>
-											<?php $c = 1;foreach ($pop as $row): ?>
-											<?php $abs_class = ($row['abs'] > 0 ) ? 'text-primary' : 'text-muted';?>
-											<?php $pdf_class = ($row['count'] > 0 ) ? 'text-primary' : 'text-muted';?>
-											<?php $cite_class = ($row['cite'] > 0 ) ? 'text-primary' : 'text-muted';?>
+											<?php foreach ($popular as $row): ?>
+											<?php
+											$abs = (int) $row->abs;
+											$pdf = (int) $row->pdf_count;
+											$cite = (int) $row->cite;
+											$coa = !empty($row->coa) ? $row->coa : $row->art_author;
+											$abs_class = ($abs > 0) ? 'text-primary' : 'text-muted';
+											$pdf_class = ($pdf > 0) ? 'text-primary' : 'text-muted';
+											$cite_class = ($cite > 0) ? 'text-primary' : 'text-muted';
+											?>
 											<tr>
 												<td></td>
-												<td><a href="javascript:void(0);"  class="text-primary text-decoration-none" onclick="edit_article(<?php echo $row['id']; ?>)"><?php echo '<strong>' . $row['title'] . '</strong>, ' . $row['coa']; ?></a></td>
-												<td><a href="javascript:void(0);"  class="<?php echo $abs_class;?> fw-bold text-decoration-none" onclick="get_hits_info(<?php echo $row['id']; ?>)"><?php echo $row['abs']; ?></a></td>
-												<td><a href="javascript:void(0);"  class="<?php echo $pdf_class;?> fw-bold text-decoration-none" onclick="get_client_info(<?php echo $row['id']; ?>)"><?php echo $row['count']; ?></a></td>
-												<td><a href="javascript:void(0);"  class="<?php echo $cite_class;?> fw-bold text-decoration-none" onclick="get_citees(<?php echo $row['id']; ?>)"><?php echo $row['cite']; ?></a></td>
+												<td><a href="javascript:void(0);"  class="text-primary text-decoration-none" onclick="edit_article(<?php echo $row->art_id; ?>)"><?php echo '<strong>' . $row->art_title . '</strong>, ' . $coa; ?></a></td>
+												<td><a href="javascript:void(0);"  class="<?php echo $abs_class;?> fw-bold text-decoration-none" onclick="get_hits_info(<?php echo $row->art_id; ?>)"><?php echo $abs; ?></a></td>
+												<td><a href="javascript:void(0);"  class="<?php echo $pdf_class;?> fw-bold text-decoration-none" onclick="get_client_info(<?php echo $row->art_id; ?>)"><?php echo $pdf; ?></a></td>
+												<td><a href="javascript:void(0);"  class="<?php echo $cite_class;?> fw-bold text-decoration-none" onclick="get_citees(<?php echo $row->art_id; ?>)"><?php echo $cite; ?></a></td>
 											</tr>
 											<?php endforeach;?>
 										</tbody>
@@ -430,15 +425,16 @@
 												<td><?php echo $j->jor_year; ?></td>
 												<td><?php echo $j->jor_issn; ?></td>
 												<td>
-													<?php if ($this->Article_model->count_article_by_journal($j->jor_id) > 0) {
-														echo '<a href="javascript:void(0);"  class="fw-bold text-primary text-decoration-none cursor-pointer" role="button" onclick="view_articles(\'' . $j->jor_id . '\',\'' . $j->jor_volume . '\',\'' . $j->jor_issue . '\',\'' . $j->jor_month . '\',\'' . $j->jor_year . '\')">' . $this->Article_model->count_article_by_journal($j->jor_id) . ' Article(s)</a>';
+													<?php $journal_article_count = isset($journal_article_counts[$j->jor_id]) ? (int) $journal_article_counts[$j->jor_id] : 0; ?>
+													<?php if ($journal_article_count > 0) {
+														echo '<a href="javascript:void(0);"  class="fw-bold text-primary text-decoration-none cursor-pointer" role="button" onclick="view_articles(\'' . $j->jor_id . '\',\'' . $j->jor_volume . '\',\'' . $j->jor_issue . '\',\'' . $j->jor_month . '\',\'' . $j->jor_year . '\')">' . $journal_article_count . ' Article(s)</a>';
 													} else {echo '0';}
 													?>
 												</td>
 												<td><?php echo $j->date_created; ?></td>
 												<td>
 													<?php if ($this->session->userdata('_prv_edt') == 1) {?>
-													<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Journal" class="btn btn-light btn-sm" onclick="edit_journal('<?php echo $j->jor_id; ?>','<?php echo $this->Article_model->count_article_by_journal($j->jor_id); ?>')"><span class="oi oi-pencil"></span></button>
+													<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Journal" class="btn btn-light btn-sm" onclick="edit_journal('<?php echo $j->jor_id; ?>','<?php echo $journal_article_count; ?>')"><span class="oi oi-pencil"></span></button>
 													<?php }?>
 													<?php if ($this->session->userdata('_prv_add') == 1) {?>
 													<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Add Article" class="btn btn-primary btn-sm" onclick="add_article('<?php echo $j->jor_year; ?>','<?php echo $j->jor_id; ?>')" ><span class="oi oi-plus"></span></button>
@@ -628,6 +624,11 @@
 													<?php }?>
 												</select>
 											</div>
+												<div class="form-group col">
+												<label for="edt_duration" class="form-label">Duration</label>
+												<input type="text" class="form-control" id="edt_duration" name="edt_duration" placeholder="Years of duration">
+												</select>
+											</div>
 											<div class="form-group col">
 												<label for="edt_volume"  class="form-label">Volume</label>
 												<select class="form-select" id="edt_volume" name="edt_volume" placeholder="ex. X">
@@ -747,6 +748,7 @@
 										<th scope="col">Specialization</th>
 										<th scope="col">Email</th>
 										<th scope="col">Date Added</th>
+										<th scope="col">Years of Duration</th>
 										<th scope="col">
 											<?php if ($this->session->userdata('_prv_add') == 1) {?>
 											<button type="button" class="w-100 btn btn-sm btn-primary" id="btn-add-editorial"><span class="oi oi-plus"></span> Add Editorial</button>
@@ -779,6 +781,7 @@
 										<td><?php echo $e->edt_specialization; ?></td>
 										<td><?php echo $e->edt_email; ?></td>
 										<td><?php echo $e->date_created; ?></td>
+										<td><?php echo $e->edt_duration; ?></td>
 										<td>
 											<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="btn btn-light text-primary btn-sm w-100" onclick="edit_editorial('<?php echo $e->edt_id; ?>')"><span class="oi oi-pencil" ></span> Edit</button>
 											<!-- <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="btn btn-danger btn-sm" onclick="_remove('delete-editorial-out')"><span class="oi oi-trash"></span></button> -->

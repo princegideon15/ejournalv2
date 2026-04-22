@@ -14,6 +14,7 @@
             <!-- <div><img src="<?php echo base_url("assets/images/email.svg"); ?>" alt="Email Logo"  height="37" width="37" class="me-1 nrcp-brand"><a class="text-white" href="mailto:nrcpinfo@nrcp.dost.gov.ph">nrcpinfo@nrcp.dost.gov.ph</a></div>  -->
             <div><img src="<?php echo base_url("assets/images/email.svg"); ?>" alt="Email Logo"  height="37" width="37" class="me-1 nrcp-brand"><a class="text-white" href="mailto:nrcpinfo@nrcp.dost.gov.ph">ejournal@nrcp.dost.gov.ph</a></div> 
             <div><img src="<?php echo base_url("assets/images/bagong-pilipinas.png"); ?>" alt="Bagong Pilipinas Logo" height="70" width="70"></div> 
+			 <div class = 'p-3'><img src="<?php echo base_url("assets/images/republika_ng_pilipinas.png"); ?>" alt="Bagong Pilipinas Logo" height="60" width="60"></div> 
         </div>
         <div class="row mb-0" style="height:.5rem">
         <!-- #D17C49, #DD4949, #36498E, #33A1D6, #406DA6 -->
