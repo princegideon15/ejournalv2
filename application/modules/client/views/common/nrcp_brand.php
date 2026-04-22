@@ -3,7 +3,7 @@
         <div class="px-2 py-0 text-xs d-flex justify-content-between align-items-center gap-2">
             <div class="fw-bold">"Providing Solutions! Opening Opportunities!"</div> 
             <div class="d-flex gap-2 justify-content-center align-items-center">
-                <div><img src="<?php echo base_url("assets/images/fb.svg"); ?>" alt="Facebook Logo" height="30" width="30" class="nrcp-brand"></div>
+                <div><img src="<?php echo base_url("assets/images/fb.svg"); ?>" alt="Facebook Logo" height="40" width="40" class="nrcp-brand"></div>
                 <div class="p-0" style="font-size:.8rem">
                     <p class="mb-0"><a class="text-white" href="https://www.facebook.com/nationalresearchcouncil" target="_blank">/nationalresearchcouncil</a></p>
                     <p class="mb-0"><a class="text-white" href="https://www.facebook.com/nrcpresearchjournal" target="_blank">/nrcpresearchjournal</a></p>
@@ -14,7 +14,6 @@
             <!-- <div><img src="<?php echo base_url("assets/images/email.svg"); ?>" alt="Email Logo"  height="37" width="37" class="me-1 nrcp-brand"><a class="text-white" href="mailto:nrcpinfo@nrcp.dost.gov.ph">nrcpinfo@nrcp.dost.gov.ph</a></div>  -->
             <div><img src="<?php echo base_url("assets/images/email.svg"); ?>" alt="Email Logo"  height="37" width="37" class="me-1 nrcp-brand"><a class="text-white" href="mailto:nrcpinfo@nrcp.dost.gov.ph">ejournal@nrcp.dost.gov.ph</a></div> 
             <div><img src="<?php echo base_url("assets/images/bagong-pilipinas.png"); ?>" alt="Bagong Pilipinas Logo" height="70" width="70"></div> 
-			 <div class = 'p-3'><img src="<?php echo base_url("assets/images/republika_ng_pilipinas.png"); ?>" alt="Bagong Pilipinas Logo" height="60" width="60"></div> 
         </div>
         <div class="row mb-0" style="height:.5rem">
         <!-- #D17C49, #DD4949, #36498E, #33A1D6, #406DA6 -->
