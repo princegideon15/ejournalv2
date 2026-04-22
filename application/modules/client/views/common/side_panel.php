@@ -11,11 +11,11 @@
     <div class="card bg-light border-0">
         <div class="card-body">
             <h6 class="card-title fw-bold d-block">Journal Information</h6>
-				<p class="mb-0">
+				<!-- <p class="mb-0">
 				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">
 					Intl. Advisory Board
 				</a>
-				</p>
+				</p> -->
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/editorial');?>"
             class="text-dark text-decoration-underline">Editorial Board</a></p>
           
