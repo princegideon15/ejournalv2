@@ -972,7 +972,7 @@ $(document).ready(function () {
 	}).draw(false);
 
 	// check and display export button if privilege to export is enabled
-	if (prv_exp == 0) {
+	if (prv_exp == 1) {
 		$('#table-clients').DataTable({
 			// "order": [
 			// 	[3, "desc"]
@@ -988,6 +988,11 @@ $(document).ready(function () {
 			// "order": [
 			// 	[3, "desc"]
 			// ],
+			serverSide: false,
+			ajax: {
+				url: base_url + 'admin/dashboard/get_clients_dt',
+				type: 'POST'
+			},
 			retrieve: true,
 			"columnDefs": [{
 				"targets": 0,
@@ -1559,6 +1564,9 @@ $(document).ready(function () {
 				required: true,
 			},
 			edt_email: {
+				required: true,
+			},
+			edt_duration:{
 				required: true,
 			},
 			edt_sex: {

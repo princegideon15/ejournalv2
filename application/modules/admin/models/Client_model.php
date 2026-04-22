@@ -57,6 +57,22 @@ class Client_model extends CI_Model {
 		$this->db->join($this->users . ' e', 'c.user_id = e.id', 'left');
 		$this->db->order_by('dl_datetime', 'desc');
 		$this->db->like('dl_datetime', date('Y'));
+		$this->db->limit(100);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_clients_excel() {
+
+		$this->db->select('art_title, title, first_name, last_name, sex, affiliation, country_name, email, dl_datetime, dl_art_id');
+		$this->db->from($this->clients . ' a');
+		$this->db->join($this->articles . ' b', 'a.dl_art_id = b.art_id');
+		$this->db->join($this->user_profiles . ' c', 'a.dl_user_id = c.user_id', 'left');
+		$this->db->join($this->countries . ' d', 'c.country = d.country_id', 'left');
+		$this->db->join($this->users . ' e', 'c.user_id = e.id', 'left');
+		$this->db->order_by('dl_datetime', 'desc');
+		$this->db->like('dl_datetime', date('Y'));
+		// $this->db->limit(100);
 		$query = $this->db->get();
 		return $query->result();
 	}

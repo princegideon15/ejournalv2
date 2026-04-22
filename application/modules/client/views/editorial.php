@@ -49,7 +49,8 @@
 							?>
 							<div class="accordion-item border-0 mb-2">
 								<a href="javascript:void(0);" class="main-link text-decoration-underline" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $flag;?>">
-									Editorial Board and Staff - <?php echo $issue . $row->volume;?>
+									<?php  $fullDuration = $row->edt_year + $row->edt_duration;
+									echo $row->edt_year . ' - ' . $fullDuration; ?>
 								</a>
 								<div id="collapse<?php echo $flag;?>" class="accordion-collapse collapse <?php echo $show;?>"
 									aria-labelledby="headingOne" data-bs-parent="#accordionEditorial">

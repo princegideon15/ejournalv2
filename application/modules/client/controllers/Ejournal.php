@@ -48,7 +48,7 @@ class Ejournal extends EJ_Controller {
 		// store visitor information
 		ip_info(); 
 		
-		$journals = 
+		// $journals = 
 
 		//data to display
 		$data['volumes'] = $this->Client_journal_model->get_journals();
