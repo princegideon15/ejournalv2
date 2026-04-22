@@ -8,8 +8,8 @@
 		<!-- Grid row -->
 		<div class="row mb-3">
 
-			<div class="col-auto">
-				<img src="<?php echo base_url("assets/images/phil_seal.png");?>" width="150" height="150">			
+			<div class="col-md-2 px-3 text-center">
+				<img  src="<?php echo base_url("assets/images/phil_seal.png");?>" width="150" height="150">			
 			</div>
 
 			<!-- Grid column -->

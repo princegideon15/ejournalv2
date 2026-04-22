@@ -972,7 +972,7 @@ $(document).ready(function () {
 	}).draw(false);
 
 	// check and display export button if privilege to export is enabled
-	if (prv_exp == 1) {
+	if (prv_exp == 0) {
 		$('#table-clients').DataTable({
 			// "order": [
 			// 	[3, "desc"]
@@ -988,10 +988,12 @@ $(document).ready(function () {
 			// "order": [
 			// 	[3, "desc"]
 			// ],
+			destroy: true,
 			serverSide: false,
 			ajax: {
 				url: base_url + 'admin/dashboard/get_clients_dt',
-				type: 'POST'
+				type: 'POST',
+				dataSrc: 'data'
 			},
 			retrieve: true,
 			"columnDefs": [{
