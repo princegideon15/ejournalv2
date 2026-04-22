@@ -93,7 +93,7 @@
 							Research Information System (BRIS)</a>
 					</li>
 					<li class="mb-2">
-						<a class="text-muted" href="https://aram.nrcp.dost.gov.ph/" target="_blank">NRCP
+						<a class="text-muted" href="https://aram.nrcp.dost.gov.ph/" target="_blank">
 							Access to Repositories and Archival Materials (ARAM)</a>
 					</li>
 					<!-- <li class="mb-2">

@@ -43,7 +43,7 @@ gtag('config', 'G-VDLLX3HKBL');
             <!-- ABOUT CONTENT -->
 			<div class = 'journal-content'>
  			<?php 
-            echo nl2br(htmlspecialchars(file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt')));
+            echo nl2br(file_get_contents('./assets/uploads/DO_NOT_DELETE_description.txt'));
             ?>
 			</div>
 		  
@@ -100,7 +100,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 <div class="tab-pane fade show active" id="recent-tab-pane" role="tabpanel" aria-labelledby="home-tab"
                     tabindex="0">
 
-                    <?php $c = 0;foreach ($latest as $row):
+                    <?php $c = 0;foreach (array_slice($latest, 0, 5) as $row):
 
                                     $c++;
                         
@@ -117,19 +117,6 @@ gtag('config', 'G-VDLLX3HKBL');
                                                 (($row->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $row->jor_issue)))
                                     );
                                     $lat[$c]['cite'] =  $this->Client_journal_model->get_citation($row->art_id) . '('. $row->art_year .'). ' . ucfirst(strtolower($row->art_title)) . '. NRCP Research Journal, Volume ' . $row->jor_volume . ', ' . $issue . ', ' . $row->art_page;
-
-                                    $server_dir = '/var/www/html/ejournal/assets/uploads/pdf/';
-                                    $get_file = filesize($server_dir . $row->art_full_text_pdf);
-
-                                    // $get_file = filesize($_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/'.$row->art_full_text_pdf);
-
-                                    if ($get_file >= 1048576) {
-                                        $lat[$c]['fsize'] = round($get_file / 1024 / 1024, 1) . ' MB';
-                                    } elseif ($get_file >= 1024) {
-                                        $lat[$c]['fsize'] = round($get_file / 1024, 1) . ' KB';
-                                    } else {
-                                        $lat[$c]['fsize'] = round($get_file, 1) . ' bytes';
-                                    }
 
                                     $lat[$c]['citations'] = $this->Client_journal_model->count_citation($row->art_id);
                                     $lat[$c]['count'] = $this->Client_journal_model->count_pdf($row->art_id);
@@ -164,9 +151,9 @@ gtag('config', 'G-VDLLX3HKBL');
                                     <?=$row['count']?></span>
                                 <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Abstract Hits"><i class="oi oi-eye"></i> <?=$row['abs']?></span>
-                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                <!-- <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Cited"><i class="oi oi-document"></i>
-                                    <?=$row['citations']?></span>
+                                    <?=$row['citations']?></span> -->
 
                             </div>
                         </div>
@@ -183,7 +170,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     tabindex="0">
 
                     <?php if ($client_count != '' || $hits_count != '') { ?>
-                    <?php $c = 0;foreach ($popular as $row):
+                    <?php $c = 0;foreach (array_slice($popular, 0, 5) as $row):
 					$c++;
 					$pop[$c]['title'] = $row->art_title;
 					$pop[$c]['id'] = $row->art_id;
@@ -198,19 +185,6 @@ gtag('config', 'G-VDLLX3HKBL');
 								(($row->jor_issue == 8) ? 'Special Issue No. 4' : 'Issue ' . $row->jor_issue)))
 					);
 					$pop[$c]['cite'] =  $this->Client_journal_model->get_citation($row->art_id) . '('. $row->art_year .'). ' . ucfirst(strtolower($row->art_title)) . '. NRCP Research Journal, Volume ' . $row->jor_volume . ', ' . $issue . ', ' . $row->art_page;
-
-					$server_dir = '/var/www/html/ejournal/assets/uploads/pdf/';
-					$get_file = filesize($server_dir . $row->art_full_text_pdf);
-
-					// $get_file = filesize($_SERVER['DOCUMENT_ROOT'].'/ejournal/assets/uploads/pdf/'.$row->art_full_text_pdf);
-
-					if ($get_file >= 1048576) {
-						$pop[$c]['fsize'] = round($get_file / 1024 / 1024, 1) . ' MB';
-					} elseif ($get_file >= 1024) {
-						$pop[$c]['fsize'] = round($get_file / 1024, 1) . ' KB';
-					} else {
-						$pop[$c]['fsize'] = round($get_file, 1) . ' bytes';
-					}
 
 				$pop[$c]['citations'] = $this->Client_journal_model->count_citation($row->art_id);
 				$pop[$c]['count'] = $this->Client_journal_model->count_pdf($row->art_id);
@@ -246,9 +220,9 @@ gtag('config', 'G-VDLLX3HKBL');
                                     <?=$row['count']?></span>
                                 <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Abstract Hits"><span class="oi oi-eye"></span> <?=$row['abs']?></span>
-                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                <!-- <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Cited"><span class="oi oi-document"></span>
-                                    <?=$row['citations']?></span>
+                                    <?=$row['citations']?></span> -->
 
                             </div>
                         </div>
@@ -265,7 +239,7 @@ gtag('config', 'G-VDLLX3HKBL');
                     aria-labelledby="advance-publication-tab" tabindex="0">
 
 
-                    <?php $c = 0;foreach ($adv_publication as $row):
+                    <?php $c = 0;foreach (array_slice($adv_publication, 0, 5) as $row):
 
                     $c++;
 
@@ -331,9 +305,9 @@ gtag('config', 'G-VDLLX3HKBL');
                                 <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Abstract Hits"><i class="oi oi-eye"></i>
                                     <?=number_format($row['abs'], 0, '', ',')?></span>
-                                <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
+                                <!-- <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"
                                     title="Cited"><i class="oi oi-document"></i>
-                                    <?=number_format($row['citations'], 0, '', ',')?></span>
+                                    <?=number_format($row['citations'], 0, '', ',')?></span> -->
                             </div>
 
                         </div>

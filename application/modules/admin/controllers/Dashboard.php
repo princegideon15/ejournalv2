@@ -114,6 +114,25 @@ class Dashboard extends EJ_Controller {
 		echo json_encode($output);
 	}
 
+	public function get_clients_dt(){
+		$clients = $this->Client_model->get_clients_excel();
+		$data = [];
+		$index = 1;
+		foreach($clients as $row){
+			$data[] = [
+				$index++,
+				$row->art_title ?? '',
+				($row->title ? $row->title . '. ' : '') . ($row->first_name ?? '') . ' ' . ($row->last_name ?? ''),
+				$row->sex ?? '',
+				$row->affiliation ?? '',
+				$row->country_name ?? '',
+				$row->email ?? '',
+				$row->dl_datetime ?? ''
+			];
+		}
+		echo json_encode(['data' => $data]);
+	}
+
 	/**
 	 * this function change password
 	 *
