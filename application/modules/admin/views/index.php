@@ -607,6 +607,7 @@
 						</div>
 					</div>
 				</div>
+				
 				<div class="tab-pane fade" id="v-pills-add-editorial" role="tabpanel" aria-labelledby="v-pills-add-editorial-tab" tabindex="0">
 					<div class="card border-dark">
 						<div class="card-body">
@@ -675,9 +676,10 @@
 											<select class="form-select" name="edt_position" id="edt_position">
 												<option value="">Select Editorial Position</option>
 												<?php foreach($editorial_board_position as $row):?>
-													<?php echo '<option value=' . $row->role_name . '>' . $row->role_name . '</option>'; ?>
+													<?php echo '<option value="' . $row->role_name . '">' . $row->role_name . '</option>'; ?>
 												<?php endforeach ?>
 												<option value="Editorial Staff">Editorial Staff</option>
+												<option value="Advisory Board">Advisory Board</option>
 											</select>
 											<!-- <input type="text" class="form-control" id="edt_position" name="edt_position" placeholder="ex. Editor-in-Chief"> -->
 										</div>	
@@ -769,8 +771,8 @@
 										<input type="hidden" id="delete_edt_id" value="<?php echo $e->edt_id; ?>">
 										<td></td>
 										<td><?php echo $issue . 'Volume ' . $e->edt_volume . ', ' . $e->edt_year ?></td>
-										<!-- <td><img class="img-thumbnail" src="<?php echo base_url('assets/uploads/editorial/'. $e->edt_photo .''); ?>" style="width:50px;height:50px;"></td> -->
-										<td><img class="img-thumbnail" src="" style="width:50px;height:50px;"></td>
+										<td><img class="img-thumbnail" src="<?php echo base_url('assets/uploads/editorial/'. $e->edt_photo .''); ?>" style="width:50px;height:50px;"></td>
+										<!-- <td><img class="img-thumbnail" src="" style="width:50px;height:50px;"></td> -->
 										<td><?php echo $e->edt_name; ?></td>
 										<td><?php echo ($e->edt_sex == 1) ? 'Male' : 'Female'; ?></td>
 										<td><?php echo $e->edt_position; ?></td>

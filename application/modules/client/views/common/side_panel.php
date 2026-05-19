@@ -16,6 +16,9 @@
 					Intl. Advisory Board
 				</a>
 				</p> -->
+				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Under Development">
+					Intl. Advisory Board
+				</a>
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/editorial');?>"
             class="text-dark text-decoration-underline">Editorial Board</a></p>
           

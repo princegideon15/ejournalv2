@@ -19,7 +19,7 @@
 								To submit a manuscript and to check the status of your submission, kindly register a separate account on the eJournal’s Online Peer Review System (eReview). 
 
 							</p>							
-							<p>Don't have an account? <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/login#create-account');?>">Sign up here.</a></p>
+							<p>To Submit a manuscript and check the status of submission, please create an account <a class="fw-bold main-link text-decoration-underline" href="<?php echo base_url('/client/login#create-account');?>">Create an Account</a></p>
 						
 						 </div>
 						 <?php } ?>

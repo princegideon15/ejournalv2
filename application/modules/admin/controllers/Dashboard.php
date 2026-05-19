@@ -119,15 +119,17 @@ class Dashboard extends EJ_Controller {
 		$data = [];
 		$index = 1;
 		foreach($clients as $row){
+			$sex = ($row->sex == 1) ? 'Male' : (($row->sex == 2) ? 'Female' : 'N/A');
 			$data[] = [
 				$index++,
 				$row->art_title ?? '',
 				($row->title ? $row->title . '. ' : '') . ($row->first_name ?? '') . ' ' . ($row->last_name ?? ''),
-				$row->sex ?? '',
+				$sex,
 				$row->affiliation ?? '',
 				$row->country_name ?? '',
 				$row->email ?? '',
-				$row->dl_datetime ?? ''
+				$row->dl_datetime ?? '',
+				'ID:' . ($row->dl_art_id ?? '')
 			];
 		}
 		echo json_encode(['data' => $data]);
