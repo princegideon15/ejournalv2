@@ -4878,7 +4878,7 @@ class Manuscripts extends OPRS_Controller {
 			if($criteria_status == 2){
 				$post['man_status'] = 1; // Technical review: TeDeEd
 			} else if($editor_review_status == 10){
-				$post['man_status'] = 10; // Revision: Author (aligns with status_types table)
+				$post['man_status'] = 17; // Revised — return to editor who requested revision
 			} else {
 				$post['man_status'] = 2; // Desk review: EIC
 			}
