@@ -309,7 +309,7 @@ class Signup extends EJ_Controller {
 		<br><br>
 		NRCP Research Journal
 		<br><br><br>
-		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 		
 		// send email
 		$mail->Subject = 'Verify New Account';
@@ -335,11 +335,11 @@ class Signup extends EJ_Controller {
 											</div>');
 		$this->session->set_userdata('otp_ref_code', $ref_code);
 
-		if($nrcp_member == 3){
-			echo $link;
-		}else{
-			redirect($link);
-		}
+		// if($nrcp_member == 3){
+		// 	echo $link;
+		// }else{
+		// 	redirect($link);
+		// }
 	}
 
 	/**
