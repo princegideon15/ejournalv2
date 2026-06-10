@@ -126,7 +126,8 @@ class Login extends EJ_Controller {
 					if (password_verify($password, $validateUser[0]->password)) {
 						$this->Login_model->clear_login_attempts($email);
 
-						if ($this->Library_model->validate_device_token($user_id)) {
+						// OTP disabled after login — skip device token check
+						// if ($this->Library_model->validate_device_token($user_id)) {
 
 							$last_visit_date = $this->Login_model->get_last_visit_date($user_id);
 							$last_visit_date = new DateTime($last_visit_date[0]->date_created);
@@ -273,10 +274,10 @@ class Login extends EJ_Controller {
 
 							redirect('client/ejournal/');
 
-						}else{
-							//send otp to email
-							$this->send_login_otp($email);
-						}
+						// }else{
+						// 	//send otp to email
+						// 	$this->send_login_otp($email);
+						// }
 					}else{
 						$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->email));
 	
@@ -446,7 +447,7 @@ class Login extends EJ_Controller {
 		<br><br>
 		NRCP Research Journal
 		<br><br><br>
-		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 		
 		// send email
 		$mail->Subject = 'Login Verification';
@@ -874,7 +875,7 @@ class Login extends EJ_Controller {
 		<br><br>
 		NRCP Research Journal
 		<br><br><br>
-		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 		
 		// send email
 		$mail->Subject = 'Reset Password';

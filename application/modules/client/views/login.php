@@ -16,8 +16,8 @@
     // Initialize reCAPTCHA and store the widget ID
     window.onload = function () {
         recaptchaWidgetId_create_client_account = grecaptcha.render('captcha_client', {
-            'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA',
-          // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
+          //  'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA',
+           'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
             'callback': onRecaptchaSuccess,
             'expired-callback': onRecaptchaExpired
         });
@@ -27,9 +27,9 @@
        // Initialize reCAPTCHA and store the widget ID
     window.onload = function () {
         recaptchaWidgetId_create_author_account = grecaptcha.render('captcha_author', {
-             'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+            // 'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
             // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
-          // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
+           'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
             'callback': onRecaptchaSuccess,
             'expired-callback': onRecaptchaExpired
         });
@@ -38,9 +38,9 @@
        // Initialize reCAPTCHA and store the widget ID
     window.onload = function () {
         recaptchaWidgetId_create_author_account = grecaptcha.render('captcha_author', {
-            'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
+            //'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
             // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
-          // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
+           'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
             'callback': onRecaptchaSuccess,
             'expired-callback': onRecaptchaExpired
         });
