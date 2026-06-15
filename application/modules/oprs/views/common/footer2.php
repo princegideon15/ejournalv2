@@ -2072,7 +2072,7 @@
 				<div class="row">
 					<ul class="nav nav-tabs" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
-							<button class="nav-item nav-link active" role="tab" id="submit-assoc-review-tab" data-bs-toggle="tab" data-bs-target="#submit-assoc-review-tab-pane" type="button" aria-controls="submit-assoc-review-tab-pane" aria-selected="true"><span class="fa fa-check"></span> Submit Review</button>
+							<button class="nav-item nav-link active" role="tab" id="submit-assoc-review-tab" data-bs-toggle="tab" data-bs-target="#submit-assoc-review-tab-pane" type="button" aria-controls="submit-assoc-review-tab-pane" aria-selected="true"><span class="fa fa-check"></span> Endorse to Copy Editor</button>
 						</li>
 						<li class="nav-item" role="presentation">
 							<button class="nav-item nav-link" role="tab" id="select-cluster-tab" data-bs-toggle="tab" data-bs-target="#select-cluster-tab-pane" type="button" role="tab" aria-controls="select-cluster-tab-pane" aria-selected="true"><span class="fa fa-plus-square"></span> Endorse to Cluster Editors</button>
@@ -2305,12 +2305,12 @@
 </div>
 <!-- /.Cluster Editor Process  -->
 
-<!-- Technical Desk Editor on Revision - Copy Editor -->
+<!-- Last Handling Editor — review author revision -->
 <div class="modal fade" id="checkRevisionModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Manuscript Revision Matrix</h5>
+				<h5 class="modal-title" id="exampleModalLabel">Review Author Revision</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -2351,7 +2351,7 @@
 		</div>
 	</div>
 </div>
-<!-- /.Technical Desk Editor on Revision - Copy Editor -->
+<!-- /.Last Handling Editor — review author revision -->
 
 <!-- Copy Editor Process -->
 <div class="modal fade" id="copEdProcessModal">

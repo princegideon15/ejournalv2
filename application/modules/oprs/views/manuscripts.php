@@ -1126,15 +1126,8 @@
 															<div class="btn-groupx d-flex gap-1" role="group">
 																
 																<!-- TECHNICAL DESK EDITOR -->
-																<?php if (_UserRoleFromSession() == 5) { 
-																	if($m->man_status == 17){ ?>
-																		<!-- process manuscript -->
-																		<button type="button" class="btn btn-outline-primary"
-																			onclick="submit_revision_consolidation(<?php echo $m->row_id; ?>)" rel="tooltip"
-																			data-bs-placement="top" title=""><span
-																				class="fas fa-gear"></span></button>
-
-																	<?php } ?>
+																<?php if (_UserRoleFromSession() == 5) { ?>
+																	<!-- TeDeEd no longer reviews author revisions; last handling editor does -->
 																<?php } ?>
 
 																	<!-- view manuscript details -->
@@ -1581,6 +1574,12 @@
 															data-bs-toggle="modal" data-bs-target="#eicProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
+															<?php }else if($m->man_status == 17){ ?>
+															<button type="button" class="btn btn-outline-primary"
+															onclick="last_editor_revision_check(<?php echo $m->row_id; ?>)"
+															data-bs-toggle="modal" data-bs-target="#checkRevisionModal" rel="tooltip"
+															data-bs-placement="top" title="Review Author Revision"><span
+																class="fas fa-gear"></span></button>
 															<?php }else if($m->man_status == 8){ ?>
 															<!-- process manuscript -->
 															<button type="button" class="btn btn-outline-primary"
@@ -1605,12 +1604,19 @@
 
 													<!-- ASSOCIATE EDITOR -->
 													<?php if (_UserRoleFromSession() >= 7 && _UserRoleFromSession() <= 10) { ?>
-															<!-- process manuscript -->
+														<?php if($m->man_status == 3){ ?>
 															<button type="button" class="btn btn-outline-primary"
 															onclick="assoced_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>,<?php echo $m->man_revision_status; ?>)"
 															data-bs-toggle="modal" data-bs-target="#assocEdProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
+														<?php }else if($m->man_status == 17){ ?>
+															<button type="button" class="btn btn-outline-primary"
+															onclick="last_editor_revision_check(<?php echo $m->row_id; ?>)"
+															data-bs-toggle="modal" data-bs-target="#checkRevisionModal" rel="tooltip"
+															data-bs-placement="top" title="Review Author Revision"><span
+																class="fas fa-gear"></span></button>
+														<?php } ?>
 														
 															<!-- view manuscript details -->
 															<button type="button" class="btn btn-outline-secondary" rel="tooltip"
@@ -1626,6 +1632,12 @@
 															onclick="clued_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
 															data-bs-toggle="modal" data-bs-target="#cluEdProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
+																class="fas fa-gear"></span></button>
+														<?php }else if($m->man_status == 17){ ?>
+															<button type="button" class="btn btn-outline-primary"
+															onclick="last_editor_revision_check(<?php echo $m->row_id; ?>)"
+															data-bs-toggle="modal" data-bs-target="#checkRevisionModal" rel="tooltip"
+															data-bs-placement="top" title="Review Author Revision"><span
 																class="fas fa-gear"></span></button>
 														<?php } ?>
 														
