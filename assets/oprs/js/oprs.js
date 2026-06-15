@@ -10624,6 +10624,28 @@ function submit_revision_consolidation(id){
     $('#cons_man_id').val(id);
 }
 
+function last_editor_revision_check(man_id) {
+    $('#uploaded_revision_matrix').empty();
+    $('#submit_revision_endorsement_form')[0].reset();
+    $('#cons_man_id').val(man_id);
+
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_revision_matrix/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#uploaded_revision_matrix').append('<a href="'+ base_url + 'assets/oprs/uploads/revision_matrix/' + val.mtx_file +'" download>Download</a>');
+            });
+        }
+    });
+}
+
+function endorse_coped(man_id) {
+    last_editor_revision_check(man_id);
+}
+
 function checkOnlyOne(checkbox) {
     let name = $(checkbox).attr('name');
     const checkboxes = document.querySelectorAll('input[name="' + name + '"]');
