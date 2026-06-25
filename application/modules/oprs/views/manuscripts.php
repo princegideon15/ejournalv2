@@ -1626,20 +1626,20 @@
 													<!-- CLUSTER EDITOR -->
 													<?php if (_UserRoleFromSession() >= 11 && _UserRoleFromSession() <= 14) { ?>
 
-														<?php if($m->man_status == 4){ ?>
+														<?php if($m->man_status == 4 || $m->man_status == 17){ ?>
 															<!-- process manuscript -->
 															<button type="button" class="btn btn-outline-primary"
 															onclick="clued_process(<?php echo $m->row_id; ?>,'<?php echo $mantitle; ?>',<?php echo $m->man_status; ?>)"
 															data-bs-toggle="modal" data-bs-target="#cluEdProcessModal" rel="tooltip"
 															data-bs-placement="top" title="Process"><span
 																class="fas fa-gear"></span></button>
-														<?php }else if($m->man_status == 17){ ?>
+														<!-- <?php }else if($m->man_status == 17){ ?>
 															<button type="button" class="btn btn-outline-primary"
 															onclick="last_editor_revision_check(<?php echo $m->row_id; ?>)"
 															data-bs-toggle="modal" data-bs-target="#checkRevisionModal" rel="tooltip"
 															data-bs-placement="top" title="Review Author Revision"><span
 																class="fas fa-gear"></span></button>
-														<?php } ?>
+														<?php } ?> -->
 														
 														<!-- view manuscript details -->
 														<button type="button" class="btn btn-outline-secondary" rel="tooltip"

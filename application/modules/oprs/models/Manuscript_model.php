@@ -132,7 +132,9 @@ class Manuscript_model extends CI_Model {
 			$oprs->where('edit_status', NULL);
 			$oprs->where('man_status >=', 4);
 			$oprs->group_end();
+			$oprs->or_where('e.edit_status', 10);
 			$oprs->group_end();
+			$oprs->group_by('m.row_id');
 		}else if($role_id == 16){ // peer reviwer
 				$oprs->select('m.*,s.scr_status, s.date_reviewed, r.rev_hide_auth, scr_nda');
 				$oprs->from($this->scores . ' s');

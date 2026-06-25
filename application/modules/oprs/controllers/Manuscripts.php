@@ -4546,6 +4546,14 @@ class Manuscripts extends OPRS_Controller {
 
 			// save process for auto reminder email notificiation
 			$email_contents = $this->Email_model->get_email_content(13);
+
+			// Return route: cluster editor who requested revision
+			$handler_process['ps_man_id'] = $man_id;
+			$handler_process['ps_processor_id'] = _UserIdFromSession();
+			$handler_process['ps_role_id'] = _UserRoleFromSession();
+			$handler_process['ps_duration'] = $email_contents[0]->enc_process_duration;
+			$this->Review_model->save_process_status(array_filter($handler_process));
+
 			$process['ps_man_id'] = $man_id;
 			$process['ps_processor_id'] = $man_user_id;
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
@@ -4833,6 +4841,15 @@ class Manuscripts extends OPRS_Controller {
 	public function get_last_editors_review($id){
 		$output = $this->Review_model->get_last_editors_review($id);
 		echo json_encode($output);
+	}
+
+	public function get_revision_handling_editor($id){
+		$output = $this->Review_model->get_revision_handling_editor($id);
+		if ($output) {
+			echo json_encode([$output]);
+		} else {
+			echo json_encode([]);
+		}
 	}
 
 	public function get_suggested_peer($id){
@@ -5132,8 +5149,9 @@ class Manuscripts extends OPRS_Controller {
 
 		}
 		else if($revision_status == 1 || $editor_review_status == 10){
-			$get_last_processor_role_id = $this->Review_model->get_last_processor_role_id($man_id);
-			$last_editor_id = $this->Review_model->get_last_handling_editor_id($man_id);
+			$handler = $this->Review_model->get_revision_handling_editor($man_id);
+			$get_last_processor_role_id = $handler ? $handler->usr_role : $this->Review_model->get_last_processor_role_id($man_id);
+			$last_editor_id = $handler && !empty($handler->edit_usr_id) ? $handler->edit_usr_id : $this->Review_model->get_last_handling_editor_id($man_id);
 
 			if ($get_last_processor_role_id == 6) {
 				$editor = 'Editor-in-Chief';
@@ -5323,6 +5341,12 @@ class Manuscripts extends OPRS_Controller {
 		
 		// get manuscript info
 		$output = $this->Review_model->get_manus_author_info($man_id);
+
+		$manuscript = '';
+		$title = '';
+		$author = '';
+		$email = '';
+		$man_user_id = null;
 
 		foreach ($output as $key => $value) {
 			$manuscript = $value->man_title;

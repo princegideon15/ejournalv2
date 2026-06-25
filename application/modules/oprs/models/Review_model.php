@@ -422,36 +422,28 @@ public function get_manuscript_by_id($man_id) {
 		return $query->result();
 	}
 
-	public function get_last_processor_role_id($man_id){
+	public function get_revision_handling_editor($man_id){
 		$editor_roles = [6, 7, 8, 9, 10, 11, 12, 13, 14];
 		$oprs = $this->load->database('dboprs', TRUE);
 
-		$oprs->select('u.usr_role');
-		$oprs->from($this->process_status . ' ps');
-		$oprs->join($this->oprs_users . ' u', 'u.usr_id = ps.ps_processor_id');
-		$oprs->where('ps.ps_man_id', $man_id);
+		// Editor who requested revision (desk review → revise)
+		$oprs->select('e.edit_usr_id, u.usr_role, e.edit_status, e.edit_remarks');
+		$oprs->from($this->editors_review . ' e');
+		$oprs->join($this->oprs_users . ' u', 'e.edit_usr_id = u.usr_id');
+		$oprs->where('e.edit_man_id', $man_id);
+		$oprs->where('e.edit_status', 10);
 		$oprs->where_in('u.usr_role', $editor_roles);
-		$oprs->order_by('ps.id', 'DESC');
+		$oprs->order_by('e.last_updated', 'DESC');
+		$oprs->order_by('e.date_created', 'DESC');
 		$oprs->limit(1);
 		$result = $oprs->get()->row();
 		if ($result) {
-			return $result->usr_role;
+			return $result;
 		}
 
+		// Most recently assigned handling editor
 		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('ps.ps_role_id');
-		$oprs->from($this->process_status . ' ps');
-		$oprs->where('ps.ps_man_id', $man_id);
-		$oprs->where_in('ps.ps_role_id', $editor_roles);
-		$oprs->order_by('ps.id', 'DESC');
-		$oprs->limit(1);
-		$result = $oprs->get()->row();
-		if ($result && $result->ps_role_id) {
-			return $result->ps_role_id;
-		}
-
-		$oprs = $this->load->database('dboprs', TRUE);
-		$oprs->select('u.usr_role');
+		$oprs->select('e.edit_usr_id, u.usr_role');
 		$oprs->from($this->editors_review . ' e');
 		$oprs->join($this->oprs_users . ' u', 'e.edit_usr_id = u.usr_id');
 		$oprs->where('e.edit_man_id', $man_id);
@@ -459,15 +451,13 @@ public function get_manuscript_by_id($man_id) {
 		$oprs->order_by('e.date_created', 'DESC');
 		$oprs->limit(1);
 		$result = $oprs->get()->row();
+		if ($result) {
+			return $result;
+		}
 
-		return $result ? $result->usr_role : 6;
-	}
-
-	public function get_last_handling_editor_id($man_id){
-		$editor_roles = [6, 7, 8, 9, 10, 11, 12, 13, 14];
+		// Process-status fallback
 		$oprs = $this->load->database('dboprs', TRUE);
-
-		$oprs->select('ps.ps_processor_id');
+		$oprs->select('ps.ps_processor_id as edit_usr_id, u.usr_role');
 		$oprs->from($this->process_status . ' ps');
 		$oprs->join($this->oprs_users . ' u', 'u.usr_id = ps.ps_processor_id');
 		$oprs->where('ps.ps_man_id', $man_id);
@@ -475,15 +465,41 @@ public function get_manuscript_by_id($man_id) {
 		$oprs->order_by('ps.id', 'DESC');
 		$oprs->limit(1);
 		$result = $oprs->get()->row();
-		if ($result && $result->ps_processor_id) {
-			return $result->ps_processor_id;
+		if ($result && $result->edit_usr_id) {
+			return $result;
 		}
 
-		$last_review = $this->get_last_editors_review($man_id);
-		if (!empty($last_review)) {
-			return $last_review[0]->edit_usr_id;
+		$oprs = $this->load->database('dboprs', TRUE);
+		$oprs->select('ps.ps_role_id as usr_role');
+		$oprs->from($this->process_status . ' ps');
+		$oprs->where('ps.ps_man_id', $man_id);
+		$oprs->where_in('ps.ps_role_id', $editor_roles);
+		$oprs->order_by('ps.id', 'DESC');
+		$oprs->limit(1);
+		$result = $oprs->get()->row();
+		if ($result && $result->usr_role) {
+			$row = new stdClass();
+			$row->edit_usr_id = null;
+			$row->usr_role = $result->usr_role;
+			return $row;
 		}
 
+		return null;
+	}
+
+	public function get_last_processor_role_id($man_id){
+		$handler = $this->get_revision_handling_editor($man_id);
+		if ($handler && $handler->usr_role) {
+			return $handler->usr_role;
+		}
+		return 6;
+	}
+
+	public function get_last_handling_editor_id($man_id){
+		$handler = $this->get_revision_handling_editor($man_id);
+		if ($handler && !empty($handler->edit_usr_id)) {
+			return $handler->edit_usr_id;
+		}
 		return null;
 	}
 }
