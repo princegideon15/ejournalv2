@@ -6142,7 +6142,11 @@ $(document).ready(function() {
         errorClass: 'text-danger',
         rules: {
             man_matrix : {
-                required: true,
+                required: {
+                    depends: function() {
+                        return $('#div_man_matrix').is(':visible');
+                    }
+                },
                 extension: "pdf|doc|docx",
                 filesize : 20000000,
             },
@@ -10624,6 +10628,28 @@ function submit_revision_consolidation(id){
     $('#cons_man_id').val(id);
 }
 
+function last_editor_revision_check(man_id) {
+    $('#uploaded_revision_matrix').empty();
+    $('#submit_revision_endorsement_form')[0].reset();
+    $('#cons_man_id').val(man_id);
+
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_revision_matrix/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#uploaded_revision_matrix').append('<a href="'+ base_url + 'assets/oprs/uploads/revision_matrix/' + val.mtx_file +'" download>Download</a>');
+            });
+        }
+    });
+}
+
+function endorse_coped(man_id) {
+    last_editor_revision_check(man_id);
+}
+
 function checkOnlyOne(checkbox) {
     let name = $(checkbox).attr('name');
     const checkboxes = document.querySelectorAll('input[name="' + name + '"]');
@@ -10637,12 +10663,19 @@ function upload_revision(man_id){
     $('#uploadRevisionModal').modal('toggle');
     $('#revision_consolidations').empty();
     $('#revision_remarks').text('');
+    $('#criteria_review_result').addClass('d-none');
+    $('#criteria_review_result_value').text('');
+    $('#revision_consolidations_row').hide();
+    $('#revision_consolidations').empty();
+    $('#revision_matrix_template').show();
+    $('#div_man_matrix').show();
     $('#manuscript_revision_form #man_id').val(man_id);
-    
+    $('#manuscript_revision_form button[type="submit"]').prop('disabled', true);
+
     // Reset form fields
-    $('#criteria_status').val('');
-    $('#editor_review_status').val('');
-    $('#revision_status').val('');
+    $('#criteria_status').val('0');
+    $('#editor_review_status').val('0');
+    $('#revision_status').val('0');
     
     // State object to collect all revision information
     var revisionState = {
@@ -10655,6 +10688,14 @@ function upload_revision(man_id){
         consolidationFile: null,
         remarks: [] // Array to collect all remarks
     };
+
+    var revisionAjaxCount = 0;
+    function checkRevisionLoaded() {
+        revisionAjaxCount++;
+        if (revisionAjaxCount === 3) {
+            $('#manuscript_revision_form button[type="submit"]').prop('disabled', false);
+        }
+    }
 
     // Function to apply revision state with proper priority
     function applyRevisionState(state) {
@@ -10736,7 +10777,6 @@ function upload_revision(man_id){
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            // console.log("🚀 ~ upload_revision ~ data:", data)
             $.each(data, function(key, val){
                 if(val.tr_final == 2){
                     revisionState.criteriaFailed = true;
@@ -10747,13 +10787,14 @@ function upload_revision(man_id){
                 }
             });
             applyRevisionState(revisionState);
-        }
+        },
+        complete: checkRevisionLoaded
     });
 
-    // get editors review if for revision
+    // get handling editor revision request if for revision
     $.ajax({
         type: "GET",
-        url: base_url + "oprs/manuscripts/get_last_editors_review/"+man_id,
+        url: base_url + "oprs/manuscripts/get_revision_handling_editor/"+man_id,
         dataType: "json",
         crossDomain: true,
         success: function(data) {
@@ -10767,7 +10808,8 @@ function upload_revision(man_id){
                 }
             });
             applyRevisionState(revisionState);
-        }
+        },
+        complete: checkRevisionLoaded
     });
     
     // get consolidation
@@ -10777,7 +10819,6 @@ function upload_revision(man_id){
         dataType: "json",
         crossDomain: true,
         success: function(data) {
-            console.log(data);
             $.each(data, function(key, val){    
                 // technical desk editor consolidate peer review results
                 revisionState.consolidationStatus = val.cons_status;
@@ -10789,7 +10830,8 @@ function upload_revision(man_id){
                 }
             });
             applyRevisionState(revisionState);
-        }
+        },
+        complete: checkRevisionLoaded
     });
 }
 

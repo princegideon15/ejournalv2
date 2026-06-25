@@ -127,7 +127,7 @@ class Forgot extends OPRS_Controller {
 			<br><br>
 			NRCP Research Journal
 			<br><br><br>
-			<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+			<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 			
 			$mail->Body = $emailBody;
 			$mail->IsHTML(true);
@@ -269,7 +269,7 @@ class Forgot extends OPRS_Controller {
 						<br><br>
 						NRCP Research Journal
 						<br><br><br>
-						<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+						<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 						
 						$mail->Body = $emailBody;
 						$mail->IsHTML(true);

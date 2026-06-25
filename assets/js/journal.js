@@ -43,25 +43,22 @@ var recaptchaWidgetId_logout; // recaptcha widget
 
 $(document).ready(function () {
 	
-    // get user account info
+    // get user account info (async to avoid blocking first paint)
     $.ajax({
         type: "GET",
         url: base_url + "oprs/user/get_account_info",
-        async:false,
         crossDomain: true,
-        dataType: 'json',
-        success: function(data) {
-            $.each(data, function(key, val){
-                $('#form_update_account #usr_username').val(val.usr_username);
-                $('#form_update_account #usr_full_name').val(val.usr_full_name);
-                $('#form_update_account #usr_sex').val(val.usr_sex);
-                $('#form_update_account #usr_contact').val(val.usr_contact);
-            });
-        },
-        error: function(xhr, status, error) {
-        reject(error);
-        }
-    }); 
+        dataType: 'json'
+    }).done(function(data) {
+        $.each(data, function(key, val){
+            $('#form_update_account #usr_username').val(val.usr_username);
+            $('#form_update_account #usr_full_name').val(val.usr_full_name);
+            $('#form_update_account #usr_sex').val(val.usr_sex);
+            $('#form_update_account #usr_contact').val(val.usr_contact);
+        });
+    }).fail(function(xhr, status, error) {
+        console.error('Failed to load account info:', error);
+    });
 
 	
 	// validate file size before uploading
@@ -76,54 +73,41 @@ $(document).ready(function () {
 		return element.files.length > 0 && element.files[0].size <= param;
 	}, `File size exceeds the allowed limit.`);
 
-
-	 // get user access token
-	 accessToken = $.ajax({
+	 // get user access token (async to avoid blocking)
+	 $.ajax({
         type: "GET",
         url: base_url + "oprs/login/get_access_token/",
-        async:false,
-        crossDomain: true,
-        success: function(data) {
-            if(data != 0){
-                return data;
-            }
-        },
-        error: function(xhr, status, error) {
-        reject(error);
+        crossDomain: true
+    }).done(function(data) {
+        accessToken = $.trim(data);
+        let idleTime = 0;
+
+        if (accessToken != 0) {
+            $(document).on('mousemove keydown scroll', function() {
+                idleTime = 0;
+            });
+
+            let timerInterval = setInterval(function() {
+                idleTime += 1;
+
+                if (idleTime >= 3600) { // 60 minutes in seconds
+                    clearInterval(timerInterval);
+                    destroyUserSession();
+
+                    Swal.fire({
+                        title: "Session Expired",
+                        text: "You have been idle for 20 minutes. Please log in again.",
+                        icon: "info",
+                        confirmButtonColor: "#0c6bcb",
+                    }).then(function () {
+                        window.location = base_url + "oprs/login";
+                    });
+                }
+            }, 1000);
         }
-    }); 
-
-    accessToken = (accessToken.responseText).trim();
-	
-	
-    let idleTime = 0;
-
-    if(accessToken != 0){
-      $(document).on('mousemove keydown scroll', function() {
-          idleTime = 0;
-      });
-  
-      let timerInterval = setInterval(function() {
-          idleTime += 1;
-          
-          if (idleTime >= 3600) { // 20 minutes in seconds
-              // Trigger logout or other actions
-              clearInterval(timerInterval); // Stop the timer
-  
-              destroyUserSession();
-  
-              Swal.fire({
-                title: "Session Expired",
-                text: "You have been idle for 20 minutes. Please log in again.",
-                icon: "info",
-                confirmButtonColor: "#0c6bcb",
-              
-              }).then(function () {
-                window.location = base_url + "oprs/login";
-              });
-          }
-      }, 1000); // Check every 1 second
-    }
+    }).fail(function(xhr, status, error) {
+        console.error('Failed to load access token:', error);
+    });
 	// feedback suggestion box character limit
 	let $textArea = $("#fb_suggest_ui");
 	let $charCount = $("#char_count_ui");
@@ -384,38 +368,52 @@ $(document).ready(function () {
         }
     });
 
-	tinymce.init({
-		selector: '#enc_content',
+	const initializedEditors = {};
+	function initEditor(selector, config) {
+		if (initializedEditors[selector] || !$(selector).length) {
+			return;
+		}
+
+		tinymce.init(Object.assign({ selector: selector }, config));
+		initializedEditors[selector] = true;
+	}
+
+	// Initialize only the currently visible dashboard editor.
+	initEditor('#enc_content', {
 		forced_root_block: false,
 		height: "400",
-		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
-		menubar: false // Optional: Hide the menubar if not needed
+		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link',
+		menubar: false
 	});
 
-	tinymce.init({
-		selector: '#home_description',
-		forced_root_block: false,
-		height: "400",
-		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
-		menubar: false // Optional: Hide the menubar if not needed
+	// Lazy init heavy editors when their tabs are opened.
+	$('#v-pills-home-tab').on('shown.bs.tab', function () {
+		initEditor('#home_description', {
+			forced_root_block: false,
+			height: "400",
+			toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link',
+			menubar: false
+		});
 	});
 
-	tinymce.init({
-		selector: '#ep_content',
- 		content_css: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
-		forced_root_block: false,
-		height: "900",
-		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
-		menubar: false // Optional: Hide the menubar if not needed,
+	$('#v-pills-policy-tab').on('shown.bs.tab', function () {
+		initEditor('#ep_content', {
+			content_css: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+			forced_root_block: false,
+			height: "900",
+			toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link',
+			menubar: false
+		});
 	});
 
-	tinymce.init({
-		selector: '#gd_content',
-		forced_root_block: false,
-		height: "900",
-		plugins: 'link',
-		toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link', // Add alignment buttons
-		menubar: false // Optional: Hide the menubar if not needed
+	$('#v-pills-guidelines-tab').on('shown.bs.tab', function () {
+		initEditor('#gd_content', {
+			forced_root_block: false,
+			height: "900",
+			plugins: 'link',
+			toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link',
+			menubar: false
+		});
 	});
 
 	$('#table-registry').DataTable();
@@ -424,15 +422,25 @@ $(document).ready(function () {
 	var _year; // journal year
 	var _jor; // journal id
 	var _ref; // user account status
-	//get members info
-	$.ajax({
-		type: "GET",
-		url: base_url + "oprs/manuscripts/members/",
-		dataType: "json",
-		crossDomain: true,
-		success: function (data) {
-			$.each(data, function (key, val) {
+	var membersLoaded = false;
+	var membersRequest = null;
 
+	function ensureMembersLoaded() {
+		if (membersLoaded) {
+			return $.Deferred().resolve().promise();
+		}
+
+		if (membersRequest) {
+			return membersRequest;
+		}
+
+		membersRequest = $.ajax({
+			type: "GET",
+			url: base_url + "oprs/manuscripts/members/",
+			dataType: "json",
+			crossDomain: true
+		}).done(function (data) {
+			$.each(data, function (key, val) {
 				mems.push(val.pp_first_name + ' ' + val.pp_middle_name + ' ' + val.pp_last_name);
 				mem_mail.push(val.pp_email);
 				mem_num.push(val.pp_contact);
@@ -442,12 +450,23 @@ $(document).ready(function () {
 				mem_aff.push(val.bus_name);
 				mem_prf.push(array_prf[val.pp_title]);
 			});
+			membersLoaded = true;
+		}).fail(function (xhr, status, error) {
+			console.error('Failed to load members:', error);
+		});
 
-		}
+		return membersRequest;
+	}
+
+	window.ensureMembersLoaded = ensureMembersLoaded;
+
+	$(document).on('focus', '#art_author_p, #art_author', function () {
+		ensureMembersLoaded().done(function () {
+			if ($('#art_author_p').length) {
+				autocomplete_acoa(document.getElementById("art_author_p"), mem_exp, '#art_affiliation_p', '#art_email_p');
+			}
+		});
 	});
-
-	if ($('#art_author_p').length)
-		autocomplete_acoa(document.getElementById("art_author_p"), mem_exp, '#art_affiliation_p', '#art_email_p');
 
 	// get new messages from another user
 	// newMessages();
@@ -485,6 +504,12 @@ $(document).ready(function () {
 
 	// set editableSelect plugin effects to slide
 	// $('#edt_country ,#editorial_modal#edt_country').editableSelect({ effects: 'slide' });
+
+	function initializeDashboardTables() {
+		if (window.__ejTablesInitialized) {
+			return;
+		}
+		window.__ejTablesInitialized = true;
 
 	// check and display export button if privilege to export is enabled 
 	if (prv_exp == 0) {
@@ -963,6 +988,13 @@ $(document).ready(function () {
 			// "order": [
 			// 	[3, "desc"]
 			// ],
+			destroy: true,
+			serverSide: false,
+			ajax: {
+				url: base_url + 'admin/dashboard/get_clients_dt',
+				type: 'POST',
+				dataSrc: 'data'
+			},
 			retrieve: true,
 			"columnDefs": [{
 				"targets": 0,
@@ -1454,6 +1486,18 @@ $(document).ready(function () {
         alt.draw(); // Redraw the table with the new filter applied
     });
 
+	}
+
+	// Defer expensive DataTable setup to idle time for faster first paint.
+	if ('requestIdleCallback' in window) {
+		window.requestIdleCallback(initializeDashboardTables, { timeout: 1200 });
+	} else {
+		setTimeout(initializeDashboardTables, 300);
+	}
+
+	// expose init for actions that need DataTables immediately
+	window.ensureDashboardTablesInitialized = initializeDashboardTables;
+
 
 	// show create journal tab from dashboard shortcut
 	$('#btn-create-journal').click(function (e) {
@@ -1522,6 +1566,9 @@ $(document).ready(function () {
 				required: true,
 			},
 			edt_email: {
+				required: true,
+			},
+			edt_duration:{
 				required: true,
 			},
 			edt_sex: {
@@ -4005,6 +4052,9 @@ function view_articles(id, vol, iss, mos, year) {
  * @return  {void}        
  */
 function get_citees(data) {
+	if (typeof window.ensureDashboardTablesInitialized === 'function') {
+		window.ensureDashboardTablesInitialized();
+	}
 	$('#v-pills-citees-list-tab').trigger('click');
 	$('#table-citees').DataTable().search('ID:' + data).draw();
 }
@@ -4017,6 +4067,9 @@ function get_citees(data) {
  * @return  {void}        
  */
 function get_client_info(data) {
+	if (typeof window.ensureDashboardTablesInitialized === 'function') {
+		window.ensureDashboardTablesInitialized();
+	}
 	$('#v-pills-client-list-tab').trigger('click');
 	$('#table-clients').DataTable().search('ID:' + data).draw();
 }
@@ -4029,6 +4082,9 @@ function get_client_info(data) {
  * @return  {void} 
  */
 function get_hits_info(data) {
+	if (typeof window.ensureDashboardTablesInitialized === 'function') {
+		window.ensureDashboardTablesInitialized();
+	}
 	$('#v-pills-viewers-list-tab').trigger('click');
 	$('#table-viewers').DataTable().search('ID:' + data).draw();
 }
@@ -4103,7 +4159,13 @@ function add_article(year, jor_id) {
 function edit_article(id) {
 	$('#coa_list').empty();
 
-	autocomplete_acoa(document.getElementById("art_author"), mem_exp, '#art_affiliation', '#art_email');
+	if (typeof window.ensureMembersLoaded === 'function') {
+		window.ensureMembersLoaded().done(function () {
+			autocomplete_acoa(document.getElementById("art_author"), mem_exp, '#art_affiliation', '#art_email');
+		});
+	} else {
+		autocomplete_acoa(document.getElementById("art_author"), mem_exp, '#art_affiliation', '#art_email');
+	}
 
 	$.ajax({
 		type: "POST",
@@ -5037,8 +5099,8 @@ function logout(){
     $('#feedbackModal').modal('toggle');
     recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
 		// 'sitekey': '6LcTEV8qAAAAACVwToj7gI7BRdsoEEhJCnnFkWC6', // gp site key
-		'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
-	  // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
+		//'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // prod key
+	   'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
         'callback': onRecaptchaSuccess,
         'expired-callback': onRecaptchaExpired
     });

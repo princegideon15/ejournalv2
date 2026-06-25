@@ -33,6 +33,8 @@
 										<li><a class="text-darkk">Communications</a></li>
                     <li><a class="text-darkk">Open Access Policy</a></li>
                     <li><a class="text-darkk">Copyright Policy</a></li>
+										<li><a class="text-darkk">Licensing</a></li>
+										<li><a class="text-darkk">Article Processing Charge (APC) Policy</a></li>
                     <li><a class="text-darkk">Retraction Policy</a></li>
                     <li><a class="text-darkk">Digital Archiving and Preservation Policy</a></li>
                     <ul>
