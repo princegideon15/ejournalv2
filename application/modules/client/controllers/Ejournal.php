@@ -48,7 +48,7 @@ class Ejournal extends EJ_Controller {
 		// store visitor information
 		ip_info(); 
 		
-		$journals = 
+		// $journals = 
 
 		//data to display
 		$data['volumes'] = $this->Client_journal_model->get_journals();
@@ -60,6 +60,7 @@ class Ejournal extends EJ_Controller {
 		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
 		// $data['divisions'] = $this->Client_journal_model->getDivisions();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
+		$data['abstract_hits'] = $this->Client_journal_model->all_hits();
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/journal";

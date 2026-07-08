@@ -1903,6 +1903,7 @@ class Manuscripts extends OPRS_Controller {
 		}
 
 		$mail->AddBCC('gerard_balde@yahoo.com');
+		$mail->AddBCC('rannaze123@gmail.com');
 
 		// update manuscript status
 		$man['last_updated'] = date('Y-m-d H:i:s');
@@ -3649,7 +3650,7 @@ class Manuscripts extends OPRS_Controller {
 
 			$mail->AddAddress($next_processor_email);
 			$mail->AddBCC('gerard_balde@yahoo.com');
-			
+			$mail->AddBCC('rannaze123@gmail.com');
 		}else{ // add peer reviwers
 			$track['trk_description'] = 'Suggested Peer Reviewers';
 			$track['trk_remarks'] = $remarks;
@@ -4256,7 +4257,7 @@ class Manuscripts extends OPRS_Controller {
 
 			$mail->AddAddress($next_processor_email);
 			$mail->AddBCC('gerard_balde@yahoo.com');
-			
+			$mail->AddBCC('rannaze123@gmail.com');
 		}else{ // add peer reviwers
 			$track['trk_description'] = 'Suggested Peer Reviewers';
 			$track['trk_remarks'] = $remarks;
@@ -4545,6 +4546,14 @@ class Manuscripts extends OPRS_Controller {
 
 			// save process for auto reminder email notificiation
 			$email_contents = $this->Email_model->get_email_content(13);
+
+			// Return route: cluster editor who requested revision
+			$handler_process['ps_man_id'] = $man_id;
+			$handler_process['ps_processor_id'] = _UserIdFromSession();
+			$handler_process['ps_role_id'] = _UserRoleFromSession();
+			$handler_process['ps_duration'] = $email_contents[0]->enc_process_duration;
+			$this->Review_model->save_process_status(array_filter($handler_process));
+
 			$process['ps_man_id'] = $man_id;
 			$process['ps_processor_id'] = $man_user_id;
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
@@ -4834,6 +4843,15 @@ class Manuscripts extends OPRS_Controller {
 		echo json_encode($output);
 	}
 
+	public function get_revision_handling_editor($id){
+		$output = $this->Review_model->get_revision_handling_editor($id);
+		if ($output) {
+			echo json_encode([$output]);
+		} else {
+			echo json_encode([]);
+		}
+	}
+
 	public function get_suggested_peer($id){
 		$output = $this->Review_model->get_suggested_peer($id);
 		echo json_encode($output);
@@ -4870,18 +4888,14 @@ class Manuscripts extends OPRS_Controller {
 		// $current_manuscript = $this->Manuscript_model->get_manuscript_by_id($man_id);
 		// $current_status = $current_manuscript['man_status'];
 
-		if ($revision_status == 1) {
-    			$post['man_status'] = 17;
+		if ($criteria_status == 2) {
+			$post['man_status'] = 1; // Criteria failed — back to TeDeEd
+		} else if ($revision_status == 1 || $editor_review_status == 10) {
+			// Author uploaded revision — route to last handling editor (EIC/AssocEd/CluEd)
+			$post['man_status'] = 17;
 		} else {
-			// Priority: criteria_status > editor_review_status > default
-			if($criteria_status == 2){
-				$post['man_status'] = 1; // Technical review: TeDeEd
-			} else if($editor_review_status == 10){
-				$post['man_status'] = 10; // Revision: Author (aligns with status_types table)
-			} else {
-				$post['man_status'] = 2; // Desk review: EIC
-			}
-		 }
+			$post['man_status'] = 8; // Post-copy-editor final revision — EIC final review
+		}
 		if ($revision_status == 1) {
    			$post['man_revision_status'] = 1;
 		} else if ($criteria_status == 2 || $editor_review_status == 10) {
@@ -5124,48 +5138,47 @@ class Manuscripts extends OPRS_Controller {
 			$email = $value->man_email;
 		}
 
-		if($revision_status == 1){
-			$get_last_processor_role_id = $this->Review_model->get_last_processor_role_id($man_id);
-			//TODO:check if last process is valid
-			$editor = ($get_last_processor_role_id == '6') ? 'Editor-in-Chief' : 'Associate Editor';
-
-			$next_processor_info = $this->User_model->get_processor_by_role($get_last_processor_role_id);
-			// save process for auto reminder email notificiation
-			$email_contents = $this->Email_model->get_email_content(14);
-			$process['ps_man_id'] = $man_id;
-			$process['ps_role_id'] = $get_last_processor_role_id; //change to next processor eic or assoced
-			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
-			$this->Review_model->save_process_status(array_filter($process));
-
-		}
-		else if($criteria_status == 2){
+		if($criteria_status == 2){
 			$next_processor_info = $this->User_model->get_processor_by_role(5);
-			// get email notification content
-			$email_contents = $this->Email_model->get_email_content(14);
-				
-			// save process for auto reminder email notificiation
 			$email_contents = $this->Email_model->get_email_content(14);
 			$editor = "Technical Desk Editor";
 			$process['ps_man_id'] = $man_id;
 			$process['ps_role_id'] = 5;
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
 			$this->Review_model->save_process_status(array_filter($process));
-		}
-		else if($editor_review_status == 10){
-			// After editorial review - not revised accordingly, return to editor who did desk review
-			$get_last_processor_role_id = $this->Review_model->get_last_processor_role_id($man_id);
-			//TODO:check if last process is valid
-			$editor = ($get_last_processor_role_id == '6') ? 'Editor-in-Chief' : 'Associate Editor';
 
-			$next_processor_info = $this->User_model->get_processor_by_role($get_last_processor_role_id);
-			// save process for auto reminder email notificiation
+		}
+		else if($revision_status == 1 || $editor_review_status == 10){
+			$handler = $this->Review_model->get_revision_handling_editor($man_id);
+			$get_last_processor_role_id = $handler ? $handler->usr_role : $this->Review_model->get_last_processor_role_id($man_id);
+			$last_editor_id = $handler && !empty($handler->edit_usr_id) ? $handler->edit_usr_id : $this->Review_model->get_last_handling_editor_id($man_id);
+
+			if ($get_last_processor_role_id == 6) {
+				$editor = 'Editor-in-Chief';
+			} else if ($get_last_processor_role_id >= 11) {
+				$editor = 'Cluster Editor';
+			} else {
+				$editor = 'Associate Editor';
+			}
+
+			if ($last_editor_id) {
+				$next_processor_info = $this->User_model->get_processor_by_id($last_editor_id);
+			} else {
+				$next_processor_info = $this->User_model->get_processor_by_role($get_last_processor_role_id);
+			}
+
 			$email_contents = $this->Email_model->get_email_content(14);
 			$process['ps_man_id'] = $man_id;
-			$process['ps_role_id'] = $get_last_processor_role_id; // route back to editor who did desk review
+			$process['ps_role_id'] = $get_last_processor_role_id;
+			if ($last_editor_id) {
+				$process['ps_processor_id'] = $last_editor_id;
+			}
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
 			$this->Review_model->save_process_status(array_filter($process));
+
 		}
 		else{
+			// Post-copy-editor author final revision → EIC final review
 			$next_processor_info = $this->User_model->get_processor_by_role(6);
 			// get email notification content
 			$email_contents = $this->Email_model->get_email_content(15);
@@ -5185,7 +5198,7 @@ class Manuscripts extends OPRS_Controller {
 
 		$mail->AddAddress($next_processor_email);
 		$mail->AddBCC('gerard_balde@yahoo.com');
-
+		$mail->AddBCC('rannaze123@gmail.com');
 		foreach($email_contents as $row){
 			$email_subject = $row->enc_subject;
 			$email_contents = $row->enc_content;
@@ -5282,21 +5295,23 @@ class Manuscripts extends OPRS_Controller {
 		$man_id = $this->input->post('cons_man_id', true);
 		$status = $this->input->post('cons_check_revise', TRUE);
 		$post = array(); $where = array();
+		$remarks = $this->input->post('cons_remarks', true);
 
-		$where['cons_man_id'] = $man_id; 
-		$where['cons_usr_id'] = _UserIdFromSession(); 
-		$post['cons_remarks'] = $this->input->post('cons_remarks', true);
-		$post['cons_status'] = $status;
-		$post['last_updated'] = date('Y-m-d H:i:s');
+		// Last handling editor reviews author revision (workflow: need revision? yes/no)
+		$consolidation = $this->Review_model->get_consolidation($man_id);
+		if (!empty($consolidation)) {
+			$where['cons_man_id'] = $man_id;
+			$post['cons_remarks'] = $remarks;
+			$post['cons_status'] = $status;
+			$post['last_updated'] = date('Y-m-d H:i:s');
+			$this->Review_model->update_consolidations(array_filter($post), $where);
+		}
 
-		$this->Review_model->update_consolidations(array_filter($post), $where);
-
-		
-		// update process status
+		// update process status for current handling editor
 		$process['ps_status'] = 1;
 		$process['ps_action_date'] = date('Y-m-d H:i:s');
 		$where_process['ps_man_id'] = $man_id;
-		$where_process['ps_role_id'] = 5;
+		$where_process['ps_processor_id'] = _UserIdFromSession();
 		$where_process['ps_status'] = 0;
 		$this->Review_model->update_process_status(array_filter($process), $where_process);
 		$process = array(); $where_process = array();
@@ -5327,6 +5342,12 @@ class Manuscripts extends OPRS_Controller {
 		// get manuscript info
 		$output = $this->Review_model->get_manus_author_info($man_id);
 
+		$manuscript = '';
+		$title = '';
+		$author = '';
+		$email = '';
+		$man_user_id = null;
+
 		foreach ($output as $key => $value) {
 			$manuscript = $value->man_title;
 			$title = $value->man_author_title;
@@ -5338,9 +5359,10 @@ class Manuscripts extends OPRS_Controller {
 		$where = array();
 
 		// email notification condition
-		if($status == 1){ // for revision
+		if($status == 1){ // need revision — return to author
 			$man['man_status'] = 10;
-			$track['trk_description'] = 'For Revision';
+			$track['trk_description'] = 'Revision Required: Returned to Author';
+			$track['trk_remarks'] = $remarks;
 			$email_contents = $this->Email_model->get_email_content(13);
 
 			$mail->AddAddress($email);
@@ -5352,9 +5374,10 @@ class Manuscripts extends OPRS_Controller {
 			$process['ps_duration'] = $email_contents[0]->enc_process_duration;
 			$this->Review_model->save_process_status(array_filter($process));
 
-		}else{ // no revision
+		}else{ // no revision needed — endorse to copy editor
 			$man['man_status'] = 7;
-			$track['trk_description'] = 'For Proofread';
+			$track['trk_description'] = 'Revision Accepted: Endorsed to Copy Editor';
+			$track['trk_remarks'] = $remarks;
 			$email_contents = $this->Email_model->get_email_content(12);
 
 			$next_processor_info = $this->User_model->get_processor_by_role(17);

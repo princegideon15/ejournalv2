@@ -26,8 +26,8 @@
   // Initialize reCAPTCHA and store the widget ID
   window.onload = function () {
       recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
-          'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // orig key
-          // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
+         // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // orig key
+           'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
           'callback': onRecaptchaSuccess,
           'expired-callback': onRecaptchaExpired
       });
@@ -40,9 +40,9 @@
   <div class="container-fluid p-0 d-flex align-items-center">
     
     <div class="d-flex gap-1 align-items-center me-3">
-      <a href="https://skms.nrcp.dost.gov.ph/" target="_blank">
-        <img src="<?php echo base_url("assets/images/skms.png"); ?>" height="60" width="110">
-      </a>
+      <!-- <a href="https://skms.nrcp.dost.gov.ph/" target="_blank">
+        <img src="<?php //echo base_url("assets/images/skms.png"); ?>" height="60" width="110">
+      </a> -->
       <a href="https://nrcp.dost.gov.ph/" target="_blank">
         <img src="<?php echo base_url("assets/oprs/img/nrcp.png"); ?>" height="55" width="55">
       </a>

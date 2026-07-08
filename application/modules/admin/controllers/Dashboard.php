@@ -52,8 +52,9 @@ class Dashboard extends EJ_Controller {
 				
 				$data['editorials'] = $this->Editorial_model->get_editorials();
 				$data['clients'] = $this->Client_model->get_clients(); //current year
-				$data['popular'] = $this->Article_model->top_five();
+				$data['popular'] = $this->Article_model->top_five_with_summary();
 				$data['articles'] = $this->Article_model->get_all_articles_with_metrics();
+				$data['journal_article_counts'] = $this->Article_model->count_articles_grouped_by_journal();
 				$data['citees'] = $this->Article_model->get_all_citees();
 				$data['tables'] = $this->Library_model->get_tables();
 				$data['emails'] = $this->Email_model->get_contents();
@@ -81,7 +82,7 @@ class Dashboard extends EJ_Controller {
 
 				$acoa_arr = explode(",& ", $this->Coauthor_model->get_author_coauthors_list());
 				sort($acoa_arr, SORT_STRING);
-				$data['authors'] = array_unique($acoa_arr);
+				// $data['authors'] = array_unique($acoa_arr);
 				$data['main_title'] = "eJournal Admin";
 				$data['main_content'] = "admin/index";
 
@@ -111,6 +112,27 @@ class Dashboard extends EJ_Controller {
 	public function sex_monthly_line(){
 		$output = $this->Client_model->get_clients_monthly_line_graph();
 		echo json_encode($output);
+	}
+
+	public function get_clients_dt(){
+		$clients = $this->Client_model->get_clients_excel();
+		$data = [];
+		$index = 1;
+		foreach($clients as $row){
+			$sex = ($row->sex == 1) ? 'Male' : (($row->sex == 2) ? 'Female' : 'N/A');
+			$data[] = [
+				$index++,
+				$row->art_title ?? '',
+				($row->title ? $row->title . '. ' : '') . ($row->first_name ?? '') . ' ' . ($row->last_name ?? ''),
+				$sex,
+				$row->affiliation ?? '',
+				$row->country_name ?? '',
+				$row->email ?? '',
+				$row->dl_datetime ?? '',
+				'ID:' . ($row->dl_art_id ?? '')
+			];
+		}
+		echo json_encode(['data' => $data]);
 	}
 
 	/**

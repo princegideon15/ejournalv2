@@ -11,7 +11,14 @@
     <div class="card bg-light border-0">
         <div class="card-body">
             <h6 class="card-title fw-bold d-block">Journal Information</h6>
-			  <p class="mb-0"><a href="#" class="text-dark text-decoration-underline" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">Intl. Advisory Board</a></p>
+				<!-- <p class="mb-0">
+				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">
+					Intl. Advisory Board
+				</a>
+				</p> -->
+				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Under Development">
+					Intl. Advisory Board
+				</a>
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/editorial');?>"
             class="text-dark text-decoration-underline">Editorial Board</a></p>
           
@@ -21,14 +28,17 @@
 
     <div class="card bg-light border-0 mt-3 mb-3">
         <div class="card-body">
-            <h6 class="card-title fw-bold">Annual Journal Metrics</h6>
-            <!-- <h6 class="card-title fw-bold mt-3 mb-0">Citation Impact <?php echo date('Y');?></h6>
-            -
-            <h6 class="card-title fw-bold mt-2 mb-0">Speed <?php echo date('Y');?></h6>
-            - -->
-            <h6 class="card-title fw-bold mt-2 mb-0">Usage <?php echo date('Y');?></h6>
-            <div>Downloads: <?=number_format($downloads, 0, '', ',')?></div>
-            <div>Abstract Hits: <?=number_format($citations, 0, '', ',')?></div>
+            <h6 class="card-title fw-bold mt-2 mb-0">Usage Metrics <?php echo date('Y');?></h6>
+            <div>Downloads: <?php echo $downloads; ?></div>
+            <div>Abstract Hits: <?php echo $citations; ?></div>
+			<div>Visitors: <?php echo $hits_count; ?></div>
+        </div>
+    </div>
+
+	<div class="card bg-light border-0 mt-3 mb-3">
+        <div class="card-body">
+            <h6 class="card-title fw-bold mt-2 mb-0">Submission To Publication</h6>
+            <h6 class="card-title fw-bold mt-2 mb-0">96 Days</h6>
 
         </div>
     </div>
@@ -38,12 +48,18 @@
             Login to Get Access <span class="oi oi-account-login ms-1" style="font-size:.9rem"></span></a></div>';
     }?> -->
 
-    <img src="https://assets.crossref.org/logo/crossref-logo-200.svg" alt="Crossref logo stacked" width="100%" height="70px"/>
-	<!-- <img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/crossref.png"); ?>" alt="crossref" width="100%" height="70px">	 -->
-	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/logos/ebscohost.gif"); ?>" alt="ebscohost" width="100%" height="70px">
-	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/agpci.png"); ?>" alt="agpci" width="100%" height="60px">
-	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/pejlogo.png"); ?>" alt="agpci" width="100%" height="200px">
-	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/Ithenticate.jpg"); ?>" alt="ithenticate" width="100%" height="80px">
-	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/issn.png"); ?>" alt="ithenticate" width="100%" height="90px">
-	<img class="mt-3 border rounded" src="<?php echo base_url("assets/images/new-images/iso.png"); ?>" alt="iso" width="100%" height="200px"> 
-	<img class="mt-3" src="<?php echo base_url("assets/images/dpo_seal.png");?>" width="100%" height="200px">
+    <img class="mt-3 " src="https://assets.crossref.org/logo/crossref-logo-200.svg" alt="Crossref logo stacked" width="100%" height="70px"/>
+	<!-- <img class="mt-3 " src="<?php echo base_url("assets/images/new-images/crossref.png"); ?>" alt="crossref" width="100%" height="70px">	 -->
+	<img class="mt-3 " src="<?php echo base_url("assets/images/logos/ebscohost.gif"); ?>" alt="ebscohost" width="100%" height="70px">
+	<img class="mt-3 " src="<?php echo base_url("assets/images/new-images/agpci.png"); ?>" alt="agpci" width="100%" height="60px">
+	<img class="mt-3 " src="<?php echo base_url("assets/images/new-images/pejlogo.png"); ?>" alt="agpci" width="100%" height="200px">
+	<img class="mt-3 " src="<?php echo base_url("assets/images/Ithenticate.jpg"); ?>" alt="ithenticate" width="100%" height="80px">
+	<img class="mt-3 " src="<?php echo base_url("assets/images/new-images/issn.png"); ?>" alt="ithenticate" width="100%" height="90px">
+	<img class="mt-3 " src="<?php echo base_url("assets/images/new-images/iso.png"); ?>" alt="iso" width="100%" height="200px"> 
+	<img class="mt-3 " src="<?php echo base_url("assets/images/dpo_seal.png");?>" width="100%" height="200px">
+
+<div class="card bg-light border-0 mt-3" width="100%">
+       <a href="https://info.flagcounter.com/l6yQ"><img src="https://s01.flagcounter.com/count2/l6yQ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/"
+	    alt="Flag Counter" border="0" width="100%"></a>
+    </div>
+

@@ -35,6 +35,7 @@ class Journal_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from($this->tblName);
 		$this->db->order_by('date_created', 'desc');
+		$this->db->limit(20);
 		$query = $this->db->get();
 		return $query->result();
 	}

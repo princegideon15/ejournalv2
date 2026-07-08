@@ -54,7 +54,7 @@ class Client_journal_model extends CI_Model {
 	}
 
 	public function get_unique_editorials(){
-		$this->db->select('CONCAT("Volume ", edt_volume, ", ", edt_year) as volume, edt_volume, edt_year, edt_issue');
+		$this->db->select('CONCAT("Volume ", edt_volume, ", ", edt_year) as volume, edt_volume, edt_year, edt_issue, edt_duration');
 		$this->db->from($this->editorials);
 		$this->db->group_by('CONCAT(edt_volume, edt_year, edt_issue)');
 		$this->db->order_by('edt_id', 'desc');

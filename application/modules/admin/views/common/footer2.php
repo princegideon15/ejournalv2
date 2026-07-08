@@ -1,4 +1,23 @@
-
+<style>
+    .rating-star {
+        font-size: 3rem;
+        cursor: pointer;
+        color: gray;
+        padding-top: 0;
+        margin-top: 0;
+    }
+    .rating-star.selected {
+        color: gold;
+    }
+    .character-counter {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+    }
+    .character-counter.exceeded {
+        color: red;
+    }
+</style>
+	
 	<footer class="py-4 bg-light mt-auto">
       <div class="container-fluid px-4">
           <div class="d-flex align-items-center justify-content-between small">
@@ -272,6 +291,11 @@
 											<?php }?>
 										</select>
 									</div>
+									<div class="form-group col">
+												<label for="edt_duration" class="form-label">Duration</label>
+												<input type="text" class="form-control" id="edt_duration" name="edt_duration" placeholder="Years of duration">
+												</select>
+											</div>
 									<div class="col">
 										<label for="edt_volume" class="form-label">Volume</label>
 										<select class="form-select" id="edt_volume" name="edt_volume" placeholder="ex. X">
@@ -319,9 +343,10 @@
 								<select class="form-select" name="edt_position" id="edt_position">
 									<option value="">Select Editorial Position</option>
 									<?php foreach($editorial_board_position as $row):?>
-										<?php echo '<option value=' . $row->role_name . '>' . $row->role_name . '</option>'; ?>
+										<?php echo '<option value="' . $row->role_name . '">' . $row->role_name . '</option>'; ?>
 									<?php endforeach ?>
 									<option value="Editorial Staff">Editorial Staff</option>
+									<option value="Advisory Board">Advisory Board</option>
 								</select>
 								<!-- <input type="text" class="form-control" id="edt_position" name="edt_position" placeholder="ex. Editor-in-Chief"> -->
 							</div>	
@@ -622,7 +647,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body p-4">
-        <h5 class="fw-bold main-link">Thank you for visiting the eJournal/eReview system!</h5>
+        <h5 class="fw-bold main-link">Thank you for visiting qqqqthe eJournal/eReview system!</h5>
         <p>To improve the performance of the system, kindly provide us your feedback.</p>
         <hr>
         <form id="feedback_form">

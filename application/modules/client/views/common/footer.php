@@ -8,8 +8,8 @@
 		<!-- Grid row -->
 		<div class="row mb-3">
 
-			<div class="col-auto">
-				<img src="<?php echo base_url("assets/images/phil_seal.png");?>" width="150" height="150">			
+			<div class="col-md-2 px-3 text-center">
+				<img  src="<?php echo base_url("assets/images/phil_seal.png");?>" width="150" height="150">			
 			</div>
 
 			<!-- Grid column -->
@@ -93,7 +93,7 @@
 							Research Information System (BRIS)</a>
 					</li>
 					<li class="mb-2">
-						<a class="text-muted" href="https://aram.nrcp.dost.gov.ph/" target="_blank">NRCP
+						<a class="text-muted" href="https://aram.nrcp.dost.gov.ph/" target="_blank">
 							Access to Repositories and Archival Materials (ARAM)</a>
 					</li>
 					<!-- <li class="mb-2">

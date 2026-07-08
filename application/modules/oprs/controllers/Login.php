@@ -143,7 +143,8 @@ class Login extends OPRS_Controller {
 						// }else{
 							$this->Login_model->clear_login_attempts($validateUser[0]->usr_username);
 
-							if ($this->validate_device_token($validateUser[0]->usr_id)) {
+							// OTP disabled after login — skip device token check
+							// if ($this->validate_device_token($validateUser[0]->usr_id)) {
 								$type_num = $validateUser[0]->usr_role;
 								$type = $validateUser[0]->usr_desc;
 								$id = $validateUser[0]->usr_id;
@@ -261,10 +262,10 @@ class Login extends OPRS_Controller {
 										redirect('oprs/manuscripts');
 									}
 								}
-							}else{
-								//send otp to email
-								$this->send_login_otp($email);
-							}
+							// }else{
+							// 	//send otp to email
+							// 	$this->send_login_otp($email);
+							// }
 
 						// }
 					}else{
@@ -464,7 +465,7 @@ class Login extends OPRS_Controller {
 		<br><br>
 		NRCP Research Journal
 		<br><br><br>
-		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 		
 		// send email
 		$mail->Subject = 'Login Verification';

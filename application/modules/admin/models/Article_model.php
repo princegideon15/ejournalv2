@@ -38,7 +38,7 @@ class Article_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from($this->citations.' c');
 		$this->db->join($this->articles.' a','a.art_id = c.cite_art_id');
-		$this->db->limit(100);
+		$this->db->limit(20);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -71,6 +71,7 @@ class Article_model extends CI_Model {
 		$this->db->from($this->articles.' a');
 		$this->db->join($this->journals.' j','a.art_jor_id = j.jor_id');
 		$this->db->order_by('a.art_title', 'asc');
+		$this->db->limit(20);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -213,6 +214,25 @@ class Article_model extends CI_Model {
 		$this->db->where('art_jor_id', $id);
 		$query = $this->db->get();
 		return $query->num_rows();
+	}
+
+	/**
+	 * Count all articles grouped by journal id.
+	 *
+	 * @return array<int,int> Map of jor_id => article count
+	 */
+	public function count_articles_grouped_by_journal() {
+		$this->db->select('art_jor_id, COUNT(*) AS total_articles');
+		$this->db->from($this->articles);
+		$this->db->group_by('art_jor_id');
+		$query = $this->db->get()->result();
+
+		$counts = [];
+		foreach ($query as $row) {
+			$counts[(int) $row->art_jor_id] = (int) $row->total_articles;
+		}
+
+		return $counts;
 	}
 
 	/**
