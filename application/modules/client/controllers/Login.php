@@ -127,6 +127,9 @@ class Login extends EJ_Controller {
 						$this->Login_model->clear_login_attempts($email);
 
 						if ($this->Library_model->validate_device_token($user_id)) {
+							// Always require OTP even for trusted devices
+							$this->send_login_otp($email);
+							return;
 
 							$last_visit_date = $this->Login_model->get_last_visit_date($user_id);
 							$last_visit_date = new DateTime($last_visit_date[0]->date_created);

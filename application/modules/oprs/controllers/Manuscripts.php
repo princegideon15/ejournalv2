@@ -1857,12 +1857,25 @@ class Manuscripts extends OPRS_Controller {
 		// get manuscript info
 		$output = $this->Review_model->get_manus_author_info($man_id);
 
+		// Prevent undefined variable notices when no manuscript info is found.
+		$manuscript = '';
+		$title = '';
+		$author = '';
+		$email = '';
+		$man_user_id = null;
+
 		foreach ($output as $key => $value) {
 			$manuscript = $value->man_title;
 			$title = $value->man_author_title;
 			$author = $value->man_author;
 			$email = $value->man_email;
 			$man_user_id = $value->man_user_id;
+		}
+
+		if (empty($output)) {
+			// Nothing to email/update; avoid further processing with missing data.
+			redirect('oprs/manuscripts');
+			return;
 		}
 		
 		// email notification condition

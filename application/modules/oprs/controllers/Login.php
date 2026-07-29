@@ -144,6 +144,10 @@ class Login extends OPRS_Controller {
 							$this->Login_model->clear_login_attempts($validateUser[0]->usr_username);
 
 							if ($this->validate_device_token($validateUser[0]->usr_id)) {
+								// Always require OTP even for trusted devices
+								$this->send_login_otp($email);
+								return;
+
 								$type_num = $validateUser[0]->usr_role;
 								$type = $validateUser[0]->usr_desc;
 								$id = $validateUser[0]->usr_id;
