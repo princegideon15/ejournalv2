@@ -57,8 +57,8 @@ class Email extends EJ_Controller {
 
 		$link = "<a href='https://researchjournal.nrcp.dost.gov.ph/client/ejournal/csf_arta/". $ref_code ."' target='_blank'>CSF-ARTA</a>";
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = '0zhfrY6Wp6AEfoSLU14z';
 
 		// setup email config
 		$mail = new PHPMailer;

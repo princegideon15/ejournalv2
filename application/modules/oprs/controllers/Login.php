@@ -419,8 +419,8 @@ class Login extends OPRS_Controller {
 
 		$link = base_url() . 'oprs/login/verify_otp/'.$ref_code;
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = '0zhfrY6Wp6AEfoSLU14z';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -923,8 +923,8 @@ class Login extends OPRS_Controller {
 	 */
 	// public function send_password_copy($email, $pass) {
 	// 	$nameuser = 'eJournal Admin';
-	// 	$usergmail = 'nrcp.ejournal@gmail.com';
-	// 	$password = 'fpzskheyxltsbvtg';
+	// 	$usergmail = 'ejournalnrcp1933@gmail.com';
+	// 	$password = '0zhfrY6Wp6AEfoSLU14z';
 	// 	$mail = new PHPMailer;
 	// 	$mail->isSMTP();
 	// 	$mail->Host = "smtp.gmail.com";
@@ -980,8 +980,8 @@ class Login extends OPRS_Controller {
 
 		$link = 'https://researchjournal.nrcp.dost.gov.ph/oprs/login';
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = '0zhfrY6Wp6AEfoSLU14z';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -1229,8 +1229,8 @@ class Login extends OPRS_Controller {
 		}
 
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = '0zhfrY6Wp6AEfoSLU14z';
 
 		// setup email config	
 		$mail = new PHPMailer;
@@ -1393,8 +1393,8 @@ class Login extends OPRS_Controller {
 		$last_attempt_time = $attempts[0]->attempt_time;
 
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = '0zhfrY6Wp6AEfoSLU14z';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -1413,7 +1413,7 @@ class Login extends OPRS_Controller {
 		$mail->From = $sender_email;
 		$mail->FromName = $sender;
 	
-		// $mail->AddAddress('nrcp.ejournal@gmail.com');
+		// $mail->AddAddress('ejournalnrcp1933@gmail.com');
 		$mail->AddAddress('gerard_balde@yahoo.com');
 
 

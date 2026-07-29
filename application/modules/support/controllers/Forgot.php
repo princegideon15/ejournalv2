@@ -83,10 +83,10 @@ class Forgot extends OPRS_Controller {
 
 			//email
 			$nameuser = 'eJournal';
-			$sender_email = 'nrcp.ejournal@gmail.com';
-			$password = 'fpzskheyxltsbvtg';
-			$usergmail = 'nrcp.ejournal@gmail.com';
-			$password = 'fpzskheyxltsbvtg';
+			$sender_email = 'ejournalnrcp1933@gmail.com';
+			$password = '0zhfrY6Wp6AEfoSLU14z';
+			$usergmail = 'ejournalnrcp1933@gmail.com';
+			$password = '0zhfrY6Wp6AEfoSLU14z';
 			$mail = new PHPMailer;
 			$mail->isSMTP();
 			$mail->Host = "smtp.gmail.com";
@@ -225,10 +225,10 @@ class Forgot extends OPRS_Controller {
 		
 						//email
 						$nameuser = 'eJournal';
-						$sender_email = 'nrcp.ejournal@gmail.com';
-						$password = 'fpzskheyxltsbvtg';
-						$usergmail = 'nrcp.ejournal@gmail.com';
-						$password = 'fpzskheyxltsbvtg';
+						$sender_email = 'ejournalnrcp1933@gmail.com';
+						$password = '0zhfrY6Wp6AEfoSLU14z';
+						$usergmail = 'ejournalnrcp1933@gmail.com';
+						$password = '0zhfrY6Wp6AEfoSLU14z';
 						$mail = new PHPMailer;
 						$mail->isSMTP();
 						$mail->Host = "smtp.gmail.com";
