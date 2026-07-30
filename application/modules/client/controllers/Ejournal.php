@@ -232,7 +232,7 @@ class Ejournal extends EJ_Controller {
 		$link = "<a href='https://researchjournal.nrcp.dost.gov.ph/' target='_blank'>https://researchjournal.nrcp.dost.gov.ph/</a>";
 		$sender = 'eJournal Admin';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 
 		// setup email config
 		$mail = new PHPMailer;
@@ -498,7 +498,7 @@ class Ejournal extends EJ_Controller {
 				
 		$sender = 'eJournal Admin';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 
 		// setup email config
 		$mail = new PHPMailer;
@@ -1006,7 +1006,7 @@ class Ejournal extends EJ_Controller {
 					
 			$sender = 'eJournal Admin';
 			$sender_email = 'ejournalnrcp1933@gmail.com';
-			$password = '0zhfrY6Wp6AEfoSLU14z';
+			$password = 'fetdihtmokwwpjha';
 
 			// setup email config
 			$mail = new PHPMailer;
@@ -1470,7 +1470,7 @@ class Ejournal extends EJ_Controller {
 		$link = "<a href='https://researchjournal.nrcp.dost.gov.ph/client/ejournal/csf_arta/". $ref_code ."' target='_blank'>CSF-ARTA</a>";
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 
 		// setup email config
 		$mail = new PHPMailer;
@@ -1740,7 +1740,7 @@ class Ejournal extends EJ_Controller {
 	// private function email($recipient, $verification_code){
 	// 	$sender = 'eJournal Admin';
 	// 	$sender_email = 'ejournalnrcp1933@gmail.com';
-	// 	$password = '0zhfrY6Wp6AEfoSLU14z';
+	// 	$password = 'fetdihtmokwwpjha';
 	// 	// setup email config
 	// 	$mail = new PHPMailer;
 	// 	$mail->isSMTP();

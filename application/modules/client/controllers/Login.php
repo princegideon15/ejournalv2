@@ -406,7 +406,7 @@ class Login extends EJ_Controller {
 		$link = base_url() . 'client/login/verify_otp/'.$ref_code;
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -501,7 +501,7 @@ class Login extends EJ_Controller {
 
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -837,7 +837,7 @@ class Login extends EJ_Controller {
 		// $link = base_url() . 'client/login/';
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;

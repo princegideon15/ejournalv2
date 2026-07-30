@@ -424,7 +424,7 @@ class Login extends OPRS_Controller {
 		$link = base_url() . 'oprs/login/verify_otp/'.$ref_code;
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -928,7 +928,7 @@ class Login extends OPRS_Controller {
 	// public function send_password_copy($email, $pass) {
 	// 	$nameuser = 'eJournal Admin';
 	// 	$usergmail = 'ejournalnrcp1933@gmail.com';
-	// 	$password = '0zhfrY6Wp6AEfoSLU14z';
+	// 	$password = 'fetdihtmokwwpjha';
 	// 	$mail = new PHPMailer;
 	// 	$mail->isSMTP();
 	// 	$mail->Host = "smtp.gmail.com";
@@ -985,7 +985,7 @@ class Login extends OPRS_Controller {
 		$link = 'https://researchjournal.nrcp.dost.gov.ph/oprs/login';
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -1234,7 +1234,7 @@ class Login extends OPRS_Controller {
 
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 
 		// setup email config	
 		$mail = new PHPMailer;
@@ -1398,7 +1398,7 @@ class Login extends OPRS_Controller {
 
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = '0zhfrY6Wp6AEfoSLU14z';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
