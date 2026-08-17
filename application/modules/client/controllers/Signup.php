@@ -266,7 +266,7 @@ class Signup extends EJ_Controller {
 
 
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
 		$password = 'fpzskheyxltsbvtg';
 		
 		// setup email config	

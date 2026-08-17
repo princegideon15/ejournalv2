@@ -795,7 +795,7 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
 
         <p class="small">
         Address: 51 General Santos Ave, Taguig, Metro Manila </br>
-        Email: <a href="mailto:nrcp.ejournal@gmail.com" target="_blank">nrcp.ejournal@gmail.com</a></br>
+        Email: <a href="mailto:ejournalnrcp1933@gmail.com" target="_blank">ejournalnrcp1933@gmail.com</a></br>
         Hours: 7AM - 5PM Weekdays </br>
         Phone: (02) 8837 0409 </br>
         </p>

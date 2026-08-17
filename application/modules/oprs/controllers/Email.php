@@ -165,8 +165,8 @@ class Email extends OPRS_Controller {
 
 		$link_to = base_url() . 'oprs/login/reviewer';
 		$sender = 'eJournal Admin';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -314,8 +314,8 @@ class Email extends OPRS_Controller {
 
 		$link_to = base_url() . 'oprs/login/reviewer';
 		$sender = 'eJournal Admin';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 		$file_to_attach = '/var/www/html/ejournal/assets/oprs/uploads/manuscripts/';
 		// Localhost
 		// $file_to_attach = $_SERVER['DOCUMENT_ROOT'].'/oprs/assets/uploads/manuscripts/';
@@ -454,8 +454,8 @@ class Email extends OPRS_Controller {
 		}
 
 		$sender = 'eJournal Admin';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config
 		$mail = new PHPMailer;
@@ -560,8 +560,8 @@ class Email extends OPRS_Controller {
 							// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 							$link_to = base_url() . 'oprs/login';
 							$sender = 'eReview';
-							$sender_email = 'nrcp.ejournal@gmail.com';
-							$password = 'fpzskheyxltsbvtg';
+							$sender_email = 'ejournalnrcp1933@gmail.com';
+							$password = 'fetdihtmokwwpjha';
 				
 							$mail = new PHPMailer;
 							$mail->isSMTP();
@@ -794,8 +794,8 @@ class Email extends OPRS_Controller {
 					// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 					$link_to = base_url() . 'oprs/login';
 					$sender = 'eReview';
-					$sender_email = 'nrcp.ejournal@gmail.com';
-					$password = 'fpzskheyxltsbvtg';
+					$sender_email = 'ejournalnrcp1933@gmail.com';
+					$password = 'fetdihtmokwwpjha';
 		
 					$mail = new PHPMailer;
 					$mail->isSMTP();

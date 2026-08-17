@@ -384,8 +384,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -671,8 +671,8 @@ class Manuscripts extends OPRS_Controller {
 
 		$link_to = base_url() . 'oprs/login/reviewer';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 		// server
 		$man_abs = '/var/www/html/ejournal/assets/oprs/uploads/initial_abstracts_pdf/' . $abs;
 		// $nda = '/var/www/html/ejournal/assets/oprs/uploads/SAMPLE_NDA_NRCP.doc';
@@ -910,8 +910,8 @@ class Manuscripts extends OPRS_Controller {
 
 	// 	$link_to = base_url() . 'oprs/login/editor';
 	// 	$sender = 'eReview';
-	// 	$sender_email = 'nrcp.ejournal@gmail.com';
-	// 	$password = 'fpzskheyxltsbvtg';
+	// 	$sender_email = 'ejournalnrcp1933@gmail.com';
+	// 	$password = 'fetdihtmokwwpjha';
 	// 	// server
 	// 	// $man_abs = '/var/www/html/ejournal/assets/oprs/uploads/abstracts/' . $abs;
 	// 	// $nda = '/var/www/html/ejournal/assets/oprs/uploads/SAMPLE_NDA_NRCP.doc';
@@ -1111,8 +1111,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -1321,8 +1321,8 @@ class Manuscripts extends OPRS_Controller {
 		>Download Certification 
 		</a>";
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		// setup email config	
 		$mail = new PHPMailer;
@@ -1835,8 +1835,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -2194,8 +2194,8 @@ class Manuscripts extends OPRS_Controller {
 	// 	}
 
 	// 	$nameuser = 'eJournal Admin';
-	// 	$usergmail = 'nrcp.ejournal@gmail.com';
-	// 	$password = 'fpzskheyxltsbvtg';
+	// 	$usergmail = 'ejournalnrcp1933@gmail.com';
+	// 	$password = 'fetdihtmokwwpjha';
 	// 	$mail = new PHPMailer;
 	// 	$mail->isSMTP();
 	// 	$mail->Host = "smtp.gmail.com";
@@ -2299,8 +2299,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$dir = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		// setup email config	
 		$mail = new PHPMailer;
@@ -2419,8 +2419,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$dir = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		// setup email config	
 		$mail = new PHPMailer;
@@ -2570,8 +2570,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -2874,8 +2874,8 @@ class Manuscripts extends OPRS_Controller {
 		// $dir = "https://skms.nrcp.dost.gov.ph/main/login";
 		$link = '<a href="' . $dir . '" target="_blank">https://researchjournal.nrcp.dost.gov.ph</a>';
 		$sender = 'eReview Admin';
-		$sender_mail = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_mail = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 		
 		// replace reserved words
 		$emailBody = str_replace('[TITLE]', $title, $email_body);
@@ -3012,8 +3012,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -3282,8 +3282,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -3832,8 +3832,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -4439,8 +4439,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -5093,8 +5093,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -5302,8 +5302,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -5538,8 +5538,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -5694,8 +5694,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -5867,8 +5867,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -6171,8 +6171,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -6460,8 +6460,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph/oprs/login";
 		$link_to = base_url() . 'oprs/login';
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();
@@ -6794,8 +6794,8 @@ class Manuscripts extends OPRS_Controller {
 		// $link_to = "https://researchjournal.nrcp.dost.gov.ph";
 		$link_to = base_url();
 		$sender = 'eReview';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 
 		$mail = new PHPMailer;
 		$mail->isSMTP();

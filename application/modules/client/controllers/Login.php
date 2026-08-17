@@ -403,8 +403,8 @@ class Login extends EJ_Controller {
 
 		$link = base_url() . 'client/login/verify_otp/'.$ref_code;
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -498,8 +498,8 @@ class Login extends EJ_Controller {
 
 
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -518,7 +518,7 @@ class Login extends EJ_Controller {
 		$mail->From = $sender_email;
 		$mail->FromName = $sender;
 	
-		$mail->AddAddress('nrcp.ejournal@gmail.com');
+		$mail->AddAddress('ejournalnrcp1933@gmail.com');
 		$mail->addCC('gerard_balde@yahoo.com'); // Replace with actual CC email
 		$mail->addCC('rannaze123@gmail.com'); // Replace with actual CC email
 
@@ -834,8 +834,8 @@ class Login extends EJ_Controller {
 
 		// $link = base_url() . 'client/login/';
 		$sender = 'eJournal';
-		$sender_email = 'nrcp.ejournal@gmail.com';
-		$password = 'fpzskheyxltsbvtg';
+		$sender_email = 'ejournalnrcp1933@gmail.com';
+		$password = 'fetdihtmokwwpjha';
 		
 		// setup email config	
 		$mail = new PHPMailer;
