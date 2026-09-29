@@ -1071,9 +1071,9 @@
 	</div>
 
 		<!-- Copyright -->
-		<div class="footer-copyright text-center mt-3 mb-3" >&copy; 2018 Copyright ResearchJournal, All Rights Reserved
+		<!-- <div class="footer-copyright text-center mt-3 mb-3" >&copy; 2018 Copyright ResearchJournal, All Rights Reserved
 			<small class="text-muted d-block">Currently v2.1.85</small>
-		</div>
+		</div> -->
 		<!-- Copyright -->
 </div>
 

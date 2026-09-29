@@ -2,10 +2,10 @@
 <footer class="py-4 bg-light mt-auto">
       <div class="container-fluid px-4">
           <div class="d-flex align-items-center justify-content-between small">
-              <div class="text-muted">Copyright &copy; 2018 NRCP Online Research Journal (eJournal), Online Peer Review System (eReview) All Rights Reserved</div>
+              <!-- <div class="text-muted">Copyright &copy; 2018 NRCP Online Research Journal (eJournal), Online Peer Review System (eReview) All Rights Reserved</div>
 			  <div class="text-muted">
 				Currently v3.0.0
-			  </div>
+			  </div> -->
               <!-- <div>
                   <a href="javascript:void(0);">Privacy Policy</a>
                   &middot;

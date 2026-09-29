@@ -41,7 +41,7 @@ class Login extends EJ_Controller {
 		 $this->load->model('Oprs/Skms_model', '_skms_user_model');
 		 $this->load->model('Admin/Journal_model');
 		 $this->load->model('Admin/Email_model');
-
+		$this->load->model('Admin/Dashboard_model');
         $this->signupController = new Signup();
 
 	}
@@ -57,7 +57,7 @@ class Login extends EJ_Controller {
 		if ($this->session->userdata('_ej_logged_in')) {
 			redirect('client/ejournal/');
 		}
-
+		// $data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
@@ -67,6 +67,8 @@ class Login extends EJ_Controller {
 		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/login";
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
+		$data['vis_count'] = $this->Dashboard_model->vis_count();
 
 		if($flag){
 			$this->session->set_flashdata('active_link1', '');

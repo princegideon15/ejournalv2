@@ -36,6 +36,7 @@ class Ejournal extends EJ_Controller {
 		$this->load->model('Oprs/User_model');
 		$this->load->model('Admin/Journal_model');
 		$this->load->model('Admin/Email_model');
+		$this->load->model('Admin/Dashboard_model');
 	}
 
 	/**
@@ -51,6 +52,7 @@ class Ejournal extends EJ_Controller {
 		// $journals = 
 
 		//data to display
+		$data['vis_count'] = $this->Dashboard_model->vis_count();
 		$data['volumes'] = $this->Client_journal_model->get_journals();
 		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['popular'] = $this->Client_journal_model->top_five();
@@ -140,7 +142,8 @@ class Ejournal extends EJ_Controller {
 		$issues = [];
 
 		$journals = $this->Client_journal_model->get_journals();
-
+		$data['hits_count'] = $this->Client_journal_model->all_hits();	
+		$data['vis_count'] = $this->Dashboard_model->vis_count();
 		foreach($journals as $row){
 			$issues = $this->Client_journal_model->get_issues($row->jor_volume);
 			$jor_issues = [];
@@ -1369,7 +1372,8 @@ class Ejournal extends EJ_Controller {
 		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['guidelines'] = $this->Library_model->get_guidelines_content();
 		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
-
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
+		$data['vis_count'] = $this->Dashboard_model->vis_count();
 		if($create_author_account){
 			$data['titles'] = $this->Client_journal_model->getTitles();
 			$data['educations'] = $this->Client_journal_model->getEducations();

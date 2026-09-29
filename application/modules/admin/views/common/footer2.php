@@ -21,13 +21,13 @@
 	<footer class="py-4 bg-light mt-auto">
       <div class="container-fluid px-4">
           <div class="d-flex align-items-center justify-content-between small">
-              <div class="text-muted">Copyright &copy; 2018 NRCP Online Research Journal (eJournal), Online Peer Review System (eReview) All Rights Reserved</div>
+              <!-- <div class="text-muted">Copyright &copy; 2018 NRCP Online Research Journal (eJournal), Online Peer Review System (eReview) All Rights Reserved</div>
               <div class="text-muted">
                 Currently v2.1.85
-                  <!-- <a href="javascript:void(0);">Privacy Policy</a>
+                  <a href="javascript:void(0);">Privacy Policy</a>
                   &middot;
                   <a href="javascript:void(0);">Terms &amp; Conditions</a> -->
-              </div>
+              </div> 
           </div>
       </div>
     </footer>
