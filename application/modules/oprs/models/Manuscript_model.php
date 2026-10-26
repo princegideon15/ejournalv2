@@ -1002,7 +1002,7 @@ class Manuscript_model extends CI_Model {
 		$oprs->where('s.scr_status >', 3);
 		$oprs->where('m.man_status', 3);
 		$oprs->group_by('m.row_id');
-		$oprs->having('count(score) >', 1);
+		$oprs->having('count(scr_status) >', 1);
 		$oprs->order_by('m.man_title', 'asc');
 		$query = $oprs->get();
 		return $query->result();

@@ -53,11 +53,14 @@ class Ejournal extends EJ_Controller {
 
 		//data to display
 		$data['vis_count'] = $this->Dashboard_model->vis_count();
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
+
 		$data['volumes'] = $this->Client_journal_model->get_journals();
 		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['popular'] = $this->Client_journal_model->top_five();
 		$data['client_count'] = $this->Client_journal_model->all_client();
-		$data['hits_count'] = $this->Client_journal_model->all_hits();
+		
 		$data['latest'] = $this->Client_journal_model->latest_journal();
 		$data['adv_publication'] = $this->Client_journal_model->advancePublication();
 		// $data['divisions'] = $this->Client_journal_model->getDivisions();
@@ -75,11 +78,13 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	public function guidelines() {
+		$data['vis_count'] = $this->Dashboard_model->vis_count();
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
+		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/guidelines";
 		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
-		$data['downloads'] = $this->Client_journal_model->totalDownloadsCurrentYear();
 		$data['journals'] = $this->Client_journal_model->get_journals();
 		$data['guidelines'] = $this->Library_model->get_guidelines_content();
 		$this->_LoadPage('common/body', $data);
@@ -91,6 +96,8 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	public function policy() {
+		$data['vis_count'] = $this->Dashboard_model->vis_count();
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/policy";
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
@@ -109,6 +116,8 @@ class Ejournal extends EJ_Controller {
 	 * @return void
 	 */
 	public function editorial() {
+		$data['vis_count'] = $this->Dashboard_model->vis_count();
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/editorial";
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();

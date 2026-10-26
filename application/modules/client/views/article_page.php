@@ -53,11 +53,11 @@
                             }
                             ?>
                         </div>
-                        <div class="text-muted mt-1 small">Pages: <?=$article[0]->art_page?></div>
+                        <div class="text-muted mt-1 small p-1">Pages: <?=$article[0]->art_page?></div>
                         
-                        <div class="text-muted mt-1 small">Year Published: <?=$article[0]->art_year?></div>
+                        <div class="text-muted mt-1 small p-1">Year Published: <?=$article[0]->art_year?></div>
                         
-                        <div class="text-muted mt-1 small"><a class="text-muted" href="<?= base_url('/client/ejournal/volume/'.$article[0]->jor_volume.'/'.$article[0]->jor_issue.'');?>">Volume <?=$article[0]->jor_volume . ' ' . $issue?></a></div>
+                        <div class="text-muted mt-1 small p-1"><a class="text-muted" href="<?= base_url('/client/ejournal/volume/'.$article[0]->jor_volume.'/'.$article[0]->jor_issue.'');?>">Volume <?=$article[0]->jor_volume . ' ' . $issue?></a></div>
 
                         <div class='mb-5 mt-3'>
                             <span class="badge bg-light text-dark" data-toggle="tooltip" data-placement="top"

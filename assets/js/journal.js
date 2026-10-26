@@ -1580,6 +1580,9 @@ $(document).ready(function () {
       edt_position_affiliation: {
 				required: true,
       },
+	  edt_scopus_id: {
+				required: true,
+      },
 			edt_specialization: {
 				required: false,
 			},
@@ -1700,6 +1703,9 @@ $(document).ready(function () {
 				required: false,
 			},
 			edt_affiliation: {
+				required: true,
+			},
+			edt_scopus_id: {
 				required: true,
 			}
 		},

@@ -12,11 +12,11 @@
         <div class="card-body">
             <h6 class="card-title fw-bold d-block">Journal Information</h6>
 				<!-- <p class="mb-0">
-				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">
+				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer">
 					Intl. Advisory Board
 				</a>
 				</p> -->
-				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Under Development">
+				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer">
 					Intl. Advisory Board
 				</a>
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/editorial');?>"
