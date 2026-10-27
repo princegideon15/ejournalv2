@@ -4,10 +4,10 @@
 
 <div class="container-fluid mt-2 p-4">
     <div class="row">
-        <div class="col col-3 p-3">
+        <!-- <div class="col col-3 p-3">
             <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">View All Articles</a>
-        </div>
-        <div class="col col-7 p-3">
+        </div> -->
+        <div class="col col-10 p-3">
             <h3>Advanced search</h3>
 
             <div class="accordion mb-4" id="accordionPanelsStayOpenExample">
@@ -85,7 +85,7 @@
                             <div class="row mb-3">
                                 <div class="col col-3 align-self-center text-end">Issue:</div>
                                 <div class="col">
-                                    <select name="jor_issue" class="form-select">
+                                    <select name="jor_issue" id="jor_issue" class="form-select">
                                         <option disabled selected>Select Issue</option>
                                         <option value="1" <?= ($issue == 1) ? 'selected' : ''?>>1</option>
                                         <option value="2" <?= ($issue == 2) ? 'selected' : ''?>>2</option>

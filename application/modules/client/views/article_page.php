@@ -2,10 +2,7 @@
 <?php $logged_in = $this->session->userdata('user_id'); ?>
 <div class="container-fluid mt-2 p-4">
     <div class="row">
-        <div class="col col-3 p-3">
-            <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
-        </div>
-        <div class="col-7 p-3">
+        <div class="col-10 p-3">
             <div class="border p-5 mb-5 bg-white rounded">
                 <div class="row">
                     <div class="col">

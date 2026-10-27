@@ -211,7 +211,7 @@
 								</div>
 								<div class="mb-3">
 									<label for="jor_issue" class="form-label">Issue No.</label>
-									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 								</div>
 								<div class="row mb-3">
 									<div class="col">
@@ -297,7 +297,7 @@
 									</div>
 									<div class="col">
 										<label for="edt_issue" class="form-label">Issue</label>
-									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 									</div>
 								</div>
 							</div>

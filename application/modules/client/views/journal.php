@@ -92,7 +92,7 @@ gtag('config', 'G-VDLLX3HKBL');
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="advance-publication-tab" data-bs-toggle="tab"
                         data-bs-target="#advance-publication-tab-pane" type="button" role="tab"
-                        aria-controls="advance-publication-tab-pane" aria-selected="false">Advanced Publicationq</button>
+                        aria-controls="advance-publication-tab-pane" aria-selected="false">Advanced Publication</button>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">

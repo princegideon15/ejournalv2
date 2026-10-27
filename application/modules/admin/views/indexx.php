@@ -408,7 +408,7 @@
 								</div>
 								<div class="form-group col-md-2">
 									<label for="jor_issue">Issue No.</label>
-									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 								</div>
 								</div>
 								<div class="form-group col-md-4">
@@ -573,7 +573,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_issue">Issue</label>
-									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 										</div>
 									</div>
 									<div class="form-row">
@@ -1223,7 +1223,7 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="jor_issue">Issue No.</label>
-									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 						</div>
 					</div>
 					<div class="form-row">
@@ -1314,7 +1314,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_issue">Issue</label>
-												<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
+												<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 										</div>
 									</div>
 									<div class="form-row">

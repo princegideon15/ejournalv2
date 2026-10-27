@@ -126,4 +126,8 @@ font-size: 4rem;
       max-width: 1140px;
     }
   }
+
+.center {
+    margin: 0 auto;
+}
   
