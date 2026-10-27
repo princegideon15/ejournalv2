@@ -273,7 +273,7 @@
                       </div>
                       <div class="col mb-3">
                         <label class="fw-bold form-label" for="jor_issue">Issue No.</label>
-                        <select class="form-select" id="jor_issue" name="jor_issue">
+                        <select class="form-select" name="jor_issue">
                           <option value="">Select Issue no.</option>
                           <option value="1">1</option>
                           <option value="2">2</option>

@@ -85,7 +85,7 @@
                             <div class="row mb-3">
                                 <div class="col col-3 align-self-center text-end">Issue:</div>
                                 <div class="col">
-                                    <select name="jor_issue" id="jor_issue" class="form-select">
+                                    <select name="jor_issue" class="form-select">
                                         <option disabled selected>Select Issue</option>
                                         <option value="1" <?= ($issue == 1) ? 'selected' : ''?>>1</option>
                                         <option value="2" <?= ($issue == 2) ? 'selected' : ''?>>2</option>

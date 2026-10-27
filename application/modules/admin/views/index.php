@@ -183,17 +183,7 @@
 									</div>
 									<div class="mb-3">
 										<label for="jor_issue" class="form-label">Issue No.</label>
-										<select class="form-select mb-3" id="jor_issue" name="jor_issue">
-											<option value="">Select Issue</option>
-											<option value="1">1</option>
-											<option value="2">2</option>
-											<option value="3">3</option>
-											<option value="4">4</option>
-											<option value="5">Special Issue No. 1</option>
-											<option value="6">Special Issue No. 2</option>
-											<option value="7">Special Issue No. 3</option>
-											<option value="8">Special Issue No. 4</option>
-										</select>
+									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
 									</div>
 									<div class="mb-3">
 										<label for="jor_month" class="form-label">Month  <span class="badge rounded-pill bg-secondary">Optional</span></label>
@@ -710,7 +700,9 @@
 											<span class="badge rounded-pill bg-secondary">Separate in comma</span>
 											<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
 										</div>
-										<div class="mb-3">
+										<label for="edt_scopus_id" class="form-label">Scopus ID</label>
+											<input type="text" class="form-control" id="edt_scopus_id" name="edt_scopus_id" placeholder="Scopus ID Or Google Scholar ID Or ORCID ID">
+										<div class="m-3">
 											<button type="submit" class="btn btn-primary me-1" name="submit_editorial"><span class="oi oi-check"></span> Save</button>	
 										</div>
 									</div>

@@ -8708,17 +8708,17 @@ function publish_to_ejournal(id){
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
                         var keywords = val.man_keywords ?? 'N/A';
 
-                        var select_issue = `<select class="form-select" id="man_issue" name="man_issue">
-                                                <option value="">Select Issue no.</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">Special Issue No. 1</option>
-                                                <option value="6">Special Issue No. 2</option>
-                                                <option value="7">Special Issue No. 3</option>
-                                                <option value="8">Special Issue No. 4</option>
-                                            </select>`;
+                        // var select_issue = `<select class="form-select" id="man_issue" name="man_issue">
+                        //                         <option value="">Select Issue no.</option>
+                        //                         <option value="1">1</option>
+                        //                         <option value="2">2</option>
+                        //                         <option value="3">3</option>
+                        //                         <option value="4">4</option>
+                        //                         <option value="5">Special Issue No. 1</option>
+                        //                         <option value="6">Special Issue No. 2</option>
+                        //                         <option value="7">Special Issue No. 3</option>
+                        //                         <option value="8">Special Issue No. 4</option>
+                        //                     </select>`;
 
                     //     <select class="form-select" id="jor_volume" name="jor_volume" placeholder="Select existing or Type new Volume no." style="background-color:white">
                     //     <?php foreach ($u_journal as $j): ?>

@@ -408,18 +408,7 @@
 								</div>
 								<div class="form-group col-md-2">
 									<label for="jor_issue">Issue No.</label>
-									<!-- <select class="form-control" id="jor_issue" name="jor_issue">
-										<option value="">Select Issue</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">Special Issue No. 1</option>
-										<option value="6">Special Issue No. 2</option>
-										<option value="7">Special Issue No. 3</option>
-										<option value="8">Special Issue No. 4</option>
-									</select> -->
-									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
 								</div>
 								</div>
 								<div class="form-group col-md-4">
@@ -584,18 +573,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_issue">Issue</label>
-											<!-- <select class="form-control" id="jor_issue" name="jor_issue">
-										<option value="">Select Issue</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">Special Issue No. 1</option>
-										<option value="6">Special Issue No. 2</option>
-										<option value="7">Special Issue No. 3</option>
-										<option value="8">Special Issue No. 4</option>
-									</select> -->
-									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
 										</div>
 									</div>
 									<div class="form-row">
@@ -1245,18 +1223,7 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="jor_issue">Issue No.</label>
-							<!-- <select class="form-control" id="jor_issue" name="jor_issue">
-										<option value="">Select Issue</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">Special Issue No. 1</option>
-										<option value="6">Special Issue No. 2</option>
-										<option value="7">Special Issue No. 3</option>
-										<option value="8">Special Issue No. 4</option>
-									</select> -->
-									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
 						</div>
 					</div>
 					<div class="form-row">
@@ -1347,17 +1314,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_issue">Issue</label>
-											<select class="form-control" id="edt_issue" name="edt_issue">
-												<option value="">Select Issue</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
-												<option value="5">Special Issue No. 1</option>
-												<option value="6">Special Issue No. 2</option>
-												<option value="7">Special Issue No. 3</option>
-												<option value="8">Special Issue No. 4</option>
-											</select>
+												<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
 										</div>
 									</div>
 									<div class="form-row">
@@ -1418,7 +1375,6 @@
 										</div>
 										<div class="form-group col-md">
 											<label for="edt_scopus_id" class="form-label">Scopus ID</label>
-											<span class="badge badge-secondary">Separate in comma</span>
 											<input type="text" class="form-control" id="edt_scopus_id" name="edt_scopus_id" placeholder="Scopus ID Or Google Scholar ID Or ORCID ID">
 										</div>
 									</div>

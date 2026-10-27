@@ -168,7 +168,23 @@ class Signup extends EJ_Controller {
 			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
 			$ref_code = random_string('alnum', 16);
 			$email = $this->input->post('new_email', TRUE);
-			
+
+			// Double-check if email already exists (prevents race condition)
+			$existing_user = $this->Login_model->validate_user($email);
+			if ($existing_user) {
+				$errors = [];
+				$errors['new_email'] = 'Email already in use. Please use different email.';
+
+				// Set flashdata to pass validation errors and form data to the view
+				$this->session->set_flashdata('signup_validation_errors', $errors);
+				$this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
+				$this->session->set_flashdata('active_link1', '');
+				$this->session->set_flashdata('active_link2', 'active');
+				$this->session->set_flashdata('active_tab1', '');
+				$this->session->set_flashdata('active_tab2', 'show active');
+				redirect('client/login');
+			}
+
 			$lastUserID = $this->get_last_user_id();
 			$newUserID = $this->generate_user_id('0000', intval($lastUserID) + 1);
 

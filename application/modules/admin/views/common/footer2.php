@@ -211,18 +211,7 @@
 								</div>
 								<div class="mb-3">
 									<label for="jor_issue" class="form-label">Issue No.</label>
-								<!-- <select class="form-control" id="jor_issue" name="jor_issue">
-										<option value="">Select Issue</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">Special Issue No. 1</option>
-										<option value="6">Special Issue No. 2</option>
-										<option value="7">Special Issue No. 3</option>
-										<option value="8">Special Issue No. 4</option>
-									</select> -->
-									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
 								</div>
 								<div class="row mb-3">
 									<div class="col">
@@ -308,18 +297,7 @@
 									</div>
 									<div class="col">
 										<label for="edt_issue" class="form-label">Issue</label>
-										<!-- <select class="form-control" id="jor_issue" name="jor_issue">
-										<option value="">Select Issue</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">Special Issue No. 1</option>
-										<option value="6">Special Issue No. 2</option>
-										<option value="7">Special Issue No. 3</option>
-										<option value="8">Special Issue No. 4</option>
-									</select> -->
-									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
+									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
 									</div>
 								</div>
 							</div>
