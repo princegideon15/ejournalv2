@@ -1,12 +1,12 @@
 <?php if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
+
 class Forgot extends OPRS_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('input');
-		$this->load->library("My_phpmailer");
-		$objMail = $this->my_phpmailer->load();
 		$this->load->model('Forgot_model');
 		$this->load->model('client/Client_journal_model');
 		$this->load->model('oprs/User_model');

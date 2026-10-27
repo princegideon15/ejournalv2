@@ -751,6 +751,7 @@
 										<th scope="col">Email</th>
 										<th scope="col">Date Added</th>
 										<th scope="col">Years of Duration</th>
+										<th scope="col">Scopus Id</th>
 										<th scope="col">
 											<?php if ($this->session->userdata('_prv_add') == 1) {?>
 											<button type="button" class="w-100 btn btn-sm btn-primary" id="btn-add-editorial"><span class="oi oi-plus"></span> Add Editorial</button>
@@ -784,6 +785,7 @@
 										<td><?php echo $e->edt_email; ?></td>
 										<td><?php echo $e->date_created; ?></td>
 										<td><?php echo $e->edt_duration; ?></td>
+										<td><?php echo $e->edt_scopus_id; ?></td>
 										<td>
 											<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="btn btn-light text-primary btn-sm w-100" onclick="edit_editorial('<?php echo $e->edt_id; ?>')"><span class="oi oi-pencil" ></span> Edit</button>
 											<!-- <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="btn btn-danger btn-sm" onclick="_remove('delete-editorial-out')"><span class="oi oi-trash"></span></button> -->

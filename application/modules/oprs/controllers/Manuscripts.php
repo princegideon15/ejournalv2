@@ -1,6 +1,8 @@
 <?php if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
+
 class Manuscripts extends OPRS_Controller {
 	public function __construct() {
 		parent::__construct();
@@ -18,7 +20,6 @@ class Manuscripts extends OPRS_Controller {
 		$this->load->model('Feedback_model');
 		$this->load->model('Email_model');
 		$this->load->model('Arta_model');
-		$objMail = $this->my_phpmailer->load();
 		$this->check_expired_request();
 	}
 

@@ -70,7 +70,10 @@
 												<?php echo $row->edt_affiliation;?><br/>
 												<?php echo $row->edt_address;?><br/>
 												<?php echo $expertise;?>
-												<?php echo $row->edt_email;?>
+												<?php echo $row->edt_email;?><br/>
+												<?php if($row->edt_scopus_id != ''): ?>
+													<a href="<?php echo $row->edt_scopus_id;?>" target="_blank"><?php echo $row->edt_scopus_id;?></a><br/>
+												<?php endif; ?>
 											</div>
 										</div>
 										<?php endforeach; ?>
@@ -122,6 +125,7 @@
                                                                 ' . $row->edt_address . '<br/>
                                                                 ' . $expertise . '
                                                                 ' . $row->edt_email . '<br/>
+																' . $row->edt_scopus_id . '<br/>
                                                                 </div>
                                                             </div>
                                                         </li>';

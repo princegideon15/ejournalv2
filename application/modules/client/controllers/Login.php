@@ -19,6 +19,7 @@
  */
 
 require_once(APPPATH.'modules/client/controllers/Signup.php');
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
 
 class Login extends EJ_Controller {
 

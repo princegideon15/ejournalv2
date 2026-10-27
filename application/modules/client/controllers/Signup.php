@@ -18,6 +18,8 @@
  * Copyright (C) 2018 by the Department of Science and Technology - National Research Council of the Philiipines
  */
 
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
+
 class Signup extends EJ_Controller {
 
 	public function __construct() {
