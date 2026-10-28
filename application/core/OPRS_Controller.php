@@ -32,11 +32,8 @@ class OPRS_Controller extends MX_Controller {
 		$this->load->library('encryption');
 		$this->load->library("excel");
 		$this->load->library('input');
-		$this->load->library("My_phpmailer");
 
         $this->check_user_activity();
-
-		$objMail = $this->my_phpmailer->load();
 
 		//security headers
 		$this->output->set_header("Content-Security-Policy: 

@@ -25,7 +25,7 @@ $('.right-inner-addon').hide();
         <div class="col col-3 p-3">
             <a class="main-link text-decoration-underline" href="<?=base_url('/client/ejournal/articles')?>">All Articles</a>
         </div>
-        <div class="col col-7 p-3">
+        <div class="col col-10 p-3">
             <h3>Articles</h3>
             <div class="row">
                 <div class="col col-8">

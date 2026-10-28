@@ -2,9 +2,6 @@
 <div class="container-fluid mt-2 p-4">
 	<div class="row">
 		<!-- SIDE NAVIGATION -->
-        <div class="col col-3 p-3">
-            <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
-		</div>
 			<!-- <div class="list-group sticky" id="list_group_menu">
 				<li class="list-group-item font-weight-bold bg-light"><span class="oi oi-book"></span> JOURNALS</li>
 				<?php if ($journals != null) {
@@ -13,7 +10,7 @@
 				<?php echo '<a href="'.base_url('/client/ejournal/get_issues/'.$row->jor_volume.'').'" class="list-group-item  list-group-item-action">Volume ' . $row->jor_volume . ', ' . $row->jor_year . '<span class="oi oi-chevron-right float-right mt-1" style="font-size:10px"></span></a>'; ?>
 				<?php endforeach;}?>
 			</div> -->
-		<div class="col col-7 p-3">
+		<div class="col col-10 p-3">
 			<div class="tab-content bg-white rounded border p-5" id="nav-tabContent">
 				<div class="tab-pane fade show active " id="home" role="tabpanel" aria-labelledby="home">
 					
@@ -70,7 +67,10 @@
 												<?php echo $row->edt_affiliation;?><br/>
 												<?php echo $row->edt_address;?><br/>
 												<?php echo $expertise;?>
-												<?php echo $row->edt_email;?>
+												<?php echo $row->edt_email;?><br/>
+												<?php if($row->edt_scopus_id != ''): ?>
+													<a href="<?php echo $row->edt_scopus_id;?>" target="_blank"><?php echo $row->edt_scopus_id;?></a><br/>
+												<?php endif; ?>
 											</div>
 										</div>
 										<?php endforeach; ?>
@@ -122,6 +122,7 @@
                                                                 ' . $row->edt_address . '<br/>
                                                                 ' . $expertise . '
                                                                 ' . $row->edt_email . '<br/>
+																' . $row->edt_scopus_id . '<br/>
                                                                 </div>
                                                             </div>
                                                         </li>';

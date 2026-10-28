@@ -1,10 +1,11 @@
 <?php if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
+
 class Email extends OPRS_Controller {
 	public function __construct() {
 		parent::__construct();
-		$objMail = $this->my_phpmailer->load();
 		$this->load->model('Manuscript_model');
 		$this->load->model('Review_model');
 		$this->load->model('Email_model');

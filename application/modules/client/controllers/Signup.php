@@ -18,6 +18,8 @@
  * Copyright (C) 2018 by the Department of Science and Technology - National Research Council of the Philiipines
  */
 
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
+
 class Signup extends EJ_Controller {
 
 	public function __construct() {
@@ -166,7 +168,23 @@ class Signup extends EJ_Controller {
 			$otp = substr(number_format(time() * rand(),0,'',''),0,6);
 			$ref_code = random_string('alnum', 16);
 			$email = $this->input->post('new_email', TRUE);
-			
+
+			// Double-check if email already exists (prevents race condition)
+			$existing_user = $this->Login_model->validate_user($email);
+			if ($existing_user) {
+				$errors = [];
+				$errors['new_email'] = 'Email already in use. Please use different email.';
+
+				// Set flashdata to pass validation errors and form data to the view
+				$this->session->set_flashdata('signup_validation_errors', $errors);
+				$this->session->set_flashdata('error', 'Please check the required fields and make corrections.');
+				$this->session->set_flashdata('active_link1', '');
+				$this->session->set_flashdata('active_link2', 'active');
+				$this->session->set_flashdata('active_tab1', '');
+				$this->session->set_flashdata('active_tab2', 'show active');
+				redirect('client/login');
+			}
+
 			$lastUserID = $this->get_last_user_id();
 			$newUserID = $this->generate_user_id('0000', intval($lastUserID) + 1);
 
@@ -267,7 +285,7 @@ class Signup extends EJ_Controller {
 
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = 'fetdihtmokwwpjha';
+		$password = 'fpzskheyxltsbvtg';
 		
 		// setup email config	
 		$mail = new PHPMailer;
@@ -309,7 +327,7 @@ class Signup extends EJ_Controller {
 		<br><br>
 		NRCP Research Journal
 		<br><br><br>
-		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 		
 		// send email
 		$mail->Subject = 'Verify New Account';
@@ -335,11 +353,11 @@ class Signup extends EJ_Controller {
 											</div>');
 		$this->session->set_userdata('otp_ref_code', $ref_code);
 
-		if($nrcp_member == 3){
-			echo $link;
-		}else{
-			redirect($link);
-		}
+		// if($nrcp_member == 3){
+		// 	echo $link;
+		// }else{
+		// 	redirect($link);
+		// }
 	}
 
 	/**

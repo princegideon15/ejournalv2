@@ -21,13 +21,13 @@
 	<footer class="py-4 bg-light mt-auto">
       <div class="container-fluid px-4">
           <div class="d-flex align-items-center justify-content-between small">
-              <div class="text-muted">Copyright &copy; 2018 NRCP Online Research Journal (eJournal), Online Peer Review System (eReview) All Rights Reserved</div>
+              <!-- <div class="text-muted">Copyright &copy; 2018 NRCP Online Research Journal (eJournal), Online Peer Review System (eReview) All Rights Reserved</div>
               <div class="text-muted">
                 Currently v2.1.85
-                  <!-- <a href="javascript:void(0);">Privacy Policy</a>
+                  <a href="javascript:void(0);">Privacy Policy</a>
                   &middot;
                   <a href="javascript:void(0);">Terms &amp; Conditions</a> -->
-              </div>
+              </div> 
           </div>
       </div>
     </footer>
@@ -211,17 +211,7 @@
 								</div>
 								<div class="mb-3">
 									<label for="jor_issue" class="form-label">Issue No.</label>
-									<select class="form-select" id="jor_issue" name="jor_issue" disabled>
-										<option value="">Select Issue</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">Special Issue No. 1</option>
-										<option value="6">Special Issue No. 2</option>
-										<option value="7">Special Issue No. 3</option>
-										<option value="8">Special Issue No. 4</option>
-									</select>
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 								</div>
 								<div class="row mb-3">
 									<div class="col">
@@ -307,17 +297,7 @@
 									</div>
 									<div class="col">
 										<label for="edt_issue" class="form-label">Issue</label>
-										<select class="form-select" id="edt_issue" name="edt_issue">
-											<option value="">Select Issue</option>
-											<option value="1">1</option>
-											<option value="2">2</option>
-											<option value="3">3</option>
-											<option value="4">4</option>
-											<option value="5">Special Issue No. 1</option>
-											<option value="6">Special Issue No. 2</option>
-											<option value="7">Special Issue No. 3</option>
-											<option value="8">Special Issue No. 4</option>
-										</select>
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 									</div>
 								</div>
 							</div>
@@ -375,6 +355,11 @@
 								<label for="edt_affiliation" class="form-label">Specialization</label>
 								<span class="badge badge-secondary">Separate in comma</span>
 								<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
+							</div>
+							<div class="mb-3">
+								<label for="edt_scopus_id" class="form-label">Scopus ID</label>
+								<span class="badge badge-secondary">Choose One (Scopus ID/Google Scholar ID/ORCID ID)</span>
+								<input type="text" class="form-control" id="edt_scopus_id" name="edt_scopus_id" placeholder="Scopus ID/Google Scholar ID/ORCID ID">
 							</div>
 						</div>
 						<div class="col">

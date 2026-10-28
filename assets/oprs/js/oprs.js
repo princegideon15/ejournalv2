@@ -8708,17 +8708,17 @@ function publish_to_ejournal(id){
                         var latex = (val.man_latex) ? '<a href="' + base_url + "assets/oprs/uploads/" + dir + "_latex/" + val.man_latex + '" target="_blank">LaTex</a>' : 'N/a';
                         var keywords = val.man_keywords ?? 'N/A';
 
-                        var select_issue = `<select class="form-select" id="man_issue" name="man_issue">
-                                                <option value="">Select Issue no.</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">Special Issue No. 1</option>
-                                                <option value="6">Special Issue No. 2</option>
-                                                <option value="7">Special Issue No. 3</option>
-                                                <option value="8">Special Issue No. 4</option>
-                                            </select>`;
+                        // var select_issue = `<select class="form-select" id="man_issue" name="man_issue">
+                        //                         <option value="">Select Issue no.</option>
+                        //                         <option value="1">1</option>
+                        //                         <option value="2">2</option>
+                        //                         <option value="3">3</option>
+                        //                         <option value="4">4</option>
+                        //                         <option value="5">Special Issue No. 1</option>
+                        //                         <option value="6">Special Issue No. 2</option>
+                        //                         <option value="7">Special Issue No. 3</option>
+                        //                         <option value="8">Special Issue No. 4</option>
+                        //                     </select>`;
 
                     //     <select class="form-select" id="jor_volume" name="jor_volume" placeholder="Select existing or Type new Volume no." style="background-color:white">
                     //     <?php foreach ($u_journal as $j): ?>
@@ -10622,6 +10622,28 @@ function submit_consolidation(){
 function submit_revision_consolidation(id){
     $('#consolidationModal').modal('toggle');
     $('#cons_man_id').val(id);
+}
+
+function last_editor_revision_check(man_id) {
+    $('#uploaded_revision_matrix').empty();
+    $('#submit_revision_endorsement_form')[0].reset();
+    $('#cons_man_id').val(man_id);
+
+    $.ajax({
+        type: "GET",
+        url: base_url + "oprs/manuscripts/get_revision_matrix/" + man_id,
+        dataType: "json",
+        crossDomain: true,
+        success: function(data) {
+            $.each(data, function(key, val){
+                $('#uploaded_revision_matrix').append('<a href="'+ base_url + 'assets/oprs/uploads/revision_matrix/' + val.mtx_file +'" download>Download</a>');
+            });
+        }
+    });
+}
+
+function endorse_coped(man_id) {
+    last_editor_revision_check(man_id);
 }
 
 function checkOnlyOne(checkbox) {

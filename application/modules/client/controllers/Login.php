@@ -19,6 +19,7 @@
  */
 
 require_once(APPPATH.'modules/client/controllers/Signup.php');
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
 
 class Login extends EJ_Controller {
 
@@ -41,7 +42,7 @@ class Login extends EJ_Controller {
 		 $this->load->model('Oprs/Skms_model', '_skms_user_model');
 		 $this->load->model('Admin/Journal_model');
 		 $this->load->model('Admin/Email_model');
-
+		$this->load->model('Admin/Dashboard_model');
         $this->signupController = new Signup();
 
 	}
@@ -57,7 +58,7 @@ class Login extends EJ_Controller {
 		if ($this->session->userdata('_ej_logged_in')) {
 			redirect('client/ejournal/');
 		}
-
+		// $data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
 		$data['country'] = $this->Library_model->get_library('tblcountries', 'members');
 		$data['regions'] = $this->Library_model->get_library('tblregions', 'members');
 		$data['citations'] = $this->Client_journal_model->totalCitationsCurrentYear();
@@ -67,6 +68,8 @@ class Login extends EJ_Controller {
 		$data['latest_volume'] = $this->Client_journal_model->get_latest_volume();
 		$data['main_title'] = "eJournal";
 		$data['main_content'] = "client/login";
+		$data['hits_count'] = $this->Client_journal_model->all_hits();
+		$data['vis_count'] = $this->Dashboard_model->vis_count();
 
 		if($flag){
 			$this->session->set_flashdata('active_link1', '');
@@ -126,10 +129,8 @@ class Login extends EJ_Controller {
 					if (password_verify($password, $validateUser[0]->password)) {
 						$this->Login_model->clear_login_attempts($email);
 
-						if ($this->Library_model->validate_device_token($user_id)) {
-							// Always require OTP even for trusted devices
-							$this->send_login_otp($email);
-							return;
+						// OTP disabled after login — skip device token check
+						// if ($this->Library_model->validate_device_token($user_id)) {
 
 							$last_visit_date = $this->Login_model->get_last_visit_date($user_id);
 							$last_visit_date = new DateTime($last_visit_date[0]->date_created);
@@ -276,10 +277,10 @@ class Login extends EJ_Controller {
 
 							redirect('client/ejournal/');
 
-						}else{
-							//send otp to email
-							$this->send_login_otp($email);
-						}
+						// }else{
+						// 	//send otp to email
+						// 	$this->send_login_otp($email);
+						// }
 					}else{
 						$count_attempt = count($this->Login_model->get_login_attempts($validateUser[0]->email));
 	
@@ -449,7 +450,7 @@ class Login extends EJ_Controller {
 		<br><br>
 		NRCP Research Journal
 		<br><br><br>
-		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 		
 		// send email
 		$mail->Subject = 'Login Verification';
@@ -877,7 +878,7 @@ class Login extends EJ_Controller {
 		<br><br>
 		NRCP Research Journal
 		<br><br><br>
-		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+		<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 		
 		// send email
 		$mail->Subject = 'Reset Password';

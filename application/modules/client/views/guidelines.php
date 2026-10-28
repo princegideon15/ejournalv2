@@ -1,10 +1,10 @@
 <?php error_reporting(0);?>
 <div class="container-fluid mt-2 p-4">
     <div class="row">
-        <div class="col col-3 p-3">
+        <!-- <div class="col col-3 p-3">
             <a class="btn btn-link main-link" href="<?=base_url('/client/ejournal/articles')?>">View all articles</a>
-		</div>
-		<div class="col col-7 p-3">
+		</div> -->
+		<div class="col col-10 p-3">
 					<div class="border p-5 mb-5 bg-white rounded">
 						<div class="row">
 							<div class="col">

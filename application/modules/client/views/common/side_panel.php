@@ -12,11 +12,11 @@
         <div class="card-body">
             <h6 class="card-title fw-bold d-block">Journal Information</h6>
 				<!-- <p class="mb-0">
-				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ongoing Development">
+				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer">
 					Intl. Advisory Board
 				</a>
 				</p> -->
-				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Under Development">
+				<a href="<?= base_url('../../../../../assets/admin/International Advisory.pdf') ?>" class="text-dark text-decoration-underline" target="_blank" rel="noopener noreferrer">
 					Intl. Advisory Board
 				</a>
             <p class="mb-0"><a href="<?php echo base_url('/client/ejournal/editorial');?>"
@@ -30,8 +30,8 @@
         <div class="card-body">
             <h6 class="card-title fw-bold mt-2 mb-0">Usage Metrics <?php echo date('Y');?></h6>
             <div>Downloads: <?php echo $downloads; ?></div>
-            <div>Abstract Hits: <?php echo $citations; ?></div>
-			<div>Visitors: <?php echo $hits_count; ?></div>
+            <div>Abstract Hits: <?php echo $hits_count; ?></div>
+			<div>Visitors: <?php echo $vis_count; ?></div>
         </div>
     </div>
 
@@ -39,6 +39,16 @@
         <div class="card-body">
             <h6 class="card-title fw-bold mt-2 mb-0">Submission To Publication</h6>
             <h6 class="card-title fw-bold mt-2 mb-0">96 Days</h6>
+
+        </div>
+    </div>
+
+	<div class="card bg-light border-0 mt-3 mb-3">
+        <div class="card-body">
+            <h6 class="card-title mt-2 mb-0"><b>Advancing Multidisciplinary Research </b> </h6>
+			<p> We accept original research, review, and perspectives across all disciplines - 
+				with rigorous editorial stanards and no fixed issue deadlines; rolling submissions </p>
+            <!-- <h6 class="card-title fw-bold mt-2 mb-0">96 Days</h6> -->
 
         </div>
     </div>

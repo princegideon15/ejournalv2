@@ -26,8 +26,8 @@
   // Initialize reCAPTCHA and store the widget ID
   window.onload = function () {
       recaptchaWidgetId_logout = grecaptcha.render('captcha_logout', {
-          'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // orig key
-          // 'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
+         // 'sitekey': '6LfU2_EqAAAAAJhmxWBHHXvfG2h9OH70LdfwvNTA', // orig key
+           'sitekey': '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // test purpose only
           'callback': onRecaptchaSuccess,
           'expired-callback': onRecaptchaExpired
       });
@@ -103,8 +103,8 @@
 
     <!-- ISSN -->
     <div class="d-flex flex-column ">
-      <p class="badge badge-issn rounded-0 fs-6 mb-1 rounded-start">EISSN: 2980-4728</p>
-      <p class="badge badge-issn rounded-0 fs-6 rounded-start">ISSN: 0117-3294</p>
+      <p class="badge badge-issn rounded-0 fs-6 mb-1 rounded-start">e-ISSN: 2980-4728</p>
+      <p class="badge badge-issn rounded-0 fs-6 rounded-start">p-ISSN: 0117-3294</p>
     </div>
 
   </div>

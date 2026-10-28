@@ -183,17 +183,7 @@
 									</div>
 									<div class="mb-3">
 										<label for="jor_issue" class="form-label">Issue No.</label>
-										<select class="form-select mb-3" id="jor_issue" name="jor_issue">
-											<option value="">Select Issue</option>
-											<option value="1">1</option>
-											<option value="2">2</option>
-											<option value="3">3</option>
-											<option value="4">4</option>
-											<option value="5">Special Issue No. 1</option>
-											<option value="6">Special Issue No. 2</option>
-											<option value="7">Special Issue No. 3</option>
-											<option value="8">Special Issue No. 4</option>
-										</select>
+									<input type="text" class="form-control" name="jor_issue" placeholder="Select Issue">
 									</div>
 									<div class="mb-3">
 										<label for="jor_month" class="form-label">Month  <span class="badge rounded-pill bg-secondary">Optional</span></label>
@@ -710,7 +700,9 @@
 											<span class="badge rounded-pill bg-secondary">Separate in comma</span>
 											<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
 										</div>
-										<div class="mb-3">
+										<label for="edt_scopus_id" class="form-label">Scopus ID</label>
+											<input type="text" class="form-control" id="edt_scopus_id" name="edt_scopus_id" placeholder="Scopus ID Or Google Scholar ID Or ORCID ID">
+										<div class="m-3">
 											<button type="submit" class="btn btn-primary me-1" name="submit_editorial"><span class="oi oi-check"></span> Save</button>	
 										</div>
 									</div>
@@ -751,6 +743,7 @@
 										<th scope="col">Email</th>
 										<th scope="col">Date Added</th>
 										<th scope="col">Years of Duration</th>
+										<th scope="col">Scopus Id</th>
 										<th scope="col">
 											<?php if ($this->session->userdata('_prv_add') == 1) {?>
 											<button type="button" class="w-100 btn btn-sm btn-primary" id="btn-add-editorial"><span class="oi oi-plus"></span> Add Editorial</button>
@@ -784,6 +777,7 @@
 										<td><?php echo $e->edt_email; ?></td>
 										<td><?php echo $e->date_created; ?></td>
 										<td><?php echo $e->edt_duration; ?></td>
+										<td><?php echo $e->edt_scopus_id; ?></td>
 										<td>
 											<button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="btn btn-light text-primary btn-sm w-100" onclick="edit_editorial('<?php echo $e->edt_id; ?>')"><span class="oi oi-pencil" ></span> Edit</button>
 											<!-- <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="btn btn-danger btn-sm" onclick="_remove('delete-editorial-out')"><span class="oi oi-trash"></span></button> -->

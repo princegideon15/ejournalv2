@@ -811,9 +811,9 @@ echo '<option value=' . $c->country_id . ' ' . $selected . '>' . $c->country_nam
     <!-- Footer Links -->
 
     <!-- Copyright -->
-    <div class="footer-copyright text-center pb-2 pt-2 text-dark bg-light" >&copy; 2018 Copyright ResearchJournal, All Rights Reserved
+    <!-- <div class="footer-copyright text-center pb-2 pt-2 text-dark bg-light" >&copy; 2018 Copyright ResearchJournal, All Rights Reserved
     <small class="text-muted d-block">Currently v2.1.85</small>
-    </div>
+    </div> -->
     <!-- Copyright -->
 
 </footer>

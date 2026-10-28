@@ -408,17 +408,8 @@
 								</div>
 								<div class="form-group col-md-2">
 									<label for="jor_issue">Issue No.</label>
-									<select class="form-control" id="jor_issue" name="jor_issue">
-										<option value="">Select Issue</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">Special Issue No. 1</option>
-										<option value="6">Special Issue No. 2</option>
-										<option value="7">Special Issue No. 3</option>
-										<option value="8">Special Issue No. 4</option>
-									</select>
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
+								</div>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="jor_month">Month <small class="text-warning">(optional)</small></label>
@@ -582,17 +573,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_issue">Issue</label>
-											<select class="form-control" id="edt_issue" name="edt_issue">
-												<option value="">Select Issue</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
-												<option value="5">Special Issue No. 1</option>
-												<option value="6">Special Issue No. 2</option>
-												<option value="7">Special Issue No. 3</option>
-												<option value="8">Special Issue No. 4</option>
-											</select>
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 										</div>
 									</div>
 									<div class="form-row">
@@ -1071,9 +1052,9 @@
 	</div>
 
 		<!-- Copyright -->
-		<div class="footer-copyright text-center mt-3 mb-3" >&copy; 2018 Copyright ResearchJournal, All Rights Reserved
+		<!-- <div class="footer-copyright text-center mt-3 mb-3" >&copy; 2018 Copyright ResearchJournal, All Rights Reserved
 			<small class="text-muted d-block">Currently v2.1.85</small>
-		</div>
+		</div> -->
 		<!-- Copyright -->
 </div>
 
@@ -1242,17 +1223,7 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="jor_issue">Issue No.</label>
-							<select class="form-control" id="jor_issue" name="jor_issue" disabled>
-								<option value="">Select Issue</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">Special Issue No. 1</option>
-								<option value="6">Special Issue No. 2</option>
-								<option value="7">Special Issue No. 3</option>
-								<option value="8">Special Issue No. 4</option>
-							</select>
+									<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 						</div>
 					</div>
 					<div class="form-row">
@@ -1343,17 +1314,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="edt_issue">Issue</label>
-											<select class="form-control" id="edt_issue" name="edt_issue">
-												<option value="">Select Issue</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
-												<option value="5">Special Issue No. 1</option>
-												<option value="6">Special Issue No. 2</option>
-												<option value="7">Special Issue No. 3</option>
-												<option value="8">Special Issue No. 4</option>
-											</select>
+												<input type="text" class="form-control" id="jor_issue" name="jor_issue" placeholder="Select Issue">
 										</div>
 									</div>
 									<div class="form-row">
@@ -1411,6 +1372,10 @@
 											<label for="edt_affiliation">Specialization</label>
 											<span class="badge badge-secondary">Separate in comma</span>
 											<input type="text" class="form-control" id="edt_specialization" name="edt_specialization" placeholder="ex. Specialization 1, Specialization 2">
+										</div>
+										<div class="form-group col-md">
+											<label for="edt_scopus_id" class="form-label">Scopus ID</label>
+											<input type="text" class="form-control" id="edt_scopus_id" name="edt_scopus_id" placeholder="Scopus ID Or Google Scholar ID Or ORCID ID">
 										</div>
 									</div>
 								</div>

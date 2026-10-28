@@ -1,12 +1,12 @@
 <?php if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
+
 class Forgot extends OPRS_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('input');
-		$this->load->library("My_phpmailer");
-		$objMail = $this->my_phpmailer->load();
 		$this->load->model('Forgot_model');
 		$this->load->model('client/Client_journal_model');
 		$this->load->model('oprs/User_model');
@@ -84,9 +84,9 @@ class Forgot extends OPRS_Controller {
 			//email
 			$nameuser = 'eJournal';
 			$sender_email = 'ejournalnrcp1933@gmail.com';
-			$password = 'fetdihtmokwwpjha';
+			$password = 'fpzskheyxltsbvtg';
 			$usergmail = 'ejournalnrcp1933@gmail.com';
-			$password = 'fetdihtmokwwpjha';
+			$password = 'fpzskheyxltsbvtg';
 			$mail = new PHPMailer;
 			$mail->isSMTP();
 			$mail->Host = "smtp.gmail.com";
@@ -127,7 +127,7 @@ class Forgot extends OPRS_Controller {
 			<br><br>
 			NRCP Research Journal
 			<br><br><br>
-			<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+			<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 			
 			$mail->Body = $emailBody;
 			$mail->IsHTML(true);
@@ -226,9 +226,9 @@ class Forgot extends OPRS_Controller {
 						//email
 						$nameuser = 'eJournal';
 						$sender_email = 'ejournalnrcp1933@gmail.com';
-						$password = 'fetdihtmokwwpjha';
+						$password = 'fpzskheyxltsbvtg';
 						$usergmail = 'ejournalnrcp1933@gmail.com';
-						$password = 'fetdihtmokwwpjha';
+						$password = 'fpzskheyxltsbvtg';
 						$mail = new PHPMailer;
 						$mail->isSMTP();
 						$mail->Host = "smtp.gmail.com";
@@ -269,7 +269,7 @@ class Forgot extends OPRS_Controller {
 						<br><br>
 						NRCP Research Journal
 						<br><br><br>
-						<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at [Support Email Address]</em>';
+						<em>This is an automated message. Please do not reply to this email. For assistance, please contact our support team at skms.support@nrcp.dost.gov.ph </em>';
 						
 						$mail->Body = $emailBody;
 						$mail->IsHTML(true);

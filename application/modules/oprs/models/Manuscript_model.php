@@ -125,9 +125,14 @@ class Manuscript_model extends CI_Model {
 			$oprs->join($this->publication . ' p', 'm.man_type = p.id');
 			$oprs->join($this->status . ' s', 'm.man_status = s.status_id');
 			$oprs->join($this->editors_review . ' e', 'm.row_id = e.edit_man_id');
-			$oprs->where('man_status >=', 4);
-			$oprs->where('edit_status', NULL);
 			$oprs->where('edit_usr_id', _UserIdFromSession());
+			$oprs->group_start();
+			$oprs->where('m.man_status', 17);
+			$oprs->or_group_start();
+			$oprs->where('edit_status', NULL);
+			$oprs->where('man_status >=', 4);
+			$oprs->group_end();
+			$oprs->group_end();
 		}else if($role_id == 16){ // peer reviwer
 				$oprs->select('m.*,s.scr_status, s.date_reviewed, r.rev_hide_auth, scr_nda');
 				$oprs->from($this->scores . ' s');
@@ -997,7 +1002,7 @@ class Manuscript_model extends CI_Model {
 		$oprs->where('s.scr_status >', 3);
 		$oprs->where('m.man_status', 3);
 		$oprs->group_by('m.row_id');
-		$oprs->having('count(score) >', 1);
+		$oprs->having('count(scr_status) >', 1);
 		$oprs->order_by('m.man_title', 'asc');
 		$query = $oprs->get();
 		return $query->result();

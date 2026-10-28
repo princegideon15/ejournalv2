@@ -49,7 +49,7 @@ class Login extends EJ_Controller {
 					foreach ($hash as $row) {
 						$pass = $row->acc_password;
 						$type_num = $row->acc_type;
-						$type = ($row->acc_type == 2) ? 'Manager' : ($row->acc_type == 1) ? 'Administrator' : 'Superadmin';
+						$type = ($row->acc_type == 2) ? 'Manager' : (($row->acc_type == 1) ? 'Administrator' : 'Superadmin');
 						$id = $row->row_id;
 						$dp = $row->acc_dp;
 					}

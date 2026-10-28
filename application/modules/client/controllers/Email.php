@@ -1,6 +1,8 @@
 <?php if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
+require_once(APPPATH."third_party/phpmailer/PHPMailerAutoload.php");
+
 class Email extends EJ_Controller {
 	public function __construct() {
 		parent::__construct();
@@ -58,7 +60,7 @@ class Email extends EJ_Controller {
 		$link = "<a href='https://researchjournal.nrcp.dost.gov.ph/client/ejournal/csf_arta/". $ref_code ."' target='_blank'>CSF-ARTA</a>";
 		$sender = 'eJournal';
 		$sender_email = 'ejournalnrcp1933@gmail.com';
-		$password = 'fetdihtmokwwpjha';
+		$password = 'fpzskheyxltsbvtg';
 
 		// setup email config
 		$mail = new PHPMailer;
